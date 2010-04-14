@@ -5,7 +5,7 @@ class CreateSessions < ActiveRecord::Migration
       t.text :description, :null => false
       t.boolean :panel, :null => false, :default => false
       t.boolean :projector, :null => false, :default => false
-            
+      
       t.timestamps
     end
   end
