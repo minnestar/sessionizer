@@ -1,7 +1,9 @@
 <% semantic_form_for(@session) do |f| %>
   <%= f.inputs :title, :description %>
 
-  <%= f.inputs :name, :email %>
+  <% if !logged_in? %>
+    <%= f.inputs :name, :email %>
+  <% end %>
 
   <% f.inputs do %>
     <%= f.input :categories, :as => :check_boxes %>
