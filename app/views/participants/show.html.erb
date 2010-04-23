@@ -1,0 +1,9 @@
+<% title(@participant.name) %>
+
+BIO HERE
+
+<h3>Sessions</h3>
+
+<ul>
+  <%= render :partial => 'session', :collection => @participant.sessions %>
+</ul>

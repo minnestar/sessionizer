@@ -1,6 +1,7 @@
 class CreateSessions < ActiveRecord::Migration
   def self.up
     create_table :sessions do |t|
+      t.belongs_to :participant, :null => false
       t.string :title, :null => false
       t.text :description, :null => false
       t.boolean :panel, :null => false, :default => false

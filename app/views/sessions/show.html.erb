@@ -1,6 +1,10 @@
 <% title(@session.title) %>
 
-<%= @session.description %>
+<p>By <%= @session.participant.name %></p>
+
+<div>
+  <%= @session.description %>
+</div>
 
 <h3>Categories</h3>
 
