@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100414224830) do
+ActiveRecord::Schema.define(:version => 20100414231806) do
 
   create_table "categories", :force => true do |t|
     t.string "name", :null => false
@@ -17,12 +17,20 @@ ActiveRecord::Schema.define(:version => 20100414224830) do
 
   add_index "categories", ["name"], :name => "index_categories_on_name", :unique => true
 
+  create_table "categorizations", :force => true do |t|
+    t.integer  "category_id", :null => false
+    t.integer  "session_id",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "categorizations", ["category_id", "session_id"], :name => "index_categorizations_on_category_id_and_session_id", :unique => true
+
   create_table "sessions", :force => true do |t|
     t.string   "title",                          :null => false
     t.text     "description",                    :null => false
     t.boolean  "panel",       :default => false, :null => false
     t.boolean  "projector",   :default => false, :null => false
-    t.integer  "category_id",                    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
