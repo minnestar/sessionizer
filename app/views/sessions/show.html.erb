@@ -11,3 +11,25 @@
 <ul>
   <%= render :partial => 'category', :collection => @session.categories %>
 </ul>
+
+<h3>Participants</h3>
+
+<% if @session.participants.empty? %>
+  <div id="no-participants">
+    No one has expressed interest in attending this session yet. Be the first!
+  </div>
+<% end %>
+
+<ul id="participants">
+  <%= render :partial => 'participant', :collection => @session.participants %>
+</ul>
+
+<% if !@session.attending?(current_participant) %>
+  <div id="interested-in-attending">
+    <h3>Interested in this session?</h3>
+  
+    <%= link_to 'Attend this session', '#', :id => 'attend' %>
+
+    This will add your name to the list of interested participants. You do not have to attend, but it will help us guage interest for scheduling purposes.
+  </div>
+<% end %>

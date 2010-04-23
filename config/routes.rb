@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'sessions', :action => 'index'
-  map.resources :sessions, :only => [:index, :show, :new, :create, :update]
+  map.resources :sessions, :only => [:show, :new, :create, :update] do |session|
+    session.resource :attendance, :only => [:create]
+  end
   map.resources :participants, :only => [:show]
 end

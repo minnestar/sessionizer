@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   helper :layout
-  helper_method :current_user
+  helper_method :current_participant
   helper_method :logged_in?
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
