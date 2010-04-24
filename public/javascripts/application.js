@@ -18,6 +18,9 @@ Sessionizer.Attend = function() {
                 $("div#interested-in-attending").html("Thanks for your interest in this session.");
                 $("div#no-participants").hide();
                 $("ul#participants").prepend(data);
+              },
+              error: function(xmlhttp) {
+                $("div#interested-in-attending").html(xmlhttp.textResponse);
               }
              });
 
