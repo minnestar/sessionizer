@@ -1,0 +1,3 @@
+erubis
+formtastic --version ">= 0.9.7"
+bluecloth --version '>= 2.0.7'
