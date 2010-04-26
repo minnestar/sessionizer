@@ -1,9 +1,9 @@
 <% title(@session.title) %>
 
-<p>By <%= @session.participant.name %></p>
+<p>By <%= link_to @session.participant.name, @session.participant %></p>
 
 <div>
-  <%= @session.description %>
+  <%= markdown(@session.description).html_safe! %>
 </div>
 
 <h3>Categories</h3>

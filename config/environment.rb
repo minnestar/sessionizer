@@ -8,10 +8,8 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   config.gem 'erubis'
-  config.gem 'mocha'
   config.gem 'formtastic'
-  config.gem 'shoulda'
-  # Settings in config/environments/* take precedence over those specified here.
+  config.gem 'bluecloth', '>= 2.0.7'
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
 
