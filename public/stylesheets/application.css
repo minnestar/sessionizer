@@ -85,6 +85,14 @@ a {
   list-style: disc;
 }
 
+div.sidebar-box {
+    background: lightgray;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    padding-top: 0.2em;
+}
+
 /*** Minne* Header ******************************************************************/
 
 .full-column {border-bottom:1px solid #d1d9dc;}
