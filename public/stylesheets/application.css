@@ -2,6 +2,7 @@ body {
   background-color: #fff;
   font-family: Verdana, Helvetica, Arial;
   font-size: 14px;
+  margin: 0;
 }
 
 h1 span.edit {
