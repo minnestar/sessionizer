@@ -7,6 +7,21 @@
     <%= yield(:head) %>
   </head>
   <body>
+    <div class="full-column">
+      <div class="center-column">
+	<ul id="menu">
+	  <li class="star"><a href="http://minnestar.org/" ><span class="description">the community of</span><br />minne<span class="star">*</span></a></li>
+	  <li class="bar"><a href="http://minnestar.org/minnebar/"><span class="description">(un)conference</span><br />minne<span class="bar">bar</span></a></li>
+	  <li class="demo"><a href="http://minnestar.org/minnedemo/"><span class="description">geek show &amp; tell</span><br />minne<span class="demo">demo</span></a></li>
+	  <li class="beat"><a href="http://minnestar.org/minnebeat/"><span class="description">startup &amp; investor news</span><br />minne<span class="beat">beat</span></a></li>
+          <li class="start"><a href="http://minnestar.org/minnestart/"><span class="description">incubation &amp; collaboration</span><br />minne<span class="start">start</span></a></li>
+	</ul>
+
+	<div class="clearboth"><!-- --></div>
+
+      </div><!-- / center-column -->
+    </div><!-- / full-column -->	
+
     <div id="container">
       <%- [:error, :notice, :success].each do |name| -%>
        <%= content_tag :div, flash[name], :id => "flash_#{name}" if flash[name] %>
