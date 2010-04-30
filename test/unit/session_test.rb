@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class SessionTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  context "Session" do
+    subject do
+      Session.new(:participant_id => 123)
+    end
+    
+    should_validate_presence_of :title, :description
   end
 end

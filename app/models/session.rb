@@ -6,6 +6,8 @@ class Session < ActiveRecord::Base
   has_many :participants, :through => :attendances
 
   validates_presence_of :participant_id
+  validates_presence_of :title
+  validates_presence_of :description
 
   attr_accessor :name, :email
 
