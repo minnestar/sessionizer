@@ -12,6 +12,9 @@
     <% end %>
 
     <%= f.input :categories, :as => :check_boxes %>
+
+    <%= f.input :panel, :label => 'This is a panel discussion' %>
+    <%= f.input :projector, :label => 'I need a projector' %>
   <% end %>
 
   <%= recaptcha_tags.html_safe! %>
