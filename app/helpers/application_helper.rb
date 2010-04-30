@@ -2,7 +2,7 @@
 module ApplicationHelper
 
   def edit(obj, &blk)
-    if logged_in? && obj == current_participant || obj.participant == current_participant
+    if logged_in? && obj == current_participant || (obj.respond_to?(:participant) && obj.participant == current_participant)
       concat(capture(&blk))
     end
   end
