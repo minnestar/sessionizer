@@ -4,6 +4,11 @@ body {
   font-size: 14px;
 }
 
+h1 span.edit {
+    font-size: 50%;
+    color: gray;
+}
+
 a img {
   border: none;
 }

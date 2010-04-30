@@ -38,9 +38,12 @@ ActiveRecord::Schema.define(:version => 20100423214500) do
   create_table "participants", :force => true do |t|
     t.string   "name"
     t.string   "email"
+    t.text     "bio"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "participants", ["email"], :name => "index_participants_on_email", :unique => true
 
   create_table "sessions", :force => true do |t|
     t.integer  "participant_id",                    :null => false

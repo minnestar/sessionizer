@@ -1,6 +1,18 @@
 <% title(@participant.name) %>
 
-BIO HERE
+<% content_for :edit do %>
+  <% edit(@participant) do %>
+    (This is you! <%= link_to 'Edit your profile', edit_participant_path(@participant) %>.)
+  <% end %>
+<% end %>
+
+<h3>Bio</h3>
+
+<% if @participant.bio.blank? %>
+  <p>This user hasn't yet added a bio.</p>
+<% end %>
+
+<%= markdown(@participant.bio).html_safe! %>
 
 <h3>Sessions</h3>
 
