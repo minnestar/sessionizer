@@ -22,7 +22,7 @@
       </div><!-- / center-column -->
     </div><!-- / full-column -->	
 
-    <div id="container">
+    <div class="center-column">
       <%- [:error, :notice, :success].each do |name| -%>
        <%= content_tag :div, flash[name], :id => "flash_#{name}" if flash[name] %>
       <%- end -%>
