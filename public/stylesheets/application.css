@@ -1,5 +1,5 @@
 body {
-  background-color: #4B7399;
+  background-color: #fff;
   font-family: Verdana, Helvetica, Arial;
   font-size: 14px;
 }
@@ -23,7 +23,7 @@ a {
   margin: 0 auto;
   background-color: #FFF;
   padding: 20px 40px;
-  border: solid 1px black;
+  border: none;
   margin-top: 20px;
 }
 
