@@ -7,34 +7,44 @@
 
 <p>By <%= link_to @session.participant.name, @session.participant %></p>
 
-<div>
-  <%= markdown(@session.description).html_safe! %>
-</div>
 
-<h3>Categories</h3>
+<div class="row">
+  <div class="column grid_6" style="margin-left:0px">
 
-<ul>
-  <%= render :partial => 'category', :collection => @session.categories %>
-</ul>
+    <div>
+      <%= markdown(@session.description).html_safe! %>
+    </div>
 
-<h3>Participants</h3>
+    <h3>Categories</h3>
 
-<% if @session.participants.empty? %>
-  <div id="no-participants">
-    No one has expressed interest in attending this session yet. Be the first!
-  </div>
-<% end %>
+    <ul>
+      <%= render :partial => 'category', :collection => @session.categories %>
+    </ul>
 
-<ul id="participants">
-  <%= render :partial => 'participant', :collection => @session.participants %>
-</ul>
+ </div>
 
-<% if !@session.attending?(current_participant) %>
-  <div id="interested-in-attending">
-    <h3>Interested in this session?</h3>
+  <div class="column grid_4">
+    <div id="interested-in-attending" class="sidebar-box">
+
+      <% if !@session.attending?(current_participant) %>
+        <h3>Interested in this session?</h3>
   
-    <%= link_to 'Attend this session', '#', :id => 'attend' %>
+        <p><%= link_to 'Attend this session', '#', :id => 'attend' %></p>
 
-    This will add your name to the list of interested participants. You do not have to attend, but it will help us guage interest for scheduling purposes.
+        <p>This will add your name to the list of interested participants. You do not have to attend, but it will help us guage interest for scheduling purposes.</p>
+      <% end %>
+
+      <h3>Participants</h3>
+
+      <% if @session.participants.empty? %>
+        <div id="no-participants">
+          No one has expressed interest in attending this session yet. Be the first!
+        </div>
+      <% end %>
+
+      <ul id="participants">
+        <%= render :partial => 'participant', :collection => @session.participants %>
+      </ul>
+    </div>
   </div>
-<% end %>
+</div>
