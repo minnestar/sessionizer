@@ -1,1 +1,6 @@
-<li><%= link_to session.title, session %> by <%= link_to session.participant.name, session.participant %></li>
+<li>
+  <%= link_to session.title, session %> by <%= link_to session.participant.name, session.participant %>
+  <% edit(session) do %>
+    (<%= link_to 'edit', edit_session_path(session) %>)
+  <% end %>
+</li>

@@ -1,4 +1,9 @@
 <% title(@session.title) %>
+<% content_for :edit_stuff do %>
+  <% edit(@session) do %>
+    (<%= link_to 'edit', edit_session_path(@session) %>)
+  <% end %>
+<% end %>
 
 <p>By <%= link_to @session.participant.name, @session.participant %></p>
 

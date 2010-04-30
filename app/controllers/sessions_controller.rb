@@ -1,6 +1,8 @@
 class SessionsController < ApplicationController
+  before_filter :verify_owner, :only => [:update, :edit]
+  
   make_resourceful do
-    actions :index, :show, :new
+    actions :index, :show, :new, :edit, :update
   end
 
   def create
@@ -27,6 +29,14 @@ class SessionsController < ApplicationController
       redirect_to current_object
     else
       render :action => 'new'
+    end
+  end
+
+  private
+
+  def verify_owner
+    if current_object.participant != current_participant
+      redirect_to current_object
     end
   end
 end
