@@ -20,7 +20,7 @@ Sessionizer.Attend = function() {
                 $("ul#participants").prepend(data);
               },
               error: function(xmlhttp) {
-                $("div#interested-in-attending").html(xmlhttp.textResponse);
+                $("div#interested-in-attending").html(xmlhttp.responseText);
               }
              });
 

@@ -17,10 +17,9 @@ class AttendancesController < ApplicationController
 
     response_for :create_fails do |format|
       format.json do
-        render :template => 'sessions/new_participant.html.erb'
+        render :template => 'sessions/new_participant.html.erb', :status => :unprocessable_entity
       end
     end
-
   end
 
   private
