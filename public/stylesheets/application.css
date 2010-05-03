@@ -94,7 +94,7 @@ div.sidebar-box {
     padding-top: 0.2em;
 }
 
-.sessionsList li {
+ul.sessionsList li {
 	margin: 4px 0;
 }
 
