@@ -94,6 +94,10 @@ div.sidebar-box {
     padding-top: 0.2em;
 }
 
+.sessionsList li {
+	margin: 4px 0;
+}
+
 /*** Minne* Header ******************************************************************/
 
 .full-column {border-bottom:1px solid #d1d9dc;}
