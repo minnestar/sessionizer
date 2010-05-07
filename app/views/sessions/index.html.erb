@@ -7,6 +7,8 @@
         note:</strong> you should <em>register for MinneBar</em> before adding
       your session. Adding a session does not register you!</p>
 
+			<p><%= link_to image_tag('button-add-session.png', :size => "215x43", :border=>"0"), new_session_path %></p>
+
     <h2>Sessions</h2>
     <ul class="sessionsList">
       <%= render @sessions %>
@@ -38,7 +40,6 @@
       with your peers, share something you know, and learn something
       new!</p>
 
-      <%= link_to image_tag('button-add-session.png', :size => "215x43", :border=>"0"), new_session_path %>
    </div>
  </div>
 </div>
