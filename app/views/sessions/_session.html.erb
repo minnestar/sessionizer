@@ -1,5 +1,5 @@
 <li>
-  <%= link_to session.title, session %> by <%= link_to session.participant.name, session.participant %>
+  <%= link_to session.title, session %> <div class="presenter">by <%= link_to session.participant.name, session.participant %></div>
   <% edit(session) do %>
     (<%= link_to 'edit', edit_session_path(session) %>)
   <% end %>
