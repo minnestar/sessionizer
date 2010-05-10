@@ -112,16 +112,29 @@ ul.sessionsList {
 
 ul.sessionsList li {
 	margin: 14px 0;
+	letter-spacing:-0.05em;
 }
 
-ul.sessionsList li a {
+ul.sessionsList li a:link,
+ul.sessionsList li a:visited {
 	font: 	700 1.2em/1.2em Arial, sans-serif;
 	color: #555;
+	text-decoration: none;
 }
-
-ul.sessionsList li div.presenter a {
+ul.sessionsList li a:hover, 
+ul.sessionsList li a:active
+ {
+	text-decoration: underline;
+}
+ul.sessionsList li div.presenter a:link,
+ul.sessionsList li div.presenter a:visited {
 	font-size: 0.8em;
 	color: #999;
+	text-decoration: none;
+}
+ul.sessionsList li div.presenter a:hover,
+ul.sessionsList li div.presenter a:active {
+	text-decoration: underline;
 }
 
 /*** Minne* Header ******************************************************************/
