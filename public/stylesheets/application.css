@@ -131,6 +131,7 @@ ul.sessionsList li a:active
 }
 ul.sessionsList li div.presenter {
 	font-size: 0.8em;
+	color: #999;
 }
 ul.sessionsList li div.presenter a:link,
 ul.sessionsList li div.presenter a:visited {
