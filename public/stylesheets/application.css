@@ -107,11 +107,14 @@ div.sidebar-box {
 }
 
 ul.sessionsList {
+	margin: 0;
+	padding: 0;
 	list-style-type: none;
 }
 
 ul.sessionsList li {
 	margin: 14px 0;
+	padding: 0;
 	letter-spacing:-0.05em;
 }
 
@@ -126,9 +129,11 @@ ul.sessionsList li a:active
  {
 	text-decoration: underline;
 }
+ul.sessionsList li div.presenter {
+	font-size: 0.8em;
+}
 ul.sessionsList li div.presenter a:link,
 ul.sessionsList li div.presenter a:visited {
-	font-size: 0.8em;
 	color: #999;
 	text-decoration: none;
 }
