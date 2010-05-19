@@ -1,8 +1,8 @@
 class Session < ActiveRecord::Base
-  has_many :categorizations
+  has_many :categorizations, :dependent => :destroy
   has_many :categories, :through => :categorizations
   belongs_to :participant
-  has_many :attendances
+  has_many :attendances, :dependent => :destroy
   has_many :participants, :through => :attendances
 
   validates_presence_of :participant_id

@@ -1,0 +1,18 @@
+require File.dirname(__FILE__) + "/../../db/seeds"
+
+luke = Participant.fixie(:luke,
+                         :email => "look@recursion.org",
+                         :name => 'Luke Francl')
+
+joe = Participant.fixie(:joe,
+                        :email => "joe@example.com",
+                        :name => "Joe Schmoe")
+
+session = Session.fixie(:luke_session,
+                        :title => "Stuff about things",
+                        :description => "whatever",
+                        :participant => luke)
+
+session.categorizations.create!(:category => Category.first)
+
+session.attendances.create(:participant => joe)
