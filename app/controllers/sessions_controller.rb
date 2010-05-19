@@ -32,6 +32,10 @@ class SessionsController < ApplicationController
     end
   end
 
+  def words
+    @sessions = Session.all
+  end
+
   private
 
   def verify_owner
