@@ -2,13 +2,16 @@
 
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
-    <p>Welcome to the MinneBar 2010 session planning tool! Please have a
-      look around, and add your own session. <strong>Important
-        note:</strong> you should <em>register for MinneBar</em> before adding
-      your session. Adding a session does not register you!</p>
+    <p>Welcome to the MinneBar 2010 session planning tool!</p>
 
-    <p><%= link_to image_tag('button-add-session.png', :size => "215x43", :border=>"0"), new_session_path %></p>
+    <p>It's too late to add sessions to the printed schedule, but you
+    can look at the planned sessions and add your name to the ones
+    that sound interesting. This helps us plan which rooms to put
+    sessions in.</p>
 
+    <p>There will also be open rooms for planning ad-hoc sessions,
+    breakout discussions, gaming, or hack fests.</p>
+    
     <h2>Recently Added Sessions</h2>
     <ul class="sessionsList">
       <%= render @recent_sessions %>
