@@ -14,8 +14,26 @@
 
 <%= markdown(@participant.bio).html_safe! %>
 
-<h3>Sessions</h3>
+<div class="column grid_5">
+  <h3>Presenting Sessions</h3>
 
-<ul>
-  <%= render :partial => 'session', :collection => @participant.sessions %>
-</ul>
+  <% if @participant.sessions.empty? %>
+    <p>This person isn't presenting any sessions.</p>
+  <% end %>
+
+  <ul>
+    <%= render :partial => 'session', :collection => @participant.sessions %>
+  </ul>
+</div>
+
+<div class="column grid_5">
+  <h3>Participating Sessions</h3>
+
+  <% if @participant.sessions_attending.empty? %>
+    <p>This person hasn't expressed interested in any sessions yet.</p>
+  <% end %>
+ 
+  <ul>
+    <%= render :partial => 'session', :collection => @participant.sessions_attending %>
+  </ul>
+</div>
