@@ -16,6 +16,66 @@
 
     <p><%= link_to 'See all sessions', sessions_path %></p>
 
+    <div class="row">
+      <div class="column grid_3">
+        <h3>Sessions about development</h3>
+
+        <ul class="sessionsList">
+          <%= render @development.sessions.all(:limit => 5) %>
+        </ul>
+
+        <p><%= link_to 'See more...', category_path(@development) %></p>
+      </div>
+
+      <div class="column grid_3">
+        <h3>Sessions about Design</h3>
+
+        <ul class="sessionsList">
+          <%= render @design.sessions.all(:limit => 5) %>
+        </ul>
+
+        <p><%= link_to 'See more...', category_path(@design) %></p>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column grid_3">
+        <h3>Sessions about Startups</h3>
+
+        <ul class="sessionsList">
+          <%= render @startups.sessions.all(:limit => 5) %>
+        </ul>
+
+        <p><%= link_to 'See more...', category_path(@startups) %></p>
+     </div>
+
+      <div class="column grid_3">
+        <h3>Sessions about Hardware</h3>
+
+        <ul class="sessionsList">
+          <%= render @hardware.sessions.all(:limit => 5) %>
+        </ul>
+
+        <p><%= link_to 'See more...', category_path(@hardware) %></p>
+
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="column grid_6">
+        <h3>Sessions about other stuff</h3>
+
+        <ul class="sessionsList">
+          <%= render @other.sessions.all(:limit => 5) %>
+        </ul>
+
+        <p><%= link_to 'See more...', category_path(@other) %></p>
+        
+      </div>
+   </div>
+    
   </div>
   <div class="column grid_4">
     <div class="sidebar-box">
