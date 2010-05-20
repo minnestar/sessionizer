@@ -36,6 +36,11 @@ class SessionsController < ApplicationController
     @sessions = Session.all
   end
 
+  def export
+    @sessions = Session.all(:order => 'lower(title) asc')
+    render :layout => 'export'
+  end
+
   private
 
   def verify_owner
