@@ -1,0 +1,48 @@
+<% title('MinneBar 2010 Session Registration') %>
+
+<div class="row">
+  <div class="column grid_6" style="margin-left:0px">
+    <p>Welcome to the MinneBar 2010 session planning tool! Please have a
+      look around, and add your own session. <strong>Important
+        note:</strong> you should <em>register for MinneBar</em> before adding
+      your session. Adding a session does not register you!</p>
+
+    <p><%= link_to image_tag('button-add-session.png', :size => "215x43", :border=>"0"), new_session_path %></p>
+
+    <h2>Recently Added Sessions</h2>
+    <ul class="sessionsList">
+      <%= render @recent_sessions %>
+    </ul>
+
+    <p><%= link_to 'See all sessions', sessions_path %></p>
+
+  </div>
+  <div class="column grid_4">
+    <div class="sidebar-box">
+      <h3>What kind of sessions are OK?</h3>
+
+      <p>If you're interested in a topic, chances are others are
+      too. Types of sessions could
+      include <strong>presentations</strong> (on a programming
+      language, cool project, marketing, music, or anything
+      else), <strong>panel
+      discussions</strong>, <strong>hackfests</strong>,
+      or <strong>meetups</strong>.</p>
+
+      <p><strong>What's not OK?</strong> MinneBar is not a forum for advertisements or snake oil sales.</p>
+
+      <p>If you've got an idea for a session and you want to run it by us, email look@recursion.org.</p>
+
+      <h3>No Spectators, Only Participants</h3>
+
+      <p>The first rule of MinneBar is <strong>No Spectators, Only
+      Participants</strong>. We encourage everyone to participate in
+      the event by presenting, hosting a discussion, or even just
+      participating in discussions and Q&amp;A. Come ready to engage
+      with your peers, share something you know, and learn something
+      new!</p>
+
+   </div>
+ </div>
+</div>
+

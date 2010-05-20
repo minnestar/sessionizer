@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
-  map.root :controller => 'sessions', :action => 'index'
-  map.resources :sessions, :only => [:show, :new, :create, :update, :edit], :collection => { :words => :get } do |session|
+  map.root :controller => 'pages', :action => 'home'
+  map.resources :sessions, :only => [:index, :show, :new, :create, :update, :edit], :collection => { :words => :get } do |session|
     session.resource :attendance, :only => [:create]
   end
   map.resources :participants, :only => [:show, :edit, :update]

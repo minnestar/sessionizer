@@ -23,9 +23,9 @@
     </div><!-- / full-column -->	
 
     <div class="center-column">
-      <% unless current_page?(root_path) %>
+      <% unless current_page?(root_path) || current_page?(sessions_path) %>
 	<p>
-	  <a href="/">Back to Sessions List</a>
+	  <%= link_to 'Back to Sessions List', sessions_path %>
 	</p>
       <% end %>
 
