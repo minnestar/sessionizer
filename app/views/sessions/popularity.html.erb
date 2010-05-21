@@ -2,6 +2,7 @@
   <tr>
     <th>Title</th>
     <th>Presenter</th>
+    <th>Categories</th>
     <th>Attendees</th>
   </th>
   <% @sessions.each do |session| %>
@@ -13,8 +14,11 @@
         <%= session.participant.name %>
       </td>
       <td>
+        <%= session.categories.map(&:name).join(", ") %>
+      </td>
+      <td>
         <%= session.attendence_count || 0 %>
       </td>
-    </tr>
+   </tr>
  <% end %>
 </table>
