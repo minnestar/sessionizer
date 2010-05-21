@@ -1,0 +1,20 @@
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Presenter</th>
+    <th>Attendees</th>
+  </th>
+  <% @sessions.each do |session| %>
+    <tr>
+      <td>
+        <%= link_to session.title, session %>
+      </td>
+      <td>
+        <%= session.participant.name %>
+      </td>
+      <td>
+        <%= session.attendence_count || 0 %>
+      </td>
+    </tr>
+ <% end %>
+</table>

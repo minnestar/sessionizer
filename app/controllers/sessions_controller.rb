@@ -41,6 +41,11 @@ class SessionsController < ApplicationController
     render :layout => 'export'
   end
 
+  def popularity
+    @sessions = Session.with_attendence_count.all(:order => "COALESCE(attendence_count, 0) desc")
+    render :layout => 'export'
+  end
+
   private
 
   def verify_owner
