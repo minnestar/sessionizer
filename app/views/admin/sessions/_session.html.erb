@@ -1,0 +1,4 @@
+<li>
+  <%= link_to session.title, session %> <div class="presenter">by <%= link_to session.participant.name, session.participant %></div>
+   (<%= link_to 'edit', edit_admin_session_path(session) %>)
+</li>

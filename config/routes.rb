@@ -8,4 +8,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.new_login '/login', :controller => 'user_sessions', :action => 'new', :conditions => {:method => :get}
   map.login '/login', :controller => 'user_sessions', :action => 'create', :conditions => {:method => :post}
+
+  map.namespace :admin do |admin|
+    admin.resources :sessions
+  end
+    
 end
