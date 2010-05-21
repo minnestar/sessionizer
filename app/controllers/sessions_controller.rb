@@ -32,8 +32,18 @@ class SessionsController < ApplicationController
   #   end
   # end
 
+  STOP_WORDS = Set.new(['session', 'etc', 'just', 'presentation', 'get', 'discussion'])
+
   def words
     @sessions = Session.all
+    @words = @sessions.map(&:description).
+      map { |desc| BlueCloth.new(desc).to_html }.
+      map { |md| RailsSanitize.full_sanitizer.sanitize(md) }.
+      map(&:downcase).
+      join(" ").
+      split(/\s+/).
+      reject { |w| STOP_WORDS.include?(w) }.
+      join(" ") 
   end
 
   def export
