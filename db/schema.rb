@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100423214500) do
+ActiveRecord::Schema.define(:version => 20110414025659) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "session_id",     :null => false
@@ -35,6 +35,13 @@ ActiveRecord::Schema.define(:version => 20100423214500) do
 
   add_index "categorizations", ["category_id", "session_id"], :name => "index_categorizations_on_category_id_and_session_id", :unique => true
 
+  create_table "events", :force => true do |t|
+    t.string   "name",       :null => false
+    t.date     "date",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "participants", :force => true do |t|
     t.string   "name"
     t.string   "email"
@@ -53,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20100423214500) do
     t.boolean  "projector",      :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
 
 end

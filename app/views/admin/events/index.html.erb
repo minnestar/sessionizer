@@ -1,0 +1,13 @@
+<% title('Admin: Manage Events') %>
+
+<h2>Existing events</h2>
+
+<p>The most recent event is the current event for session creation.</p>
+
+<ul>
+  <% @events.each do |event| %>
+  <li><%= event.name %> (<%= event.date %>)</li>
+  <% end %>
+</ul>
+
+<p><%= link_to 'Create new event', new_admin_event_path %></p>

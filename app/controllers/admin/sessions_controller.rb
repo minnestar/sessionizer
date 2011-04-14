@@ -1,6 +1,4 @@
-class Admin::SessionsController < ApplicationController
-  before_filter :authenticate
-
+class Admin::SessionsController < Admin::AdminController
   make_resourceful do
     actions :index, :edit, :update
 
@@ -9,13 +7,4 @@ class Admin::SessionsController < ApplicationController
     end
   end
   
-  private
-
-  def authenticate
-    if Rails.env.production?
-      authenticate_or_request_with_http_basic do |user_name, password|
-        user_name == "minnestar" && password == "nottheusualpassword"
-      end
-    end
-  end
 end

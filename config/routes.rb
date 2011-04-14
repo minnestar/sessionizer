@@ -11,6 +11,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace :admin do |admin|
     admin.resources :sessions
+    admin.resources :events
   end
     
 end
