@@ -1,2 +1,3 @@
 bluecloth --version '= 2.0.7'
 recaptcha --version '= 0.2.3'
+rails --version '2.3.11'
