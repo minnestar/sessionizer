@@ -23,9 +23,9 @@
     </div><!-- / full-column -->	
 
     <div class="center-column">
-      <% unless current_page?(root_path) || current_page?(sessions_path) %>
+      <% unless current_page?(root_path) %>
 	<p>
-	  <%= link_to 'Back to Sessions List', sessions_path %>
+	  <%= link_to 'Back to MinneBar Sessions Home Page', root_path %>
 	</p>
       <% end %>
 
