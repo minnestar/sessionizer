@@ -2,7 +2,11 @@ class SessionsController < ApplicationController
   before_filter :verify_owner, :only => [:update, :edit]
   
   make_resourceful do
-    actions :index, :show, :new, :edit, :update
+    actions :show, :new, :edit, :update
+  end
+
+  def index
+    @sessions = Event.current_event.sessions
   end
 
   def create
