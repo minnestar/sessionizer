@@ -1,4 +1,2 @@
-erubis
-formtastic --version "= 0.9.9"
 bluecloth --version '= 2.0.7'
 recaptcha --version '= 0.2.3'
