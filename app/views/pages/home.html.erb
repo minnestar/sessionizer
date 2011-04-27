@@ -21,7 +21,7 @@
         <h3>Sessions about development</h3>
 
         <ul class="sessionsList">
-          <%= render @development.sessions.for_current_event(:limit => 5) %>
+          <%= render @development.sessions.for_current_event.all(:limit => 5) %>
         </ul>
 
         <p><%= link_to 'See more...', category_path(@development) %></p>
@@ -31,7 +31,7 @@
         <h3>Sessions about Design</h3>
 
         <ul class="sessionsList">
-          <%= render @design.sessions.for_current_event(:limit => 5) %>
+          <%= render @design.sessions.for_current_event.all(:limit => 5) %>
         </ul>
 
         <p><%= link_to 'See more...', category_path(@design) %></p>
@@ -44,7 +44,7 @@
         <h3>Sessions about Startups</h3>
 
         <ul class="sessionsList">
-          <%= render @startups.sessions.for_current_event(:limit => 5) %>
+          <%= render @startups.sessions.for_current_event.all(:limit => 5) %>
         </ul>
 
         <p><%= link_to 'See more...', category_path(@startups) %></p>
@@ -54,7 +54,7 @@
         <h3>Sessions about Hardware</h3>
 
         <ul class="sessionsList">
-          <%= render @hardware.sessions.for_current_event(:limit => 5) %>
+          <%= render @hardware.sessions.for_current_event.all(:limit => 5) %>
         </ul>
 
         <p><%= link_to 'See more...', category_path(@hardware) %></p>
@@ -68,7 +68,7 @@
         <h3>Sessions about other stuff</h3>
 
         <ul class="sessionsList">
-          <%= render @other.sessions.for_current_event(:limit => 5) %>
+          <%= render @other.sessions.for_current_event.all(:limit => 5) %>
         </ul>
 
         <p><%= link_to 'See more...', category_path(@other) %></p>
