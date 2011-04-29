@@ -18,7 +18,8 @@ Sessionizer.Attend = function() {
               type: 'POST',
               dataType: 'html',
               success: function(data, textStatus) {
-                $("div#interested-in-attending").html("Thanks for your interest in this session.");
+                $("div#flash_message_placeholder").after('<div id="flash_notice">Thanks for your interest in this session.</div>');
+                $("div#interested-in-attending").hide();
                 $("div#no-participants").hide();
                 $("ul#participants").prepend(data);
               },

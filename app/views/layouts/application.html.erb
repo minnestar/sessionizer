@@ -32,7 +32,8 @@
       <% if !logged_in? && !current_page?(new_login_path) && !current_page?(login_path) %>
         <p style="float:right"><%= link_to 'Log in', new_login_path %></p>
       <% end %>
-      
+
+      <div id="flash_message_placeholder"></div>
       <%- [:error, :notice, :success].each do |name| -%>
         <%= content_tag :div, flash[name], :id => "flash_#{name}" if flash[name] %>
       <%- end -%>

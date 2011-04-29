@@ -24,15 +24,17 @@
  </div>
 
   <div class="column grid_4">
-    <div id="interested-in-attending" class="sidebar-box">
+    <div class="sidebar-box">
+      <div id="interested-in-attending">
 
-      <% if !@session.attending?(current_participant) %>
+        <% if !@session.attending?(current_participant) %>
         <h3>Interested in this session?</h3>
   
         <p><%= link_to 'Attend this session', '#', :id => 'attend' %></p>
 
         <p>This will add your name to the list of interested participants. You do not have to attend, but it will help us guage interest for scheduling purposes.</p>
-      <% end %>
+        <% end %>
+      </div>
 
       <h3>Participants</h3>
 
