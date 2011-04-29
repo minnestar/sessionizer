@@ -34,8 +34,10 @@ class Session < ActiveRecord::Base
   end
 
   def self.session_similarity
-    preferences = Session.attendee_preferences
-    Recommender.calculate_similar_items(preferences, 5)
+    Rails.cache.fetch('session_similarity', :expires_in => 30.minutes) do
+      preferences = Session.attendee_preferences
+      Recommender.calculate_similar_items(preferences, 5)
+    end
   end
 
   def attending?(user)

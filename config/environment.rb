@@ -11,6 +11,7 @@ Rails::Initializer.run do |config|
   config.gem 'formtastic'
   config.gem 'bluecloth', '>= 2.0.7'
   config.gem "recaptcha", :lib => "recaptcha/rails"
+  config.gem 'dalli'
 
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
