@@ -7,6 +7,7 @@ class AttendancesController < ApplicationController
 
     response_for :create do |format|
       format.html do
+        flash[:notice] = "Thanks for your interest in this session."
         redirect_to @session
       end
       
