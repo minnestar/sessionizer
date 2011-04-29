@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
     else
       name, email = object_parameters[:name], object_parameters[:email]
 
-      participant = Participant.first(:conditions => {:email => email}) || Participant.create(:email => email, :name => name)
+      participant = Participant.first(:conditions => ['lower(email) = ?', email.downcase]) || Participant.create(:email => email, :name => name)
       
       if !participant.new_record?
         session[:participant_id] = participant.id

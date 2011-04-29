@@ -4,7 +4,7 @@ class UserSessionsController < ApplicationController
   end
 
   def create
-    @participant = Participant.first(:conditions => {:email => params[:participant][:email]})
+    @participant = Participant.first(:conditions => ['lower(email) = ?', params[:participant][:email].downcase])
 
     if !verify_recaptcha
       @participant = Participant.new(:email => params[:participant][:email])
