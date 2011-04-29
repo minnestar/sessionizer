@@ -1,2 +1,4 @@
 log/*
 .git
+syntax:glob
+*.orig

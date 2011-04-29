@@ -12,6 +12,9 @@ Sessionizer.Attend = function() {
 
     attend: function() {
       $.ajax({url: attendanceUrl(),
+              beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+              },
               type: 'POST',
               dataType: 'html',
               success: function(data, textStatus) {
