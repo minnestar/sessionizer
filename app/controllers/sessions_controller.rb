@@ -3,6 +3,11 @@ class SessionsController < ApplicationController
   
   make_resourceful do
     actions :show, :new, :edit, :update
+
+    before :show do
+      @similar_sessions = []
+      @similar_sessions = current_object.recommended_sessions
+    end
   end
 
   def index

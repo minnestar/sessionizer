@@ -45,6 +45,23 @@
       <ul id="participants">
         <%= render :partial => 'participant', :collection => @session.participants %>
       </ul>
+
+      <h3>Similar Sessions</h3>
+
+      <% if !@similar_sessions.empty? %>
+
+      <p>Does this session sound interesting? You may also like these:</p>
+
+      <ul>
+        <% @similar_sessions.each do |session| %>
+        <li><%= link_to session.title, session %></li>
+        <% end %>
+      </ul>
+      <% else %>
+
+      <p>Help us find similar sessions by signing up for them!</p>
+
+      <% end %>
     </div>
   </div>
 </div>

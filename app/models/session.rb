@@ -16,9 +16,42 @@ class Session < ActiveRecord::Base
 
   attr_accessor :name, :email
 
+  def self.attendee_preferences
+    result = {}
+    sessions = Event.current_event.sessions.all(:include => :participants)
+
+    sessions.each do |session|
+      prefs = {}
+
+      session.participant_ids.each do |p_id|
+        prefs[p_id] = 1
+      end
+
+      result[session.id] = prefs
+    end
+
+    result
+  end
+
+  def self.session_similarity
+    preferences = Session.attendee_preferences
+    Recommender.calculate_similar_items(preferences, 5)
+  end
+
   def attending?(user)
     return false if user.nil?
 
     participants.include?(user)
+  end
+
+  def recommended_sessions
+    similarity = Session.session_similarity
+    recommended = similarity[self.id]
+
+    if recommended
+      Session.find(recommended.map { |r| r[1] })
+    else
+      []
+    end
   end
 end
