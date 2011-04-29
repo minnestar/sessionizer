@@ -46,7 +46,7 @@ class SessionsController < ApplicationController
   STOP_WORDS = Set.new(['session', 'etc', 'just', 'presentation', 'get', 'discussion'])
 
   def words
-    @sessions = Session.all
+    @sessions = Event.current_event.sessions
     @words = @sessions.map(&:description).
       map { |desc| BlueCloth.new(desc).to_html }.
       map { |md| RailsSanitize.full_sanitizer.sanitize(md) }.
@@ -58,12 +58,12 @@ class SessionsController < ApplicationController
   end
 
   def export
-    @sessions = Session.all(:order => 'lower(title) asc')
+    @sessions = Event.current_event.sessions.all(:order => 'lower(title) asc')
     render :layout => 'export'
   end
 
   def popularity
-    @sessions = Session.with_attendence_count.all(:order => "COALESCE(attendence_count, 0) desc")
+    @sessions = Event.current_event.sessions.with_attendence_count.all(:order => "COALESCE(attendence_count, 0) desc")
     render :layout => 'export'
   end
 
