@@ -3,24 +3,24 @@ module Recommender
   class << self
 
     # Returns a distance-based similarity score for person1 and person2
-    def distance_similarity(prefs, person1, person2)
-      if prefs[person1].nil? || prefs[person2].nil?
+    def distance_similarity(prefs, item1, item2)
+      if prefs[item1].nil? || prefs[item2].nil?
         return 0
       end
       
       # Get the list of shared_items
-      shared_items = (prefs[person1].keys & prefs[person2].keys)
+      shared_items = (prefs[item1].keys & prefs[item2].keys)
 
       # if they have no ratings in common, return 0
       if shared_items.empty?
         return 0
       end
       
-      squares = prefs[person1].map do |item|
-        if prefs[person2].include?(item)
-          (prefs[person1][item] - prefs[person2][item]) ** 2
+      squares = prefs[item1].keys.map do |rating_key|
+        if prefs[item2].has_key?(rating_key)
+          (prefs[item1][rating_key] - prefs[item2][rating_key]) ** 2
         else
-          0
+          1.0 # user did not rate => 0 => (1-0)^2 = 1
         end
       end
 
