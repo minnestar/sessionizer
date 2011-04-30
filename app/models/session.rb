@@ -51,8 +51,8 @@ class Session < ActiveRecord::Base
     recommended = similarity[self.id]
 
     if recommended
-      # find will not order by recommendation strength
-      sessions = Session.find(recommended.map { |r| r[1] })
+      # find will not order by recommendation strength; use conditions instead of find to ignore missing sessions in the cache
+      sessions = Session.all(:conditions => ["id in (?)", recommended.map { |r| r[1] }])
       sessions.sort_by do |session|
         recommended.find_index { |r| r[1] == session.id }
       end

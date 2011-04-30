@@ -40,4 +40,12 @@ class SessionTest < ActiveSupport::TestCase
 
     assert_equal([equal_session, half_similar], comparison_session.recommended_sessions)
   end
+
+  test "recommended_sessions should not error if session similarity includes deleted session" do
+    session = Fixie.sessions(:luke_session)
+    
+    Session.stubs(:session_similarity).returns({ session.id => [[1, 123], [0.5, 999]] })
+
+    assert_equal([], session.recommended_sessions)
+  end
 end
