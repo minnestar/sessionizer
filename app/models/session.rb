@@ -51,7 +51,11 @@ class Session < ActiveRecord::Base
     recommended = similarity[self.id]
 
     if recommended
-      Session.find(recommended.map { |r| r[1] })
+      # find will not order by recommendation strength
+      sessions = Session.find(recommended.map { |r| r[1] })
+      sessions.sort_by do |session|
+        recommended.find_index { |r| r[1] == session.id }
+      end
     else
       []
     end
