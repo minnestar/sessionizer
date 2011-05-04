@@ -16,6 +16,11 @@ h1 span.edit {
     color: gray;
 }
 
+h3 span.edit {
+    font-size: 75%;
+    color: gray;
+}
+
 h2 {
 	margin: 10px 0;
 	font: 300 18px/18px Arial, sans-serif; 
