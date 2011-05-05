@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class SessionsController < ApplicationController
   before_filter :verify_owner, :only => [:update, :edit]
   
@@ -52,6 +53,7 @@ class SessionsController < ApplicationController
       map { |md| RailsSanitize.full_sanitizer.sanitize(md) }.
       map(&:downcase).
       join(" ").
+      gsub(/[.*,-?()+!"•—%]/, '').
       split(/\s+/).
       reject { |w| STOP_WORDS.include?(w) }.
       join(" ") 
