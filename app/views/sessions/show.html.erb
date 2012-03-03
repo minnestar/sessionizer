@@ -59,6 +59,7 @@
         <%= render :partial => 'participant', :collection => @session.participants %>
       </ul>
 
+      <% if @session.event == Event.current_event %>
       <h3>Similar Sessions</h3>
 
       <% if !@similar_sessions.empty? %>
@@ -74,6 +75,7 @@
 
       <p>Help us find similar sessions by signing up for them!</p>
 
+      <% end %>
       <% end %>
     </div>
   </div>
