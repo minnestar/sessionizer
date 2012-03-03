@@ -102,7 +102,16 @@
       with your peers, share something you know, and learn something
       new!</p>
 
-   </div>
- </div>
+      <h3>Sessions from Past Events</h3>
+
+      <p>Check out sessions from past events:</p>
+      
+      <ul>
+        <% @events.each do |event| %>
+        <li><%= link_to event.name, event %> (<%= event.date.to_s(:long) %>)</li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 </div>
 

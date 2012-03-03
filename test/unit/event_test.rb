@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class EventTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  context "Event" do
+    subject do
+      Event.new(:name => 'Foobar', :date => Date.today)
+    end
+    
+    should_validate_presence_of :name, :date
+    should_have_many :sessions
   end
 end

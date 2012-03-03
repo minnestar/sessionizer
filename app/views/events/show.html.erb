@@ -1,8 +1,8 @@
-<% title('All Sessions') %>
+<% title("All Sessions from #{@event.name} (#{@event.date.to_s(:long)})") %>
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
    <ul class="sessionsList">
-      <%= render @sessions %>
+      <%= render @event.sessions %>
     </ul>
   </div>
 </div>
