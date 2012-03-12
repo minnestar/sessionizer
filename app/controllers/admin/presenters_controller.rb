@@ -7,6 +7,11 @@ class Admin::PresentersController < Admin::AdminController
     render :text => current_objects.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), :content_type => Mime::TEXT
   end
 
+  def export_all
+    participant_ids = Session.all.map(&:participant_id)
+    render :text => Participant.find(participant_ids).map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), :content_type => Mime::TEXT
+  end
+
   private
 
   def current_objects
