@@ -21,7 +21,7 @@
       <%= render :partial => 'category', :collection => @session.categories %>
     </ul>
 
-    <h3>About the presenter <% edit(@session.participant) do %><span class="edit">(This is you! <%= link_to 'Edit your bio', edit_participant_path(@participant) %>.)</span><% end %></h3>
+    <h3>About the presenter <% edit(@session.participant) do %><span class="edit">(This is you! <%= link_to 'Edit your bio', edit_participant_path(@session.participant) %>.)</span><% end %></h3>
 
     
     <% if @session.participant.bio.blank? %>
