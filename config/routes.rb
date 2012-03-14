@@ -6,6 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :participants, :only => [:show, :edit, :update]
   map.resources :categories, :only => :show
   map.resources :events, :only => [:index, :show]
+  map.resources :presenters, :only => :index
 
   map.new_login '/login', :controller => 'user_sessions', :action => 'new', :conditions => {:method => :get}
   map.login '/login', :controller => 'user_sessions', :action => 'create', :conditions => {:method => :post}
