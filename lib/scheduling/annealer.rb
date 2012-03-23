@@ -2,7 +2,7 @@ module Scheduling
   class Annealer
     def initialize(opts = {})
       @cooling_func = opts[:cooling_func] || lambda do |iter_count|
-        Math.exp(iter_count / (opts[:cooling_time] || 1000))
+        Math.exp(iter_count / (opts[:cooling_time] || 1000000))
       end
     
       @transition_probability = opts[:transition_probability] || lambda do |e0, e1, temp|
@@ -28,7 +28,7 @@ module Scheduling
           state, energy = new_state, new_energy
           if new_energy < best_energy
             best_state, best_energy = state, energy
-            puts "Found better solution on iter #{iter_count} (energy = #{energy}):"
+            puts "Found better solution on iter #{iter_count}:"
             p state
           end
         end

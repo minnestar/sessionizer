@@ -45,13 +45,13 @@ module Scheduling
     def random_neighbor!
       # Choose 2 or more random sessions in distinct time slots
       k = 1.0 / (@time_slots.size - 1)
-      chain_size = 1 + ((1 + k) / (rand + k)).floor
-      slot_rotation = @time_slots.dup.shuffle.slice(0, chain_size)
-      session_rotation = slot_rotation.map { |slot| @sessions_by_slot[slot].sample }
+      cycle_size = 1 + ((1 + k) / (rand + k)).floor
+      slot_cycle = @time_slots.shuffle.slice(0, cycle_size)
+      session_cycle = slot_cycle.map { |slot| @sessions_by_slot[slot].sample }
       
       # Rotate their assignments
-      session_rotation.each_with_index do |session, i|
-        old_slot, new_slot = slot_rotation[i], slot_rotation[(i+1) % slot_rotation.count]
+      session_cycle.each_with_index do |session, i|
+        old_slot, new_slot = slot_cycle[i], slot_cycle[(i+1) % slot_cycle.count]
         @slots_by_session[session] = new_slot
         @sessions_by_slot[old_slot].delete session
         @sessions_by_slot[new_slot] << session
@@ -114,13 +114,22 @@ sched = Scheduling::Schedule.new(
    %w(penguins walruses monkeys chickens),
    %w(snowboarding windsurfing),
    %w(glossolalia nuts monkeys),
-   # %w(soup nuts penguins walruses monkeys chickens ocelots snowboarding windsurfing bobsledding glossolalia),
-   %w()],
-  [%w(penguins snowboarding bobsledding)])
+   %w(soup nuts penguins walruses monkeys chickens ocelots snowboarding windsurfing bobsledding glossolalia),
+   %w(windsurfing walruses glossolalia ocelots),
+   %w(windsurfing monkeys),
+   %w(windsurfing nuts penguins),
+   %w(snowboarding ocelots monkeys),
+   %w(nuts ocelots chickens),
+   %w(snowboarding glossolalia),
+   %w(chickens soup),
+   %w(penguins soup),
+   %w(snowboarding walruses nuts)],
+  [%w(penguins snowboarding bobsledding),
+   %w(penguins ocelots)])
 
 p sched
 
-annealer = Scheduling::Annealer.new
+annealer = Scheduling::Annealer.new(:max_iter => 50000, :cooling_time => 100000000)
 best = annealer.anneal(sched)
 puts "BEST SOLUTION:"
 p best
