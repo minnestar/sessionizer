@@ -13,7 +13,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace :admin do |admin|
     admin.resources :sessions
-    admin.resources :events
+    admin.resources :events do |events|
+      events.resources :timeslots
+    end
     admin.resources :presenters, :collection => { :export => :get, :export_all => :get }
   end
     

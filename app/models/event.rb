@@ -1,5 +1,6 @@
 class Event < ActiveRecord::Base
   has_many :sessions
+  has_many :timeslots
 
   validates_presence_of :name, :date
 

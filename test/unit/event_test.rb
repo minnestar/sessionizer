@@ -8,5 +8,6 @@ class EventTest < ActiveSupport::TestCase
     
     should_validate_presence_of :name, :date
     should_have_many :sessions
+    should_have_many :timeslots
   end
 end
