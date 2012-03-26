@@ -4,6 +4,7 @@ class Session < ActiveRecord::Base
   belongs_to :participant
   belongs_to :event
   belongs_to :timeslot
+  belongs_to :room
   has_many :attendances, :dependent => :destroy
   has_many :participants, :through => :attendances
 
@@ -18,7 +19,7 @@ class Session < ActiveRecord::Base
   attr_accessor :name, :email
 
   # TODO: attr_accessible?
-  attr_protected :event_id, :timeslot_id, :participant_id
+  attr_protected :event_id, :timeslot_id, :participant_id, :room_id
 
   def self.attendee_preferences
     result = {}

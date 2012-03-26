@@ -7,6 +7,8 @@ class SessionTest < ActiveSupport::TestCase
     end
     
     should_validate_presence_of :title, :description
+    should_belong_to :timeslot
+    should_belong_to :room
 
     should "destory categorizations and attendences" do
       session = Fixie.sessions(:luke_session)
