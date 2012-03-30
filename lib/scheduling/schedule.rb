@@ -94,7 +94,9 @@ module Scheduling
     end
     
     def inspect
-      s = "Schedule   average participant can attend #{'%1.3f' % ((1 - self.energy) * 100)}% of their sessions of interest    presenter overlap = #{overlap_score(@presenter_sets)}\n"
+      s = "Schedule"
+      s << " | average participant can attend #{'%1.3f' % ((1 - overlap_score(@attendance_sets)) * 100)}% of their sessions of interest"
+      s << " | presenter overlap = #{overlap_score(@presenter_sets)}\n"
       @time_slots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
