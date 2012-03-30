@@ -1,7 +1,9 @@
 class Session < ActiveRecord::Base
   has_many :categorizations, :dependent => :destroy
   has_many :categories, :through => :categorizations
-  belongs_to :participant
+  belongs_to :participant  # TODO: rename to 'owner'
+  has_many :presentations
+  has_many :presenters, :through => :presentations, :source => :participant
   belongs_to :event
   belongs_to :timeslot
   belongs_to :room

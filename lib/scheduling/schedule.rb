@@ -1,5 +1,4 @@
 require 'set'
-require './annealer'
 
 
 unless Array.method_defined?(:sample)
@@ -13,18 +12,42 @@ end
 
 module Scheduling
   class Schedule
+    
+    def self.build_sets(sessions, association_class)
+      # This brute force iteration is hardly slick, but I'm too rusty on fancy querying in Rails 2.3 to care just now. -PPC
+      by_participant = Hash.new { |h,k| h[k] = [] }
+      association_class.find(:all, :conditions => { :session_id => sessions }, :select => 'participant_id, session_id').each do |assoc|
+        by_participant[assoc.participant_id] << assoc.session_id
+      end
+      puts "#{by_participant.count} #{association_class.name.pluralize.humanize.downcase}"
+      by_participant.values
+    end
   
-    def initialize(sessions, time_slots, max_per_slot, interests, presenters)
-      @sessions, @time_slots, @max_per_slot, @interests, @presenters = sessions, time_slots, max_per_slot, interests, presenters
+    def initialize(*args)
+      if args.length == 1
+        event = args.first
+        @sessions = event.session_ids
+        @time_slots = event.timeslots
+        @max_per_slot = event.rooms.count
+        @attendance_sets = Schedule.build_sets @sessions, Attendance
+        @presenter_sets  = Schedule.build_sets @sessions, Presentation
+      elsif args.length == 5
+        @sessions, @time_slots, @max_per_slot, @attendance_sets, @presenter_sets = *args
+      else
+        raise ArgumentError, 'expected either 1 or 5 args'
+      end
     
       @slots_by_session = {}
       @sessions_by_slot = {}
-      unassigned = sessions.shuffle
+      unassigned = @sessions.shuffle
       @time_slots.each do |slot|
-        slot_sessions = unassigned.slice!(0, max_per_slot)
-        slot_sessions << Unassigned.new while slot_sessions.count < max_per_slot
+        slot_sessions = unassigned.slice!(0, @max_per_slot)
+        slot_sessions << Unassigned.new while slot_sessions.count < @max_per_slot
         slot_sessions.each { |session| @slots_by_session[session] = slot }
         @sessions_by_slot[slot] = slot_sessions
+      end
+      unless unassigned.empty?
+        raise "Not enough room / slot combinations! There are #{@sessions.count} sessions, but only #{@time_slots.count} times slots * #{@max_per_slot} rooms = #{@time_slots.count * @max_per_slot} combinations."
       end
     end
     
@@ -35,7 +58,7 @@ module Scheduling
     end
   
     def energy
-      overlap_score(@interests) + overlap_score(@presenters) * 50
+      overlap_score(@attendance_sets) + overlap_score(@presenter_sets) * @attendance_sets.count
     end
   
     def random_neighbor
@@ -59,16 +82,30 @@ module Scheduling
       
       self
     end
-  
+    
     def inspect
-      s = "Schedule  energy = #{self.energy}    presenter overlap = #{overlap_score(@presenters)}\n"
+      s = "Schedule   average participant can attend #{'%1.3f' % ((1 - self.energy) * 100)}% of their sessions of interest    presenter overlap = #{overlap_score(@presenter_sets)}\n"
       @time_slots.each do |slot|
-        s << "  #{slot}\n"
-        @sessions_by_slot[slot].each do |session|
-          s << "    #{session}\n"
-        end
+        s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
       s
+    end
+    
+    def assign_rooms_and_save!
+      Session.transaction do
+        rooms_by_capacity = Room.find :all, :order => 'capacity desc'
+        @sessions_by_slot.sort_by { |k,v| k.starts_at }.each do |slot_id, session_ids|
+          slot = Timeslot.find(slot_id)
+          puts slot
+          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.attendances.count }
+          sessions.zip(rooms_by_capacity) do |session, room|
+            puts "    #{session.categories.map(&:name).inspect} #{session.title} (#{session.attendances.count}) in #{room.name} (#{room.capacity})"
+            session.timeslot = slot
+            session.room = room
+            session.save!
+          end
+        end
+      end
     end
 
   private
@@ -106,30 +143,30 @@ end
 
 
 
-sched = Scheduling::Schedule.new(
-  %w(soup nuts penguins walruses monkeys chickens ocelots snowboarding windsurfing bobsledding glossolalia),
-  %w(9:00 10:00 11:00 12:00),
-  4,
-  [%w(soup nuts),
-   %w(penguins walruses monkeys chickens),
-   %w(snowboarding windsurfing),
-   %w(glossolalia nuts monkeys),
-   %w(soup nuts penguins walruses monkeys chickens ocelots snowboarding windsurfing bobsledding glossolalia),
-   %w(windsurfing walruses glossolalia ocelots),
-   %w(windsurfing monkeys),
-   %w(windsurfing nuts penguins),
-   %w(snowboarding ocelots monkeys),
-   %w(nuts ocelots chickens),
-   %w(snowboarding glossolalia),
-   %w(chickens soup),
-   %w(penguins soup),
-   %w(snowboarding walruses nuts)],
-  [%w(penguins snowboarding bobsledding),
-   %w(penguins ocelots)])
-
-p sched
-
-annealer = Scheduling::Annealer.new(:max_iter => 50000, :cooling_time => 100000000)
-best = annealer.anneal(sched)
-puts "BEST SOLUTION:"
-p best
+# sched = Scheduling::Schedule.new(
+#   %w(soup nuts penguins walruses monkeys chickens ocelots snowboarding windsurfing bobsledding glossolalia),
+#   %w(9:00 10:00 11:00 12:00),
+#   4,
+#   [%w(soup nuts),
+#    %w(penguins walruses monkeys chickens),
+#    %w(snowboarding windsurfing),
+#    %w(glossolalia nuts monkeys),
+#    %w(soup nuts penguins walruses monkeys chickens ocelots snowboarding windsurfing bobsledding glossolalia),
+#    %w(windsurfing walruses glossolalia ocelots),
+#    %w(windsurfing monkeys),
+#    %w(windsurfing nuts penguins),
+#    %w(snowboarding ocelots monkeys),
+#    %w(nuts ocelots chickens),
+#    %w(snowboarding glossolalia),
+#    %w(chickens soup),
+#    %w(penguins soup),
+#    %w(snowboarding walruses nuts)],
+#   [%w(penguins snowboarding bobsledding),
+#    %w(penguins ocelots)])
+# 
+# p sched
+# 
+# annealer = Scheduling::Annealer.new(:max_iter => 80000, :cooling_time => 10000000, :repetition_count => 3)
+# best = annealer.anneal(sched)
+# puts "BEST SOLUTION:"
+# p best

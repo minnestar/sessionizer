@@ -2,7 +2,7 @@ namespace :app do
   desc 'create default timeslots for the most recent event'
   task :create_timeslots => :environment do
     session_length = 50.minutes
-    event = Event.last
+    event = Event.current_event
 
     start_times = ["09:40",
                    "10:40",
@@ -21,7 +21,7 @@ namespace :app do
 
   desc 'create default rooms for most recent event'
   task :create_rooms => :environment do
-    event = Event.last
+    event = Event.current_event
 
     rooms = [{ :name => 'Harriet',
                :capacity => 100 },
@@ -44,4 +44,24 @@ namespace :app do
       event.rooms.create!(room)
     end
   end
+  
+  desc 'create a schedule for most recent event'
+  task :generate_schedule => :environment do
+    quality = ENV['quality'].to_f || 1
+    
+    event = Event.current_event
+    puts "Scheduling #{event.name}..."
+    
+    puts
+    puts "Assigning sessions to time slots..."
+    schedule = Scheduling::Schedule.new event
+    annealer = Scheduling::Annealer.new :max_iter => 100000 * quality, :cooling_time => 5000000 * quality, :repetition_count => 3
+    best = annealer.anneal schedule
+    puts "BEST SOLUTION:"
+    p best
+    best.assign_rooms_and_save!
+    puts
+    puts 'Congratulations. You have a schedule!'
+  end
 end
+

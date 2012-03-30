@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120326004834) do
+ActiveRecord::Schema.define(:version => 20120330060456) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "session_id",     :null => false
@@ -51,6 +51,13 @@ ActiveRecord::Schema.define(:version => 20120326004834) do
   end
 
   add_index "participants", ["email"], :name => "index_participants_on_email", :unique => true
+
+  create_table "presentations", :force => true do |t|
+    t.integer  "session_id"
+    t.integer  "participant_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "rooms", :force => true do |t|
     t.integer  "event_id",   :null => false
