@@ -34,6 +34,8 @@ module Scheduling
         @attendance_sets = Schedule.build_sets @sessions, Attendance
         @presenter_sets  = Schedule.build_sets @sessions, Presentation
         
+        raise 'No session-presenter relationships in DB. Did you populate the presentations table?' unless @presenter_sets.count > 0
+        
         # Presenters also attend their own sessions:
         @presenter_sets.each do |person, sessions|
           @attendance_sets[person] += sessions
