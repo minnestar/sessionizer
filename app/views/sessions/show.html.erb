@@ -5,7 +5,7 @@
   <% end %>
 <% end %>
 
-<p>By <%= link_to @session.participant.name, @session.participant %></p>
+<p>By <%= @session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %></p>
 
 
 <div class="row">
@@ -21,18 +21,22 @@
       <%= render :partial => 'category', :collection => @session.categories %>
     </ul>
 
-    <h3>About the presenter <% edit(@session.participant) do %><span class="edit">(This is you! <%= link_to 'Edit your bio', edit_participant_path(@session.participant) %>.)</span><% end %></h3>
+    <h3>About the <%= @session.presenters.count > 1 ? 'presenters' : 'presenter' %></h3>
 
+    <% @session.presenters.each do |presenter| %>
+    <% edit(presenter) do %>
+    <span class="edit">(This is you! <%= link_to 'Edit your bio', edit_participant_path(@session.participant) %>.)</span>
+    <% end %>
     
-    <% if @session.participant.bio.blank? %>
+    <% if presenter.bio.blank? %>
     <p>This person hasn't yet added a bio.</p>
+    <% else %>
+    <%= markdown(presenter.bio).html_safe %>
     <% end %>
 
-    <%= markdown(@session.participant.bio).html_safe %>
-
-    
-
- </div>
+    <hr>
+    <% end %>
+  </div>
 
   <div class="column grid_4">
     <div class="sidebar-box">
