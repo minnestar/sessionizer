@@ -17,12 +17,12 @@
 <div class="column grid_5">
   <h3>Presenting Sessions</h3>
 
-  <% if @participant.sessions.empty? %>
+  <% if @participant.sessions_presenting.empty? %>
     <p>This person isn't presenting any sessions.</p>
   <% end %>
 
   <ul>
-    <%= render :partial => 'session', :collection => @participant.sessions.for_current_event %>
+    <%= render :partial => 'session', :collection => @participant.sessions_presenting.for_current_event %>
   </ul>
 </div>
 
