@@ -68,9 +68,9 @@ namespace :app do
       participant = Participant.find_by_id(ENV["PARTICIPANT"])
     end
 
-    # for some reason Heroku chokes on an env named 'NAME'
-    if participant.nil? && ENV['PNAME']
-      participant = Participant.new(:name => ENV['PNAME'], :email => ENV['EMAIL'])
+    # NOTE! Heroku does NOT like env vars with spaces in them, even when quoted. Escape spaces with \
+    if participant.nil? && ENV['NAME']
+      participant = Participant.new(:name => ENV['NAME'], :email => ENV['EMAIL'])
 
       participant.save(false) # ignore missing email addy
 
