@@ -4,4 +4,7 @@
 class Presentation < ActiveRecord::Base
   belongs_to :session
   belongs_to :participant
+
+  validates_presence_of :session_id
+  validates_presence_of :participant_id
 end

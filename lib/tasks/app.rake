@@ -57,6 +57,29 @@ namespace :app do
       end
     end
   end
+
+  desc 'add a presenter to a session'
+  task :presenter => :environment do
+    session = Session.find(ENV['SESSION'])
+
+    if ENV['EMAIL']
+      participant = Participant.find_by_email(ENV['EMAIL'])
+    elsif ENV['PARTICIPANT']
+      participant = Participant.find_by_id(ENV["PARTICIPANT"])
+    end
+
+    if participant.nil? && ENV['NAME']
+      participant = Participant.new(:name => ENV['NAME'], :email => ENV['EMAIL'])
+
+      participant.save(false) # ignore missing email addy
+
+      puts "Created new participant #{participant.id}#{participant.email.blank? ? ' (without an email address!)' : ''}"
+    end
+
+    session.presentations.create!(:participant => participant)
+    puts "#{participant.name} (#{participant.id}) is now associated with #{session.title}"
+  end
+    
   
   desc 'create a schedule for most recent event'
   task :generate_schedule => :environment do
