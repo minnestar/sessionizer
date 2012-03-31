@@ -3,6 +3,7 @@ namespace :app do
   task :create_timeslots => :environment do
     session_length = 50.minutes
     event = Event.current_event
+    event.timeslots.destroy_all
 
     start_times = ["09:40",
                    "10:40",
@@ -19,9 +20,10 @@ namespace :app do
     end
   end
 
-  desc 'create default rooms for most recent event'
+  desc 'create default rooms for most recent event. Will nuke old rooms.'
   task :create_rooms => :environment do
     event = Event.current_event
+    event.rooms.destroy_all
 
     rooms = [{ :name => 'Harriet',
                :capacity => 100 },
@@ -29,19 +31,30 @@ namespace :app do
                :capacity => 100 },
              { :name => 'Nokomis',
                :capacity => 100 },
+             { :name => 'Minnetonka',
+               :capacity => 100 },
              { :name => 'Theater',
                :capacity => 250 },
              { :name => 'Proverb-Edison',
                :capacity => 60 },
-             { :name => 'Emerson',
+             { :name => 'Landers',
                :capacity => 40 },
              { :name => 'Learn',
                :capacity => 24 },
-             { :name => 'Texas',
-               :capacity => 20 }]
-
+             { :name => 'Challenge',
+               :capacity => 24 }]
+t
     rooms.each do |room|
       event.rooms.create!(room)
+    end
+  end
+
+  desc 'add a Presentation for each Session with the session owner, if it does not have one'
+  task :presentationize => :environment do
+    Session.all.each do |session|
+      if session.presentations.empty?
+        session.presentations.create!(:participant => session.participant)
+      end
     end
   end
   

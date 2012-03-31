@@ -1,6 +1,6 @@
 class Room < ActiveRecord::Base
   belongs_to :event
-  has_many :sessions
+  has_many :sessions, :dependent => :nullify
 
   validates_numericality_of :capacity, :greater_than => 0, :only_integer => true
   validates_presence_of :event_id
