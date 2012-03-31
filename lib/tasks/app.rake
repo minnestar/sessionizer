@@ -43,7 +43,7 @@ namespace :app do
                :capacity => 24 },
              { :name => 'Challenge',
                :capacity => 24 }]
-t
+
     rooms.each do |room|
       event.rooms.create!(room)
     end
