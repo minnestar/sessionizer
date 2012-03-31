@@ -68,8 +68,9 @@ namespace :app do
       participant = Participant.find_by_id(ENV["PARTICIPANT"])
     end
 
-    if participant.nil? && ENV['NAME']
-      participant = Participant.new(:name => ENV['NAME'], :email => ENV['EMAIL'])
+    # for some reason Heroku chokes on an env named 'NAME'
+    if participant.nil? && ENV['PNAME']
+      participant = Participant.new(:name => ENV['PNAME'], :email => ENV['EMAIL'])
 
       participant.save(false) # ignore missing email addy
 
