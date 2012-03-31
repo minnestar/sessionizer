@@ -41,13 +41,13 @@
         <% if !@session.attending?(current_participant) %>
         <h3>Interested in this session?</h3>
   
-        <p><%= link_to 'Attend this session', '#', :id => 'attend' %></p>
+        <p><%= link_to "Yes! I might attend.", '#', :id => 'attend' %></p>
 
-        <p>This will add your name to the list of interested participants. You do not have to attend, but it will help us guage interest for scheduling purposes.</p>
+        <p>This will add your name to the list of interested participants. It will help us guage interest for scheduling purposes.</p>
         <% end %>
       </div>
 
-      <h3>Participants</h3>
+      <h3>Interested Participants</h3>
 
       <% if @session.participants.empty? %>
         <div id="no-participants">
