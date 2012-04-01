@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120330060456) do
+ActiveRecord::Schema.define(:version => 20120401214321) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "session_id",     :null => false
@@ -58,6 +58,16 @@ ActiveRecord::Schema.define(:version => 20120330060456) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "presenter_timeslot_restrictions", :force => true do |t|
+    t.integer  "participant_id"
+    t.integer  "timeslot_id"
+    t.float    "weight"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "presenter_timeslot_restrictions", ["timeslot_id", "participant_id"], :name => "present_timeslot_participant_unique", :unique => true
 
   create_table "rooms", :force => true do |t|
     t.integer  "event_id",   :null => false

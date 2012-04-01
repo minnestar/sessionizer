@@ -1,6 +1,7 @@
 class Timeslot < ActiveRecord::Base
   belongs_to :event
   has_many :sessions, :dependent => :nullify
+  has_many :presenter_timeslot_restrictions
   
   validates_presence_of :starts_at
   validates_presence_of :ends_at

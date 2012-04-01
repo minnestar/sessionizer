@@ -24,40 +24,41 @@ module Scheduling
       session_set
     end
   
-    def initialize(*args)
-      if args.length == 1
-        event = args.first
-        @sessions = event.session_ids
-        @time_slots = event.timeslots
-        @max_per_slot = event.rooms.count
-        
-        @attendance_sets = Schedule.build_sets @sessions, Attendance
-        @presenter_sets  = Schedule.build_sets @sessions, Presentation
-        
-        raise 'No session-presenter relationships in DB. Did you populate the presentations table?' unless @presenter_sets.count > 0
-        
-        # Presenters also attend their own sessions:
-        @presenter_sets.each do |person, sessions|
-          @attendance_sets[person] += sessions
-          @attendance_sets[person].uniq!
-        end
-      elsif args.length == 5
-        @sessions, @time_slots, @max_per_slot, @attendance_sets, @presenter_sets = *args
-      else
-        raise ArgumentError, 'expected either 1 or 5 args'
+    def initialize(event)
+      @sessions = event.session_ids
+      @timeslots = event.timeslots
+      @max_per_slot = event.rooms.count
+      
+      @attendance_sets = Schedule.build_sets @sessions, Attendance    # These are both maps from participant_id to array of session_ids
+      @presenter_sets  = Schedule.build_sets @sessions, Presentation
+      
+      raise 'No session-presenter relationships in DB. Did you populate the presentations table?' unless @presenter_sets.count > 0
+      
+      # Presenters also attend their own sessions, which isn't necessarily reflected in the attendances:
+      @presenter_sets.each do |person, sessions|
+        @attendance_sets[person] += sessions
+        @attendance_sets[person].uniq!
       end
-    
-      @slots_by_session = {}
-      @sessions_by_slot = {}
+      
+      @timeslot_restrictions = {}
+      event.presenter_timeslot_restrictions.each do |ptsr|
+        @timeslot_restrictions[[ptsr.participant_id, ptsr.timeslot_id]] = ptsr.weight
+      end
+      p @timeslot_restrictions
+      
+      # Create a random schedule to start
+      
+      @slots_by_session = {}  # map from session_id to timeslot
+      @sessions_by_slot = {}  # map from timeslot to array of session_ids
       unassigned = @sessions.shuffle
-      @time_slots.each do |slot|
+      @timeslots.each do |slot|
         slot_sessions = unassigned.slice!(0, @max_per_slot)
         slot_sessions << Unassigned.new while slot_sessions.count < @max_per_slot
         slot_sessions.each { |session| @slots_by_session[session] = slot }
         @sessions_by_slot[slot] = slot_sessions
       end
       unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{@sessions.count} sessions, but only #{@time_slots.count} times slots * #{@max_per_slot} rooms = #{@time_slots.count * @max_per_slot} combinations."
+        raise "Not enough room / slot combinations! There are #{@sessions.count} sessions, but only #{@timeslots.count} times slots * #{@max_per_slot} rooms = #{@timeslots.count * @max_per_slot} combinations."
       end
     end
     
@@ -67,8 +68,18 @@ module Scheduling
       @slots_by_session.each { |session, slot| @sessions_by_slot[slot] << session }
     end
   
+    # This is the metric we're trying to minimize. It's called "energy" in simulated annealing by analogy to the
+    # real-life physical process of annealing, in which a cooling material minimizes the energy of its chemical bonds.
     def energy
-      overlap_score(@attendance_sets) + overlap_score(@presenter_sets) * @attendance_sets.count
+       attendance_energy + presenter_energy
+    end
+    
+    def attendance_energy
+      overlap_score(@attendance_sets)
+    end
+    
+    def presenter_energy
+      overlap_score(@presenter_sets, @timeslot_restrictions) * @attendance_sets.count
     end
   
     def random_neighbor
@@ -77,9 +88,9 @@ module Scheduling
     
     def random_neighbor!
       # Choose 2 or more random sessions in distinct time slots
-      k = 1.0 / (@time_slots.size - 1)
+      k = 1.0 / (@timeslots.size - 1)
       cycle_size = 1 + ((1 + k) / (rand + k)).floor
-      slot_cycle = @time_slots.shuffle.slice(0, cycle_size)
+      slot_cycle = @timeslots.shuffle.slice(0, cycle_size)
       session_cycle = slot_cycle.map { |slot| @sessions_by_slot[slot].sample }
       
       # Rotate their assignments
@@ -95,9 +106,9 @@ module Scheduling
     
     def inspect
       s = "Schedule"
-      s << " | average participant can attend #{'%1.3f' % ((1 - overlap_score(@attendance_sets)) * 100)}% of their sessions of interest"
-      s << " | presenter overlap = #{overlap_score(@presenter_sets)}\n"
-      @time_slots.each do |slot|
+      s << " | average participant can attend #{'%1.3f' % ((1 - attendance_energy) * 100)}% of their sessions of interest"
+      s << " | presenter exclusion score = #{presenter_energy} (we want zero)\n"
+      @timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
       s
@@ -128,19 +139,21 @@ module Scheduling
       end
     end
     
-    def overlap_score(session_sets)
+    def overlap_score(session_sets, slot_penalties = {})
       return 0 if session_sets.empty?
       
       score = 0
       slots_used = Set.new
       
-      session_sets.each do |person, set|
+      session_sets.each do |participant_id, set|
         next if set.empty?
         overlaps = 0
         set.each do |session|
-          unless slots_used.add? @slots_by_session[session]
+          slot = @slots_by_session[session]
+          unless slots_used.add? slot
             overlaps += 1
           end
+          overlaps += slot_penalties[[participant_id, slot.id]] || 0
         end
         slots_used.clear
         score += overlaps / set.count.to_f
