@@ -84,7 +84,7 @@ namespace :app do
   
   desc 'create a schedule for most recent event'
   task :generate_schedule => :environment do
-    quality = ENV['quality'].to_f || 1
+    quality = (ENV['quality'] || 1).to_f
     
     event = Event.current_event
     puts "Scheduling #{event.name}..."
