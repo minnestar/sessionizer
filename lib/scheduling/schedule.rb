@@ -13,56 +13,27 @@ end
 
 module Scheduling
   class Schedule
-    
-    def self.build_sets(sessions, association_class)
-      # This brute force iteration is hardly slick, but I'm too rusty on fancy querying in Rails 2.3 to care just now. -PPC
-      session_set = Hash.new { |h,k| h[k] = [] }
-      association_class.find(:all, :conditions => { :session_id => sessions }, :select => 'participant_id, session_id').each do |assoc|
-        session_set[assoc.participant_id] << assoc.session_id
-      end
-      puts "#{session_set.count} #{association_class.name.pluralize.humanize.downcase}"
-      session_set
-    end
-  
     def initialize(event)
-      @sessions = event.session_ids
-      @timeslots = event.timeslots
-      @max_per_slot = event.rooms.count
+      @ctx = Scheduling::Context.new(event)
       
-      @attendance_sets = Schedule.build_sets @sessions, Attendance    # These are both maps from participant_id to array of session_ids
-      @presenter_sets  = Schedule.build_sets @sessions, Presentation
-      
-      raise 'No session-presenter relationships in DB. Did you populate the presentations table?' unless @presenter_sets.count > 0
-      
-      # Presenters also attend their own sessions, which isn't necessarily reflected in the attendances:
-      @presenter_sets.each do |person, sessions|
-        @attendance_sets[person] += sessions
-        @attendance_sets[person].uniq!
-      end
-      
-      @timeslot_restrictions = {}
-      event.presenter_timeslot_restrictions.each do |ptsr|
-        @timeslot_restrictions[[ptsr.participant_id, ptsr.timeslot_id]] = ptsr.weight
-      end
-      p @timeslot_restrictions
+      @slots_by_session = {}                            # map from session to timeslot
+      @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
       
       # Create a random schedule to start
       
-      @slots_by_session = {}  # map from session_id to timeslot
-      @sessions_by_slot = {}  # map from timeslot to array of session_ids
-      unassigned = @sessions.shuffle
-      @timeslots.each do |slot|
-        slot_sessions = unassigned.slice!(0, @max_per_slot)
-        slot_sessions << Unassigned.new while slot_sessions.count < @max_per_slot
-        slot_sessions.each { |session| @slots_by_session[session] = slot }
-        @sessions_by_slot[slot] = slot_sessions
+      unassigned = ctx.sessions.shuffle
+      room_count = ctx.rooms.count
+      ctx.timeslots.each do |slot|
+        slot_sessions = unassigned.slice!(0, room_count)
+        slot_sessions << Unassigned.new while slot_sessions.count < room_count
+        slot_sessions.each { |session| reschedule(session, slot)  }
       end
       unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{@sessions.count} sessions, but only #{@timeslots.count} times slots * #{@max_per_slot} rooms = #{@timeslots.count * @max_per_slot} combinations."
+        raise "Not enough room / slot combinations! There are #{ctx.sessions.count} sessions, but only #{ctx.timeslots.count} times slots * #{room_count} rooms = #{ctx.timeslots.count * room_count} combinations."
       end
     end
     
-    def initialize_copy(source)
+    def initialize_copy(source)  # deep copy; called by dup
       @slots_by_session = @slots_by_session.dup
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }
       @slots_by_session.each { |session, slot| @sessions_by_slot[slot] << session }
@@ -75,11 +46,11 @@ module Scheduling
     end
     
     def attendance_energy
-      overlap_score(@attendance_sets)
+      overlap_score :attendees
     end
     
     def presenter_energy
-      overlap_score(@presenter_sets, @timeslot_restrictions) * @attendance_sets.count
+      overlap_score(:presenters) * ctx.attendee_count
     end
   
     def random_neighbor
@@ -88,35 +59,22 @@ module Scheduling
     
     def random_neighbor!
       # Choose 2 or more random sessions in distinct time slots
-      k = 1.0 / (@timeslots.size - 1)
+      k = 1.0 / (ctx.timeslots.size - 1)
       cycle_size = 1 + ((1 + k) / (rand + k)).floor
-      slot_cycle = @timeslots.shuffle.slice(0, cycle_size)
-      session_cycle = slot_cycle.map { |slot| @sessions_by_slot[slot].sample }
+      slot_cycle = ctx.timeslots.shuffle.slice(0, cycle_size)
       
       # Rotate their assignments
-      session_cycle.each_with_index do |session, i|
-        old_slot, new_slot = slot_cycle[i], slot_cycle[(i+1) % slot_cycle.count]
-        @slots_by_session[session] = new_slot
-        @sessions_by_slot[old_slot].delete session
-        @sessions_by_slot[new_slot] << session
+      slot_cycle.each_with_index do |old_slot, i|
+        new_slot = slot_cycle[(i+1) % slot_cycle.count]
+        reschedule @sessions_by_slot[old_slot].sample, new_slot
       end
       
       self
     end
     
-    def inspect
-      s = "Schedule"
-      s << " | average participant can attend #{'%1.3f' % ((1 - attendance_energy) * 100)}% of their sessions of interest"
-      s << " | presenter exclusion score = #{presenter_energy} (we want zero)\n"
-      @timeslots.each do |slot|
-        s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
-      end
-      s
-    end
-    
     def assign_rooms_and_save!
       Session.transaction do
-        rooms_by_capacity = Room.find :all, :order => 'capacity desc'
+        rooms_by_capacity = ctx.rooms.sort_by { |r| -r.capacity }
         @sessions_by_slot.sort_by { |k,v| k.starts_at }.each do |slot_id, session_ids|
           slot = Timeslot.find(slot_id)
           puts slot
@@ -130,37 +88,63 @@ module Scheduling
         end
       end
     end
-
+    
+    def inspect
+      s = "Schedule"
+      s << " | average participant can attend #{'%1.3f' % ((1 - attendance_energy) * 100)}% of their sessions of interest"
+      s << " | presenter exclusion score = #{presenter_energy} (we want zero)\n"
+      ctx.timeslots.each do |slot|
+        s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
+      end
+      s
+    end
+    
   private
 
+    attr_reader :ctx
+    
+    def overlap_score(role)
+      
+      score = 0.0
+      slots_used = Set.new
+      
+      count = ctx.each_session_set(role) do |participant, session_set, penalty_callback|
+        next if session_set.empty?  # prevents divide by zero
+        
+        slots_used.clear
+        overlaps = 0
+        session_set.each do |session|
+          slot = @slots_by_session[session]
+          unless slots_used.add? slot
+            overlaps += 1
+          end
+          overlaps += penalty_callback.call(slot)
+        end
+        
+        score += overlaps / session_set.count.to_f
+      end
+      
+      if count == 0
+        0
+      else
+        score / count
+      end
+    end
+
+    def reschedule(session, new_slot)
+      old_slot = @slots_by_session[session]
+      @sessions_by_slot[old_slot].delete(session) if old_slot
+      
+      @slots_by_session[session] = new_slot
+      @sessions_by_slot[new_slot] << session if new_slot
+    end
+    
     class Unassigned
       def to_s
         "<< open >>"
       end
     end
-    
-    def overlap_score(session_sets, slot_penalties = {})
-      return 0 if session_sets.empty?
-      
-      score = 0
-      slots_used = Set.new
-      
-      session_sets.each do |participant_id, set|
-        next if set.empty?
-        overlaps = 0
-        set.each do |session|
-          slot = @slots_by_session[session]
-          unless slots_used.add? slot
-            overlaps += 1
-          end
-          overlaps += slot_penalties[[participant_id, slot.id]] || 0
-        end
-        slots_used.clear
-        score += overlaps / set.count.to_f
-      end
-      
-      score / session_sets.count
-    end
+
   end
 end
 

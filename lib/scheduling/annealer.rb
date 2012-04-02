@@ -15,7 +15,18 @@ module Scheduling
       
       @repetition_count = opts[:repetition_count] || 1
     end
-  
+    
+    # Given a (probably random) starting state, returns a state that approximately minimizes an arbitrary "energy" metric.
+    #
+    # The given start_state must respond to:
+    #  - *energy*: Returns the metric you want to optimize.
+    #  - *random_neighbor*:
+    #      Returns a randomly selected new state which differs slightly from this one.
+    #      This method _must not modify_ the original state, but instead return a clean copy.
+    #      You must ensure that the entire state space you want to search is reachable by hopping from neighbor to
+    #      neighbor. Ideally, the new state should be likely to have similar energy (i.e. "neighbors" should be small changes);
+    #      at the same time, you don't want it to require too many hops between any two states.
+    #
     def anneal(start_state)
       best_state = nil
       best_energy = 1 / 0.0
@@ -23,7 +34,7 @@ module Scheduling
       
       @repetition_count.times do |rep|
         puts "Repetition #{rep}..." if @repetition_count > 1
-        state = start_state.dup
+        state = start_state
         
         iter_count = 0
         while !@stop_condition.call(iter_count, best_energy)
