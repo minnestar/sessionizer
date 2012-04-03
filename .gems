@@ -3,3 +3,4 @@ recaptcha --version '= 0.2.3'
 rails --version '2.3.11'
 dalli
 fastercsv
+ri_cal
