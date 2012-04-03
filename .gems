@@ -1,6 +1,6 @@
 bluecloth --version '= 2.0.7'
 recaptcha --version '= 0.2.3'
 rails --version '2.3.11'
-dalli
-fastercsv
-ri_cal
+dalli --version '1.0.3'
+fastercsv --version '1.5.4'
+ri_cal --version '0.8.8'
