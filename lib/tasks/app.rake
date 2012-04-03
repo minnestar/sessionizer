@@ -86,7 +86,12 @@ namespace :app do
     hour = ENV["HOUR"].split(':')
     time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
     presenter = Participant.find(ENV['PARTICIPANT_ID'])
-    presenter.restrict_after(time)
+
+    if ENV['BEFORE']
+      presenter.restrict_before(time)
+    else
+      presenter.restrict_after(time)
+    end
   end
     
   
