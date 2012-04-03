@@ -23,10 +23,18 @@ class Session < ActiveRecord::Base
   # TODO: attr_accessible?
   attr_protected :event_id, :timeslot_id, :participant_id, :room_id
 
-  def presenter_names
-    presenters.map(&:name)
+  def self.swap_rooms(session_1, session_2)
+    if session_1.timeslot != session_2.timeslot
+      raise "Sessions must be in the same timeslot to swap"
+    end
+    
+    Session.transaction do
+      session_1.room, session_2.room = session_2.room, session_1.room
+      session_1.save
+      session_2.save
+    end
   end
-
+  
   def self.attendee_preferences
     result = {}
     sessions = Event.current_event.sessions.all(:include => :participants)
@@ -50,6 +58,11 @@ class Session < ActiveRecord::Base
       Recommender.calculate_similar_items(preferences, 5)
     end
   end
+
+  def presenter_names
+    presenters.map(&:name)
+  end
+
 
   def attending?(user)
     return false if user.nil?
