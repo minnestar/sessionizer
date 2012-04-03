@@ -12,6 +12,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'user_sessions', :action => 'create', :conditions => {:method => :post}
 
   map.schedule '/schedule', :controller => 'schedules', :action => 'index'
+  map.schedule_ics '/schedule.ics', :controller => 'schedules', :action => 'ical'
 
   map.namespace :admin do |admin|
     admin.resources :sessions

@@ -23,6 +23,10 @@ class Session < ActiveRecord::Base
   # TODO: attr_accessible?
   attr_protected :event_id, :timeslot_id, :participant_id, :room_id
 
+  def presenter_names
+    presenters.map(&:name)
+  end
+
   def self.attendee_preferences
     result = {}
     sessions = Event.current_event.sessions.all(:include => :participants)

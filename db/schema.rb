@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120401214321) do
+ActiveRecord::Schema.define(:version => 20120403022345) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "session_id",     :null => false
@@ -92,10 +92,10 @@ ActiveRecord::Schema.define(:version => 20120401214321) do
 
   create_table "timeslots", :force => true do |t|
     t.integer  "event_id",   :null => false
-    t.time     "starts_at",  :null => false
-    t.time     "ends_at",    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
   end
 
 end

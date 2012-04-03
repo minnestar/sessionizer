@@ -14,9 +14,8 @@ namespace :app do
                    "16:40"]
 
     start_times.each do |st|
-      event.timeslots.create!(:starts_at => st) do |obj|
-        obj.ends_at = obj.starts_at + 50.minutes
-      end
+      starts = Time.zone.parse("#{event.date.to_s} #{st}")
+      event.timeslots.create!(:starts_at => starts, :ends_at => starts + session_length)
     end
   end
 

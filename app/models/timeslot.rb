@@ -10,6 +10,6 @@ class Timeslot < ActiveRecord::Base
   default_scope :order => 'starts_at asc'
 
   def to_s
-    "#{starts_at.to_s(:hhmm)} - #{ends_at.to_s(:hhmm)}"
+    "#{starts_at.in_time_zone.to_s(:hhmm)} - #{ends_at.in_time_zone.to_s(:hhmm)}"
   end
 end
