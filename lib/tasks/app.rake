@@ -79,6 +79,15 @@ namespace :app do
     session.presentations.create!(:participant => participant)
     puts "#{participant.name} (#{participant.id}) is now associated with #{session.title}"
   end
+
+  desc "restrict a presenter's timeslots"
+  task :restrict => :environment do
+    d = Event.current_event.date
+    hour = ENV["HOUR"].split(':')
+    time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
+    presenter = Participant.find(ENV['PARTICIPANT_ID'])
+    presenter.restrict_after(time)
+  end
     
   
   desc 'create a schedule for most recent event'

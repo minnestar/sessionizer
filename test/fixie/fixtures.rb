@@ -1,8 +1,25 @@
 require File.dirname(__FILE__) + "/../../db/seeds"
 
+today = Date.today
+
 current_event = Event.fixie(:current_event,
                             :name => "Current Event",
-                            :date => Date.today)
+                            :date => today)
+
+Timeslot.fixie(:timeslot_1,
+               :event => current_event,
+               :starts_at => Time.zone.local(today.year, today.month, today.day, 9),
+               :ends_at => Time.zone.local(today.year, today.month, today.day, 9, 50))
+
+Timeslot.fixie(:timeslot_2,
+               :event => current_event,
+               :starts_at => Time.zone.local(today.year, today.month, today.day, 10),
+               :ends_at => Time.zone.local(today.year, today.month, today.day, 10, 50))
+
+Timeslot.fixie(:timeslot_3,
+               :event => current_event,
+               :starts_at => Time.zone.local(today.year, today.month, today.day, 11),
+               :ends_at => Time.zone.local(today.year, today.month, today.day, 11, 50))
 
 luke = Participant.fixie(:luke,
                          :email => "look@recursion.org",
