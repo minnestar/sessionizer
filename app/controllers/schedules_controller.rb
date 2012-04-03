@@ -25,6 +25,7 @@ class SchedulesController < ApplicationController
         
         cal.event do |entry|
           entry.summary = session.title
+          entry.description = session.presenter_names.to_sentence
           entry.dtstart = session.timeslot.starts_at
           entry.dtend = session.timeslot.ends_at
           entry.location = session.room.name
