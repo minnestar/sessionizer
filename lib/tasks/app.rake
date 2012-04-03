@@ -87,10 +87,12 @@ namespace :app do
     time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
     presenter = Participant.find(ENV['PARTICIPANT_ID'])
 
+    weight = ENV['WEIGHT'] || 1
+
     if ENV['BEFORE']
-      presenter.restrict_before(time)
+      presenter.restrict_before(time, weight)
     else
-      presenter.restrict_after(time)
+      presenter.restrict_after(time, weight)
     end
   end
     
