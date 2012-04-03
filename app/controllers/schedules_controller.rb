@@ -21,6 +21,8 @@ class SchedulesController < ApplicationController
     sessions = event.sessions.all(:include => [:room, :timeslot])
     calendar = RiCal.Calendar do |cal|
       sessions.each do |session|
+        next if session.timeslot.nil?
+        
         cal.event do |entry|
           entry.summary = session.title
           entry.dtstart = session.timeslot.starts_at
