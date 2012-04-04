@@ -13,7 +13,7 @@ Rails::Initializer.run do |config|
   config.gem "recaptcha", :lib => "recaptcha/rails"
   config.gem 'dalli'
   config.gem 'fastercsv'
-  config.gem 'ri_cal'
+  config.gem 'icalendar'
 
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
