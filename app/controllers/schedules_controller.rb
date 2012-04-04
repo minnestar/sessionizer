@@ -50,13 +50,13 @@ class SchedulesController < ApplicationController
       cal.event do
         summary session.title
         description session.presenter_names.to_sentence
-        dtstart     session.timeslot.starts_at
-        dtend       session.timeslot.ends_at
+        dtstart     session.timeslot.starts_at.to_datetime
+        dtend       session.timeslot.ends_at.to_datetime
         location    session.room.name
       end
     end
 
-    render :text => calendar.to_s, :content_type => 'text/calendar'
+    render :text => cal.to_ical, :content_type => 'text/calendar'
   end
 
 end
