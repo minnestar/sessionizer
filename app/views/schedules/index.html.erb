@@ -1,24 +1,20 @@
-<table>
-  <tr>
-    <th></th>
-    <% @rooms.each do |room| %>
-    <th><%= room.name %></th>
+<% @event.timeslots.each do |slot| %>
+  <div class='timeslot'>
+    <h1><%= slot.starts_at.in_time_zone.to_s(:hhmm) %></h1>
+    <% slot.sessions.each do |session| %>
+      <div class='session'>
+        <h2><%= session.title %></h2>
+        <div class='room'>
+          <%= session.room.name %>
+        </div>
+        <% session.presenters.each do |presenter| %>
+          <%= presenter.name %>
+        <% end %>
+        <div class='description'>
+          <%= markdown(session.description).html_safe %>
+        </div>
+      </div>
     <% end %>
-  </tr>
-  <% @timeslots.each do |timeslot| %>
-  <tr>
-    <td><%= timeslot.to_s %></td>
-    <% @rooms.each do |room| %>
+  </div>
+<% end %>
 
-    <td>
-      <% if @sessions[timeslot][room] %>
-        <%= link_to @sessions[timeslot][room].title, @sessions[timeslot][room] %><br>
-        <%= @sessions[timeslot][room].presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %>
-      <% else %>
-        OPEN
-      <% end %>
-    </td>
-    <% end %>
-  </tr>
-  <% end %>
-</table>
