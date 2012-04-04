@@ -1,0 +1,52 @@
+.schedule
+  .timeslot
+    h1
+      color: white
+      background: #999
+      margin: 0.3em 0
+      font-weight: bold
+      padding: 0.24em 1ex
+      border-top: 1px solid #888
+      border-bottom: 1px solid #888
+    .sessions
+      clear: both
+      
+      .session
+        clear: left
+        padding: 0.6em 1ex
+        border-bottom: 1px solid #DDD
+        &:last-child
+          border: none
+        h2
+          color: #111
+          font-weight: bold
+          padding: 0
+          margin: 0.16em 0
+          font-size: 1.2em
+        .room
+          float: right
+          font-size: 0.9em
+          padding-top: 0.2em
+          color: #87b090
+        .detail
+          color: #999
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          .presenters
+            display: inline
+            .presenter
+              display: inline
+              color: #333
+              &:after
+                content: ','
+              &:last-child:after
+                content: ''
+          .summary
+            display: inline
+            padding-left: 1ex
+            margin: 0
+        .description
+          display: none
+          p
+            margin: 0.6em 0

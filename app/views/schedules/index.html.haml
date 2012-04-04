@@ -1,0 +1,24 @@
+.schedule
+  - @event.timeslots.each do |slot|
+    .timeslot
+      %h1
+        = slot.starts_at.in_time_zone.to_s(:hhmm)
+        &ndash;
+        = slot.ends_at.in_time_zone.to_s(:hhmm)
+  
+      .sessions
+        - slot.sessions.sort_by { |s| -s.room.capacity }.each do |session|
+      
+          .session
+            .room= session.room.name
+        
+            %h2= session.title
+          
+            .detail
+              .presenters
+                - session.presenters.each do |presenter|
+                  .presenter= presenter.name
+              .summary= session.summary
+          
+            .description
+              = markdown(session.description).html_safe

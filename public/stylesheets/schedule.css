@@ -1,0 +1,49 @@
+.schedule .timeslot h1 {
+  color: white;
+  background: #999999;
+  margin: 0.3em 0;
+  font-weight: bold;
+  padding: 0.24em 1ex;
+  border-top: 1px solid #888888;
+  border-bottom: 1px solid #888888; }
+.schedule .timeslot .sessions {
+  clear: both; }
+  .schedule .timeslot .sessions .session {
+    clear: left;
+    padding: 0.6em 1ex;
+    border-bottom: 1px solid #dddddd; }
+    .schedule .timeslot .sessions .session:last-child {
+      border: none; }
+    .schedule .timeslot .sessions .session h2 {
+      color: #111111;
+      font-weight: bold;
+      padding: 0;
+      margin: 0.16em 0;
+      font-size: 1.2em; }
+    .schedule .timeslot .sessions .session .room {
+      float: right;
+      font-size: 0.9em;
+      padding-top: 0.2em;
+      color: #87b090; }
+    .schedule .timeslot .sessions .session .detail {
+      color: #999999;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+      .schedule .timeslot .sessions .session .detail .presenters {
+        display: inline; }
+        .schedule .timeslot .sessions .session .detail .presenters .presenter {
+          display: inline;
+          color: #333333; }
+          .schedule .timeslot .sessions .session .detail .presenters .presenter:after {
+            content: ","; }
+          .schedule .timeslot .sessions .session .detail .presenters .presenter:last-child:after {
+            content: ""; }
+      .schedule .timeslot .sessions .session .detail .summary {
+        display: inline;
+        padding-left: 1ex;
+        margin: 0; }
+    .schedule .timeslot .sessions .session .description {
+      display: none; }
+      .schedule .timeslot .sessions .session .description p {
+        margin: 0.6em 0; }
