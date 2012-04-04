@@ -6,5 +6,9 @@ class Admin::SessionsController < Admin::AdminController
       redirect_to admin_sessions_path
     end
   end
+
+  def current_objects
+    @current_objects ||= Event.current_event.sessions
+  end
   
 end
