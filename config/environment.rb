@@ -8,6 +8,8 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   config.gem 'erubis'
+  config.gem 'haml'
+  config.gem 'sass'
   config.gem 'formtastic'
   config.gem 'bluecloth', '>= 2.0.7'
   config.gem "recaptcha", :lib => "recaptcha/rails"

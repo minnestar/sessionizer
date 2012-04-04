@@ -2,3 +2,4 @@ log/*
 .git
 syntax:glob
 *.orig
+tmp/*
