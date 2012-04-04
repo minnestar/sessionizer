@@ -6,7 +6,7 @@ class Event < ActiveRecord::Base
   
   validates_presence_of :name, :date
 
-  def self.current_event
-    @current_event ||= Event.last(:order => :date)
+  def self.current_event(opts = {})
+    @current_event ||= Event.last(opts.reverse_merge(:order => :date))
   end
 end
