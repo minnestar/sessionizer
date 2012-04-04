@@ -37,9 +37,11 @@ class SchedulesController < ApplicationController
       
       cal.event do
         summary session.title
-        description session.presenter_names.to_sentence
+        organizer   "", :CN => session.presenter_names.join("\\, ")
+        description session.summary
         dtstart     session.timeslot.starts_at.to_datetime
         dtend       session.timeslot.ends_at.to_datetime
+
         location    session.room.name
       end
     end
