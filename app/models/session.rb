@@ -17,6 +17,7 @@ class Session < ActiveRecord::Base
   validates_presence_of :participant_id
   validates_presence_of :title
   validates_presence_of :description
+  validates_length_of :summary, :maximum => 100
 
   attr_accessor :name, :email
 
