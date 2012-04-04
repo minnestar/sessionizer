@@ -1,17 +1,17 @@
 namespace :app do
   desc 'create default timeslots for the most recent event'
   task :create_timeslots => :environment do
-    session_length = 50.minutes
+    session_length = 45.minutes
     event = Event.current_event
     event.timeslots.destroy_all
 
     start_times = ["09:40",
                    "10:40",
                    "11:40",
-                   "13:40",
-                   "14:40",
-                   "15:40",
-                   "16:40"]
+                   "13:50",
+                   "14:50",
+                   "15:50",
+                   "16:50"]
 
     start_times.each do |st|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
@@ -85,7 +85,7 @@ namespace :app do
     d = Event.current_event.date
     hour = ENV["HOUR"].split(':')
     time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
-    presenter = Participant.find(ENV['PARTICIPANT_ID'])
+    presenter = Participant.find(ENV['PARTICIPANT'])
 
     weight = ENV['WEIGHT'] || 1
 
