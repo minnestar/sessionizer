@@ -8,7 +8,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        render :json => @event.to_json(:include => { :sessions => { :include => { :participant => { :except => :email } } } } )
+        render :json => @event.to_json(:include => { :sessions => { :methods => [:starts_at, :room_name, :presenter_names] } } )
       end
     end
   end
