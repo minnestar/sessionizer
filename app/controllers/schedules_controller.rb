@@ -1,6 +1,7 @@
 class SchedulesController < ApplicationController
   def index
     @event = Event.current_event :include => { :timeslots => { :sessions => [:room, :presenters] } }
+    render :layout => 'schedule'
   end
 
   def ical

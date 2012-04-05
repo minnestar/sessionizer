@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= csrf_meta_tag %>
+    <title><%= h(yield(:title) || "Untitled") %></title>
+    <%= stylesheet_link_tag 'grid', 'schedule' %>
+
+    <%= yield(:head) %>
+  </head>
+  <body>
+     
+    <%= yield %>
+
+  </body>
+</html>

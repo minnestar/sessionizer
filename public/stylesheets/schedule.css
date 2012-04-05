@@ -1,0 +1,25 @@
+body {
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial';
+}
+
+div.timeslot {
+    margin-bottom: 0.1em;
+    padding-bottom: 0.9em;
+    border-bottom: 1px dashed gray;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 0px;
+}
+
+h2 small {
+    font-size: 75%;
+    color: gray;
+    font-family: 'HelveticaNeue-Light', 'Helvetica', 'Arial';
+    font-weight: normal;
+}
+
+div.presenter {
+    margin-bottom: 10px;
+}
