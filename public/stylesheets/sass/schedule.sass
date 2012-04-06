@@ -3,7 +3,7 @@
   padding: 0
   
   .schedule-header
-    padding: 2em 2%
+    padding: 2em
     background: #f0f0f0
     h1
       margin: 0
@@ -22,9 +22,10 @@
     
     .controls
       float: right
-      margin-top: 1ex
       a
-        margin: 1em
+        display: block
+        float: right
+        margin-right: 1em
         padding: 1ex 1em
         border-radius: 2em
         border: 1px solid #444
@@ -32,6 +33,7 @@
         @each $browser in '', -webkit-, -moz-, -o-, -ms-
           background-image: #{$browser}linear-gradient(top, #fff 0%, #f8f8f8 1%, #eee 49%, #e0e0e0 50%, #c0c0c0 100%)
         color: #003
+        white-space: nowrap
         text-decoration: none
         font:
           family: 'Lucida Grande', 'Verdana', sans-serif
@@ -137,3 +139,6 @@
                 .name
                   font-weight: bold
                   margin-top: 0.6em
+
+  .clr
+    clear: both

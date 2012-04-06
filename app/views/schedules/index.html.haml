@@ -2,15 +2,16 @@
 
 .schedule
   .schedule-header
-    .controls
-      %a#hide-all(href='#') Hide all details
-      %a#show-all(href='#') Show all details
-    
     %h1
       = @event.name
       Session Schedule
     
-    .hint Tap a session title to show/hide details.
+    .controls
+      %a#hide-all(href='#') Hide all details
+      %a#show-all(href='#') Show all details
+      .clr
+    
+    .hint Tap a session title to show/hide its details.
     .hint Tap a room name to see a map.
   
   - @event.timeslots.each do |slot|

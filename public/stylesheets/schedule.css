@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0; }
   #schedule-body .schedule-header {
-    padding: 2em 2%;
+    padding: 2em;
     background: #f0f0f0; }
     #schedule-body .schedule-header h1 {
       margin: 0;
@@ -16,10 +16,11 @@
       font-family: "Helvetica Neue", "Verdana", sans-serif;
       font-size: 90%; }
     #schedule-body .schedule-header .controls {
-      float: right;
-      margin-top: 1ex; }
+      float: right; }
       #schedule-body .schedule-header .controls a {
-        margin: 1em;
+        display: block;
+        float: right;
+        margin-right: 1em;
         padding: 1ex 1em;
         border-radius: 2em;
         border: 1px solid #444444;
@@ -30,6 +31,7 @@
         background-image: -o-linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
         background-image: -ms-linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
         color: #000033;
+        white-space: nowrap;
         text-decoration: none;
         font-family: "Lucida Grande", "Verdana", sans-serif;
         font-weight: bold; }
@@ -130,3 +132,5 @@
               #schedule-body .schedule .timeslot .sessions .column .session .description .bios .name {
                 font-weight: bold;
                 margin-top: 0.6em; }
+  #schedule-body .clr {
+    clear: both; }
