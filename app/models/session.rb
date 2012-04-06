@@ -27,6 +27,8 @@ class Session < ActiveRecord::Base
   # TODO: attr_accessible?
   attr_protected :event_id, :timeslot_id, :participant_id, :room_id
 
+  after_create :create_presenter
+
   def self.swap_rooms(session_1, session_2)
     if session_1.timeslot != session_2.timeslot
       raise "Sessions must be in the same timeslot to swap"
@@ -87,5 +89,12 @@ class Session < ActiveRecord::Base
     else
       []
     end
+  end
+
+  private
+
+  # assign the creator as the first presenter
+  def create_presenter
+    self.presentations.create(:participant => self.participant)
   end
 end

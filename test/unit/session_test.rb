@@ -23,6 +23,11 @@ class SessionTest < ActiveSupport::TestCase
       subject.valid?
       assert_nil subject.errors[:summary]
     end
+
+    should "add the owner as a presenter" do
+      session = Fixie.participants(:joe).sessions.create!(:title => 'hi', :description => 'bye')
+      assert_equal([Fixie.participants(:joe)], session.presenters)
+    end
   end
 
   test "recommended_sessions should order based on recommendation strength" do
