@@ -1,7 +1,21 @@
+- title @event.name + " &ndash; Session Schedule".html_safe
+
 .schedule
+  .schedule-header
+    .controls
+      %a#hide-all(href='#') Hide all details
+      %a#show-all(href='#') Show all details
+    
+    %h1
+      = @event.name
+      Session Schedule
+    
+    .hint Tap a session title to show/hide details.
+    .hint Tap a room name to see a map.
+  
   - @event.timeslots.each do |slot|
     .timeslot
-      %h1
+      %h2
         = slot.starts_at.in_time_zone.to_s(:hhmm)
         &ndash;
         = slot.ends_at.in_time_zone.to_s(:hhmm)
@@ -15,7 +29,7 @@
                 .header
                   .room= session.room.name
         
-                  %h2.title= session.title
+                  %h3.title= session.title
           
                   .presenters
                     - session.presenters.each do |presenter|
@@ -27,13 +41,35 @@
                     - session.presenters.each do |presenter|
                       .bio
                         .name= presenter.name
-                        = markdown(presenter.bio).html_safe
+                        = markdown(presenter.bio || "No bio.").html_safe
                 
                 .summary= session.summary
 
 :javascript
+  var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+
   $('.session .header').click(function(evt) {
     var session = $(evt.target).closest('.session')
     session.find('.summary').slideToggle()
     session.find('.description').slideToggle()
+  })
+  
+  $('#show-all').click(function() {
+    if(mobile) {
+      $('.session .summary').hide()
+      $('.session .description').show()
+    } else {
+      $('.session .summary').slideUp()
+      $('.session .description').slideDown()
+    }
+  })
+  
+  $('#hide-all').click(function() {
+    if(mobile) {
+      $('.session .summary').show()
+      $('.session .description').hide()
+    } else {
+      $('.session .summary').slideDown()
+      $('.session .description').slideUp()
+    }
   })

@@ -1,22 +1,65 @@
 #schedule-body
-  margin: 1em 0
+  margin: 0
   padding: 0
+  
+  .schedule-header
+    padding: 2em 2%
+    background: #f0f0f0
+    h1
+      margin: 0
+      padding: 0
+      font:
+        family: 'Helvetica Neue', 'Verdana', sans-serif
+        weight: bold
+        size: 2em
+    
+    .hint
+      margin: 1ex 0
+      color: #777
+      font:
+        family: 'Helvetica Neue', 'Verdana', sans-serif
+        size: 90%
+    
+    .controls
+      float: right
+      margin-top: 1ex
+      a
+        margin: 1em
+        padding: 1ex 1em
+        border-radius: 2em
+        border: 1px solid #444
+        background: #EEE
+        @each $browser in '', -webkit-, -moz-, -o-, -ms-
+          background-image: #{$browser}linear-gradient(top, #fff 0%, #f8f8f8 1%, #eee 49%, #e0e0e0 50%, #c0c0c0 100%)
+        color: #003
+        text-decoration: none
+        font:
+          family: 'Lucida Grande', 'Verdana', sans-serif
+          weight: bold
+        &:active
+          background: #333
+          @each $browser in '', -webkit-, -moz-, -o-, -ms-
+            background-image: #{$browser}linear-gradient(bottom, #222 0%, #333 50%, #222 100%)
+          color: white
+  
   .schedule
     .timeslot
       clear: both
-      h1
+      h2
         font:
           family: 'Helvetica Neue', 'Verdana', sans-serif
           weight: 'Bold'
           size: 1.8em !important
         color: white
         background: #999
-        margin: 0.3em -20px
+        margin: 0.3em 0
         font-weight: bold
         text-align: center
         padding: 0.3em 1em
         outline: 1px solid #333
         border-top: 1px solid #676AB1
+        &:first-child
+          margin-top: 0
         @each $browser in '', -webkit-, -moz-, -o-, -ms-
           background-image: #{$browser}linear-gradient(top, #454689 0%, #676AB1 100%)
     
@@ -85,7 +128,7 @@
               p, ul
                 margin: 0.6em 0
               .bios
-                margin: 1em 0
+                margin: 1.4em 0
                 padding: 0.4em 1.2em
                 background: #F0F0F0
                 border: 1px solid #ccc
