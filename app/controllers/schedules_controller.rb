@@ -49,5 +49,5 @@ class SchedulesController < ApplicationController
 
     render :text => cal.to_ical, :content_type => 'text/calendar'
   end
-
+  
 end

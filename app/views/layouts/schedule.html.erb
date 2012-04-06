@@ -4,10 +4,12 @@
     <%= csrf_meta_tag %>
     <title><%= h(yield(:title) || "Untitled") %></title>
     <%= stylesheet_link_tag 'grid', 'schedule' %>
+    <%= stylesheet_link_tag 'schedule-mobile', :media => 'only screen and (max-device-width: 600px)' %>
+    
 
     <%= yield(:head) %>
   </head>
-  <body>
+  <body id='schedule-body'>
      
     <%= yield %>
 
