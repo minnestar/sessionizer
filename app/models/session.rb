@@ -10,6 +10,9 @@ class Session < ActiveRecord::Base
   has_many :attendances, :dependent => :destroy
   has_many :participants, :through => :attendances
 
+  delegate :name, :to => :room, :prefix => true
+  delegate :starts_at, :to => :timeslot
+
   named_scope :with_attendence_count, :select => '*', :joins => "LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id"
 
   named_scope :for_current_event, lambda { {:conditions => {:event_id => Event.current_event.id}} }
