@@ -16,9 +16,9 @@
     - @event.timeslots.each do |slot|
       .timeslot
         %h2
-          = slot.starts_at.in_time_zone.to_s(:hhmm)
+          = slot.starts_at.in_time_zone.to_s(:usahhmm)
           &ndash;
-          = slot.ends_at.in_time_zone.to_s(:hhmm)
+          = slot.ends_at.in_time_zone.to_s(:usahhmm)
   
         .sessions
           - session_columns_for_slot(slot) do |column|
