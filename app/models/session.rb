@@ -20,12 +20,14 @@ class Session < ActiveRecord::Base
   validates_presence_of :participant_id
   validates_presence_of :title
   validates_presence_of :description
-  validates_length_of :summary, :maximum => 100
+  validates_length_of :summary, :maximum => 100, :allow_blank => true
 
   attr_accessor :name, :email
 
   # TODO: attr_accessible?
   attr_protected :event_id, :timeslot_id, :participant_id, :room_id
+
+  after_create :create_presenter
 
   def self.swap_rooms(session_1, session_2)
     if session_1.timeslot != session_2.timeslot
@@ -87,5 +89,12 @@ class Session < ActiveRecord::Base
     else
       []
     end
+  end
+
+  private
+
+  # assign the creator as the first presenter
+  def create_presenter
+    self.presentations.create(:participant => self.participant)
   end
 end
