@@ -32,7 +32,11 @@
           padding: 1.4ex; }
           #schedule-body .schedule .timeslot .sessions .column .session:last-child {
             border: none; }
-          #schedule-body .schedule .timeslot .sessions .column .session h2 {
+          #schedule-body .schedule .timeslot .sessions .column .session .header {
+            cursor: pointer; }
+            #schedule-body .schedule .timeslot .sessions .column .session .header:hover .title {
+              color: #454689; }
+          #schedule-body .schedule .timeslot .sessions .column .session .title {
             color: #111111;
             font-family: "HelveticaNeue-CondensedBold", "Helvetica Neue", "Verdana", sans-serif;
             font-weight: Bold;
@@ -49,28 +53,38 @@
             font-size: 0.9em;
             padding-left: 1ex;
             padding-top: 0.4em; }
-          #schedule-body .schedule .timeslot .sessions .column .session .detail {
+          #schedule-body .schedule .timeslot .sessions .column .session .presenters, #schedule-body .schedule .timeslot .sessions .column .session .summary {
             color: #555555; }
-            #schedule-body .schedule .timeslot .sessions .column .session .detail .presenters {
-              display: inline;
-              font-family: "HelveticaNeue-Medium", "Helvetica Neue", "Verdana", sans-serif;
-              font-weight: Medium; }
-              #schedule-body .schedule .timeslot .sessions .column .session .detail .presenters .presenter {
-                display: inline; }
-                #schedule-body .schedule .timeslot .sessions .column .session .detail .presenters .presenter:after {
-                  content: ","; }
-                #schedule-body .schedule .timeslot .sessions .column .session .detail .presenters .presenter:last-child:after {
-                  content: ""; }
-            #schedule-body .schedule .timeslot .sessions .column .session .detail .summary {
-              font-family: "HelveticaNeue-Light", "Helvetica Neue", "Verdana", sans-serif;
-              font-weight: Light;
-              weight: "Medium";
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              margin: 0; }
+          #schedule-body .schedule .timeslot .sessions .column .session .presenters {
+            display: inline;
+            font-family: "HelveticaNeue-Medium", "Helvetica Neue", "Verdana", sans-serif;
+            font-weight: Medium; }
+            #schedule-body .schedule .timeslot .sessions .column .session .presenters .presenter {
+              display: inline; }
+              #schedule-body .schedule .timeslot .sessions .column .session .presenters .presenter:after {
+                content: ","; }
+              #schedule-body .schedule .timeslot .sessions .column .session .presenters .presenter:last-child:after {
+                content: ""; }
+          #schedule-body .schedule .timeslot .sessions .column .session .summary {
+            font-family: "HelveticaNeue-Light", "Helvetica Neue", "Verdana", sans-serif;
+            font-weight: Light;
+            weight: "Medium";
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0; }
           #schedule-body .schedule .timeslot .sessions .column .session .description {
             display: none;
             font-family: "Helvetica Neue", "Verdana", sans-serif; }
             #schedule-body .schedule .timeslot .sessions .column .session .description p, #schedule-body .schedule .timeslot .sessions .column .session .description ul {
               margin: 0.6em 0; }
+            #schedule-body .schedule .timeslot .sessions .column .session .description .bios {
+              margin: 1em 0;
+              padding: 0.4em 1.2em;
+              background: #f0f0f0;
+              border: 1px solid #cccccc;
+              border-radius: 1em;
+              font-size: 92%; }
+              #schedule-body .schedule .timeslot .sessions .column .session .description .bios .name {
+                font-weight: bold;
+                margin-top: 0.6em; }

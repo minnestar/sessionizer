@@ -32,7 +32,12 @@
             padding: 1.4ex
             &:last-child
               border: none
-            h2
+            .header
+              cursor: pointer
+              &:hover
+                .title
+                  color: #454689
+            .title
               color: #111
               font:
                 family: 'HelveticaNeue-CondensedBold', 'Helvetica Neue', 'Verdana', sans-serif
@@ -51,31 +56,41 @@
               font-size: 0.9em
               padding-left: 1ex
               padding-top: 0.4em
-            .detail
+            .presenters, .summary
               color: #555
-              .presenters
+            .presenters
+              display: inline
+              font:
+                family: 'HelveticaNeue-Medium', 'Helvetica Neue', 'Verdana', sans-serif
+                weight: Medium
+              .presenter
                 display: inline
-                font:
-                  family: 'HelveticaNeue-Medium', 'Helvetica Neue', 'Verdana', sans-serif
-                  weight: Medium
-                .presenter
-                  display: inline
-                  &:after
-                    content: ','
-                  &:last-child:after
-                    content: ''
-              .summary
-                font:
-                  family: 'HelveticaNeue-Light', 'Helvetica Neue', 'Verdana', sans-serif
-                  weight: Light
-                weight: 'Medium'
-                white-space: nowrap
-                overflow: hidden
-                text-overflow: ellipsis
-                margin: 0
+                &:after
+                  content: ','
+                &:last-child:after
+                  content: ''
+            .summary
+              font:
+                family: 'HelveticaNeue-Light', 'Helvetica Neue', 'Verdana', sans-serif
+                weight: Light
+              weight: 'Medium'
+              white-space: nowrap
+              overflow: hidden
+              text-overflow: ellipsis
+              margin: 0
             .description
               display: none
               font:
                 family: 'Helvetica Neue', 'Verdana', sans-serif
               p, ul
                 margin: 0.6em 0
+              .bios
+                margin: 1em 0
+                padding: 0.4em 1.2em
+                background: #F0F0F0
+                border: 1px solid #ccc
+                border-radius: 1em
+                font-size: 92%
+                .name
+                  font-weight: bold
+                  margin-top: 0.6em

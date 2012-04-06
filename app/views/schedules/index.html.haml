@@ -12,15 +12,28 @@
             - column.each do |session|
 
               .session
-                .room= session.room.name
+                .header
+                  .room= session.room.name
         
-                %h2= session.title
+                  %h2.title= session.title
           
-                .detail
                   .presenters
                     - session.presenters.each do |presenter|
                       .presenter= presenter.name
-                  .summary= session.summary
           
                 .description
                   = markdown(session.description).html_safe
+                  .bios
+                    - session.presenters.each do |presenter|
+                      .bio
+                        .name= presenter.name
+                        = markdown(presenter.bio).html_safe
+                
+                .summary= session.summary
+
+:javascript
+  $('.session .header').click(function(evt) {
+    var session = $(evt.target).closest('.session')
+    session.find('.summary').slideToggle()
+    session.find('.description').slideToggle()
+  })
