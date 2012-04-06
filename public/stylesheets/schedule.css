@@ -82,8 +82,6 @@
             border: none; }
           #schedule-body .schedule .timeslot .sessions .column .session .header {
             cursor: pointer; }
-            #schedule-body .schedule .timeslot .sessions .column .session .header:hover .title {
-              color: #454689; }
           #schedule-body .schedule .timeslot .sessions .column .session .title {
             color: #111111;
             font-family: "HelveticaNeue-CondensedBold", "Helvetica Neue", "Verdana", sans-serif;
@@ -92,6 +90,8 @@
             padding: 0;
             margin: 0;
             font-size: 1.2em; }
+            #schedule-body .schedule .timeslot .sessions .column .session .title:hover {
+              color: #454689; }
           #schedule-body .schedule .timeslot .sessions .column .session .room {
             font-family: "Gill Sans", "Futura", "Tahoma", sans-serif;
             font-size: 0.8em;
@@ -101,6 +101,8 @@
             font-size: 0.9em;
             padding-left: 1ex;
             padding-top: 0.4em; }
+            #schedule-body .schedule .timeslot .sessions .column .session .room:hover {
+              text-decoration: underline; }
           #schedule-body .schedule .timeslot .sessions .column .session .presenters, #schedule-body .schedule .timeslot .sessions .column .session .summary {
             color: #555555; }
           #schedule-body .schedule .timeslot .sessions .column .session .presenters {

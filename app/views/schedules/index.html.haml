@@ -27,7 +27,8 @@
 
                 .session
                   .header
-                    .room= session.room.name
+                    .room{:href => "/images/maps/#{session.room.name.downcase}.png"}
+                      = session.room.name
         
                     %h3.title= session.title
           
@@ -89,3 +90,7 @@
       updateButtonsDelayed()
     }
   })
+  
+  $(".room").fancybox()
+  $(".room").click(function() { return false })
+  
