@@ -12,37 +12,39 @@
     .hint Tap a session title to show/hide its details.
     .hint Tap a room name to see a map.
   
-  - @event.timeslots.each do |slot|
-    .timeslot
-      %h2
-        = slot.starts_at.in_time_zone.to_s(:hhmm)
-        &ndash;
-        = slot.ends_at.in_time_zone.to_s(:hhmm)
+  .timeslots
+    - @event.timeslots.each do |slot|
+      .timeslot
+        %h2
+          = slot.starts_at.in_time_zone.to_s(:hhmm)
+          &ndash;
+          = slot.ends_at.in_time_zone.to_s(:hhmm)
   
-      .sessions
-        - session_columns_for_slot(slot) do |column|
-          .column
-            - column.each do |session|
+        .sessions
+          - session_columns_for_slot(slot) do |column|
+            .column
+              - column.each do |session|
 
-              .session
-                .header
-                  .room= session.room.name
+                .session
+                  .header
+                    .room= session.room.name
         
-                  %h3.title= session.title
+                    %h3.title= session.title
           
-                  .presenters
-                    - session.presenters.each do |presenter|
-                      .presenter= presenter.name
+                    .presenters
+                      - session.presenters.each do |presenter|
+                        .presenter= presenter.name
           
-                .description
-                  = markdown(session.description).html_safe
-                  .bios
-                    - session.presenters.each do |presenter|
-                      .bio
-                        .name= presenter.name
-                        = markdown(presenter.bio || "No bio.").html_safe
+                  .description
+                    = markdown(session.description).html_safe
+                    .bios
+                      - session.presenters.each do |presenter|
+                        .bio
+                          .name= presenter.name
+                          = markdown(presenter.bio || "No bio.").html_safe
                 
-                .summary= session.summary
+                  .summary= session.summary
+
 
 :javascript
   var slowBrowser = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())

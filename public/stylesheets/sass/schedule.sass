@@ -50,6 +50,9 @@
   .schedule
     .timeslot
       clear: both
+      padding-top: 0.8em
+      &:first-child
+        padding-top: 0
       h2
         font:
           family: 'Helvetica Neue', 'Verdana', sans-serif
@@ -57,14 +60,12 @@
           size: 1.8em !important
         color: white
         background: #999
-        margin: 0.3em 0
+        margin: 0 0 0.4em 0
         font-weight: bold
         text-align: center
         padding: 0.3em 1em
         outline: 1px solid #333
         border-top: 1px solid #676AB1
-        &:first-child
-          margin-top: 0
         @each $browser in '', -webkit-, -moz-, -o-, -ms-
           background-image: #{$browser}linear-gradient(top, #454689 0%, #676AB1 100%)
     
@@ -77,7 +78,7 @@
           margin: 0
           padding: 0.5em 1%
           .session
-            padding: 1.4ex
+            padding: 1.6ex 1.4ex
             &:last-child
               border: none
             .header
