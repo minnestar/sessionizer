@@ -45,30 +45,45 @@
                 .summary= session.summary
 
 :javascript
-  var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+  var slowBrowser = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+  
+  var updateButtons = function() {
+    $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
+    $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
+  }
+  var updateButtonsDelayed = function() {
+    setTimeout(updateButtons, 410)
+  }
+  
+  $(updateButtons)
 
   $('.session .header').click(function(evt) {
     var session = $(evt.target).closest('.session')
     session.find('.summary').slideToggle()
     session.find('.description').slideToggle()
+    updateButtonsDelayed()
   })
   
   $('#show-all').click(function() {
-    if(mobile) {
+    if(slowBrowser) {
       $('.session .summary').hide()
       $('.session .description').show()
+      updateButtons()
     } else {
       $('.session .summary').slideUp()
       $('.session .description').slideDown()
+      updateButtonsDelayed()
     }
   })
   
   $('#hide-all').click(function() {
-    if(mobile) {
+    if(slowBrowser) {
       $('.session .summary').show()
       $('.session .description').hide()
+      updateButtons()
     } else {
       $('.session .summary').slideDown()
       $('.session .description').slideUp()
+      updateButtonsDelayed()
     }
   })

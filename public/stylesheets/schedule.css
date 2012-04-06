@@ -25,11 +25,11 @@
         border-radius: 2em;
         border: 1px solid #444444;
         background: #eeeeee;
-        background-image: linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
-        background-image: -webkit-linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
-        background-image: -moz-linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
-        background-image: -o-linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
-        background-image: -ms-linear-gradient(top, white 0%, #f8f8f8 1%, #eeeeee 49%, #e0e0e0 50%, silver 100%);
+        background-image: linear-gradient(top, white 0%, #f4f4f4 1%, #e8e8e8 49%, #dddddd 50%, silver 100%);
+        background-image: -webkit-linear-gradient(top, white 0%, #f4f4f4 1%, #e8e8e8 49%, #dddddd 50%, silver 100%);
+        background-image: -moz-linear-gradient(top, white 0%, #f4f4f4 1%, #e8e8e8 49%, #dddddd 50%, silver 100%);
+        background-image: -o-linear-gradient(top, white 0%, #f4f4f4 1%, #e8e8e8 49%, #dddddd 50%, silver 100%);
+        background-image: -ms-linear-gradient(top, white 0%, #f4f4f4 1%, #e8e8e8 49%, #dddddd 50%, silver 100%);
         color: #000033;
         white-space: nowrap;
         text-decoration: none;
@@ -43,6 +43,9 @@
           background-image: -o-linear-gradient(bottom, #222222 0%, #333333 50%, #222222 100%);
           background-image: -ms-linear-gradient(bottom, #222222 0%, #333333 50%, #222222 100%);
           color: white; }
+      #schedule-body .schedule-header .controls a.disabled {
+        color: #aaaaaa;
+        border-color: #aaaaaa; }
   #schedule-body .schedule .timeslot {
     clear: both; }
     #schedule-body .schedule .timeslot h2 {
