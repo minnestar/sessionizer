@@ -14,7 +14,7 @@
   
   .timeslots
     - @event.timeslots.each do |slot|
-      .timeslot
+      .timeslot{:id => "timeslot_#{slot.id}"}
         %h2
           = slot.starts_at.in_time_zone.to_s(:usahhmm)
           &ndash;
@@ -65,9 +65,11 @@
     session.find('.summary').slideToggle()
     session.find('.description').slideToggle()
     updateButtonsDelayed()
+    evt.stopPropagation()
+    return false
   })
   
-  $('#show-all').click(function() {
+  $('#show-all').click(function(evt) {
     if(slowBrowser) {
       $('.session .summary').hide()
       $('.session .description').show()
@@ -77,9 +79,11 @@
       $('.session .description').slideDown()
       updateButtonsDelayed()
     }
+    evt.stopPropagation()
+    return false
   })
   
-  $('#hide-all').click(function() {
+  $('#hide-all').click(function(evt) {
     if(slowBrowser) {
       $('.session .summary').show()
       $('.session .description').hide()
@@ -89,6 +93,8 @@
       $('.session .description').slideUp()
       updateButtonsDelayed()
     }
+    evt.stopPropagation()
+    return false
   })
   
   $(".room").fancybox()
