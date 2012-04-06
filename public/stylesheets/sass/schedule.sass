@@ -2,8 +2,39 @@
   margin: 0
   padding: 0
   
+  .nav-top
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    font:
+      family: 'Helvetica Neue', 'Verdana', sans-serif
+      weight: bold
+    color: white
+    background: #999
+    padding: 0.6em 2%
+    border-bottom: 1px solid #333
+    box-shadow: 0 -0.2ex 1ex black
+    @each $browser in '', -webkit-, -moz-, -o-, -ms-
+      background-image: #{$browser}linear-gradient(top, #676AB1 0%, #8a8cc3 100%)
+    .timeslots
+      .timeslot
+        float: left
+        padding: 0 1ex
+        text-decoration: none
+        border-radius: 1em
+        &:link, &:hover, &:active, &:visited
+          color: white
+        &.selected
+          background: white
+          color: #667 !important
+        &.now
+          color: #833 !important
+        
+  
   .schedule-header
     padding: 2em
+    padding-top: 4em
     background: #f0f0f0
     h1
       margin: 0

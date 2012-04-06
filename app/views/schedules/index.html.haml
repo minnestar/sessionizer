@@ -1,3 +1,9 @@
+.nav-top
+  .timeslots
+    - @event.timeslots.each do |slot|
+      %a.timeslot{:id => "timeslot_#{slot.id}_nav", :href=> "#timeslot_#{slot.id}", :starts_at => slot.starts_at.in_time_zone}
+        = slot.starts_at.in_time_zone.to_s(:usahhmm)
+
 .schedule
   .schedule-header
     %h1
@@ -46,57 +52,116 @@
                 
                   .summary= session.summary
 
-
 :javascript
-  var slowBrowser = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+  $().ready(function() {
+    var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+    alert($(window).width())
+    
   
-  var updateButtons = function() {
-    $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
-    $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
-  }
-  var updateButtonsDelayed = function() {
-    setTimeout(updateButtons, 410)
-  }
+    // Top nav
   
-  $(updateButtons)
+    var updateTimeslotNav = function() {
+      var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
+      var foundCurrent = false
+      $($('.schedule .timeslot').get().reverse()).each(function(i, slot) {
+        var selected = false;
+        if($(slot).offset().top <= scrollTop) {
+          if(!foundCurrent)
+            selected = true
+          foundCurrent = true
+        }
+        $('#' + slot.id + '_nav').toggleClass('selected', selected)
+      })
+      return true
+    }
+    updateTimeslotNav()
+    
+    var scrollingToSlot = false
+  
+    $('.nav-top .timeslot').click(function(evt) {
+      var link = $(evt.target)
+      slotIdSel = link.attr('href')
+      $('.nav-top .timeslot').toggleClass('selected', false)
+      $(slotIdSel + '_nav').toggleClass('selected', true)
 
-  $('.session .header').click(function(evt) {
-    var session = $(evt.target).closest('.session')
-    session.find('.summary').slideToggle()
-    session.find('.description').slideToggle()
-    updateButtonsDelayed()
-    evt.stopPropagation()
-    return false
-  })
+      // Temporarily force clicked time slot to be highlighted,
+      // even if it's near the end of the page & doesn't make it
+      // past the top edge of the window.
+      scrollingToSlot = true
+
+      $.scrollTo($(slotIdSel), {
+        duration: (mobile ? 0 : 500),
+        offset: { left: 0, top: -$('.nav-top').height() },
+        onAfter: function() {
+          // Make nav bar show true position again on next scroll
+          setTimeout(function() { scrollingToSlot = false }, 10)
+        }
+      })
+
+      evt.stopPropagation()
+      return false
+    })
   
-  $('#show-all').click(function(evt) {
-    if(slowBrowser) {
-      $('.session .summary').hide()
-      $('.session .description').show()
-      updateButtons()
-    } else {
-      $('.session .summary').slideUp()
-      $('.session .description').slideDown()
-      updateButtonsDelayed()
+    $(window).scroll(function() {
+      if(!scrollingToSlot)
+        updateTimeslotNav()
+      return true
+    })
+  
+  
+    // Show / hide details
+  
+    var updateButtons = function() {
+      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
+      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
     }
-    evt.stopPropagation()
-    return false
-  })
-  
-  $('#hide-all').click(function(evt) {
-    if(slowBrowser) {
-      $('.session .summary').show()
-      $('.session .description').hide()
-      updateButtons()
-    } else {
-      $('.session .summary').slideDown()
-      $('.session .description').slideUp()
-      updateButtonsDelayed()
+    var updateButtonsDelayed = function() {
+      setTimeout(updateButtons, 410)
     }
-    evt.stopPropagation()
-    return false
+  
+    $(updateButtons)
+
+    $('.session .header').click(function(evt) {
+      var session = $(evt.target).closest('.session')
+      session.find('.summary').slideToggle()
+      session.find('.description').slideToggle()
+      updateButtonsDelayed()
+      evt.stopPropagation()
+      return false
+    })
+  
+    $('#show-all').click(function(evt) {
+      if(mobile) {
+        $('.session .summary').hide()
+        $('.session .description').show()
+        updateButtons()
+      } else {
+        $('.session .summary').slideUp()
+        $('.session .description').slideDown()
+        updateButtonsDelayed()
+      }
+      evt.stopPropagation()
+      return false
+    })
+  
+    $('#hide-all').click(function(evt) {
+      if(mobile) {
+        $('.session .summary').show()
+        $('.session .description').hide()
+        updateButtons()
+      } else {
+        $('.session .summary').slideDown()
+        $('.session .description').slideUp()
+        updateButtonsDelayed()
+      }
+      evt.stopPropagation()
+      return false
+    })
+  
+  
+    // Map popups
+  
+    $(".room").fancybox()
+    $(".room").click(function() { return false })
+  
   })
-  
-  $(".room").fancybox()
-  $(".room").click(function() { return false })
-  
