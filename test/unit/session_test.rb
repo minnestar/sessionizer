@@ -17,6 +17,12 @@ class SessionTest < ActiveSupport::TestCase
         session.destroy
       end
     end
+
+    should "allow a blank summary" do
+      subject.summary = ''
+      subject.valid?
+      assert_nil subject.errors[:summary]
+    end
   end
 
   test "recommended_sessions should order based on recommendation strength" do
