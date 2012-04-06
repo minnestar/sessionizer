@@ -1,6 +1,7 @@
 class SchedulesController < ApplicationController
   def index
     @event = Event.current_event :include => { :timeslots => { :sessions => [:room, :presenters] } }
+    expires_in 5.minutes, :public => true
     render :layout => 'schedule'
   end
 
