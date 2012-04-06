@@ -1,0 +1,4 @@
+#schedule-body {
+  font-size: 0.5em !important; }
+  #schedule-body .schedule-header .hint, #schedule-body .schedule-header .controls {
+    display: none; }
