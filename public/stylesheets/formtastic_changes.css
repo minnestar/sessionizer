@@ -28,3 +28,6 @@ form.formtastic fieldset ol li ul.errors { margin:0.5em 0 0 0; }
 form.formtastic fieldset ol li.text textarea { width:100%; }
 
 
+form.formtastic fieldset ol li { width:100%; }
+
+

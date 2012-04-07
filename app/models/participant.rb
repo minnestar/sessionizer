@@ -7,7 +7,6 @@ class Participant < ActiveRecord::Base
   has_many :presenter_timeslot_restrictions
 
   validates_presence_of :name
-  validates_presence_of :email
   validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
 
   def restrict_after(datetime, weight=1)
