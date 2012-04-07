@@ -21,6 +21,11 @@ Timeslot.fixie(:timeslot_3,
                :starts_at => Time.zone.local(today.year, today.month, today.day, 11),
                :ends_at => Time.zone.local(today.year, today.month, today.day, 11, 50))
 
+Room.fixie(:room,
+           :event => current_event,
+           :name => 'Only Room',
+           :capacity => 100)
+
 luke = Participant.fixie(:luke,
                          :email => "look@recursion.org",
                          :name => 'Luke Francl')

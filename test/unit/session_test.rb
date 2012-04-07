@@ -28,6 +28,20 @@ class SessionTest < ActiveSupport::TestCase
       session = Fixie.participants(:joe).sessions.create!(:title => 'hi', :description => 'bye')
       assert_equal([Fixie.participants(:joe)], session.presenters)
     end
+
+    should "require a unique timeslot and room" do
+      Session.create!(:title => 'hi',
+                      :description => 'bye',
+                      :timeslot => Fixie.timeslots(:timeslot_1),
+                      :room => Fixie.rooms(:room),
+                      :participant => Fixie.participants(:joe))
+
+      session = Session.new(:room => Fixie.rooms(:room),
+                            :timeslot => Fixie.timeslots(:timeslot_1))
+      session.valid?
+
+      assert session.errors[:timeslot_id]
+    end
   end
 
   test "recommended_sessions should order based on recommendation strength" do
