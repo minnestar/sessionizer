@@ -95,10 +95,20 @@
         duration: (mobile ? 0 : 500),
         offset: { left: 0, top: -$('.nav-top').height() },
         onAfter: function() {
-          // Make nav bar show true position again on next scroll
-          setTimeout(function() { scrollingToSlot = false }, 10)
+          setTimeout(function() {
+            // Make nav bar show true position again on next scroll
+            scrollingToSlot = false
+            
+            // see below
+            $('#ios-bug-workaround').remove()
+          }, 10)
         }
       })
+      
+      // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
+      // Adding and removing a div apparently forces it to generate its layout.
+      if(mobile)
+        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body))
 
       evt.stopPropagation()
       return false
