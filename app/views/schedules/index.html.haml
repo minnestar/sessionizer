@@ -1,7 +1,10 @@
 .nav-top
   .timeslots
     - @event.timeslots.each do |slot|
-      %a.timeslot{:id => "timeslot_#{slot.id}_nav", :href=> "#timeslot_#{slot.id}", :starts_at => slot.starts_at.in_time_zone}
+      %a.timeslot{:id => "timeslot_#{slot.id}_nav",
+                  :href=> "#timeslot_#{slot.id}",
+                  :startsAt => slot.starts_at.in_time_zone.to_i,
+                  :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = slot.starts_at.in_time_zone.to_s(:usahhmm)
 
 .schedule
@@ -55,10 +58,9 @@
 :javascript
   $().ready(function() {
     var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
-    alert($(window).width())
     
   
-    // Top nav
+    // Jump to timeslot
   
     var updateTimeslotNav = function() {
       var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
@@ -107,6 +109,28 @@
         updateTimeslotNav()
       return true
     })
+    
+    
+    // Show current timeslot
+    
+    var showCurrentTimeslot = function() {
+      var curTime = Date.now(), eventStarted = false, foundCurrent = false
+      $('.nav-top .timeslot').each(function(i, slot) {
+        var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
+            slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
+        
+        var now = false
+        if(curTime >= slotStart)
+          eventStarted = true
+        if(eventStarted && !foundCurrent && curTime <= slotEnd)
+          now = foundCurrent = true
+        $(slot).toggleClass('now', now)
+      })
+      
+      setTimeout(showCurrentTimeslot, 30000)
+    }
+    
+    showCurrentTimeslot()
   
   
     // Show / hide details

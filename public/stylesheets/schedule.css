@@ -29,7 +29,9 @@
         background: white;
         color: #666677 !important; }
       #schedule-body .nav-top .timeslots .timeslot.now {
-        color: #883333 !important; }
+        color: #ffee88; }
+      #schedule-body .nav-top .timeslots .timeslot.now.selected {
+        color: #9c8c29 !important; }
   #schedule-body .schedule-header {
     padding: 2em;
     padding-top: 4em;
