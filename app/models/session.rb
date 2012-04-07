@@ -21,7 +21,7 @@ class Session < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :description
   validates_length_of :summary, :maximum => 100, :allow_blank => true
-  validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
+  #validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
   
 
   attr_accessor :name, :email

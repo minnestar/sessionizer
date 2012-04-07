@@ -29,6 +29,6 @@ class Admin::SessionsController < Admin::AdminController
   end
 
   def current_objects
-    @current_objects ||= Event.current_event.sessions
+    @current_objects ||= Event.current_event.sessions.sort_by{ |s| -s.created_at.to_i}
   end  
 end

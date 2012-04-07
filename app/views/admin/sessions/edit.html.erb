@@ -8,7 +8,7 @@
     <%= f.input :title %>
 
     <div>
-      By <%= link_to @session.participant.name, @session.participant %>
+      By <%= @session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %>
     </div>
     
     <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <strong>**bold**</strong>, <em>*italic*</em>, [link](http://example.com)' %>
@@ -18,6 +18,10 @@
     <%= f.input :panel, :label => 'This is a panel discussion' %>
     <%= f.input :projector, :label => 'I need a projector' %>
     <%= f.input :summary, :label => 'Short description of the session (for the program)' %>
+
+    <%= f.input :room_id, :as => :select, :collection => Event.current_event.rooms %>
+    <%= f.input :timeslot_id, :as => :select, :collection => Event.current_event.timeslots %>
+
   <% end %>
 
  <%= f.buttons %>
