@@ -13,7 +13,7 @@ class Admin::AdminController < ApplicationController
   def authenticate
     if Rails.env.production?
       authenticate_or_request_with_http_basic do |user_name, password|
-        user_name == "sessionizer" && password == "SuperDuperSecure!"
+        user_name == ENV['sessionizer_admin_user'] && password == ENV['sessonizer_admin_password']
       end
     end
   end
