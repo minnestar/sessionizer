@@ -1,2 +1,38 @@
-Use this README file to introduce your application and point to useful places in the API for learning more.
-Run "rake doc:app" to generate API documentation for your models, controllers, helpers, and libraries.
+
+#admin events screen ... 
+# create the first event here... 
+http://localhost:3001/admin/events
+
+# to create rooms and timeslots 
+rake -T | grep app 
+
+# ability to modify the sessions here...
+http://localhost:3001/admin/sessions/1/edit
+
+
+# hide create session link when we are ready to go...
+# then run pauls annealing
+
+
+#pull a db from heroku for old data... 
+
+# Create word cloud with 	
+/sessions/words
+Wordle to generate tag cloud
+
+
+## TODO ##
+### 
+### 1.) Rails 3.0
+### 2.) User accounts (authlogic)
+### 3.) Remove xss_terminate, fixie 
+### 4.) Ability to add more presenters to session 
+         --> After session is created prompt session creator 
+             with ability to add other presenters/invite people (email address?!)
+             or autocomplete/search for other people already in the system.
+### 5.) Update header for new minnestar L&F
+### 6.) 
+
+
+
+
