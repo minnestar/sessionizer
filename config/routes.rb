@@ -1,6 +1,4 @@
 Sessionizer::Application.routes.draw do
-  root :controller => 'pages', :action => 'home'
-  #root :controller => 'schedules', :action => 'index'
   
   resources :sessions, 
     :only => [:index, :show, :new, :create, :update, :edit], 
@@ -15,11 +13,11 @@ Sessionizer::Application.routes.draw do
   resources :events, :only => [:index, :show]
   resources :presenters, :only => :index
 
-  match '/login', 'user_sessions/new', :as => :new_login
-  match '/login', 'user_sessions/create', :as => :login
+  #match '/login', 'user_sessions#new', :as => :new_login
+  #match '/login', 'user_sessions#create', :as => :login
 
-  match '/schedule', 'schedules/index', :as => :schedule
-  match '/schedule.ics', 'schedules/ical', :as => :schedule_ics
+  #match '/schedule', 'schedules#index', :as => :schedule
+  #match '/schedule.ics', 'schedules#ical', :as => :schedule_ics
 
   namespace :admin do 
     resources :sessions
@@ -85,4 +83,8 @@ Sessionizer::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
+  
+  root :to => 'pages#home'
+
+  #root :to => 'schedules/index'
 end

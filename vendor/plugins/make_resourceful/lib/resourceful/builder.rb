@@ -20,13 +20,14 @@ module Resourceful
     # additions to the controller.
     def initialize(kontroller)
       @controller       = kontroller
-      @inherited        = !kontroller.read_inheritable_attribute(:resourceful_responses).blank?
+      @inherited        = !kontroller.resourceful_responses.blank?
       @action_module    = Resourceful::Default::Actions.dup
       @ok_actions       = []
       @callbacks        = {:before => {}, :after => {}}
       @responses        = {}
       @publish          = {}
       @parents          = []
+      @shallow_parent   = nil
       @custom_member_actions = []
       @custom_collection_actions = []
     end
@@ -40,6 +41,7 @@ module Resourceful
       apply_publish
 
       kontroller = @controller
+      
       Resourceful::ACTIONS.each do |action_named|
         # See if this is a method listed by #actions
         unless @ok_actions.include? action_named
@@ -51,12 +53,17 @@ module Resourceful
 
       kontroller.hidden_actions.reject! &@ok_actions.method(:include?)
       kontroller.send :include, @action_module
+      
+      merged_callbacks = kontroller.resourceful_callbacks.merge @callbacks
+      merged_responses = kontroller.resourceful_responses.merge @responses
+      
+      kontroller.resourceful_callbacks = merged_callbacks
+      kontroller.resourceful_responses = merged_responses
+      kontroller.made_resourceful = true
 
-      kontroller.read_inheritable_attribute(:resourceful_callbacks).merge! @callbacks
-      kontroller.read_inheritable_attribute(:resourceful_responses).merge! @responses
-      kontroller.write_inheritable_attribute(:made_resourceful, true)
-
-      kontroller.write_inheritable_attribute(:parents, @parents)
+      kontroller.parents = @parents
+      kontroller.shallow_parent = @shallow_parent
+      kontroller.model_namespace = @model_namespace
       kontroller.before_filter :load_object, :only => (@ok_actions & SINGULAR_PRELOADED_ACTIONS) + @custom_member_actions
       kontroller.before_filter :load_objects, :only => (@ok_actions & PLURAL_ACTIONS) + @custom_collection_actions
       kontroller.before_filter :load_parent_object, :only => @ok_actions + @custom_member_actions + @custom_collection_actions
@@ -355,9 +362,22 @@ module Resourceful
     #   current_objects   #=> Baker.find(12).cakes
     #
     def belongs_to(*parents)
+      options = parents.extract_options!
       @parents = parents.map(&:to_s)
+      if options[:shallow]
+        options[:shallow] = options[:shallow].to_s
+        raise ArgumentError, ":shallow needs the name of a parent resource" unless @parents.include? options[:shallow]
+        @shallow_parent = options[:shallow]
+      end
     end
     
+    # Specifies a namespace for the resource model. It can be given as a
+    # Module::NameSpace, 'Module::NameSpace' (in a string), or
+    # 'module/name_space' (underscored form).
+    def model_namespace(ns)
+      @model_namespace = ns.to_s.camelize
+    end
+
     # This method is only meant to be called internally.
     #
     # Returns whether or not the Builder's controller

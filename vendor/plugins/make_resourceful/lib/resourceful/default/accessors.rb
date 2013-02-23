@@ -17,7 +17,7 @@ module Resourceful
     # and are called by the default make_resourceful actions[link:classes/Resourceful/Default/Actions.html].
     # This means that overriding one method
     # can affect everything else.
-    # 
+    #
     # This can be dangerous, but it can also be very powerful.
     # make_resourceful is designed to take advantage of overriding,
     # so as long as the new methods accomplish the same purpose as the old ones,
@@ -60,7 +60,7 @@ module Resourceful
       #
       # This is called automatically by the default make_resourceful actions.
       # You shouldn't need to use it directly unless you're creating a new action.
-      # 
+      #
       # For example, in UsersController,
       # calling +load_objects+ sets <tt>@users = current_objects</tt>.
       def load_objects
@@ -99,7 +99,7 @@ module Resourceful
       #
       # This is called automatically by the default make_resourceful actions.
       # You shouldn't need to use it directly unless you're creating a new action.
-      # 
+      #
       # For example, in UsersController,
       # calling +load_object+ sets <tt>@user = current_object</tt>.
       def load_object
@@ -120,18 +120,22 @@ module Resourceful
       #
       #   build_object
       #   current_object.person.id #=> 4
-      # 
+      #
       def build_object
         @current_object = if current_model.respond_to? :build
           current_model.build(object_parameters)
         else
-          returning(current_model.new(object_parameters)) do |obj|
+          current_model.new(object_parameters).tap do |obj|
             if singular? && parent?
               obj.send("#{parent_name}_id=", parent_object.id)
               obj.send("#{parent_name}_type=", parent_object.class.to_s) if polymorphic_parent?
             end
           end
         end
+      end
+
+      def namespaced_model_name
+        [self.class.model_namespace, current_model_name].compact.join('::')
       end
 
       # The string name of the current model.
@@ -144,7 +148,7 @@ module Resourceful
       # For example, in Admin::Content::PagesController:
       #
       #   namespaces #=> [:admin, :content]
-      # 
+      #
       def namespaces
         @namespaces ||= self.class.name.split('::').slice(0...-1).map(&:underscore).map(&:to_sym)
       end
@@ -168,7 +172,7 @@ module Resourceful
       # and so forth.
       def current_model
         if !parent? || singular?
-          current_model_name.constantize
+          namespaced_model_name.constantize
         else
           parent_object.send(instance_variable_name)
         end
@@ -179,7 +183,7 @@ module Resourceful
       # of the current object.
       # This is only meaningful for +create+ or +update+.
       def object_parameters
-        params[current_model_name.underscore]
+        params[namespaced_model_name.underscore.tr('/', '_')]
       end
 
       # Returns a list of the names of all the potential parents of the current model.
@@ -190,7 +194,7 @@ module Resourceful
       #
       # Note that the parents must be declared via Builder#belongs_to.
       def parent_names
-        self.class.read_inheritable_attribute :parents
+        self.class.parents
       end
 
       # Returns true if an appropriate parent id parameter has been supplied.
@@ -208,14 +212,23 @@ module Resourceful
         !!parent_name
       end
 
+      # Returns true if no parent id parameter can be found _and_ a belongs_to
+      # relationship on this controller was declared with a parent for shallow
+      # routing.
+      def shallow?
+        self.class.shallow_parent &&
+          (parent_name.nil? || parent_name == self.class.shallow_parent)
+      end
+
       # Returns whether the parent (if it exists) is polymorphic
       def polymorphic_parent?
         !!polymorphic_parent_name
       end
 
-      # Returns the name of the current parent object if a parent id is given, or nil otherwise.
-      # For example, in HatsController where Rack has_many :hats and Person has_many :hats,
-      # if <tt>params[:rack_id]</tt> is given,
+      # Returns the name of the current parent object if a parent id is given,
+      # or nil otherwise. For example, in HatsController where Rack has_many
+      # :hats and Person has_many :hats, if <tt>params[:rack_id]</tt> is
+      # given,
       #
       #   parent_name #=> "rack"
       #
@@ -223,44 +236,47 @@ module Resourceful
       #
       #   parent_name #=> "person"
       #
-      # If both <tt>params[:rack_id]</tt> and <tt>params[:rack_id]</tt> are nil,
+      # If both <tt>params[:rack_id]</tt> and <tt>params[:person_id]</tt> are
+      # nil,
       #
       #   parent_name #=> nil
       #
-      # There are several things to note about this method.
-      # First, make_resourceful only supports single-level model nesting.
-      # Thus, if neither <tt>params[:rack_id]</tt> nor <tt>params[:rack_id]</tt> are nil,
-      # the return value of +parent_name+ is undefined.
+      # There are several things to note about this method. First,
+      # make_resourceful only supports single-level model nesting. Thus, if
+      # neither <tt>params[:rack_id]</tt> nor <tt>params[:rack_id]</tt> are
+      # nil, the return value of +parent_name+ is undefined.
       #
       # Second, don't use parent_name to check whether a parent id is given.
       # It's better to use the more semantic parent? method.
       #
-      # Third, parent_name caches its return value in the <tt>@parent_name</tt> variable,
-      # which you should keep in mind if you're overriding it.
-      # However, because <tt>@parent_name == nil</tt> could mean that there is no parent
-      # _or_ that the method hasn't been run yet,
-      # it uses <tt>defined?(@parent_name)</tt> to do the caching
+      # Third, parent_name caches its return value in the
+      # <tt>@parent_name</tt> variable, which you should keep in mind if
+      # you're overriding it. However, because <tt>@parent_name == nil</tt>
+      # could mean that there is no parent _or_ that the method hasn't been
+      # run yet, it uses <tt>defined?(@parent_name)</tt> to do the caching
       # rather than <tt>@parent_name ||=</tt>. See the source code.
-      # 
+      #
       # Finally, note that parents must be declared via Builder#belongs_to.
       #
-      # FIXME - Perhaps this logic should be moved to parent?() or another init method
+      # FIXME - Perhaps this logic should be moved to parent?() or another
+      # init method
       def parent_name
         return @parent_name if defined?(@parent_name)
         @parent_name = parent_names.find { |name| params["#{name}_id"] }
         if @parent_name.nil?
           # get any polymorphic parents through :as association inspection
-          names = params.reject { |key, value| key.to_s[/_id$/].nil? }.keys.map { |key| key.chomp("_id") }
-          names.each do |name|
+          names = params.keys.inject({}) do |hsh, key|
+            hsh[key] = key.chomp("_id") if key.to_s =~ /_id$/
+            hsh
+          end
+          names.each do |key, name|
             begin
               klass = name.camelize.constantize
-              id = params["#{name}_id"]
-              object = klass.find(id)
-              if association = object.class.reflect_on_all_associations.detect { |association| association.options[:as] && parent_names.include?(association.options[:as].to_s) }
+              if association = klass.reflect_on_all_associations.detect { |association| association.options[:as] && parent_names.include?(association.options[:as].to_s) }
                 @parent_name = name
                 @polymorphic_parent_name = association.options[:as].to_s
                 @parent_class_name = name.camelize
-                @parent_object = object
+                @parent_object = klass.find(params[key])
                 break
               end
             rescue
@@ -268,11 +284,11 @@ module Resourceful
           end
         else
           @parent_class_name = params["#{parent_name}_type"]
-          @polymorphic_parent = !@parent_class_name.nil?
+          @polymorphic_parent = !@parent_class_name.nil? # NEVER USED
         end
         @parent_name
       end
-      
+
       def polymorphic_parent_name
         @polymorphic_parent_name
       end
@@ -330,7 +346,7 @@ module Resourceful
       # For example:
       #
       #   before_filter :ensure_parent_exists, :only => [:create, :update]
-      # 
+      #
       def ensure_parent_exists
         return true if parent?
         render :text => 'No parent id given', :status => 422
@@ -345,7 +361,7 @@ module Resourceful
 
       # Declares that the current databse update was completed successfully.
       # Causes subsequent calls to <tt>save_succeeded?</tt> to return +true+.
-      # 
+      #
       # This is mostly meant to be used by the default actions,
       # but it can be used by user-defined actions as well.
       def save_succeeded!
@@ -354,7 +370,7 @@ module Resourceful
 
       # Declares that the current databse update was not completed successfully.
       # Causes subsequent calls to <tt>save_succeeded?</tt> to return +false+.
-      # 
+      #
       # This is mostly meant to be used by the default actions,
       # but it can be used by user-defined actions as well.
       def save_failed!
@@ -378,8 +394,8 @@ module Resourceful
       #
       # Note that the way this is determined is based on the singularity of the controller name,
       # so it may yield false positives for oddly-named controllers and need to be overridden.
-      # 
-      # TODO: maybe we can define plural? and singular? as class_methods, 
+      #
+      # TODO: maybe we can define plural? and singular? as class_methods,
       # so they are not visible to the world
       def singular?
         instance_variable_name.singularize == instance_variable_name
@@ -391,8 +407,8 @@ module Resourceful
       # Note that the way this is determined is based on the singularity of the controller name,
       # so it may yield false negatives for oddly-named controllers.
       # If this is the case, the singular? method should be overridden.
-      # 
-      # TODO: maybe we can define plural? and singular? as class_methods, 
+      #
+      # TODO: maybe we can define plural? and singular? as class_methods,
       # so they are not visible to the world
       def plural?
         !singular?
