@@ -12,7 +12,7 @@
   <div class="column grid_6" style="margin-left:0px">
 
     <div>
-      <%= @session.description %>
+      <%= markdown @session.description %>
     </div>
 
     <h3>Categories</h3>
@@ -31,7 +31,7 @@
     <% if presenter.bio.blank? %>
     <p>This person hasn't yet added a bio.</p>
     <% else %>
-    <%= presenter.bio %>
+    <%= markdown(presenter.bio) %>
     <% end %>
     <% end %>
   </div>

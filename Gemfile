@@ -35,9 +35,8 @@ gem 'dalli'
 gem 'make_resourceful' #, :git => 'git://github.com/hcatlin/make_resourceful', :branch => 'rails3'
 
 # TODO
-# gem 'fastercsv'
 gem 'icalendar'
-
+gem 'redcarpet', :git => 'git://github.com/vmg/redcarpet.git'
 gem 'heroku_san'
 gem 'heroku'
 
