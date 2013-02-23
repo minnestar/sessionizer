@@ -13,11 +13,13 @@ Sessionizer::Application.routes.draw do
   resources :events, :only => [:index, :show]
   resources :presenters, :only => :index
 
-  #match '/login', 'user_sessions#new', :as => :new_login
-  #match '/login', 'user_sessions#create', :as => :login
+  #something is still off here
+  match '/login' => 'user_sessions#new', :as => :new_login
+  match '/login' => 'user_sessions#create', :as => :login
 
-  #match '/schedule', 'schedules#index', :as => :schedule
-  #match '/schedule.ics', 'schedules#ical', :as => :schedule_ics
+  #something is still off here
+  match '/schedule' => 'schedules#index', :as => :schedule
+  match '/schedule.ics' => 'schedules#ical', :as => :schedule_ics
 
   namespace :admin do 
     resources :sessions
