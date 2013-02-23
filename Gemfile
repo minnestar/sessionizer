@@ -29,7 +29,7 @@ gem 'erubis'
 gem 'haml'
 gem 'sass'
 gem 'formtastic'
-gem 'bluecloth' #, '>= 2.0.7'
+#gem 'bluecloth' #, '>= 2.0.7'
 gem "recaptcha" #, :lib => "recaptcha/rails"
 gem 'dalli'
 

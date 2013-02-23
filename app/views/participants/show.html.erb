@@ -12,7 +12,7 @@
   <p>This user hasn't yet added a bio.</p>
 <% end %>
 
-<%= markdown(@participant.bio).html_safe! %>
+<%= @participant.bio %>
 
 <div class="column grid_5">
   <h3>Presenting Sessions</h3>
