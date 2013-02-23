@@ -60,6 +60,7 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    make_resourceful (1.0.1)
     metaclass (0.0.1)
     mime-types (1.21)
     mocha (0.10.5)
@@ -132,6 +133,7 @@ DEPENDENCIES
   haml
   icalendar
   jquery-rails
+  make_resourceful
   mocha
   pg
   rails (= 3.2.12)
