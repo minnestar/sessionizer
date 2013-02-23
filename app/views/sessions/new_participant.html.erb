@@ -1,4 +1,4 @@
-<% semantic_form_for(@attendance, :url => session_attendance_path(@session)) do |f| %>
+<%= semantic_form_for(@attendance, :url => session_attendance_path(@session)) do |f| %>
   <p>Thanks for your interest in attending this session. Please enter your name and email so we can track who's coming.</p>
   
   <%= f.inputs :name, :email %>

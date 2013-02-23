@@ -1,13 +1,14 @@
 <% title('Log in') %>
 
-<% semantic_form_for(@participant, :url => login_path) do |f| %>
-  <% f.inputs do %>
+<%= semantic_form_for(@participant, :url => login_path) do |f| %>
+
+  <%= f.inputs do %>
    <%= f.input :email, :label => 'Your email' %>
   <% end %>
 
-  <%= recaptcha_tags.html_safe! %>
+  <%= recaptcha_tags.html_safe %>
 
-  <% f.buttons do %>
-    <%= f.commit_button 'Log in'  %>
-  <% end %>
+  <%# f.buttons do %>
+    <%= f.button 'Log in'  %>
+  <%# end %>
 <% end %>
