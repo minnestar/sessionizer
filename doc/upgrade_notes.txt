@@ -4,6 +4,16 @@ TODO:
 FasterCSV reference --> CSV ... 
 Routes
 
+f.error_messages
+
+attribute whitelist attr_accessible
+
+find_by_*
+
+
+
+
+
 
 #PG RESTORE FROM HEROKU
 curl -o latest.dump `heroku pgbackups:url --app sessionizer`
