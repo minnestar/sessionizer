@@ -2,9 +2,9 @@
 
 <%= semantic_form_for([:admin, @session]) do |f| %>
 
-  <%= f.error_messages %>
+  <%= f.semantic_errors %>
   
-  <% f.inputs do %>
+  <%= f.inputs do %>
     <%= f.input :title %>
 
     <%= f.input :name, :label => 'Presenter Name' %>
@@ -17,5 +17,5 @@
 
   <% end %>
   
-  <%= f.buttons %>
+  <%= f.actions %>
 <% end %>

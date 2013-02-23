@@ -26,8 +26,7 @@ class Session < ActiveRecord::Base
 
   attr_accessor :name, :email
 
-  # TODO: attr_accessible?
-  attr_protected :event_id, :timeslot_id, :participant_id, :room_id
+  #attr_protected :event_id, :timeslot_id, :participant_id, :room_id
 
   after_create :create_presenter
 
