@@ -1,31 +1,88 @@
-ActionController::Routing::Routes.draw do |map|
-  map.root :controller => 'pages', :action => 'home'
-  #map.root :controller => 'schedules', :action => 'index'
+Sessionizer::Application.routes.draw do
+  root :controller => 'pages', :action => 'home'
+  #root :controller => 'schedules', :action => 'index'
   
-  map.resources :sessions, :only => [:index, :show, :new, :create, :update, :edit], :collection => { 
-    :words => :get, 
-    :export => :get, 
-    :popularity => :get 
-  } do |session|
-    session.resource :attendance, :only => [:create]
+  resources :sessions, 
+    :only => [:index, :show, :new, :create, :update, :edit], 
+    :collection => { :words => :get, :export => :get, :popularity => :get } do 
+
+      resource :attendance, :only => [:create]
+
   end
-  map.resources :participants, :only => [:show, :edit, :update]
-  map.resources :categories, :only => :show
-  map.resources :events, :only => [:index, :show]
-  map.resources :presenters, :only => :index
 
-  map.new_login '/login', :controller => 'user_sessions', :action => 'new', :conditions => {:method => :get}
-  map.login '/login', :controller => 'user_sessions', :action => 'create', :conditions => {:method => :post}
+  resources :participants, :only => [:show, :edit, :update]
+  resources :categories, :only => :show
+  resources :events, :only => [:index, :show]
+  resources :presenters, :only => :index
 
-  map.schedule '/schedule', :controller => 'schedules', :action => 'index'
-  map.schedule_ics '/schedule.ics', :controller => 'schedules', :action => 'ical'
+  match '/login', 'user_sessions/new', :as => :new_login
+  match '/login', 'user_sessions/create', :as => :login
 
-  map.namespace :admin do |admin|
-    admin.resources :sessions
-    admin.resources :events do |events|
-      events.resources :timeslots
+  match '/schedule', 'schedules/index', :as => :schedule
+  match '/schedule.ics', 'schedules/ical', :as => :schedule_ics
+
+  namespace :admin do 
+    resources :sessions
+    resources :events do 
+      resources :timeslots
     end
-    admin.resources :presenters, :collection => { :export => :get, :export_all => :get }
+    resources :presenters, :collection => { :export => :get, :export_all => :get }
   end
-    
+
+  # The priority is based upon order of creation:
+  # first created -> highest priority.
+
+  # Sample of regular route:
+  #   match 'products/:id' => 'catalog#view'
+  # Keep in mind you can assign values other than :controller and :action
+
+  # Sample of named route:
+  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
+  # This route can be invoked with purchase_url(:id => product.id)
+
+  # Sample resource route (maps HTTP verbs to controller actions automatically):
+  #   resources :products
+
+  # Sample resource route with options:
+  #   resources :products do
+  #     member do
+  #       get 'short'
+  #       post 'toggle'
+  #     end
+  #
+  #     collection do
+  #       get 'sold'
+  #     end
+  #   end
+
+  # Sample resource route with sub-resources:
+  #   resources :products do
+  #     resources :comments, :sales
+  #     resource :seller
+  #   end
+
+  # Sample resource route with more complex sub-resources
+  #   resources :products do
+  #     resources :comments
+  #     resources :sales do
+  #       get 'recent', :on => :collection
+  #     end
+  #   end
+
+  # Sample resource route within a namespace:
+  #   namespace :admin do
+  #     # Directs /admin/products/* to Admin::ProductsController
+  #     # (app/controllers/admin/products_controller.rb)
+  #     resources :products
+  #   end
+
+  # You can have the root of your site routed with "root"
+  # just remember to delete public/index.html.
+  # root :to => 'welcome#index'
+
+  # See how all your routes lay out with "rake routes"
+
+  # This is a legacy wild controller route that's not recommended for RESTful applications.
+  # Note: This route will make all actions in every controller accessible via GET requests.
+  # match ':controller(/:action(/:id))(.:format)'
 end

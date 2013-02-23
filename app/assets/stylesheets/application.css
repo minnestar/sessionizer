@@ -1,0 +1,191 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+body {
+  background-color: #fff;
+  font-family: Verdana, Helvetica, Arial;
+  font-size: 14px;
+  margin: 0;
+}
+
+h1 {
+	margin: 10px 0;
+	font: 700 24px/24px Arial, sans-serif; 
+	color: #666;
+}
+
+h1 span.edit {
+    font-size: 50%;
+    color: gray;
+}
+
+h3 span.edit {
+    font-size: 75%;
+    color: gray;
+}
+
+h2 {
+	margin: 10px 0;
+	font: 300 18px/18px Arial, sans-serif; 
+	color: #666;
+}
+
+a img {
+  border: none;
+}
+
+a {
+  color: #0000FF;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+
+#container {
+  width: 75%;
+  margin: 0 auto;
+  background-color: #FFF;
+  padding: 20px 40px;
+  border: none;
+  margin-top: 20px;
+}
+
+#flash_notice, #flash_error {
+  padding: 5px 8px;
+  margin: 10px 0;
+}
+
+#flash_notice {
+  background-color: #CFC;
+  border: solid 1px #6C6;
+}
+
+#flash_error {
+  background-color: #FCC;
+  border: solid 1px #C66;
+}
+
+.fieldWithErrors {
+  display: inline;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid #CF0000;
+  padding: 0px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: 0;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 8px;
+}
+
+#errorExplanation ul {
+  margin: 2px 24px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: disc;
+}
+
+div.sidebar-box {
+    background:none repeat scroll 0 0 #CDCEEB;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    padding-top: 0.2em;
+}
+
+ul.sessionsList {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+ul.sessionsList li {
+	margin: 14px 0;
+	padding: 0;
+	letter-spacing:-0.05em;
+}
+
+ul.sessionsList li a:link,
+ul.sessionsList li a:visited {
+	font: 	700 1.2em/1.2em Arial, sans-serif;
+	color: #555;
+	text-decoration: none;
+}
+ul.sessionsList li a:hover, 
+ul.sessionsList li a:active
+ {
+	text-decoration: underline;
+}
+ul.sessionsList li div.presenter {
+	font-size: 0.8em;
+	color: #999;
+}
+ul.sessionsList li div.presenter a:link,
+ul.sessionsList li div.presenter a:visited {
+	color: #999;
+	text-decoration: none;
+}
+ul.sessionsList li div.presenter a:hover,
+ul.sessionsList li div.presenter a:active {
+	text-decoration: underline;
+}
+
+/*** Minne* Header ******************************************************************/
+
+.full-column {border-bottom:1px solid #d1d9dc;}
+.center-column {width:65em; margin:0 auto; text-align:left; clear:both;}
+
+ul#menu {margin:0 1px; padding:0; font-size: 12px; font-family: "Helvetica Neue",Arial,Helvetica,sans-serif}
+ul#menu li {font-size:1.3em; float:left; margin-right: 0.05em; padding:0; display:block; list-style:none;}
+ul#menu li a:link, ul#menu li a:visited {display:block; padding:7px 0 10px; line-height:1em; width:9.5em; color:#6a797d; text-decoration:none; border-top:3px solid #fff; text-transform:lowercase;}
+ul#menu li a:hover {border-top:3px solid #6a797d;}
+ul#menu li.star a:hover {border-top:3px solid #ee383a;}
+ul#menu li.bar a:hover {border-top:3px solid #444689;}
+ul#menu li.demo a:hover {border-top:3px solid #FFCD32;}
+ul#menu li.beat a:hover {border-top:3px solid #F89938;}
+ul#menu li.start a:hover {border-top:3px solid #4CB848;}
+ul#menu li a span.description {font-size:0.75em; color:#d1d9dc; text-transform:lowercase;}
+ul#menu li a.selected {border-top:3px solid #6a797d;}
+ul#menu .last {margin-right:0;}
+
+
+span.star { color: #EE383A; font-weight: 700; margin-left: 1px; }
+span.bar { color: #444689; font-weight: 700; margin-left: 1px; }
+span.demo { color: #FFCD32; font-weight: 700; margin-left: 1px; }
+span.beat { color: #F89938; font-weight: 700; margin-left: 1px; }
+span.start { color: #4CB848; font-weight: 700; margin-left: 1px; }
+
+.clearboth {clear:both;}
+

@@ -1,0 +1,10 @@
+
+TODO:
+
+FasterCSV reference --> CSV ... 
+NamedScopes
+Routes
+
+make sure make_resourceful works ... might need to upgrade plugin or remove
+
+
