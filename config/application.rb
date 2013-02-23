@@ -14,6 +14,8 @@ module Sessionizer
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    #
+    config.autoload_paths += [config.root.join('lib')]
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
@@ -59,19 +61,5 @@ module Sessionizer
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    #config.gem 'erubis'
-    #config.gem 'haml'
-    #config.gem 'sass'
-    #config.gem 'formtastic'
-    #config.gem 'bluecloth', '>= 2.0.7'
-    #config.gem "recaptcha", :lib => "recaptcha/rails"
-    #config.gem 'dalli'
-    #config.gem 'fastercsv'
-    #config.gem 'icalendar'
-    #
-    #TEST BUNDLE
-    #config.gem 'shoulda'
-    #config.gem 'mocha'
-    #
   end
 end
