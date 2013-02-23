@@ -46,12 +46,12 @@
                         .presenter= presenter.name
           
                   .description
-                    = session.description
+                    = markdown session.description
                     .bios
                       - session.presenters.each do |presenter|
                         .bio
                           .name= presenter.name
-                          = presenter.bio || "No bio."
+                          = markdown(presenter.bio || "No bio.")
                 
                   .summary= session.summary
 

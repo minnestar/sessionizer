@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/vmg/redcarpet.git
+  revision: 6f515c21d2854778e1355a75a310f3b6d20acb35
+  specs:
+    redcarpet (2.2.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -157,6 +163,7 @@ DEPENDENCIES
   pg
   rails (= 3.2.12)
   recaptcha
+  redcarpet!
   sass
   sass-rails (~> 3.2.3)
   shoulda
