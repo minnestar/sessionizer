@@ -8,6 +8,7 @@ module ApplicationHelper
   end
 
   def markdown(str)
+    return '' unless str
     @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML,
         :autolink => true, :space_after_headers => true)
     @markdown.render(str).html_safe
