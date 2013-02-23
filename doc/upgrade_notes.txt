@@ -12,7 +12,9 @@ attribute whitelist attr_accessible
 
 find_by_*
 
+FIXME: markdown helper should sanitize outputted HTML before marking it safe
 
+/sessions/words is including HTML entities from the markdown processor (possible fix: convert to text instead of HTML)
 
 
 

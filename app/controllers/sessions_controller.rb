@@ -49,8 +49,8 @@ class SessionsController < ApplicationController
   def words
     @sessions = Event.current_event.sessions
     @words = @sessions.map(&:description).
-      map { |desc| BlueCloth.new(desc).to_html }.
-      map { |md| RailsSanitize.full_sanitizer.sanitize(md) }.
+      map { |desc| view_context.markdown(desc) }.
+      map { |md| view_context.strip_tags(md) }.
       map(&:downcase).
       join(" ").
       gsub(/[.*,-?()+!"•—%]/, '').
