@@ -6,13 +6,6 @@ class UserSessionsController < ApplicationController
   def create
     @participant = Participant.first(:conditions => ['lower(email) = ?', params[:participant][:email].downcase])
 
-    if !verify_recaptcha
-      @participant = Participant.new(:email => params[:participant][:email])
-      flash[:error] = "Sorry, your recaptcha response wasn't reccognized. Please try again."
-      render :action => 'new'
-      return
-    end
-
     if @participant
       session[:participant_id] = @participant.id
       flash[:notice] = "You're logged in. Welcome back."

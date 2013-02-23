@@ -97,6 +97,6 @@ class Session < ActiveRecord::Base
 
   # assign the creator as the first presenter
   def create_presenter
-    self.presentations.create(:participant => self.participant)
+    self.presentations.create({:participant => self.participant}, :without_protection => true)
   end
 end

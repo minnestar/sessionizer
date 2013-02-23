@@ -36,7 +36,7 @@ class SessionsController < ApplicationController
 
     current_object.event = Event.current_event
 
-    if verify_recaptcha(:model => current_object, :message => "Please try entering the captcha again.") && current_object.save
+    if current_object.save
       flash[:notice] = "Thanks for adding your session."
       redirect_to current_object
     else

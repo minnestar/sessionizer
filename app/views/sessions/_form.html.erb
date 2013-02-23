@@ -1,8 +1,6 @@
 <%= semantic_form_for(@session) do |f| %>
 
-  <%= f.error_messages %>
-  
-  <% f.inputs do %>
+ <%= f.inputs do %>
     <%= f.input :title %>
     <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <strong>**bold**</strong>, <em>*italic*</em>, [link](http://example.com)' %>
 
@@ -17,7 +15,5 @@
     <%= f.input :projector, :label => 'I need a projector' %>
   <% end %>
 
-  <%= recaptcha_tags.html_safe %>
-  
-  <%= f.buttons %>
+ <%= f.actions %>
 <% end %>

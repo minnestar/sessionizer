@@ -30,7 +30,6 @@ gem 'haml'
 gem 'sass'
 gem 'formtastic'
 #gem 'bluecloth' #, '>= 2.0.7'
-gem "recaptcha" #, :lib => "recaptcha/rails"
 gem 'dalli'
 
 gem 'make_resourceful' #, :git => 'git://github.com/hcatlin/make_resourceful', :branch => 'rails3'
