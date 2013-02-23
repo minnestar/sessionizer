@@ -39,6 +39,10 @@ gem 'make_resourceful' #, :git => 'git://github.com/hcatlin/make_resourceful', :
 # gem 'fastercsv'
 gem 'icalendar'
 
+gem 'heroku_san'
+gem 'heroku'
+
+
 group :development, :test do
   #gem 'pry'
   #gem 'pry-rails'

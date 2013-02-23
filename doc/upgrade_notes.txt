@@ -5,4 +5,9 @@ FasterCSV reference --> CSV ...
 Routes
 
 
+#PG RESTORE FROM HEROKU
+curl -o latest.dump `heroku pgbackups:url --app sessionizer`
+pg_restore --verbose --clean --no-acl --no-owner -d sessionizer_development latest.dump
+
+
 
