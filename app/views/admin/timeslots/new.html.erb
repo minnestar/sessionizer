@@ -1,6 +1,6 @@
 <%= semantic_form_for([:admin, @event, @timeslot]) do |f| %>
-<%= f.error_messages %>
+<%= f.semantic_errors %>
 
 <%= f.inputs %>
-<%= f.buttons %>
+<%= f.actions %>
 <% end %>
