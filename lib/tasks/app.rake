@@ -56,9 +56,9 @@ namespace :app do
     session = Session.find(ENV['SESSION'])
 
     if ENV['EMAIL']
-      participant = Participant.find_by_email(ENV['EMAIL'])
+      participant = Participant.find(email:ENV['EMAIL']).first
     elsif ENV['PARTICIPANT']
-      participant = Participant.find_by_id(ENV["PARTICIPANT"])
+      participant = Participant.find(ENV["PARTICIPANT"])
     end
 
     # NOTE! Heroku does NOT like env vars with spaces in them, even when quoted. Escape spaces with \
