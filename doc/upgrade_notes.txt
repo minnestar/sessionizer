@@ -18,6 +18,9 @@ and it correctly stripped it out for me...
 get heroku-san going
 
 
+get specs and features going again
+
+
 
 
 #PG RESTORE FROM HEROKU
