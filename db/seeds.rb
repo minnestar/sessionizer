@@ -8,7 +8,7 @@ class ActiveRecord::Base
   # Returns the record.
   def self.create_or_update(options = {})
     id = options.delete(:id)
-    record = find_by_id(id) || new
+    record = self.find(id) || new
     record.id = id
     record.attributes = options
     record.save!
