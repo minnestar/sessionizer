@@ -13,4 +13,8 @@ module ApplicationHelper
         :autolink => true, :space_after_headers => true)
     @markdown.render(str).html_safe
   end
+
+  def add_sessions_button
+    link_to image_tag('button-add-session.png', :size => "215x43", :border=>"0"), new_session_path, :id => 'add-sessions-button'
+  end
 end

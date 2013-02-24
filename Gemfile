@@ -29,10 +29,8 @@ gem 'erubis'
 gem 'haml'
 gem 'sass'
 gem 'formtastic'
-#gem 'bluecloth' #, '>= 2.0.7'
 gem 'dalli'
-
-gem 'make_resourceful' #, :git => 'git://github.com/hcatlin/make_resourceful', :branch => 'rails3'
+gem 'make_resourceful'
 
 # TODO
 gem 'icalendar'
@@ -48,11 +46,15 @@ group :development, :test do
   #gem 'pry-highlight'
   #gem "pry-rescue"
   #gem "pry-stack_explorer"
+  gem "rspec-rails", "~> 2.0"
 end
 
 group :test do
   gem 'shoulda'
   gem 'mocha'
+  gem 'factory_girl'
+  gem 'cucumber-rails', :require => false
+  gem 'database_cleaner'
 end
 
 

@@ -6,7 +6,7 @@
   <div>
     <h2>There are no <%=  @category.name.downcase %> sessions yet.</h2>
     <p>You can be the first!</p>
-    <p><%= link_to image_tag('button-add-session.png', :size => "215x43", :border=>"0"), new_session_path %></p>
+    <p><%= add_sessions_button %></p>
 <% else %>
 <ul class="sessionsList">
   <%= render @sessions %>
