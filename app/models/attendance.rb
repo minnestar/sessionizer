@@ -2,7 +2,7 @@ class Attendance < ActiveRecord::Base
   belongs_to :session
   belongs_to :participant
 
-  attr_accessor :name, :email
+  attr_accessor :name, :email, :password
 
   attr_accessible :participant
 

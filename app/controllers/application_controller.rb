@@ -8,14 +8,23 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
-
   def current_participant
-    @current_user ||= Participant.find(session[:participant_id])
+    @current_participant ||= (current_participant_session && current_participant_session.participant)
+  end
+
+  def current_participant_session
+     return @current_participant_session if defined?(@current_participant_session)
+      @current_participant_session = ParticipantSession.find
   end
 
   def logged_in?
-    session[:participant_id] && !current_participant.nil?
+    current_participant_session.present?
+  end
+
+  def verify_session
+    unless logged_in?
+      flash[:notice] = 'You must be logged in to do that. Please log in or create a new account and try again.'
+      redirect_to new_login_path
+    end
   end
 end

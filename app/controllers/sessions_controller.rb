@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 class SessionsController < ApplicationController
+  before_filter :verify_session, :only => [:new, :create, :update, :edit]
   before_filter :verify_owner, :only => [:update, :edit]
   
   make_resourceful do
@@ -19,21 +20,7 @@ class SessionsController < ApplicationController
     build_object
     load_object
     
-    if logged_in?
-      current_object.participant = current_participant
-    else
-      name, email = object_parameters[:name], object_parameters[:email]
-
-      participant = Participant.first(:conditions => ['lower(email) = ?', email.downcase]) || Participant.create(:email => email, :name => name)
-      
-      if !participant.new_record?
-        session[:participant_id] = participant.id
-        current_object.participant = participant
-      else
-        current_object.errors.add_to_base("The participant is invalid.") # FIXME: better message
-      end
-    end
-
+    current_object.participant = current_participant
     current_object.event = Event.current_event
 
     if current_object.save

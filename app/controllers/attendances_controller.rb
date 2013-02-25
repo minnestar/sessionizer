@@ -12,7 +12,7 @@ class AttendancesController < ApplicationController
       end
       
       format.json do
-        render :partial => 'sessions/participant.html.erb', :locals => { :participant => current_participant }
+        render :partial => 'sessions/participant', :locals => { :participant => current_participant }
       end
     end
 
@@ -32,14 +32,20 @@ class AttendancesController < ApplicationController
   def create_participant
     return if logged_in?
     return if object_parameters.nil?
-    
-    name, email = object_parameters[:name], object_parameters[:email]
 
-    participant = Participant.first(:conditions => {:email => email}) || Participant.create(:email => email, :name => name)
-      
-    if !participant.new_record?
-      session[:participant_id] = participant.id
+    name, email, password = object_parameters[:name], object_parameters[:email], object_parameters[:password]
+
+    participant_session = ParticipantSession.new(:email => email, :password => password)
+    if participant_session.save
+      @current_participant_session = participant_session
+    else
+      participant = Participant.new(:name => name, :email => email, :password => password)
+      if participant.save
+        @current_participant_session = ParticipantSession.create(participant, true)
+      else
+        flash[:error] = "There was a problem creating an account for you. Please try again."
+        redirect_to new_participant_path
+      end
     end
-    #FIXME: error messages???
   end
 end

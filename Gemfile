@@ -29,7 +29,6 @@ gem 'erubis'
 gem 'haml'
 gem 'sass'
 gem 'formtastic'
-#gem 'bluecloth' #, '>= 2.0.7'
 gem 'dalli'
 
 gem 'make_resourceful' #, :git => 'git://github.com/hcatlin/make_resourceful', :branch => 'rails3'
@@ -39,7 +38,8 @@ gem 'icalendar'
 gem 'redcarpet', :git => 'git://github.com/vmg/redcarpet.git'
 gem 'heroku_san'
 gem 'heroku'
-
+gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'authlogic'
 
 group :development, :test do
   #gem 'pry'
@@ -55,9 +55,6 @@ group :test do
   gem 'mocha'
 end
 
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'

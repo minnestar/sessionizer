@@ -11,14 +11,14 @@ Sessionizer::Application.routes.draw do
     resource :attendance, :only => [:create]
   end
 
-  resources :participants, :only => [:show, :edit, :update]
+  resources :participants, :except => [:index, :destroy]
   resources :categories, :only => :show
   resources :events, :only => [:index, :show]
   resources :presenters, :only => :index
 
-  #something is still off here
-  match '/login' => 'user_sessions#new', :as => :new_login
-  match '/login' => 'user_sessions#create', :as => :login
+  match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
+  match '/login' => 'user_sessions#create', :as => :login, :via => 'post'
+  match '/logout' => 'user_sessions#destroy', :as => :logout, :via => 'delete'
 
   #something is still off here
   match '/schedule' => 'schedules#index', :as => :schedule
