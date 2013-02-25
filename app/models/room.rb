@@ -8,4 +8,6 @@ class Room < ActiveRecord::Base
   validates_presence_of :event_id
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :event_id
+
+  attr_accessible :name, :capacity
 end
