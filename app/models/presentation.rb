@@ -7,4 +7,6 @@ class Presentation < ActiveRecord::Base
 
   validates_presence_of :session_id
   validates_presence_of :participant_id
+
+  attr_accessible nil
 end

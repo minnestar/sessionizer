@@ -9,9 +9,10 @@ Sessionizer::Application.routes.draw do
       get :popularity
     end
     resource :attendance, :only => [:create]
+    resources :presentations, :only => [:index, :create]
   end
 
-  resources :participants, :except => [:index, :destroy]
+  resources :participants, :except => [:destroy]
   resources :categories, :only => :show
   resources :events, :only => [:index, :show]
   resources :presenters, :only => :index
