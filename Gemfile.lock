@@ -59,15 +59,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
-    cucumber (1.2.1)
-      builder (>= 2.1.2)
-      diff-lcs (>= 1.1.3)
-      gherkin (~> 2.11.0)
-      json (>= 1.4.6)
-    cucumber-rails (1.3.0)
-      capybara (>= 1.1.2)
-      cucumber (>= 1.1.8)
-      nokogiri (>= 1.5.0)
     dalli (2.6.2)
     database_cleaner (0.9.1)
     diff-lcs (1.2.1)
@@ -77,11 +68,12 @@ GEM
       multi_json (~> 1.0)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
+    factory_girl_rails (4.2.1)
+      factory_girl (~> 4.2.0)
+      railties (>= 3.0.0)
     ffi (1.4.0)
     formtastic (2.2.1)
       actionpack (>= 3.0)
-    gherkin (2.11.6)
-      json (>= 1.7.6)
     haml (4.0.0)
       tilt
     heroku (2.35.0)
@@ -199,12 +191,12 @@ PLATFORMS
 DEPENDENCIES
   authlogic
   bcrypt-ruby (~> 3.0.0)
+  capybara
   coffee-rails (~> 3.2.1)
-  cucumber-rails
   dalli
   database_cleaner
   erubis
-  factory_girl
+  factory_girl_rails (~> 4.0)
   formtastic
   haml
   heroku

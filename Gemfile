@@ -48,13 +48,13 @@ group :development, :test do
   #gem "pry-rescue"
   #gem "pry-stack_explorer"
   gem "rspec-rails", "~> 2.0"
+  gem 'capybara'
 end
 
 group :test do
   gem 'shoulda'
   gem 'mocha'
-  gem 'factory_girl'
-  gem 'cucumber-rails', :require => false
+  gem "factory_girl_rails", "~> 4.0"
   gem 'database_cleaner'
 end
 
@@ -63,10 +63,7 @@ end
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
+#gem 'unicorn'
 
 # To use debugger
 # gem 'debugger'
