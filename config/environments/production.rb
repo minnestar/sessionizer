@@ -41,7 +41,6 @@ Sessionizer::Application.configure do
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
-  require 'active_support/cache/dalli_store23'
   config.cache_store = :dalli_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
