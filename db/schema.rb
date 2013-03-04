@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130224225306) do
+ActiveRecord::Schema.define(:version => 20130304053929) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "session_id",     :null => false
@@ -42,6 +42,10 @@ ActiveRecord::Schema.define(:version => 20130224225306) do
     t.date     "date",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "levels", :force => true do |t|
+    t.string "name"
   end
 
   create_table "participants", :force => true do |t|
@@ -93,7 +97,10 @@ ActiveRecord::Schema.define(:version => 20130224225306) do
     t.integer  "timeslot_id"
     t.integer  "room_id"
     t.string   "summary"
+    t.integer  "level_id"
   end
+
+  add_index "sessions", ["level_id"], :name => "index_sessions_on_level_id"
 
   create_table "timeslots", :force => true do |t|
     t.integer  "event_id",   :null => false

@@ -7,11 +7,13 @@ class Session < ActiveRecord::Base
   belongs_to :event
   belongs_to :timeslot
   belongs_to :room
+  belongs_to :level
   has_many :attendances, :dependent => :destroy
   has_many :participants, :through => :attendances
 
   delegate :name, :to => :room, :prefix => true
   delegate :starts_at, :to => :timeslot
+  delegate :name, :to => :level, :prefix => true
 
   scope :with_attendence_count, :select => '*', :joins => "LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id"
 
@@ -26,7 +28,7 @@ class Session < ActiveRecord::Base
 
   attr_accessor :name, :email
 
-  attr_accessible :title, :description, :category_ids, :panel, :projector
+  attr_accessible :title, :description, :category_ids, :level_id
 
   after_create :create_presenter
 

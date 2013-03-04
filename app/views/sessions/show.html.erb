@@ -26,6 +26,12 @@
       <%= render :partial => 'category', :collection => @session.categories %>
     </ul>
 
+    <h3>Topic level</h3>
+
+    <p>
+      <%= @session.level_name %>
+    </p>
+
     <h3>About the <%= @session.presenters.count > 1 ? 'presenters' : 'presenter' %></h3>
     
     <% @session.presenters.each do |presenter| %>

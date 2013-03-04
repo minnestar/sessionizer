@@ -18,6 +18,9 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 
 TBD.
 
+* Create seed data: `rake db:seed`
+
+
 ## Contributors
 
 * [Luke Francl](http://luke.francl.org)
