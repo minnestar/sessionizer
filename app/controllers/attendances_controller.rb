@@ -12,13 +12,13 @@ class AttendancesController < ApplicationController
       end
       
       format.json do
-        render :partial => 'sessions/participant', :locals => { :participant => current_participant }
+        render :partial => 'sessions/participant', :formats => ['html'], :locals => { :participant => current_participant }
       end
     end
 
     response_for :create_fails do |format|
       format.json do
-        render :template => 'sessions/new_participant.html.erb', :status => :unprocessable_entity
+        render :partial => 'sessions/new_participant', :formats => ['html'], :status => :unprocessable_entity
       end
     end
   end

@@ -13,7 +13,7 @@ class Session < ActiveRecord::Base
 
   delegate :name, :to => :room, :prefix => true
   delegate :starts_at, :to => :timeslot
-  delegate :name, :to => :level, :prefix => true
+  delegate :name, :to => :level, :prefix => true, :allow_nil => true
 
   scope :with_attendence_count, :select => '*', :joins => "LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id"
 
