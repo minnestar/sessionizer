@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require typeahead.min
+ *= require fancybox
  *= require_tree .
  */
 

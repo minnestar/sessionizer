@@ -26,6 +26,8 @@ gem 'formtastic'
 gem 'dalli'
 gem 'make_resourceful'
 
+gem "fancybox-rails", "~> 0.2.1"
+
 # TODO
 gem 'icalendar'
 gem 'redcarpet', :git => 'git://github.com/vmg/redcarpet.git'
