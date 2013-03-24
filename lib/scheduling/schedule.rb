@@ -11,6 +11,9 @@ unless Array.method_defined?(:sample)
 end
 
 
+# Represents a particular schedule (i.e. assignment of sessions to rooms) for the purpose of annealing.
+# Scores the schedule and returns nearby variations.
+#
 module Scheduling
   class Schedule
     def initialize(event)

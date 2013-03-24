@@ -1,3 +1,8 @@
+# ActiveModel access is slow enough that we create a stripped-down, in-memory version of the various
+# models we need to create a schedule, then run the annealer against this in-memory model.
+#
+# This class sucks all the rooms, sessions and timeslots from the DB, and provides them during annealing.
+#
 module Scheduling
   class Context
     
@@ -8,6 +13,7 @@ module Scheduling
       @timeslots = event.timeslots
       @rooms = event.rooms
       
+      # Keys are participant IDs, values are arrays of session IDs
       @attendance_sets = Context.build_sets @sessions, Attendance    # These are both maps from participant_id to array of session_ids
       @presenter_sets  = Context.build_sets @sessions, Presentation
       
@@ -19,6 +25,7 @@ module Scheduling
         @attendance_sets[person].uniq!
       end
       
+      # Certain presenters can't present at certain times
       @timeslot_restrictions = {}
       event.presenter_timeslot_restrictions.each do |ptsr|
         @timeslot_restrictions[[ptsr.participant_id, ptsr.timeslot_id]] = ptsr.weight
