@@ -1,3 +1,5 @@
+# Generic simulated annealing helper. Does not contain any scheduling- / MinneBar-specific knowledge.
+#
 module Scheduling
   class Annealer
     def initialize(opts = {})
