@@ -2,17 +2,17 @@ namespace :app do
 
   desc 'create default timeslots for the most recent event'
   task :create_timeslots => :environment do
-    session_length = 45.minutes
+    session_length = 40.minutes
     event = Event.current_event
     event.timeslots.destroy_all
 
-    start_times = ["09:40",
-                   "10:40",
-                   "11:40",
-                   "13:50",
+    start_times = ["09:30",
+                   "10:20",
+                   "11:10",
+                   "12:00",
+                   "14:00",
                    "14:50",
-                   "15:50",
-                   "16:50"]
+                   "16:40"]
 
     start_times.each do |st|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
@@ -33,8 +33,12 @@ namespace :app do
              { :name => 'Proverb-Edison', :capacity => 60 },
              { :name => 'Landers', :capacity => 40 },
              { :name => 'Learn', :capacity => 24 },
-             { :name => 'Challenge', :capacity => 24 }
-            ]
+             { :name => 'Challenge', :capacity => 24 },
+             { :name => 'Discovery', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+             { :name => 'Tackle', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+             { :name => 'Leacock', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+             { :name => 'Gandhi', :capacity => 23 }] # Lower so smaller sessions get put in there: no video recording
+    # { :name => 'Texas', :capacity => 16 }]
 
     rooms.each do |room|
       event.rooms.create!(room)
