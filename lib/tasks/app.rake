@@ -12,7 +12,7 @@ namespace :app do
                    "12:00",
                    "14:00",
                    "14:50",
-                   "16:40"]
+                   "15:40"]
 
     start_times.each do |st|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
