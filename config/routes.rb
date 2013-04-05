@@ -1,6 +1,6 @@
 Sessionizer::Application.routes.draw do  
   #root :to => 'pages#home'
-  root :to => 'schedules/index'
+  root :to => 'schedules#index'
   
   resources :sessions, :only => [:index, :show, :new, :create, :update, :edit] do
     collection do
