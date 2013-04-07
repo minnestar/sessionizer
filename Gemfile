@@ -43,6 +43,8 @@ group :development, :test do
   #gem 'pry-highlight'
   #gem "pry-rescue"
   #gem "pry-stack_explorer"
+  gem 'ffaker'
+  gem 'ruby-progressbar', require: false
   gem "rspec-rails", "~> 2.0"
   gem 'capybara'
 end

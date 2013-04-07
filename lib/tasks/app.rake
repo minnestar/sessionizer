@@ -115,5 +115,63 @@ namespace :app do
     puts
     puts 'Congratulations. You have a schedule!'
   end
-end
 
+  desc 'Reset and hydrate the database with dummy data.'
+  task :make_believe => :environment do
+    require 'ffaker'
+    require 'ruby-progressbar'
+
+    puts 'Reset DB.'
+    Rake::Task['db:reset'].invoke
+
+    puts 'Creating event...'
+    event = Event.create(name: Faker::HipsterIpsum.words(3), date: 1.month.from_now) 
+
+    puts 'Creating timeslots...'
+    Rake::Task['app:create_timeslots'].invoke
+
+    puts 'Creating rooms...'
+    Rake::Task['app:create_rooms'].invoke
+
+    puts 'Creating 1000 participants...'
+    progress = ProgressBar.create(title: 'Participants', total: 1000)
+    1000.times do 
+      participant = Participant.new
+      participant.name = Faker::Name.name
+      participant.email = Faker::Internet.email
+      participant.password = 'standard'
+      participant.bio = Faker::Lorem.paragraph if [true, false].sample
+      participant.save!
+      progress.increment
+    end
+
+    puts 'Creating sessions...'
+    sessions_total = Room.count * Timeslot.count
+    sessions_total.times do 
+      session = Session.new
+      session.title = Faker::HipsterIpsum.phrase
+      session.description = Faker::HipsterIpsum.paragraph
+      session.participant = Participant.order('RANDOM()').first 
+      session.event = event
+      session.categories << Category.order('RANDOM()').first
+      session.save!
+
+      high = Room.order('RANDOM()').first.capacity
+      interest = (0..high).to_a.sample
+
+      puts session.title
+      participant_progress = ProgressBar.create(title: "  Interest: #{interest}", total: interest) 
+      interest.times do 
+        p = Participant.order('RANDOM()').first 
+        unless session.participants.include?(p)
+          a = Attendance.new
+          a.session = session
+          a.participant = p
+          a.save!
+        end
+        participant_progress.increment
+      end
+    end
+
+  end
+end
