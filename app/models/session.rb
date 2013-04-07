@@ -19,9 +19,10 @@ class Session < ActiveRecord::Base
 
   scope :for_current_event, lambda { {:conditions => {:event_id => Event.current_event.id}} }
 
+  validates_presence_of :description
+  validates_presence_of :event_id
   validates_presence_of :participant_id
   validates_presence_of :title
-  validates_presence_of :description
   validates_length_of :summary, :maximum => 100, :allow_blank => true
   #validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
   

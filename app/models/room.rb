@@ -2,6 +2,7 @@ class Room < ActiveRecord::Base
   belongs_to :event
   has_many :sessions, :dependent => :nullify
 
+  # TODO: Deprecate the default scope.
   default_scope :order => 'capacity desc'
 
   validates_numericality_of :capacity, :greater_than => 0, :only_integer => true
