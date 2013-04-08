@@ -12,15 +12,11 @@
     %h1
       = @event.name
       Session Schedule
-    
     .controls
       %a#hide-all(href='#') Hide all details
       %a#show-all(href='#') Show all details
       .clr
-    
-    .hint Tap a session title to show/hide its details.
-    .hint Tap a room name to see a map.
-  
+
   .timeslots
     - @event.timeslots.each do |slot|
       .timeslot{:id => "timeslot_#{slot.id}"}

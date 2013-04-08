@@ -1,5 +1,5 @@
-<li>
-  <%= link_to session.title, session %> 
+<li class="<%= attending_class(session) %>">
+  <h3><%= link_to session.title, session %></h3> 
   <div class="presenter">by <%= session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %></div>
   <% edit(session) do %>
     (<%= link_to 'edit', edit_session_path(session) %>)

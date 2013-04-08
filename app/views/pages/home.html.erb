@@ -1,86 +1,60 @@
 <% title('MinneBar Session Registration') %>
-
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
     <p>Welcome to the MinneBar session planning tool!</p>
-
     <h2>Recently Added Sessions</h2>
     <ul class="sessionsList">
       <%= render @recent_sessions %>
     </ul>
-
-    <p><%= link_to 'See all sessions', sessions_path %></p>
-
+    <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
     <div class="row">
       <div class="column grid_3">
         <h3>Sessions about development</h3>
-
         <ul class="sessionsList">
           <%= render @development.sessions.for_current_event.all(:limit => 5) %>
         </ul>
-
-        <p><%= link_to 'See more...', category_path(@development) %></p>
+        <p class="more_sessions"><%= link_to 'See more...', category_path(@development) %></p>
       </div>
-
       <div class="column grid_3">
         <h3>Sessions about Design</h3>
-
         <ul class="sessionsList">
           <%= render @design.sessions.for_current_event.all(:limit => 5) %>
         </ul>
-
-        <p><%= link_to 'See more...', category_path(@design) %></p>
-
+        <p class="more_sessions"><%= link_to 'See more...', category_path(@design) %></p>
       </div>
     </div>
-
     <div class="row">
       <div class="column grid_3">
         <h3>Sessions about Startups</h3>
-
         <ul class="sessionsList">
           <%= render @startups.sessions.for_current_event.all(:limit => 5) %>
         </ul>
-
-        <p><%= link_to 'See more...', category_path(@startups) %></p>
+        <p class="more_sessions"><%= link_to 'See more...', category_path(@startups) %></p>
      </div>
-
       <div class="column grid_3">
         <h3>Sessions about Hardware</h3>
-
         <ul class="sessionsList">
           <%= render @hardware.sessions.for_current_event.all(:limit => 5) %>
         </ul>
-
-        <p><%= link_to 'See more...', category_path(@hardware) %></p>
-
+        <p class="more_sessions"><%= link_to 'See more...', category_path(@hardware) %></p>
       </div>
-
     </div>
-
     <div class="row">
       <div class="column grid_6">
         <h3>Sessions about other stuff</h3>
-
         <ul class="sessionsList">
           <%= render @other.sessions.for_current_event.all(:limit => 5) %>
         </ul>
-
-        <p><%= link_to 'See more...', category_path(@other) %></p>
-        
+        <p class="more_sessions"><%= link_to 'See more...', category_path(@other) %></p>
       </div>
    </div>
-    
   </div>
   <div class="column grid_4">
     <div class="sidebar-box">
       <h3>How long are sessions?</h3>
-
       <p>Sessions can be at most <strong>50 minutes</strong> long. If you need extra
       time, there will be empty small breakout rooms available.</p>
-      
       <h3>What kind of sessions are OK?</h3>
-
       <p>If you're interested in a topic, chances are others are
       too. Types of sessions could
       include <strong>presentations</strong> (on a programming
