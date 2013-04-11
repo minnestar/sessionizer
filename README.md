@@ -16,10 +16,18 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 
 ## Running
 
+### Bootstrapping
+
 TBD.
 
 * Create seed data: `rake db:seed`
 
+### Development 
+
+For development, run `rake app:make_believe` to hydrate the database with sample
+data. It will reset the database, create an event, participants, timeslots, 
+sessions, and apply randomized participant interest. This does not run the 
+scheduling algorithm.
 
 ## Deploying
 
