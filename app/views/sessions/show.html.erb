@@ -6,90 +6,80 @@
 <% end %>
 
 <p>
-  By <%= @session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %>
+  by <%= @session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %>
   <% edit(@session) do %>
     (<%= link_to 'manage presenters', session_presentations_path(@session) %>)
   <% end %>
 </p>
 
-
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
 
-    <div>
+    <% if @session.description.present? %>
+    <div class="session_description">
       <%= markdown @session.description %>
+      <ul class="tags">
+        <%= render :partial => 'category', :collection => @session.categories %>
+      </ul>
+      <div class="topic_level"><%= @session.level_name %></div>
     </div>
+    <% end %>
 
-    <h3>Categories</h3>
+    <div class="session_presenters">
+      <!-- h3 class="heading">About the <%= @session.presenters.count > 1 ? 'presenters' : 'presenter' %></h3-->
+      
+      <% @session.presenters.each do |presenter| %>
+      <h4><%= presenter.name %> <% edit(presenter) do %>
+        <span class="edit">(This is you! <%= link_to 'Edit your bio', edit_participant_path(presenter) %>.)</span>
+      <% end %></h4>
+      
+      <% if presenter.bio.blank? %>
+      <p>This person hasn't yet added a bio.</p>
+      <% else %>
+      <%= markdown(presenter.bio) %>
+      <% end %>
+      <% end %>
+    </div> 
 
-    <ul>
-      <%= render :partial => 'category', :collection => @session.categories %>
+    <hr />
+
+    <% if @session.event == Event.current_event %>
+    <h2 style="margin-top:2em;">Similar Sessions</h2>
+
+    <% if !@similar_sessions.empty? %>
+
+    <p>Does this session sound interesting? You may also like these:</p>
+
+    <ul class="sessionsList">
+      <%= render @similar_sessions %>
     </ul>
-
-    <h3>Topic level</h3>
-
-    <p>
-      <%= @session.level_name %>
-    </p>
-
-    <h3>About the <%= @session.presenters.count > 1 ? 'presenters' : 'presenter' %></h3>
-    
-    <% @session.presenters.each do |presenter| %>
-    <h4><%= presenter.name %> <% edit(presenter) do %>
-      <span class="edit">(This is you! <%= link_to 'Edit your bio', edit_participant_path(presenter) %>.)</span>
-    <% end %></h4>
-    
-    <% if presenter.bio.blank? %>
-    <p>This person hasn't yet added a bio.</p>
     <% else %>
-    <%= markdown(presenter.bio) %>
+
+    <p>Help us find similar sessions by signing up for them!</p>
+
     <% end %>
     <% end %>
   </div>
 
   <div class="column grid_4">
-    <div class="sidebar-box">
-      <div id="interested-in-attending">
 
-        <% if !@session.attending?(current_participant) %>
-        <h3>Interested in this session?</h3>
-  
-        <p><%= link_to "Yes! I might attend.", '#', :id => 'attend' %></p>
-
-        <p>This will add your name to the list of interested participants. It will help us guage interest for scheduling purposes.</p>
-        <% end %>
-      </div>
-
-      <h3>Interested Participants</h3>
-
-      <% if @session.participants.empty? %>
-        <div id="no-participants">
-          No one has expressed interest in attending this session yet. Be the first!
-        </div>
-      <% end %>
-
-      <ul id="participants">
-        <%= render :partial => 'participant', :collection => @session.participants %>
-      </ul>
-
-      <% if @session.event == Event.current_event %>
-      <h3>Similar Sessions</h3>
-
-      <% if !@similar_sessions.empty? %>
-
-      <p>Does this session sound interesting? You may also like these:</p>
-
-      <ul>
-        <% @similar_sessions.each do |session| %>
-        <li><%= link_to session.title, session %></li>
-        <% end %>
-      </ul>
-      <% else %>
-
-      <p>Help us find similar sessions by signing up for them!</p>
-
-      <% end %>
+    <div id="interested-in-attending">
+      <% if !@session.attending?(current_participant) %>
+      <h3>Are you interested in this session?</h3>
+      <p>This will add your name to the list of interested participants. It will help us guage interest for scheduling purposes.</p>
+      <button class="button yellow" id="attend">
+        <div class="meta">minnebar</div>
+        <div class="title">Yes! I might attend.</div>
+      </button>
       <% end %>
     </div>
+
+    <% if @session.participants.any? %>
+      <h3>Interested Participants</h3>
+      <ul class="sessionsList">
+        <%= render :partial => 'participant', :collection => @session.participants %>
+      </ul>
+    <% end %>
+
   </div>
 </div>

@@ -21,7 +21,7 @@
     <p>This person isn't presenting any sessions.</p>
   <% end %>
 
-  <ul>
+  <ul class="sessionsList">
     <%= render :partial => 'session', :collection => @participant.sessions_presenting.for_current_event %>
   </ul>
 </div>
@@ -33,7 +33,7 @@
     <p>This person hasn't expressed interested in any sessions yet.</p>
   <% end %>
  
-  <ul>
+  <ul class="sessionsList">
     <%= render :partial => 'session', :collection => @participant.sessions_attending.for_current_event %>
   </ul>
 </div>

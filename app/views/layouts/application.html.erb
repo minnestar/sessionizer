@@ -10,7 +10,7 @@
   <body>
     <div class="full-column">
       <div class="center-column">
-	<ul id="menu">
+      <ul id="menu">
           <li class="star"><a href="http://minnestar.org/" ><span class="description">the community of</span><br />minne<span class="star">✱</span></a></li>
           <li class="bar"><a href="http://minnestar.org/minnebar/"><span class="description">(un)conference</span><br />minne<span class="bar">bar</span></a></li>
           <li class="demo"><a href="http://minnestar.org/minnedemo/"><span class="description">geek show &amp; tell</span><br />minne<span class="demo">demo</span></a></li>
@@ -23,12 +23,6 @@
     </div><!-- / full-column -->	
 
     <div class="center-column">
-      <% unless current_page?(root_path) %>
-	<p>
-	  <%= link_to 'Back to MinneBar Sessions Home Page', root_path %>
-	</p>
-      <% end %>
-
       <% if !logged_in? && !current_page?(new_login_path) && !current_page?(login_path) %>
         <p style="float:right"><%= link_to 'Log in', new_login_path %></p>
       <% end %>

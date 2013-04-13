@@ -31,4 +31,8 @@ class Participant < ActiveRecord::Base
       end
     end
   end
+
+  def attending_session?(session)
+    sessions_attending.include?(session)
+  end
 end
