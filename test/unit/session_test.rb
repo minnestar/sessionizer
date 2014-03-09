@@ -6,9 +6,10 @@ class SessionTest < ActiveSupport::TestCase
       Session.new(:participant_id => 123)
     end
     
-    should_validate_presence_of :title, :description
-    should_belong_to :timeslot
-    should_belong_to :room
+    should validate_presence_of :title
+    should validate_presence_of :description
+    should belong_to :timeslot
+    should belong_to :room
 
     should "destory categorizations and attendences" do
       session = Fixie.sessions(:luke_session)

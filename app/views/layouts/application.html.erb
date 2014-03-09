@@ -4,29 +4,26 @@
     <%= csrf_meta_tags %>
     <title><%= yield(:title) || "Untitled" %></title>
     <%= stylesheet_link_tag 'application', 'formtastic', 'formtastic_changes', 'grid'%>
-
     <%= yield(:head) %>
   </head>
   <body>
     <div class="full-column">
       <div class="center-column">
-	<ul id="menu">
+        <ul id="menu">
           <li class="star"><a href="http://minnestar.org/" ><span class="description">the community of</span><br />minne<span class="star">✱</span></a></li>
           <li class="bar"><a href="http://minnestar.org/minnebar/"><span class="description">(un)conference</span><br />minne<span class="bar">bar</span></a></li>
           <li class="demo"><a href="http://minnestar.org/minnedemo/"><span class="description">geek show &amp; tell</span><br />minne<span class="demo">demo</span></a></li>
-          <li class="spark"><a href="http://minnestar.org/minnespark/"><span class="description">earliest stage ideas</span><br />minne<span class="beat">spark</span></a></li>
        </ul>
-
-	<div class="clearboth"><!-- --></div>
+       <div class="clearboth"><!-- --></div>
 
       </div><!-- / center-column -->
     </div><!-- / full-column -->	
 
     <div class="center-column">
       <% unless current_page?(root_path) %>
-	<p>
-	  <%= link_to 'Back to MinneBar Sessions Home Page', root_path %>
-	</p>
+      <p>
+        <%= link_to 'Back to MinneBar Sessions Home Page', root_path %>
+      </p>
       <% end %>
 
       <% if !logged_in? && !current_page?(new_login_path) && !current_page?(login_path) %>
@@ -46,7 +43,6 @@
         <h1><%=h yield(:title) %> <span class="edit"><%= yield :edit %></span></h1>
       <%- end -%>
 
-      
       <%= yield %>
 
       <%= render :partial => 'layouts/javascript' %>
