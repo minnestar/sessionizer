@@ -27,10 +27,17 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: sessionizer_development
+  database: sessionizer_development_2013
   pool: 5
   username: postgres
   password:
+#development:
+  #adapter: postgresql
+  #encoding: unicode
+  #database: sessionizer_development
+  #pool: 5
+  #username: postgres
+  #password:
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

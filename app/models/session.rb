@@ -29,7 +29,7 @@ class Session < ActiveRecord::Base
 
   attr_accessor :name, :email
 
-  attr_accessible :title, :description, :category_ids, :level_id
+  attr_accessible :title, :description, :category_ids, :level_id, :participant_id
 
   after_create :create_presenter
 

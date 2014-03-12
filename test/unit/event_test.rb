@@ -6,9 +6,10 @@ class EventTest < ActiveSupport::TestCase
       Event.new(:name => 'Foobar', :date => Date.today)
     end
     
-    should_validate_presence_of :name, :date
-    should_have_many :sessions
-    should_have_many :timeslots
-    should_have_many :rooms
+    should validate_presence_of :name
+    should validate_presence_of :date
+    should have_many :sessions
+    should have_many :timeslots
+    should have_many :rooms
   end
 end

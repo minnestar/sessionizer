@@ -27,20 +27,20 @@ namespace :app do
 
     
     rooms = [
-             { :name => 'Harriet', :capacity => 100 },
-             { :name => 'Calhoun', :capacity => 100 },
-             { :name => 'Nokomis', :capacity => 100 },
-             { :name => 'Minnetonka', :capacity => 100 },
-             { :name => 'Theater', :capacity => 250 },
-             { :name => 'Proverb-Edison', :capacity => 60 },
-             { :name => 'Learn', :capacity => 24 },
-             { :name => 'Challenge', :capacity => 24 }, 
-             { :name => 'Discovery', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-             { :name => 'Tackle', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-             { :name => 'Stephen Leacock', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-             { :name => 'Gandhi', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-             { :name => 'Texas', :capacity => 20 }
-            ]
+      { :name => 'Nokomis', :capacity => 100 },
+      { :name => 'Minnetonka', :capacity => 100 },
+      { :name => 'Harriet', :capacity => 100 },
+      { :name => 'Calhoun', :capacity => 100 },
+      { :name => 'Theater', :capacity => 250 },
+      { :name => 'Proverb-Edison', :capacity => 60 },
+      { :name => 'Learn', :capacity => 24 },
+      { :name => 'Challenge', :capacity => 24 }, 
+      { :name => 'Discovery', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+      { :name => 'Tackle', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+      { :name => 'Stephen Leacock', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+      { :name => 'Gandhi', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
+      { :name => 'Texas', :capacity => 20 }
+    ]
 
     rooms.each do |room|
       event.rooms.create!(room)
