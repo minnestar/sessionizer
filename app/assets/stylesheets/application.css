@@ -11,6 +11,8 @@
  *= require_self
  *= require typeahead.min
  *= require fancybox
+ *= require formtastic.css
+ *= require formtastic_changes.css
  *= require_tree .
  */
 
