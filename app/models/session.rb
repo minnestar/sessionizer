@@ -2,7 +2,8 @@ class Session < ActiveRecord::Base
   has_many :categorizations, :dependent => :destroy
   has_many :categories, :through => :categorizations
   belongs_to :participant  # TODO: rename to 'owner'
-  has_many :presentations
+
+  has_many :presentations, :dependent => :destroy
   has_many :presenters, :through => :presentations, :source => :participant
   belongs_to :event
   belongs_to :timeslot
@@ -32,6 +33,19 @@ class Session < ActiveRecord::Base
   attr_accessible :title, :description, :category_ids, :level_id, :participant_id
 
   after_create :create_presenter
+
+  def self.swap_timeslot_and_rooms(session_1, session_2)
+    if session_1.timeslot == session_2.timeslot
+      raise "Sessions must be in different timeslots to swap"
+    end
+    
+    Session.transaction do
+      session_1.room, session_2.room = session_2.room, session_1.room
+      session_1.timeslot, session_2.timeslot = session_2.timeslot, session_1.timeslot
+      session_1.save
+      session_2.save
+    end
+  end
 
   def self.swap_rooms(session_1, session_2)
     if session_1.timeslot != session_2.timeslot

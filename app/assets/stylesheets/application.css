@@ -177,7 +177,7 @@ ul#menu li {font-size:1.3em; float:left; margin-right: 0.05em; padding:0; displa
 ul#menu li a:link, ul#menu li a:visited {display:block; padding:7px 0 10px; line-height:1em; width:9.5em; color:#6a797d; text-decoration:none; border-top:3px solid #fff; text-transform:lowercase;}
 ul#menu li a:hover {border-top:3px solid #6a797d;}
 ul#menu li.star a:hover {border-top:3px solid #ee383a;}
-ul#menu li.bar a:hover {border-top:3px solid #444689;}
+ul#menu li.bar a:hover {border-top:3px solid #2772a4;}
 ul#menu li.demo a:hover {border-top:3px solid #FFCD32;}
 ul#menu li.beat a:hover {border-top:3px solid #F89938;}
 ul#menu li.start a:hover {border-top:3px solid #4CB848;}
@@ -187,7 +187,7 @@ ul#menu .last {margin-right:0;}
 
 
 span.star { color: #EE383A; font-weight: 700; margin-left: 1px; }
-span.bar { color: #444689; font-weight: 700; margin-left: 1px; }
+span.bar { color: #2772a4; font-weight: 700; margin-left: 1px; }
 span.demo { color: #FFCD32; font-weight: 700; margin-left: 1px; }
 span.beat { color: #F89938; font-weight: 700; margin-left: 1px; }
 span.start { color: #4CB848; font-weight: 700; margin-left: 1px; }
