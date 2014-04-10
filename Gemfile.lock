@@ -55,7 +55,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
-    dalli (2.7.0)
     database_cleaner (1.2.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
@@ -195,7 +194,6 @@ DEPENDENCIES
   bcrypt-ruby (~> 3.0.0)
   capybara
   coffee-rails (~> 3.2.1)
-  dalli
   database_cleaner
   erubis
   factory_girl_rails (~> 4.0)

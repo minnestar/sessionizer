@@ -19,7 +19,6 @@ gem 'erubis'
 gem 'haml'
 gem 'sass'
 gem 'formtastic'
-gem 'dalli'
 gem 'make_resourceful'
 
 gem "fancybox-rails", "~> 0.2.1"

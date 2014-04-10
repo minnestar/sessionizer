@@ -74,14 +74,15 @@ module SchedulesHelper
 private
 
   def estimated_height(session)
-    session[:estimated_height] ||= begin
+    if session.instance_variable_get(:@estimated_height).blank?
       h = 0
       h += (session.title.length / 42 + 1) * 25
       h += (session.presenters.size / 5 + 1) * 20
       h += session.description.length / 4 + 17
       session.presenters.each { |presenter| h += (presenter.bio || '').length / 5 + 30}
-      h
+      session.instance_variable_set(:@estimated_height, h) 
     end
+    session.instance_variable_get(:@estimated_height)
   end
 
 end

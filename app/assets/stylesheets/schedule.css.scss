@@ -1,3 +1,4 @@
+
 #schedule-body {
   margin: 0;
   padding: 0; }
@@ -18,13 +19,23 @@
     background-image: -moz-linear-gradient(top, #676ab1 0%, #8a8cc3 100%);
     background-image: -o-linear-gradient(top, #676ab1 0%, #8a8cc3 100%);
     background-image: -ms-linear-gradient(top, #676ab1 0%, #8a8cc3 100%); }
+    #schedule-body .nav-top .maps .room{
+      float: right;
+      padding: 0 3em;
+      text-decoration: none;
+      border-radius: 1em; }
+
     #schedule-body .nav-top .timeslots .timeslot {
       float: left;
       padding: 0 1ex;
       text-decoration: none;
       border-radius: 1em; }
-      #schedule-body .nav-top .timeslots .timeslot:link, #schedule-body .nav-top .timeslots .timeslot:hover, #schedule-body .nav-top .timeslots .timeslot:active, #schedule-body .nav-top .timeslots .timeslot:visited {
-        color: white; }
+
+      #schedule-body .nav-top a:link, 
+      #schedule-body .nav-top a:hover, 
+      #schedule-body .nav-top a:active, 
+      #schedule-body .nav-top a:visited { color: white; }
+
       #schedule-body .nav-top .timeslots .timeslot.selected {
         background: white;
         color: #666677 !important; }
@@ -32,6 +43,7 @@
         color: #ffee88; }
       #schedule-body .nav-top .timeslots .timeslot.now.selected {
         color: #9c8c29 !important; }
+
   #schedule-body .schedule-header {
     padding: 2em;
     padding-top: 4em;

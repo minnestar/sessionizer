@@ -35,10 +35,6 @@ class Session < ActiveRecord::Base
   after_create :create_presenter
 
   def self.swap_timeslot_and_rooms(session_1, session_2)
-    if session_1.timeslot == session_2.timeslot
-      raise "Sessions must be in different timeslots to swap"
-    end
-    
     Session.transaction do
       session_1.room, session_2.room = session_2.room, session_1.room
       session_1.timeslot, session_2.timeslot = session_2.timeslot, session_1.timeslot

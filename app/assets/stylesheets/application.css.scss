@@ -11,9 +11,13 @@
  *= require_self
  *= require typeahead.min
  *= require fancybox
- *= require grid
+ *= require fancybox/jquery.fancybox-1.3.4.css
  *= require formtastic
  *= require formtastic_changes
+ *= require grid
+ *= require schedule
+ *= require schedule-print
+ *= require schedule-mobile
  *= require_tree .
  */
 
