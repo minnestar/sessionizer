@@ -7,10 +7,8 @@
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = slot.starts_at.in_time_zone.to_s(:usahhmm)
   .maps
-    %a.room{ :href => '/assets/maps/li-meeting-rooms.png' }
-      Map 2
-    %a.room{ :href => '/assets/maps/hub-meeting-rooms.png' }
-      Map 1
+    %a.room{ :href => '/assets/maps/master-map.png' }
+      Floor Plan Map 
 
 .schedule
   .schedule-header
