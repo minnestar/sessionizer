@@ -19,11 +19,19 @@
     background-image: -moz-linear-gradient(top, #676ab1 0%, #8a8cc3 100%);
     background-image: -o-linear-gradient(top, #676ab1 0%, #8a8cc3 100%);
     background-image: -ms-linear-gradient(top, #676ab1 0%, #8a8cc3 100%); }
-    #schedule-body .nav-top .maps .room{
-      float: right;
-      padding: 0 3em;
+
+    #schedule-body .nav-top .timeslots, 
+    #schedule-body .nav-top .maps {
+      width:360px;
+      float:left;
+    }
+
+    #schedule-body .nav-top .maps a {
+      float: left;
+      margin: 0.2em 1em;
       text-decoration: none;
       border-radius: 1em; }
+
 
     #schedule-body .nav-top .timeslots .timeslot {
       float: left;
