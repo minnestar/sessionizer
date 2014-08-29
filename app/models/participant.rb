@@ -8,7 +8,7 @@ class Participant < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
-  
+
   attr_accessible :name, :email, :password, :bio
 
   acts_as_authentic do |config|

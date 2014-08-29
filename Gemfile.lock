@@ -68,9 +68,6 @@ GEM
     fancybox-rails (0.2.1)
       railties (>= 3.1.0)
     ffaker (1.23.0)
-    fixie (0.2.0)
-      activesupport
-      sequel
     formtastic (2.2.1)
       actionpack (>= 3.0)
     haml (4.0.5)
@@ -158,7 +155,6 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    sequel (4.8.0)
     shoulda (3.5.0)
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (>= 1.4.1, < 3.0)
@@ -199,7 +195,6 @@ DEPENDENCIES
   factory_girl_rails (~> 4.0)
   fancybox-rails (~> 0.2.1)
   ffaker
-  fixie
   formtastic
   haml
   heroku

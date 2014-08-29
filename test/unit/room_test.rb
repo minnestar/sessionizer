@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RoomTest < ActiveSupport::TestCase
   context "Room" do
-    subject { Fixie.events(:current_event).rooms.create!(:name => 'Asdf', :capacity => 100) }
+    subject { FactoryGirl.create(:event).rooms.create!(:name => 'Asdf', :capacity => 100) }
     should have_many :sessions
     should belong_to :event
 
