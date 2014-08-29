@@ -8,19 +8,20 @@ feature "Manage Sessions" do
   scenario "As a guest, I want to register " do
     visit root_url
 
-    click_link("Button-add-session")
-    save_and_open_page
+    click_link "Button-add-session"
+    click_link "Register here"
 
+    fill_in 'participant_name', with: 'Jack Johnson'
+    fill_in 'Your email', with: 'jack@example.com'
+    fill_in 'Password', with: 's00persekret'
+    click_button "Create Participant"
 
+    click_link "Button-add-session"
 
+    fill_in('Title', with: 'Rails 4 FTW')
+    fill_in('Description', with: 'Rails Desc')
 
-    #fill_in('Title', with: 'Rails 4 FTW')
-    #fill_in('Description', with: 'Rails Desc')
-    #fill_in('Your Name', with: 'Jack Johnson')
-    #fill_in('Your Email', with: 'jack@example.com')
-    #choose('Categories', with: [])
- 
-    #click_button 'Create Session'
-    page.should have_content 'Success'
+    click_button 'Create Session'
+    expect(page).to have_content 'Thanks for adding your session.'
   end
 end

@@ -31,6 +31,7 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'authlogic'
 
 group :development, :test do
+  gem 'sqlite3'
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
   gem "rspec-rails", "~> 2.0"

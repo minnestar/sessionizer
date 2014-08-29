@@ -13,10 +13,12 @@ describe Session do
   it { should have_many(:participants) }
 
   describe "creation" do
-    let(:participant) { stub_model(Participant) } 
+    let(:participant) { stub_model(Participant) }
     subject {
-      participant.sessions.create(title: 'Some Title', 
-                                  description: 'some desc')
+      participant.sessions.build(title: 'Some Title', description: 'some desc').tap do |s|
+        s.event = FactoryGirl.create(:event)
+        s.save!
+      end
 
     }
 
