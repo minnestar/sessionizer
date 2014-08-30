@@ -1,3 +1,5 @@
+![Travis CI Build](https://travis-ci.org/minnestar/sessionizer.svg?branch=master)
+
 # Sessionizer
 
 Sessionizer is a tool for managing session registration for unconferences. It was written for [MinneBar](http://minnestar.org/minnebar/), an unconference in Minnesota and one of the largest BarCamps in the world.
