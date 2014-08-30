@@ -1,0 +1,19 @@
+language: ruby
+rvm:
+  - 2.1
+
+notifications:
+  email:
+    - jcoyne@justincoyne.com
+
+before_script:
+  - cp config/database.yml.travis config/database.yml
+
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+bundler_args: --without development debug
+
+services:
+  - redis-server
