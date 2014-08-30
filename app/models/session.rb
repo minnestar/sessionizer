@@ -1,4 +1,5 @@
 class Session < ActiveRecord::Base
+
   has_many :categorizations, :dependent => :destroy
   has_many :categories, :through => :categorizations
   belongs_to :participant  # TODO: rename to 'owner'
@@ -72,7 +73,8 @@ class Session < ActiveRecord::Base
     result
   end
 
-  def self.session_similarity
+
+  def self.session_similarity()
     Rails.cache.fetch('session_similarity', :expires_in => 30.minutes) do
       preferences = Session.attendee_preferences
       ::Recommender.calculate_similar_items(preferences, 5)
@@ -91,7 +93,7 @@ class Session < ActiveRecord::Base
   end
 
   def recommended_sessions
-    similarity = Session.session_similarity
+    similarity = Session.session_similarity()
     recommended = similarity[self.id]
 
     if recommended

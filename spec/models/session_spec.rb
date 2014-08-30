@@ -113,9 +113,9 @@ describe Session do
 
       half_similar.attendances.create(:participant => joe)
 
-      similarity = Session.session_similarity[comparison_session.id]
+      similarity = Session.session_similarity()
 
-      assert_equal([[1, equal_session.id], [0.5, half_similar.id]], similarity)
+      assert_equal([[1, equal_session.id], [0.5, half_similar.id]], similarity[comparison_session.id])
 
       assert_equal([equal_session, half_similar], comparison_session.recommended_sessions)
     end
@@ -126,6 +126,8 @@ describe Session do
       Session.stubs(:session_similarity).returns({ session.id => [[1, 123], [0.5, 999]] })
 
       assert_equal([], session.recommended_sessions)
+      Session.unstub(:session_similarity)
+
     end
   end
 end
