@@ -11,12 +11,16 @@ describe Session do
   it { should belong_to(:room) }
   it { should have_many(:attendances) }
   it { should have_many(:participants) }
+  it { should validate_presence_of :title }
+  it {should validate_presence_of :description }
 
   describe "creation" do
-    let(:participant) { stub_model(Participant) } 
+    let(:participant) { stub_model(Participant) }
     subject {
-      participant.sessions.create(title: 'Some Title', 
-                                  description: 'some desc')
+      participant.sessions.build(title: 'Some Title', description: 'some desc').tap do |s|
+        s.event = FactoryGirl.create(:event)
+        s.save!
+      end
 
     }
 
@@ -26,4 +30,101 @@ describe Session do
 
   end
 
+  let(:event) { FactoryGirl.create(:event) }
+
+
+  it "should destory categorizations and attendences" do
+    session = FactoryGirl.create(:luke_session, event: event)
+    categorization = session.categorizations.build
+    categorization.category = FactoryGirl.create(:category)
+    categorization.save!
+    session.attendances.create(:participant => FactoryGirl.create(:joe))
+
+    expect {
+      expect {
+        expect {
+          session.destroy
+        }.to change { Attendance.count }.by(-1)
+      }.to change { Session.count }.by(-1)
+    }.to change { Categorization.count }.by(-1)
+  end
+
+  it "should allow a blank summary" do
+    subject.summary = ''
+    subject.valid?
+    assert_empty subject.errors[:summary]
+  end
+
+  it "should add the owner as a presenter" do
+    joe = FactoryGirl.create(:joe)
+    session = joe.sessions.build(:title => 'hi', :description => 'bye')
+    session.event = event
+    session.save!
+    assert_equal([joe], session.presenters)
+  end
+
+  it "should require a unique timeslot and room" do
+    room = FactoryGirl.create(:room)
+    slot = FactoryGirl.create(:timeslot_1)
+    Session.new(:title => 'hi', :description => 'bye').tap do |s|
+      s.timeslot = slot
+      s.room = room
+      s.participant = FactoryGirl.create(:joe)
+      s.event = FactoryGirl.create(:event)
+      s.save!
+    end
+
+    session = Session.new.tap do |s|
+      s.timeslot = slot
+      s.room = room
+    end
+    session.valid?
+
+    assert session.errors[:timeslot_id]
+  end
+
+  describe "#recommended_sessions" do
+    it "should order based on recommendation strength" do
+      current_event = FactoryGirl.create(:event)
+      joe = FactoryGirl.create(:joe)
+      luke = FactoryGirl.create(:luke)
+
+      comparison_session = current_event.sessions.build(:title => 'session 1', :description => 'blah').tap do |s|
+        s.participant = luke
+        s.save!
+      end
+
+      half_similar = current_event.sessions.create(:title => 'session 3', :description => 'blah').tap do |s|
+        s.participant = luke
+        s.save!
+      end
+
+      # create this one last: natural ordering is by IDs(?), this will throw it off
+      equal_session = current_event.sessions.create(:title => 'session 2', :description => 'blah').tap do |s|
+        s.participant = luke
+        s.save!
+      end
+
+      comparison_session.attendances.create(:participant => luke)
+      comparison_session.attendances.create(:participant => joe)
+
+      equal_session.attendances.create(:participant => luke)
+      equal_session.attendances.create(:participant => joe)
+
+      half_similar.attendances.create(:participant => joe)
+
+      similarity = Session.session_similarity
+      assert_equal([[1, equal_session.id], [0.5, half_similar.id]], similarity[comparison_session.id])
+
+      assert_equal([equal_session, half_similar], comparison_session.recommended_sessions)
+    end
+
+    it "should not error if session similarity includes deleted session" do
+      session = FactoryGirl.create(:luke_session)
+
+      Session.stubs(:session_similarity).returns({ session.id => [[1, 123], [0.5, 999]] })
+
+      assert_equal([], session.recommended_sessions)
+    end
+  end
 end

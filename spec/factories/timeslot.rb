@@ -4,7 +4,7 @@ FactoryGirl.define do
     association :event
 
     starts_at { Time.zone.parse("#{event.date.strftime('%Y-%m-%d')} #{generate(:slot_time)}") }
-    ends_at { starts_at + @@session_length }
+    ends_at { starts_at + SESSION_LENGTH }
 
     factory :timeslot_1 do
       starts_at { Time.zone.parse("#{event.date.strftime('%Y-%m-%d')} 09:00:00") }

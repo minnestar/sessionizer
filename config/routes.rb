@@ -1,7 +1,7 @@
-Sessionizer::Application.routes.draw do  
-  #root :to => 'pages#home'
-  root :to => 'schedules#index'
-  
+Sessionizer::Application.routes.draw do
+  root :to => 'pages#home'
+  #root :to => 'schedules#index'
+
   resources :sessions, :only => [:index, :show, :new, :create, :update, :edit] do
     collection do
       get :words
@@ -25,9 +25,9 @@ Sessionizer::Application.routes.draw do
   match '/schedule' => 'schedules#index', :as => :schedule
   match '/schedule.ics' => 'schedules#ical', :as => :schedule_ics
 
-  namespace :admin do 
+  namespace :admin do
     resources :sessions
-    resources :events do 
+    resources :events do
       resources :timeslots
     end
     resources :presenters do
