@@ -40,4 +40,10 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.include FactoryGirl::Syntax::Methods
+
+  config.before do
+    #don't hold on to any memoized events
+    Event.instance_variable_set(:'@current_event', nil)
+  end
+
 end

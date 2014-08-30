@@ -33,6 +33,7 @@ group :development, :test do
   gem 'ruby-progressbar', require: false
   gem "rspec-rails", "~> 2.0"
   gem 'capybara'
+  gem 'pry'
 end
 
 group :test do
