@@ -34,7 +34,7 @@ describe Session do
   end
 
   it "should destory categorizations and attendences" do
-    session = create(:luke_session, event: event)
+    session = create(:session, event: event)
     categorization = session.categorizations.build
     categorization.category = Category.first
     categorization.save!
@@ -121,7 +121,7 @@ describe Session do
     end
 
     it "should not error if session similarity includes deleted session" do
-      session = create(:luke_session)
+      session = create(:session)
 
       allow(Session).to receive(:session_similarity).and_return(session.id => [[1, 123], [0.5, 999]])
 
