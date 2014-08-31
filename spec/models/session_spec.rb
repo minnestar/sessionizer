@@ -36,7 +36,7 @@ describe Session do
   it "should destory categorizations and attendences" do
     session = create(:luke_session, event: event)
     categorization = session.categorizations.build
-    categorization.category = create(:category)
+    categorization.category = Category.first
     categorization.save!
     session.attendances.create(:participant => joe)
 

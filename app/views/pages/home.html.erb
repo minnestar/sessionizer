@@ -2,76 +2,13 @@
 
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
-    <p>Welcome to the MinneBar session planning tool!</p>
+    <p>Welcome to the MinneBar session planning tool.</p>
 
-    <h2>Recently Added Sessions</h2>
-    <ul class="sessionsList">
-      <%= render @recent_sessions %>
-    </ul>
-
-    <p><%= link_to 'See all sessions', sessions_path %></p>
-
-    <div class="row">
-      <div class="column grid_3">
-        <h3>Sessions about development</h3>
-
-        <ul class="sessionsList">
-          <%= render @development.sessions.for_current_event.all(:limit => 5) %>
-        </ul>
-
-        <p><%= link_to 'See more...', category_path(@development) %></p>
-      </div>
-
-      <div class="column grid_3">
-        <h3>Sessions about Design</h3>
-
-        <ul class="sessionsList">
-          <%= render @design.sessions.for_current_event.all(:limit => 5) %>
-        </ul>
-
-        <p><%= link_to 'See more...', category_path(@design) %></p>
-
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="column grid_3">
-        <h3>Sessions about Startups</h3>
-
-        <ul class="sessionsList">
-          <%= render @startups.sessions.for_current_event.all(:limit => 5) %>
-        </ul>
-
-        <p><%= link_to 'See more...', category_path(@startups) %></p>
-     </div>
-
-      <div class="column grid_3">
-        <h3>Sessions about Hardware</h3>
-
-        <ul class="sessionsList">
-          <%= render @hardware.sessions.for_current_event.all(:limit => 5) %>
-        </ul>
-
-        <p><%= link_to 'See more...', category_path(@hardware) %></p>
-
-      </div>
-
-    </div>
-
-    <div class="row">
-      <div class="column grid_6">
-        <h3>Sessions about other stuff</h3>
-        <ul class="sessionsList">
-          <%= render @other.sessions.for_current_event.all(:limit => 5) %>
-        </ul>
-        <p><%= link_to 'See more...', category_path(@other) %></p>
-      </div>
-   </div>
-
-   <div class="row">
-     <p><%= add_sessions_button %></p>
-   </div>
-
+    <% if @current_event %>
+      <%= render 'sessions' %>
+    <% else %>
+      <h2>No event is being held right now</h2>
+    <% end %>
   </div>
 
   <%= render partial: 'pages/aside' %>
