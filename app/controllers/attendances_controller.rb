@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   before_filter :create_participant, :only => :create
-  
+
   make_resourceful do
     belongs_to :session
     actions :create
@@ -10,7 +10,7 @@ class AttendancesController < ApplicationController
         flash[:notice] = "Thanks for your interest in this session."
         redirect_to @session
       end
-      
+
       format.json do
         render :partial => 'sessions/participant', :formats => ['html'], :locals => { :participant => current_participant }
       end

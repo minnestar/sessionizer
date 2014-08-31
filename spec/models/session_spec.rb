@@ -15,8 +15,8 @@ describe Session do
   it { should validate_presence_of :description }
 
   let(:event) { create(:event) }
-  let(:joe) { create(:joe) } 
-  let(:luke) { create(:luke) } 
+  let(:joe) { create(:joe) }
+  let(:luke) { create(:luke) }
 
   describe "creation" do
     let(:participant) { stub_model(Participant) }
@@ -123,11 +123,9 @@ describe Session do
     it "should not error if session similarity includes deleted session" do
       session = create(:luke_session)
 
-      Session.stubs(:session_similarity).returns({ session.id => [[1, 123], [0.5, 999]] })
+      allow(Session).to receive(:session_similarity).and_return(session.id => [[1, 123], [0.5, 999]])
 
       assert_equal([], session.recommended_sessions)
-      Session.unstub(:session_similarity)
-
     end
   end
 end
