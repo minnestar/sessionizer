@@ -96,12 +96,9 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     make_resourceful (1.0.1)
-    metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.5.2)
-    mocha (1.0.0)
-      metaclass (~> 0.0.1)
     multi_json (1.9.0)
     netrc (0.7.7)
     nokogiri (1.6.1)
@@ -208,7 +205,6 @@ DEPENDENCIES
   icalendar
   jquery-rails
   make_resourceful
-  mocha
   pg
   pry
   rails (~> 3.2.17)
