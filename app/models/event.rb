@@ -4,7 +4,7 @@ class Event < ActiveRecord::Base
   has_many :rooms, dependent: :destroy
 
   has_many :presenter_timeslot_restrictions, :through => :timeslots
-  
+
   validates_presence_of :name, :date
   attr_accessible :name, :date
 
