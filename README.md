@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/minnestar/sessionizer.svg?branch=master)](https://travis-ci.org/minnestar/sessionizer)
+[![Build Status](http://img.shields.io/travis/minnestar/sessionizer.svg)](https://travis-ci.org/minnestar/sessionizer) [![Coveralls](http://img.shields.io/coveralls/minnestar/sessionizer.svg)](https://coveralls.io/r/minnestar/sessionizer)
 
 # Sessionizer
 
