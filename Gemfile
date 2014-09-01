@@ -22,7 +22,7 @@ gem 'make_resourceful'
 gem "fancybox-rails", "~> 0.2.1"
 
 # TODO
-gem 'icalendar'
+gem 'icalendar', '~> 1.5.4'
 gem 'redcarpet', :git => 'git://github.com/vmg/redcarpet.git'
 gem 'heroku'
 gem 'bcrypt-ruby', '~> 3.0.0'
