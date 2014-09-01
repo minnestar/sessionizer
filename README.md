@@ -1,4 +1,4 @@
-[![Build Status](http://img.shields.io/travis/minnestar/sessionizer.svg)](https://travis-ci.org/minnestar/sessionizer) [![Coveralls](http://img.shields.io/coveralls/minnestar/sessionizer.svg)](https://coveralls.io/r/minnestar/sessionizer)
+[![Build Status](http://img.shields.io/travis/minnestar/sessionizer.svg)](https://travis-ci.org/minnestar/sessionizer) [![Coveralls](http://img.shields.io/coveralls/minnestar/sessionizer.svg)](https://coveralls.io/r/minnestar/sessionizer) [![Scrutinizer](http://img.shields.io/scrutinizer/g/minnestar/sessionizer.svg)](https://scrutinizer-ci.com/g/minnestar/sessionizer/)
 
 # Sessionizer
 
