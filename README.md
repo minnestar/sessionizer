@@ -1,4 +1,4 @@
-![Travis CI Build](https://travis-ci.org/minnestar/sessionizer.svg?branch=master)
+[![Build Status](https://travis-ci.org/minnestar/sessionizer.svg?branch=master)](https://travis-ci.org/minnestar/sessionizer)
 
 # Sessionizer
 
