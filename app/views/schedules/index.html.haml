@@ -8,7 +8,7 @@
         = slot.starts_at.in_time_zone.to_s(:usahhmm)
   .maps
     %a.room{ :href => '/assets/maps/master-map.png' }
-      Floor Plan Map 
+      Floor Plan Map
     %a.feedback{ :target => '_blank', :href => 'http://minnebar.voicehive.com' }
       Feedback
 
@@ -18,15 +18,15 @@
     %h1
       = @event.name
       Session Schedule
-    
+
     .controls
       %a#hide-all(href='#') Hide all details
       %a#show-all(href='#') Show all details
       .clr
-    
+
     .hint Tap a session title to show/hide its details.
     .hint Tap a room name to see a map.
-  
+
   .timeslots
     - @event.timeslots.each do |slot|
       .timeslot{:id => "timeslot_#{slot.id}"}
@@ -34,7 +34,7 @@
           = slot.starts_at.in_time_zone.to_s(:usahhmm)
           &ndash;
           = slot.ends_at.in_time_zone.to_s(:usahhmm)
-  
+
         .sessions
           - session_columns_for_slot(slot) do |column|
             .column
@@ -44,13 +44,13 @@
                   .header
                     .room{:href => "/assets/maps/#{session.room.name.downcase}.png"}
                       = session.room.name
-        
+
                     %h3.title= session.title
-          
+
                     .presenters
                       - session.presenters.each do |presenter|
                         .presenter= presenter.name
-          
+
                   .description
                     = markdown session.description
                     .bios
@@ -58,16 +58,16 @@
                         .bio
                           .name= presenter.name
                           = markdown(presenter.bio || "No bio.")
-                
+
                   .summary= session.summary
 
 :javascript
   $(function() {
     var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
-    
-  
+
+
     // Jump to timeslot
-  
+
     var updateTimeslotNav = function() {
       var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
       var foundCurrent = false
@@ -83,9 +83,9 @@
       return true
     }
     updateTimeslotNav()
-    
+
     var scrollingToSlot = false
-  
+
     $('.nav-top .timeslot').click(function(evt) {
       var link = $(evt.target)
       slotIdSel = link.attr('href')
@@ -104,13 +104,13 @@
           setTimeout(function() {
             // Make nav bar show true position again on next scroll
             scrollingToSlot = false
-            
+
             // see below
             $('#ios-bug-workaround').remove()
           }, 10)
         }
       })
-      
+
       // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
       // Adding and removing a div apparently forces it to generate its layout.
       if(mobile)
@@ -119,22 +119,22 @@
       evt.stopPropagation()
       return false
     })
-  
+
     $(window).scroll(function() {
       if(!scrollingToSlot)
         updateTimeslotNav()
       return true
     })
-    
-    
+
+
     // Show current timeslot
-    
+
     var showCurrentTimeslot = function() {
       var curTime = Date.now(), eventStarted = false, foundCurrent = false
       $('.nav-top .timeslot').each(function(i, slot) {
         var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
             slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
-        
+
         var now = false
         if(curTime >= slotStart)
           eventStarted = true
@@ -142,15 +142,15 @@
           now = foundCurrent = true
         $(slot).toggleClass('now', now)
       })
-      
+
       setTimeout(showCurrentTimeslot, 30000)
     }
-    
+
     showCurrentTimeslot()
-  
-  
+
+
     // Show / hide details
-  
+
     var updateButtons = function() {
       $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
       $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
@@ -158,7 +158,7 @@
     var updateButtonsDelayed = function() {
       setTimeout(updateButtons, 410)
     }
-  
+
     $(updateButtons)
 
     $('.session .header').click(function(evt) {
@@ -169,7 +169,7 @@
       evt.stopPropagation()
       return false
     })
-  
+
     $('#show-all').click(function(evt) {
       if(mobile) {
         $('.session .summary').hide()
@@ -183,7 +183,7 @@
       evt.stopPropagation()
       return false
     })
-  
+
     $('#hide-all').click(function(evt) {
       if(mobile) {
         $('.session .summary').show()
@@ -197,11 +197,11 @@
       evt.stopPropagation()
       return false
     })
-  
-  
+
+
     // Map popups
-  
+
     $(".room").fancybox()
     $(".room").click(function() { return false })
-  
+
   })
