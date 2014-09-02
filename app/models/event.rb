@@ -8,7 +8,17 @@ class Event < ActiveRecord::Base
   validates_presence_of :name, :date
   attr_accessible :name, :date
 
+  after_create :reset_current
+
   def self.current_event(opts = {})
     @current_event ||= Event.last(opts.reverse_merge(:order => :date))
+  end
+
+  def self.reset_current!
+    @current_event = nil
+  end
+
+  def reset_current
+    self.class.reset_current!
   end
 end
