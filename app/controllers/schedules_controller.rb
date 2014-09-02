@@ -6,7 +6,7 @@ class SchedulesController < ApplicationController
 
   def ical
     event = Event.current_event
-    
+
     sessions = event.sessions.all(:include => [:room, :timeslot])
 
 
@@ -32,10 +32,10 @@ class SchedulesController < ApplicationController
         add_recurrence_rule   "FREQ=YEARLY;BYMONTH=11;BYDAY=1SU"
       end
     end
-    
+
     sessions.each do |session|
       next if session.timeslot.nil?
-      
+
       cal.event do
         summary session.title
         organizer   "", :CN => session.presenter_names.join("\\, ")
@@ -49,5 +49,5 @@ class SchedulesController < ApplicationController
 
     render :text => cal.to_ical, :content_type => 'text/calendar'
   end
-  
+
 end
