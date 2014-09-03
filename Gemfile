@@ -33,7 +33,6 @@ group :development, :test do
   gem 'ruby-progressbar', require: false
   gem "rspec-rails", "~> 2.0"
   gem 'capybara'
-  gem 'pry'
   gem 'coveralls', require: false
 end
 
@@ -41,5 +40,9 @@ group :test do
   gem 'shoulda-matchers'
   gem "factory_girl_rails", "~> 4.0"
   gem 'database_cleaner'
+end
+
+group :debug do
+  gem 'pry'
 end
 
