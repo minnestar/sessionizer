@@ -14,6 +14,9 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'authlogic/test_case'
@@ -24,10 +27,6 @@ require 'authlogic/test_case'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = true
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -46,6 +45,27 @@ RSpec.configure do |config|
   config.before do
     #don't hold on to any memoized events
     Event.instance_variable_set(:'@current_event', nil)
+  end
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+    Category.find_or_create_defaults
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, :js => true) do
+    DatabaseCleaner.strategy = :truncation, {:except => %w[categories]}
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 
 end

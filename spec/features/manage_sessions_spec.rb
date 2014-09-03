@@ -6,7 +6,7 @@ feature "Manage Sessions" do
   end
 
   scenario "As a guest, I want to register " do
-    visit root_url
+    visit root_path
 
     click_link "Button-add-session"
     click_link "Register here"
