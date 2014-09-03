@@ -207,7 +207,6 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   coveralls
   database_cleaner
-  erubis
   factory_girl_rails (~> 4.0)
   fancybox-rails (~> 0.2.1)
   ffaker

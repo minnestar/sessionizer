@@ -13,7 +13,6 @@ end
 
 gem 'jquery-rails'
 
-gem 'erubis'
 gem 'haml'
 gem 'sass'
 gem 'formtastic'
