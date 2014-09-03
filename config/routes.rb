@@ -14,7 +14,6 @@ Sessionizer::Application.routes.draw do
 
   resources :participants, :except => [:destroy]
   resources :categories, :only => :show
-  resources :events, :only => [:index, :show]
   resources :presenters, :only => :index
 
   match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
