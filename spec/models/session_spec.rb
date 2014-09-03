@@ -33,20 +33,22 @@ describe Session do
 
   end
 
-  it "should destory categorizations and attendences" do
-    session = create(:session, event: event)
-    categorization = session.categorizations.build
-    categorization.category = Category.first
-    categorization.save!
-    session.attendances.create(:participant => joe)
+  describe "destroying" do
+    it "should destory categorizations and attendences" do
+      session = create(:session, event: event)
+      categorization = session.categorizations.build
+      categorization.category = Category.first
+      categorization.save!
+      session.attendances.create(:participant => joe)
 
-    expect {
       expect {
         expect {
-          session.destroy
-        }.to change { Attendance.count }.by(-1)
-      }.to change { Session.count }.by(-1)
-    }.to change { Categorization.count }.by(-1)
+          expect {
+            session.destroy
+          }.to change { Attendance.count }.by(-1)
+        }.to change { Session.count }.by(-1)
+      }.to change { Categorization.count }.by(-1)
+    end
   end
 
   it "should allow a blank summary" do
