@@ -1,6 +1,6 @@
 class Admin::PresentersController < Admin::AdminController
   make_resourceful do
-    actions :index, :edit, :show
+    actions :index, :edit
   end
 
   def update
@@ -13,12 +13,13 @@ class Admin::PresentersController < Admin::AdminController
   end
 
   def export
-    render :text => current_objects.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), :content_type => Mime::TEXT
+    render text: current_objects.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime::TEXT
   end
 
+  # export a list of all presenters from every event
   def export_all
     participant_ids = Session.all.map(&:presenter_ids)
-    render :text => Participant.find(participant_ids).map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), :content_type => Mime::TEXT
+    render text: Participant.find(participant_ids).map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime::TEXT
   end
 
   private
