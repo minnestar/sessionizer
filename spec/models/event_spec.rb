@@ -10,11 +10,9 @@ describe Event do
   it { should have_many :rooms }
 
   context "creating a new event" do
-    before { FactoryGirl.create(:event, date: 2.months.ago) }
+    before { create(:event, date: 2.months.ago) }
     it "should clear the existing current_event" do
-      expect {
-        e2 = FactoryGirl.create(:event)
-      }.to change { Event.current_event }
+      expect { create(:event) }.to change { Event.current_event }
     end
   end
 end

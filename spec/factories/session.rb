@@ -5,7 +5,7 @@ FactoryGirl.define do
 
     title "Stuff about things"
     description "whatever"
-    participant { FactoryGirl.create :luke }
+    participant { create :luke }
     association :event
     association :room
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Room do
-  subject { FactoryGirl.create(:event).rooms.create!(:name => 'Asdf', :capacity => 100) }
+  subject { create(:event).rooms.create!(:name => 'Asdf', :capacity => 100) }
   it { should have_many :sessions }
   it { should belong_to :event }
 

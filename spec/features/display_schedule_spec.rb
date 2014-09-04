@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 feature "Displaying the schedule" do
-  let(:event) { FactoryGirl.create(:event, :full_event) }
+  let(:event) { create(:event, :full_event) }
 
   before do
-    FactoryGirl.create(:session, timeslot: event.timeslots.first, event: event)
+    create(:session, timeslot: event.timeslots.first, event: event)
   end
 
   scenario "should draw the schedule page" do

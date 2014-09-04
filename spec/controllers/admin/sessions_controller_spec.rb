@@ -6,11 +6,11 @@ describe Admin::SessionsController do
     ParticipantSession.create(user)
   end
 
-  let(:event) { FactoryGirl.create(:event) }
-  let(:user) { FactoryGirl.create(:participant) }
+  let(:event) { create(:event) }
+  let(:user) { create(:participant) }
 
   context "with an existing session" do
-    let!(:session) { FactoryGirl.create(:session, event: event) }
+    let!(:session) { create(:session, event: event) }
 
     describe "index" do
       it "should set the sessions" do
@@ -39,7 +39,7 @@ describe Admin::SessionsController do
   end
 
   describe "create" do
-    let!(:event) { FactoryGirl.create(:event) }
+    let!(:event) { create(:event) }
     let(:category) { Category.last }
 
     context "with valid values" do
