@@ -28,7 +28,7 @@ Sessionizer::Application.routes.draw do
     resources :events do
       resources :timeslots
     end
-    resources :presenters do
+    resources :presenters, only: [:index, :edit, :update] do
       collection do
         get 'export'
         get 'export_all'
