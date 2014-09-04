@@ -13,7 +13,7 @@ Sessionizer::Application.routes.draw do
   end
 
   resources :participants, :except => [:destroy]
-  resources :categories, :only => :show
+  resources :categories, only: :show
 
   match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
   match '/login' => 'user_sessions#create', :as => :login, :via => 'post'
