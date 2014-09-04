@@ -12,8 +12,8 @@ FactoryGirl.define do
       end
 
       after(:create) do |event, evaluator|
-        FactoryGirl.create_list(:room, evaluator.rooms_count, event: event)
-        FactoryGirl.create_list(:timeslot, evaluator.timeslots_count, event: event)
+        create_list(:room, evaluator.rooms_count, event: event)
+        create_list(:timeslot, evaluator.timeslots_count, event: event)
       end
     end
   end

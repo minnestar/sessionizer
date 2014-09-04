@@ -6,10 +6,10 @@ describe SessionsController do
     ParticipantSession.create(user)
   end
 
-  let(:user) { FactoryGirl.create(:participant) }
+  let(:user) { create(:participant) }
 
   context "with an existing session" do
-    let(:session) { FactoryGirl.create(:session) }
+    let(:session) { create(:session) }
 
     describe "update" do
       it "should not be updatable by someone who doesn't own it" do
@@ -40,7 +40,7 @@ describe SessionsController do
   end
 
   describe "create" do
-    let!(:event) { FactoryGirl.create(:event) }
+    let!(:event) { create(:event) }
     let(:category) { Category.last }
 
     context "with valid values" do

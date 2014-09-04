@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PresentationsController do
-  let(:session) { FactoryGirl.create(:session) }
+  let(:session) { create(:session) }
   describe "#index" do
     it "should be successful" do
       get :index, session_id: session
@@ -13,7 +13,7 @@ describe PresentationsController do
 
   describe "#create" do
     context "when the user exists" do
-      before { FactoryGirl.create(:joe) }
+      before { create(:joe) }
 
       it "should be successful" do
         expect {

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PagesController do
   context "with an event" do
-    let!(:event) { FactoryGirl.create(:event, :full_event) }
+    let!(:event) { create(:event, :full_event) }
 
     it "should show the sessions" do
       get :home
