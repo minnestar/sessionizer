@@ -2,7 +2,7 @@
 class SessionsController < ApplicationController
   before_filter :verify_session, :only => [:new, :create, :update, :edit]
   before_filter :verify_owner, :only => [:update, :edit]
-  
+
   make_resourceful do
     actions :show, :new, :edit, :update
 
@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
   def create
     build_object
     load_object
-    
+
     current_object.participant = current_participant
     current_object.event = Event.current_event
 

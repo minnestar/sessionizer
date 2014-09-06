@@ -9,7 +9,7 @@ describe SessionsController do
   let(:user) { create(:participant) }
 
   context "with an existing session" do
-    let(:session) { create(:session) }
+    let!(:session) { create(:session) }
 
     describe "update" do
       it "should not be updatable by someone who doesn't own it" do
@@ -35,6 +35,14 @@ describe SessionsController do
       it "should not be editable by someone who doesn't own it" do
         get :edit, id: session
         expect(response).to redirect_to session
+      end
+    end
+
+    describe "index" do
+      it "should be successful" do
+        get :index
+        expect(response).to be_successful
+        expect(assigns[:sessions]).to eq [session]
       end
     end
   end
