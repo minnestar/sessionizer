@@ -29,8 +29,8 @@ describe Admin::PresentersController do
       }
       expect(response).to redirect_to admin_presenters_path
       expect(flash[:success]).to eq "Presenter updated."
-      expect(assigns[:current_object]).to eq presenter
-      expect(assigns[:current_object].name).to eq 'The father of LISP'
+      expect(assigns[:presenter]).to eq presenter
+      expect(assigns[:presenter].name).to eq 'The father of LISP'
     end
   end
 

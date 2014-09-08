@@ -1,10 +1,18 @@
 class Admin::PresentersController < Admin::AdminController
-  make_resourceful do
-    actions :index, :edit
+  before_filter :load_presenters, only: [:index, :export]
+  load_resource class: 'Participant'
+  respond_to :html
+
+  def index
+    respond_with(@presenters)
+  end
+
+  def edit
+    respond_with(@presenter)
   end
 
   def update
-    if current_object.update_attributes(params[:participant])
+    if @presenter.update_attributes(params[:participant])
       flash[:success] = "Presenter updated."
       redirect_to admin_presenters_path
     else
@@ -13,7 +21,7 @@ class Admin::PresentersController < Admin::AdminController
   end
 
   def export
-    render text: current_objects.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime::TEXT
+    render text: @presenters.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime::TEXT
   end
 
   # export a list of all presenters from every event
@@ -24,11 +32,8 @@ class Admin::PresentersController < Admin::AdminController
 
   private
 
-  def current_objects
-    @current_objects ||= Participant.find(Event.current_event.sessions.map(&:presenter_ids))
+  def load_presenters
+    @presenters ||= Participant.find(Event.current_event.sessions.map(&:presenter_ids))
   end
 
-  def current_model
-    Participant
-  end
 end

@@ -7,7 +7,7 @@ describe PresentationsController do
       get :index, session_id: session
       expect(response).to be_successful
       expect(assigns[:presentation]).to be_kind_of Presentation
-      expect(controller.send(:parent_object)).to eq session
+      expect(assigns[:session]).to eq session
     end
   end
 

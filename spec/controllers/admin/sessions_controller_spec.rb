@@ -16,7 +16,7 @@ describe Admin::SessionsController do
       it "should set the sessions" do
         get :index
         expect(response).to be_successful
-        expect(assigns[:current_objects]).to eq [session]
+        expect(assigns[:sessions]).to eq [session]
       end
     end
 
@@ -41,6 +41,9 @@ describe Admin::SessionsController do
   describe "create" do
     let!(:event) { create(:event) }
     let(:category) { Category.last }
+    before do
+      Participant.destroy_all
+    end
 
     context "with valid values" do
       it "creates a new session " do
@@ -74,7 +77,7 @@ describe Admin::SessionsController do
     it "should be successful" do
       get :new
       expect(response).to be_successful
-      expect(assigns[:current_object]).to be_kind_of Session
+      expect(assigns[:session]).to be_kind_of Session
     end
   end
 end

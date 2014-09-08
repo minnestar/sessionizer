@@ -1,7 +1,11 @@
 class Admin::TimeslotsController < Admin::AdminController
-  make_resourceful do
-    actions :index, :new
-    belongs_to :event
+  load_resource :event
+  load_resource :timeslot, through: :event, except: :create
+
+  def index
+  end
+
+  def new
   end
 
   def create

@@ -1,8 +1,8 @@
 <% title('Edit Participant') %>
 
-<%= semantic_form_for(current_object, :url => admin_presenter_path(current_object)) do |f| %>
+<%= semantic_form_for(@presenter, url: admin_presenter_path(@presenter)) do |f| %>
   <%= f.semantic_errors %>
-  
+
   <%= f.inputs do %>
     <%= f.input :name, :label => 'Name' %>
     <%= f.input :email, :label => 'Email' %>
