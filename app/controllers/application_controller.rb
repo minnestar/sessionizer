@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   def current_participant
     @current_participant ||= (current_participant_session && current_participant_session.participant)
   end
+  alias_method :current_user, :current_participant
 
   def current_participant_session
      return @current_participant_session if defined?(@current_participant_session)

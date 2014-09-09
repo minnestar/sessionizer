@@ -16,7 +16,6 @@ gem 'jquery-rails'
 gem 'haml'
 gem 'sass'
 gem 'formtastic'
-gem 'make_resourceful'
 
 gem "fancybox-rails", "~> 0.2.1"
 
@@ -26,6 +25,7 @@ gem 'redcarpet', :git => 'git://github.com/vmg/redcarpet.git'
 gem 'heroku'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'authlogic'
+gem 'cancancan'
 
 group :development, :test do
   gem 'ffaker'

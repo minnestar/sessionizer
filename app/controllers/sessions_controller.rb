@@ -1,31 +1,43 @@
 # -*- coding: utf-8 -*-
 class SessionsController < ApplicationController
-  before_filter :verify_session, :only => [:new, :create, :update, :edit]
-  before_filter :verify_owner, :only => [:update, :edit]
 
-  make_resourceful do
-    actions :show, :new, :edit, :update
+  load_resource only: [:new, :show, :edit, :create, :update]
+  before_filter :verify_session, only: [:new, :create, :update, :edit]
+  before_filter :verify_owner, only: [:update, :edit]
 
-    before :show do
-      @similar_sessions = []
-      @similar_sessions = current_object.recommended_sessions
-    end
+  respond_to :html
+
+  def show
+    @similar_sessions = []
+    @similar_sessions = @session.recommended_sessions
+    respond_with(@session)
+  end
+
+  def new
+    respond_with(@session)
+  end
+
+  def edit
+    respond_with(@session)
+  end
+
+  def update
+    @session.update_attributes(params[:session])
+    respond_with(@session)
   end
 
   def index
     @sessions = Event.current_event.sessions
+    respond_with(@sessions)
   end
 
   def create
-    build_object
-    load_object
+    @session.participant = current_participant
+    @session.event = Event.current_event
 
-    current_object.participant = current_participant
-    current_object.event = Event.current_event
-
-    if current_object.save
+    if @session.save
       flash[:notice] = "Thanks for adding your session."
-      redirect_to current_object
+      redirect_to @session
     else
       render :action => 'new'
     end
@@ -43,7 +55,7 @@ class SessionsController < ApplicationController
       gsub(/[.*,-?()+!"•—%]/, '').
       split(/\s+/).
       reject { |w| STOP_WORDS.include?(w) }.
-      join(" ") 
+      join(" ")
   end
 
   def export
@@ -59,8 +71,6 @@ class SessionsController < ApplicationController
   private
 
   def verify_owner
-    if current_object.participant != current_participant
-      redirect_to current_object
-    end
+    redirect_to @session if @session.participant != current_participant
   end
 end

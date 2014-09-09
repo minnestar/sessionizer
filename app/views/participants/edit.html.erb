@@ -1,8 +1,8 @@
 <% title('Edit your profile') %>
 
-<%= semantic_form_for(current_object) do |f| %>
+<%= semantic_form_for(@participant) do |f| %>
   <%= f.semantic_errors %>
-  
+
   <%= f.inputs do %>
     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials." %>
     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>

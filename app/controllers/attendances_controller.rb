@@ -1,39 +1,38 @@
 class AttendancesController < ApplicationController
-  before_filter :create_participant, :only => :create
+  before_filter :create_participant, only: :create
 
-  make_resourceful do
-    belongs_to :session
-    actions :create
+  load_resource :session
 
-    response_for :create do |format|
-      format.html do
-        flash[:notice] = "Thanks for your interest in this session."
-        redirect_to @session
+  def create
+    @attendance = @session.attendances.build
+    @attendance.participant = current_participant
+    if @attendance.save
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "Thanks for your interest in this session."
+          redirect_to @session
+        end
+
+        format.json do
+          render :partial => 'sessions/participant', :formats => ['html'], :locals => { :participant => current_participant }
+        end
       end
-
-      format.json do
-        render :partial => 'sessions/participant', :formats => ['html'], :locals => { :participant => current_participant }
-      end
-    end
-
-    response_for :create_fails do |format|
-      format.json do
-        render :partial => 'sessions/new_participant', :formats => ['html'], :status => :unprocessable_entity
+    else
+      respond_to do |format|
+        format.json do
+          render :partial => 'sessions/new_participant', :formats => ['html'], :status => :unprocessable_entity
+        end
       end
     end
   end
 
   private
 
-  def build_object
-    @current_object ||= parent_object.attendances.build(:participant => current_participant)
-  end
-
   def create_participant
     return if logged_in?
-    return if object_parameters.nil?
+    return if params[:attendance].nil?
 
-    name, email, password = object_parameters[:name], object_parameters[:email], object_parameters[:password]
+    name, email, password = params[:attendance][:name], params[:attendance][:email], params[:attendance][:password]
 
     participant_session = ParticipantSession.new(:email => email, :password => password)
     if participant_session.save
