@@ -9,8 +9,6 @@ class Participant < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
 
-  attr_accessible :name, :email, :password, :bio
-
   acts_as_authentic do |config|
     config.crypto_provider = Authlogic::CryptoProviders::BCrypt
     config.require_password_confirmation = false
@@ -20,7 +18,7 @@ class Participant < ActiveRecord::Base
     event.timeslots.each do |timeslot|
       if timeslot.ends_at >= datetime
         self.presenter_timeslot_restrictions.create!(
-          timeslot: timeslot, 
+          timeslot: timeslot,
           weight:   weight)
       end
     end

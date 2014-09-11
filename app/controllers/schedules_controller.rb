@@ -7,7 +7,7 @@ class SchedulesController < ApplicationController
   def ical
     event = Event.current_event
 
-    sessions = event.sessions.all(:include => [:room, :timeslot])
+    sessions = event.sessions.includes([:room, :timeslot])
 
 
     cal = Icalendar::Calendar.new

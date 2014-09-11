@@ -7,9 +7,7 @@ class Timeslot < ActiveRecord::Base
   validates :ends_at, :presence => true
   validates :event_id, :presence => true
 
-  default_scope :order => 'starts_at asc'
-
-  attr_accessible :starts_at, :ends_at
+  default_scope { order 'starts_at asc' }
 
   def to_s
     "#{starts_at.in_time_zone.to_s(:hhmm)} - #{ends_at.in_time_zone.to_s(:hhmm)}"

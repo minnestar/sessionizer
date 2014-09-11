@@ -15,4 +15,10 @@ class Admin::EventsController < Admin::AdminController
     redirect_to admin_events_path
   end
 
+  private
+
+  def event_params
+    params.require(controller_name.singularize).permit(:name, :date)
+  end
+
 end

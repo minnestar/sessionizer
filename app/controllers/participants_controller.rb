@@ -24,17 +24,22 @@ class ParticipantsController < ApplicationController
   end
 
   def update
-    @participant.update_attributes(params[:participant])
+    @participant.update(participant_params)
     respond_with(@participant)
   end
 
   def create
+    @participant.attributes = participant_params
     @participant.save!
     flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
     redirect_to root_path
   end
 
   private
+
+  def participant_params
+    params.require(controller_name.singularize).permit(:name, :email, :password)
+  end
 
   def verify_owner
     redirect_to @participant if @participant != current_participant
