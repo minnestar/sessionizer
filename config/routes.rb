@@ -20,8 +20,8 @@ Sessionizer::Application.routes.draw do
   match '/logout' => 'user_sessions#destroy', :as => :logout, :via => 'delete'
 
   #something is still off here
-  match '/schedule' => 'schedules#index', :as => :schedule
-  match '/schedule.ics' => 'schedules#ical', :as => :schedule_ics
+  get '/schedule' => 'schedules#index', as: :schedule
+  get '/schedule.ics' => 'schedules#ical', as: :schedule_ics
 
   namespace :admin do
     resources :sessions

@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
   end
 
   def update
-    @session.update_attributes(params[:session])
+    @session.update(session_params)
     respond_with(@session)
   end
 
@@ -32,6 +32,7 @@ class SessionsController < ApplicationController
   end
 
   def create
+    @session.attributes = session_params
     @session.participant = current_participant
     @session.event = Event.current_event
 
@@ -69,6 +70,10 @@ class SessionsController < ApplicationController
   end
 
   private
+
+  def session_params
+    params.require(controller_name.singularize).permit(:title, :description, :level_id, :name, :email, :category_ids => [])
+  end
 
   def verify_owner
     redirect_to @session if @session.participant != current_participant

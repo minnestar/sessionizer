@@ -19,7 +19,7 @@ describe Session do
   let(:luke) { create(:luke) }
 
   describe "creation" do
-    let(:participant) { stub_model(Participant) }
+    let(:participant) { create(:participant) }
     subject {
       participant.sessions.build(title: 'Some Title', description: 'some desc').tap do |s|
         s.event = event
@@ -28,7 +28,7 @@ describe Session do
     }
 
     it "should create a presenter after create" do
-      expect(subject.presentations).to have(1).thing
+      expect(subject.presentations.size).to eq 1
     end
 
   end

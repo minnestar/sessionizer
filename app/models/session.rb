@@ -19,7 +19,7 @@ class Session < ActiveRecord::Base
 
   scope :with_attendence_count, :select => '*', :joins => "LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id"
 
-  scope :for_current_event, lambda { {:conditions => {:event_id => Event.current_event.id}} }
+  scope :for_current_event, lambda { where(event_id: Event.current_event.id) }
 
   validates_presence_of :description
   validates_presence_of :event_id
@@ -30,8 +30,6 @@ class Session < ActiveRecord::Base
 
 
   attr_accessor :name, :email
-
-  attr_accessible :title, :description, :category_ids, :level_id, :participant_id
 
   after_create :create_presenter
 
@@ -48,17 +46,17 @@ class Session < ActiveRecord::Base
     if session_1.timeslot != session_2.timeslot
       raise "Sessions must be in the same timeslot to swap"
     end
-    
+
     Session.transaction do
       session_1.room, session_2.room = session_2.room, session_1.room
       session_1.save
       session_2.save
     end
   end
-  
+
   def self.attendee_preferences
     result = {}
-    sessions = Event.current_event.sessions.all(:include => :participants)
+    sessions = Event.current_event.sessions.includes(:participants)
 
     sessions.each do |session|
       prefs = {}
@@ -98,7 +96,7 @@ class Session < ActiveRecord::Base
 
     if recommended
       # find will not order by recommendation strength; use conditions instead of find to ignore missing sessions in the cache
-      sessions = Session.all(:conditions => ["id in (?)", recommended.map { |r| r[1] }])
+      sessions = Session.where(["id in (?)", recommended.map { |r| r[1] }])
       sessions.sort_by do |session|
         recommended.find_index { |r| r[1] == session.id }
       end
@@ -111,6 +109,6 @@ class Session < ActiveRecord::Base
 
   # assign the creator as the first presenter
   def create_presenter
-    self.presentations.create({:participant => self.participant}, :without_protection => true)
+    presentations.create(participant: participant)
   end
 end

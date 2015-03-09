@@ -12,7 +12,7 @@ class Admin::PresentersController < Admin::AdminController
   end
 
   def update
-    if @presenter.update_attributes(params[:participant])
+    if @presenter.update(presenter_params)
       flash[:success] = "Presenter updated."
       redirect_to admin_presenters_path
     else
@@ -31,6 +31,11 @@ class Admin::PresentersController < Admin::AdminController
   end
 
   private
+
+  def presenter_params
+    params.require(:participant).permit(:name, :email, :bio)
+  end
+
 
   def load_presenters
     @presenters ||= Participant.find(Event.current_event.sessions.map(&:presenter_ids))
