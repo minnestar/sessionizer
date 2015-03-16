@@ -1,0 +1,17 @@
+<% @sessions.each do |session| %>
+  <div>
+    <h2><%= session.title %></h2>
+    <h3>By <%= session.participant.name %></h3>
+
+    <div>
+      <%= markdown session.description %>
+    </div>
+
+    <h3>Categories</h3>
+
+    <ul>
+      <%= render :partial => 'category', :collection => session.categories %>
+    </ul>
+  </div>
+<% end %>
+      

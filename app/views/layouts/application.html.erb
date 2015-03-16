@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= csrf_meta_tags %>
+    <title><%= yield(:title) || "MinneBar" %></title>
+    <%= stylesheet_link_tag 'application' %>
+    <%= favicon_link_tag 'favicon.ico' %>
+    <%= yield(:head) %>
+  </head>
+  <body>
+    <div class="full-column">
+      <div class="center-column">
+        <ul id="menu">
+          <li class="star"><a href="http://minnestar.org/" ><span class="description">the community of</span><br />minne<span class="star">✱</span></a></li>
+          <li class="bar"><a href="http://minnestar.org/minnebar/"><span class="description">(un)conference</span><br />minne<span class="bar">bar</span></a></li>
+          <li class="demo"><a href="http://minnestar.org/minnedemo/"><span class="description">geek show &amp; tell</span><br />minne<span class="demo">demo</span></a></li>
+       </ul>
+       <div class="clearboth"><!-- --></div>
+
+      </div><!-- / center-column -->
+    </div><!-- / full-column -->	
+
+    <div class="center-column">
+      <% unless current_page?(root_path) %>
+      <p>
+        <%= link_to 'Back to MinneBar Sessions Home Page', root_path %>
+      </p>
+      <% end %>
+
+      <% if !logged_in? && !current_page?(new_login_path) && !current_page?(login_path) %>
+        <p style="float:right"><%= link_to 'Log in', new_login_path %></p>
+      <% end %>
+
+      <% if logged_in? %>
+        <p style="float:right"><%= link_to 'Log out', logout_path, :method => 'delete' %></p>
+      <% end %>
+
+      <div id="flash_message_placeholder"></div>
+      <%- [:error, :notice, :success].each do |name| -%>
+        <%= content_tag :div, flash[name], :id => "flash_#{name}" if flash[name] %>
+      <%- end -%>
+      
+      <%- if show_title? -%>
+        <h1><%=h yield(:title) %> <span class="edit"><%= yield :edit %></span></h1>
+      <%- end -%>
+
+      <%= yield %>
+
+      <%= render :partial => 'layouts/javascript' %>
+    </div>
+    <%= render :partial => 'shared/ga' %>
+  </body>
+</html>

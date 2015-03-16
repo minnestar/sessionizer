@@ -1,0 +1,33 @@
+
+TODO:
+
+a few routes still jacked
+
+fancybox lightbox on /schedule isn't working
+
+attribute whitelist attr_accessible
+
+FIXME: markdown helper should sanitize outputted HTML before marking it safe
+--> are you sure on this? I tried adding <script>alert('foo')</script>
+and it correctly stripped it out for me... 
+----> Maybe redcarpet takes care of it? Whitelisting would let us limit markdown to a smaller amount of allowed HTML though...
+
+Convert CSS to asset pipeline
+
+/sessions/words is including HTML entities from the markdown processor (possible fix: convert to text instead of HTML)
+
+
+get heroku-san going
+
+
+get specs and features going again
+
+
+
+
+#PG RESTORE FROM HEROKU
+curl -o latest.dump `heroku pgbackups:url --app sessionizer`
+pg_restore --verbose --clean --no-acl --no-owner -d sessionizer_development latest.dump
+
+
+

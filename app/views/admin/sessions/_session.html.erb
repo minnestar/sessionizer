@@ -1,0 +1,5 @@
+<li>
+  <%= link_to session.title, session %> <div class="presenter">By <%= session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %></div> at <%= session.timeslot.try(:starts_at).try(:to_s, :usahhmm) %> in <%= session.room.try(:name) %>
+
+   (<%= link_to 'edit', edit_admin_session_path(session) %>)
+</li>

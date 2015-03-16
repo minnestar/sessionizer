@@ -1,0 +1,19 @@
+<% title("Admin: Add Session") %>
+
+<%= semantic_form_for([:admin, @session]) do |f| %>
+
+  <%= f.semantic_errors %>
+  <%= f.inputs do %>
+    <%= f.input :title %>
+
+    <%= f.input :name, :label => 'Presenter Name' %>
+    <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <b>**bold**</b>, <i>*italic*</i>, [link](http://example.com)'.html_safe %>
+    <%= f.input :summary, :label => 'Short description of the session (for the program)' %>
+
+    <%= f.input :room_id, :as => :select, :collection => Event.current_event.rooms %>
+    <%= f.input :timeslot_id, :as => :select, :collection => Event.current_event.timeslots %>
+
+  <% end %>
+
+  <%= f.actions %>
+<% end %>

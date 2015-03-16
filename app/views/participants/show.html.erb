@@ -1,0 +1,39 @@
+<% title(@participant.name) %>
+
+<% content_for :edit do %>
+  <% edit(@participant) do %>
+    (This is you! <%= link_to 'Edit your profile', edit_participant_path(@participant) %>.)
+  <% end %>
+<% end %>
+
+<h3>Bio</h3>
+
+<% if @participant.bio.blank? %>
+  <p>This user hasn't yet added a bio.</p>
+<% end %>
+
+<%= markdown @participant.bio %>
+
+<div class="column grid_5">
+  <h3>Presenting Sessions</h3>
+
+  <% if @participant.sessions_presenting.empty? %>
+    <p>This person isn't presenting any sessions.</p>
+  <% end %>
+
+  <ul>
+    <%= render :partial => 'session', :collection => @participant.sessions_presenting.for_current_event %>
+  </ul>
+</div>
+
+<div class="column grid_5">
+  <h3>Participating Sessions</h3>
+
+  <% if @participant.sessions_attending.empty? %>
+    <p>This person hasn't expressed interested in any sessions yet.</p>
+  <% end %>
+ 
+  <ul>
+    <%= render :partial => 'session', :collection => @participant.sessions_attending.for_current_event %>
+  </ul>
+</div>

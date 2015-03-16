@@ -1,0 +1,207 @@
+.nav-top
+  .timeslots
+    - @event.timeslots.each do |slot|
+      %a.timeslot{:id => "timeslot_#{slot.id}_nav",
+                  :href=> "#timeslot_#{slot.id}",
+                  :startsAt => slot.starts_at.in_time_zone.to_i,
+                  :endsAt   => slot.ends_at  .in_time_zone.to_i }
+        = slot.starts_at.in_time_zone.to_s(:usahhmm)
+  .maps
+    %a.room{ :href => '/assets/maps/master-map.png' }
+      Floor Plan Map
+    %a.feedback{ :target => '_blank', :href => 'http://minnebar.voicehive.com' }
+      Feedback
+
+
+.schedule
+  .schedule-header
+    %h1
+      = @event.name
+      Session Schedule
+
+    .controls
+      %a#hide-all(href='#') Hide all details
+      %a#show-all(href='#') Show all details
+      .clr
+
+    .hint Tap a session title to show/hide its details.
+    .hint Tap a room name to see a map.
+
+  .timeslots
+    - @event.timeslots.each do |slot|
+      .timeslot{:id => "timeslot_#{slot.id}"}
+        %h2
+          = slot.starts_at.in_time_zone.to_s(:usahhmm)
+          &ndash;
+          = slot.ends_at.in_time_zone.to_s(:usahhmm)
+
+        .sessions
+          - session_columns_for_slot(slot) do |column|
+            .column
+              - column.each do |session|
+
+                .session
+                  .header
+                    .room{:href => "/assets/maps/#{session.room.name.downcase}.png"}
+                      = session.room.name
+
+                    %h3.title= session.title
+
+                    .presenters
+                      - session.presenters.each do |presenter|
+                        .presenter= presenter.name
+
+                  .description
+                    = markdown session.description
+                    .bios
+                      - session.presenters.each do |presenter|
+                        .bio
+                          .name= presenter.name
+                          = markdown(presenter.bio || "No bio.")
+
+                  .summary= session.summary
+
+:javascript
+  $(function() {
+    var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+
+
+    // Jump to timeslot
+
+    var updateTimeslotNav = function() {
+      var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
+      var foundCurrent = false
+      $($('.schedule .timeslot').get().reverse()).each(function(i, slot) {
+        var selected = false;
+        if($(slot).offset().top <= scrollTop) {
+          if(!foundCurrent)
+            selected = true
+          foundCurrent = true
+        }
+        $('#' + slot.id + '_nav').toggleClass('selected', selected)
+      })
+      return true
+    }
+    updateTimeslotNav()
+
+    var scrollingToSlot = false
+
+    $('.nav-top .timeslot').click(function(evt) {
+      var link = $(evt.target)
+      slotIdSel = link.attr('href')
+      $('.nav-top .timeslot').toggleClass('selected', false)
+      $(slotIdSel + '_nav').toggleClass('selected', true)
+
+      // Temporarily force clicked time slot to be highlighted,
+      // even if it's near the end of the page & doesn't make it
+      // past the top edge of the window.
+      scrollingToSlot = true
+
+      $.scrollTo($(slotIdSel), {
+        duration: (mobile ? 0 : 500),
+        offset: { left: 0, top: -$('.nav-top').height() },
+        onAfter: function() {
+          setTimeout(function() {
+            // Make nav bar show true position again on next scroll
+            scrollingToSlot = false
+
+            // see below
+            $('#ios-bug-workaround').remove()
+          }, 10)
+        }
+      })
+
+      // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
+      // Adding and removing a div apparently forces it to generate its layout.
+      if(mobile)
+        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body))
+
+      evt.stopPropagation()
+      return false
+    })
+
+    $(window).scroll(function() {
+      if(!scrollingToSlot)
+        updateTimeslotNav()
+      return true
+    })
+
+
+    // Show current timeslot
+
+    var showCurrentTimeslot = function() {
+      var curTime = Date.now(), eventStarted = false, foundCurrent = false
+      $('.nav-top .timeslot').each(function(i, slot) {
+        var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
+            slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
+
+        var now = false
+        if(curTime >= slotStart)
+          eventStarted = true
+        if(eventStarted && !foundCurrent && curTime <= slotEnd)
+          now = foundCurrent = true
+        $(slot).toggleClass('now', now)
+      })
+
+      setTimeout(showCurrentTimeslot, 30000)
+    }
+
+    showCurrentTimeslot()
+
+
+    // Show / hide details
+
+    var updateButtons = function() {
+      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
+      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
+    }
+    var updateButtonsDelayed = function() {
+      setTimeout(updateButtons, 410)
+    }
+
+    $(updateButtons)
+
+    $('.session .header').click(function(evt) {
+      var session = $(evt.target).closest('.session')
+      session.find('.summary').slideToggle()
+      session.find('.description').slideToggle()
+      updateButtonsDelayed()
+      evt.stopPropagation()
+      return false
+    })
+
+    $('#show-all').click(function(evt) {
+      if(mobile) {
+        $('.session .summary').hide()
+        $('.session .description').show()
+        updateButtons()
+      } else {
+        $('.session .summary').slideUp()
+        $('.session .description').slideDown()
+        updateButtonsDelayed()
+      }
+      evt.stopPropagation()
+      return false
+    })
+
+    $('#hide-all').click(function(evt) {
+      if(mobile) {
+        $('.session .summary').show()
+        $('.session .description').hide()
+        updateButtons()
+      } else {
+        $('.session .summary').slideDown()
+        $('.session .description').slideUp()
+        updateButtonsDelayed()
+      }
+      evt.stopPropagation()
+      return false
+    })
+
+
+    // Map popups
+
+    $(".room").fancybox()
+    $(".room").click(function() { return false })
+
+  })

@@ -1,0 +1,13 @@
+<h1>Presenters</h1>
+
+<p><%= link_to "Export presenter emails", export_admin_presenters_path %></p>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Sessions Created</th>
+  </tr>
+  
+  <%= render :partial => 'admin/presenters/presenter', :collection => @presenters %>
+</table>

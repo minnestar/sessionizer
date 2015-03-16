@@ -1,0 +1,17 @@
+<%= semantic_form_for(@session) do |f| %>
+
+ <%= f.inputs do %>
+    <%= f.input :title %>
+    <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <b>**bold**</b>, <i>*italic*</i>, [link](http://example.com)'.html_safe %>
+
+    <% if !logged_in? %>
+     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials." %>
+     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
+    <% end %>
+
+    <%= f.input :categories, :as => :check_boxes %>
+    <%= f.input :level, :as => :select, :label => 'Topic level' %>
+ <% end %>
+
+ <%= f.actions %>
+<% end %>

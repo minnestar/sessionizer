@@ -1,0 +1,14 @@
+<% title('Create an account') %>
+
+<p>Please create an account below. This will allow you to register a session, be a co-presenter, and express interest in sessions.</p>
+
+<%= semantic_form_for(@participant) do |f| %>
+  <%= f.semantic_errors %>
+  <%= f.inputs do %>
+    <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials. Use JUST your name. For joint sessions, you will be able to add co-presenters." %>
+    <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
+    <%= f.input :password, :label => 'Password' %>
+ <% end %>
+
+  <%= f.actions %>
+<% end %>

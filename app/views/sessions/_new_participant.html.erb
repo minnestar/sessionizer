@@ -1,0 +1,8 @@
+<%= semantic_form_for(@attendance, :url => session_attendance_path(@session)) do |f| %>
+  <p>Thanks for your interest in attending this session. Please register so we can track who's coming.</p>
+
+  <%= f.inputs :name, :email, :password %>
+  <%= f.actions do %>
+    <%= f.button 'Register' %>
+  <% end %>
+<% end %>

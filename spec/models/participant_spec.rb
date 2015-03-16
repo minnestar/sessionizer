@@ -1,0 +1,44 @@
+require 'spec_helper'
+
+describe Participant do
+
+  describe "timeslot restrictions" do
+    let(:event) { create(:event) }
+    let!(:time1) { create(:timeslot_1, event: event) }
+    let!(:time2) { create(:timeslot_2, event: event) }
+    let!(:time3) { create(:timeslot_3, event: event) }
+    let(:luke)  { create(:luke) }
+
+    describe "#restrict_after" do
+
+      it "should not do anything if there are no timeslots that end after the given time" do
+        expect {
+          time = Time.zone.parse("#{event.date.strftime('%Y-%m-%d')} 15:00")
+          luke.restrict_after(time, 1, event)
+        }.to_not change { PresenterTimeslotRestriction.count }
+      end
+
+      it "should add a restriction for all timeslots that end after the given time" do
+        time = Time.zone.parse("#{event.date.strftime('%Y-%m-%d')} 8:00")
+        luke.restrict_after(time, 1, event)
+        expect(luke.presenter_timeslot_restrictions.count).to eq Timeslot.count
+      end
+
+      it "should not add restrictions if a timeslot ends before the given time" do
+        time = Time.zone.parse("#{event.date.strftime('%Y-%m-%d')} 10:30")
+        luke.restrict_after(time, 1, event)
+        expect(luke.presenter_timeslot_restrictions.map(&:timeslot)).to eq [time2, time3]
+      end
+    end
+
+    describe "#restrict_before" do
+      it "should not do anything if there are no timeslots that end after the given time" do
+        time = Time.zone.parse("#{event.date.strftime('%Y-%m-%d')} 10:30")
+        luke.restrict_before(time, 1, event)
+        expect(luke.presenter_timeslot_restrictions.map(&:timeslot)).to eq [time1, time2]
+      end
+    end
+
+  end
+
+end

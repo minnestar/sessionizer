@@ -1,0 +1,14 @@
+<% title("Sessions categorized as #{@category.name}") %>
+<h1>Sessions for <%= @category.name %> </h1>
+<p><%= add_sessions_button %></p>
+
+<% if @sessions.empty? %> 
+  <div>
+    <h2>There are no <%=  @category.name.downcase %> sessions yet.</h2>
+    <p>You can be the first!</p>
+  </div>
+<% else %>
+<ul class="sessionsList">
+  <%= render @sessions %>
+</ul>
+<% end%>

@@ -1,0 +1,24 @@
+<% title('Admin: Manage Events') %>
+
+<h2>Existing events</h2>
+
+<p>The most recent event is the current event for session creation.</p>
+
+<table>
+  <tr>
+    <th>Event Name</th>
+    <th>Event Date</th>
+    <th>Timeslots</th>
+    <th></th>
+  </tr>
+    
+  <% @events.each do |event| %>
+  <tr>
+    <td valign="top"><%= event.name %></td>
+    <td valign="top"><%= event.date %></td>
+    <td valign="top"><%= event.timeslots.map(&:to_s).join("<br>").html_safe %></td>
+    <td valign="top"><%= link_to 'Manage timeslots', admin_event_timeslots_path(event) %></td>
+  <% end %>
+</ul>
+
+<p><%= link_to 'Create new event', new_admin_event_path %></p>

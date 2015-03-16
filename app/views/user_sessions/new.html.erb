@@ -1,0 +1,16 @@
+<% title('Log in') %>
+
+<%= semantic_form_for(@participant_session, :url => login_path) do |f| %>
+
+  <%= f.inputs do %>
+  
+    <%= f.input :email, :label => 'Email' %>
+    <%= f.input :password, :label => 'Password', :as => :password %>
+  <% end %>
+
+  <%= f.actions do %>
+    <%= f.button 'Log in'  %>
+  <% end %>
+<% end %>
+
+<p>Don't have an account yet? <%= link_to 'Register here', new_participant_path %>.</p>

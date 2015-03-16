@@ -1,0 +1,1 @@
+Category.find_or_create_defaults if Category.table_exists?

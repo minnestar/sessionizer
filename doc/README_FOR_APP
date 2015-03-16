@@ -1,0 +1,26 @@
+
+# To create rooms, timeslots, schedule etc...
+
+clh@jefferson.local : ~/dev/minnestar/sessionizer : (master)
+$ bx rake app:create_rooms --verbose 
+
+clh@jefferson.local : ~/dev/minnestar/sessionizer : (master)
+$ bx rake app:create_timeslots --verbose 
+
+clh@jefferson.local : ~/dev/minnestar/sessionizer : (master)
+$ bx rake app:generate_schedule --verbose 
+Scheduling MinneBar 8...
+
+Assigning sessions to time slots...
+227 attendances
+103 presentations
+rake aborted!
+Not enough room / slot combinations! There are 101 sessions, but only 7 times slots * 9 rooms = 63 combinations.
+/Users/clh/dev/minnestar/sessionizer/lib/scheduling/schedule.rb:32:in `initialize'
+/Users/clh/dev/minnestar/sessionizer/lib/tasks/app.rake:103:in `new'
+/Users/clh/dev/minnestar/sessionizer/lib/tasks/app.rake:103:in `block (2 levels) in <top (required)>'
+Tasks: TOP => app:generate_schedule
+(See full trace by running task with --trace)
+
+
+
