@@ -85,6 +85,24 @@ scheduling algorithm.
 7. Create the first event by navigating to `/admin/events` or using the
    console
 
+8. Since the app is in a git subtree (src/ directory), you need to push
+   the app to heroku like this
+ 
+from master  
+
+```
+  $ git subtree push --prefix src master
+```
+
+or from master with a --force
+```
+  $ git push heroku `git subtree split --prefix src master`:master --force
+```
+
+
+
+
+
 
 ### Automatic Scheduling
 
