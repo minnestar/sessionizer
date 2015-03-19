@@ -13,7 +13,7 @@ development:
   encoding: unicode
   database: sessionizer_development
   pool: 5
-  username: postgres
+  username: vagrant
   password:
 
 # Warning: The database defined as "test" will be erased and
@@ -24,6 +24,6 @@ test:
   encoding: unicode
   database: sessionizer_test
   pool: 5
-  username: postgres
+  username: vagrant
   password:
 
