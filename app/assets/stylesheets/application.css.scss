@@ -21,8 +21,12 @@
  *= require_tree .
  */
 
+$babyblue: #AAC9E3;
+$purple: #CCCEEE;
+$white: #fff;
+
 body {
-  background-color: #fff;
+  background-color: $white;
   font-family: Helvetica, Arial;
   font-size: 14px;
   margin: 0;
@@ -67,7 +71,7 @@ a {
 #container {
   width: 75%;
   margin: 0 auto;
-  background-color: #FFF;
+  background-color: $white;
   padding: 20px 40px;
   border: none;
   margin-top: 20px;
@@ -108,7 +112,7 @@ a {
   font-size: 12px;
   margin: 0;
   background-color: #c00;
-  color: #fff;
+  color: $white;
 }
 
 #errorExplanation p {
@@ -127,7 +131,7 @@ a {
 }
 
 div.sidebar-box {
-    background:none repeat scroll 0 0 #CDCEEB;
+    background:none repeat scroll 0 0 $purple;
     padding-left: 1em;
     padding-right: 1em;
     padding-bottom: 1em;
@@ -178,7 +182,7 @@ ul.sessionsList li div.presenter a:active {
 
 ul#menu {margin:0 1px; padding:0; font-size: 12px; font-family: "Helvetica Neue",Arial,Helvetica,sans-serif}
 ul#menu li {font-size:1.3em; float:left; margin-right: 0.05em; padding:0; display:block; list-style:none;}
-ul#menu li a:link, ul#menu li a:visited {display:block; padding:7px 0 10px; line-height:1em; width:9.5em; color:#6a797d; text-decoration:none; border-top:3px solid #fff; text-transform:lowercase;}
+ul#menu li a:link, ul#menu li a:visited {display:block; padding:7px 0 10px; line-height:1em; width:9.5em; color:#6a797d; text-decoration:none; border-top:3px solid $white; text-transform:lowercase;}
 ul#menu li a:hover {border-top:3px solid #6a797d;}
 ul#menu li.star a:hover {border-top:3px solid #ee383a;}
 ul#menu li.bar a:hover {border-top:3px solid #2772a4;}
@@ -196,5 +200,15 @@ span.demo { color: #FFCD32; font-weight: 700; margin-left: 1px; }
 span.beat { color: #F89938; font-weight: 700; margin-left: 1px; }
 span.start { color: #4CB848; font-weight: 700; margin-left: 1px; }
 
-.clearboth {clear:both;}
+.clearboth { clear:both; }
+
+.left  { float:left; }
+.right { float:right; }
+
+footer{
+  background-color: $white;
+  padding: 50px 0 100px 0;
+}
+
+
 

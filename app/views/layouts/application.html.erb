@@ -7,6 +7,7 @@
     <%= favicon_link_tag 'favicon.ico' %>
     <%= yield(:head) %>
   </head>
+
   <body>
     <div class="full-column">
       <div class="center-column">
@@ -16,15 +17,13 @@
           <li class="demo"><a href="http://minnestar.org/minnedemo/"><span class="description">geek show &amp; tell</span><br />minne<span class="demo">demo</span></a></li>
        </ul>
        <div class="clearboth"><!-- --></div>
-
       </div><!-- / center-column -->
     </div><!-- / full-column -->	
 
     <div class="center-column">
+
       <% unless current_page?(root_path) %>
-      <p>
-        <%= link_to 'Back to MinneBar Sessions Home Page', root_path %>
-      </p>
+      <p> <%= link_to 'Back to MinneBar Sessions Home Page', root_path %> </p>
       <% end %>
 
       <% if !logged_in? && !current_page?(new_login_path) && !current_page?(login_path) %>
@@ -35,7 +34,11 @@
 
 
       <% if logged_in? %>
-        <p style="float:right"><%= link_to 'Log out', logout_path, :method => 'delete' %></p>
+        <p style="float:right">
+          <%= link_to "Welcome #{current_participant.name}", [:edit, current_participant]  %>
+          <span>&nbsp;|&nbsp;</span>
+          <%= link_to 'Log out', logout_path, :method => 'delete' %>
+        </p>
       <% end %>
 
       <div id="flash_message_placeholder"></div>
@@ -52,5 +55,6 @@
       <%= render :partial => 'layouts/javascript' %>
     </div>
     <%= render :partial => 'shared/ga' %>
+    <%= render :partial => 'shared/footer' %>
   </body>
 </html>
