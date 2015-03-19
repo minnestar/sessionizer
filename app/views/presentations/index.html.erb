@@ -1,9 +1,9 @@
-<% title("Manage Presenters for #{parent_object.title}") %>
+<% title("Manage Presenters for #{@session.title}") %>
 
 <h2>Presenters</h2>
 
 <ul id="presenter-list">
-<% parent_object.presentations.each do |presentation| %>
+<% @session.presentations.each do |presentation| %>
 <li><%= link_to presentation.participant.name, presentation.participant %></li>
 <% end %>
 </ul>
@@ -12,7 +12,7 @@
 
 <p><strong>Note:</strong> In order to add a presenter to your session, they must be registered in the system.</p>
 
-<%= semantic_form_for([parent_object, @presentation]) do |f| %>
+<%= semantic_form_for([@session, @presentation]) do |f| %>
 <%= text_field_tag 'name', '', :placeholder => 'Type a name', :id => 'typeahead' %> <%= submit_tag 'Add', :id => 'add-presenter' %>
 <% end %>
 
@@ -28,5 +28,6 @@ $(function() {
 <% end %>
 
 <p style="margin-top: 120px">
-  Back to session page for <%= link_to parent_object.title, session_path(parent_object) %>
+  Back to session page for <%= link_to @session.title, session_path(@session) %>
 </p>
+
