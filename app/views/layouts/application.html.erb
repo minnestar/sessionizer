@@ -28,8 +28,11 @@
       <% end %>
 
       <% if !logged_in? && !current_page?(new_login_path) && !current_page?(login_path) %>
-        <p style="float:right"><%= link_to 'Log in', new_login_path %></p>
+        <p style="float:right">
+          <%= link_to 'Log in', new_login_path %> <span>&nbsp;|&nbsp;</span> <%= link_to 'Forgot Password?', new_password_reset_path %>
+        </p>
       <% end %>
+
 
       <% if logged_in? %>
         <p style="float:right"><%= link_to 'Log out', logout_path, :method => 'delete' %></p>

@@ -126,8 +126,11 @@ namespace :app do
     puts 'Reset DB.'
     Rake::Task['db:reset'].invoke
 
+    puts 'Create categories' 
+    Category.find_or_create_defaults
+
     puts 'Creating event...'
-    event = Event.create(name: Faker::HipsterIpsum.words(3), date: 1.month.from_now) 
+    event = Event.create(name: FFaker::HipsterIpsum.words(3).join(' '), date: 1.month.from_now) 
 
     puts 'Creating timeslots...'
     Rake::Task['app:create_timeslots'].invoke
@@ -135,14 +138,14 @@ namespace :app do
     puts 'Creating rooms...'
     Rake::Task['app:create_rooms'].invoke
 
-    puts 'Creating 1000 participants...'
+    puts 'Creating 100 participants...'
     progress = ProgressBar.create(title: 'Participants', total: 1000)
-    1000.times do 
+    100.times do 
       participant = Participant.new
-      participant.name = Faker::Name.name
-      participant.email = Faker::Internet.email
+      participant.name = FFaker::Name.name
+      participant.email = FFaker::Internet.email
       participant.password = 'standard'
-      participant.bio = Faker::Lorem.paragraph if [true, false].sample
+      participant.bio = FFaker::Lorem.paragraph if [true, false].sample
       participant.save!
       progress.increment
     end
@@ -151,8 +154,8 @@ namespace :app do
     sessions_total = Room.count * Timeslot.count
     sessions_total.times do 
       session = Session.new
-      session.title = Faker::HipsterIpsum.phrase
-      session.description = Faker::HipsterIpsum.paragraph
+      session.title = FFaker::HipsterIpsum.phrase
+      session.description = FFaker::HipsterIpsum.paragraph
       session.participant = Participant.order('RANDOM()').first 
       session.event = event
       session.categories << Category.order('RANDOM()').first
