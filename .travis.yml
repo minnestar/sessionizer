@@ -8,6 +8,7 @@ notifications:
     - casey@softwareforgood.com
 
 before_script:
+  - cd src/
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.yml.travis config/database.yml
   - bundle exec rake db:migrate
