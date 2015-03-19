@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.5'
 
 gem 'pg'
+#gem 'sqlite3'
 gem 'unicorn'
 
 # Use SCSS for stylesheets
@@ -53,4 +54,8 @@ group :test do
   gem 'database_cleaner'
   gem 'poltergeist'
 end
+
+#https://devcenter.heroku.com/articles/rails-4-asset-pipeline
+gem 'rails_12factor', group: :production
+
 
