@@ -7,6 +7,10 @@ notifications:
     - jcoyne@justincoyne.com
     - casey@softwareforgood.com
 
+before_install:
+  - gem update --system
+  - gem --version
+    
 before_script:
   - cd src/
   - psql -c 'create database travis_ci_test;' -U postgres
