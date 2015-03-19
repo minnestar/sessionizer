@@ -1,8 +1,9 @@
-[![Build Status](http://img.shields.io/travis/minnestar/sessionizer.svg)](https://travis-ci.org/minnestar/sessionizer) [![Coveralls](http://img.shields.io/coveralls/minnestar/sessionizer.svg)](https://coveralls.io/r/minnestar/sessionizer) [![Scrutinizer](http://img.shields.io/scrutinizer/g/minnestar/sessionizer.svg)](https://scrutinizer-ci.com/g/minnestar/sessionizer/)
-
 # Sessionizer
 
 Sessionizer is a tool for managing session registration for unconferences. It was written for [MinneBar](http://minnestar.org/minnebar/), an unconference in Minnesota and one of the largest BarCamps in the world.
+
+[![Build Status](http://img.shields.io/travis/minnestar/sessionizer.svg)](https://travis-ci.org/minnestar/sessionizer) [![Coveralls](http://img.shields.io/coveralls/minnestar/sessionizer.svg)](https://coveralls.io/r/minnestar/sessionizer) [![Scrutinizer](http://img.shields.io/scrutinizer/g/minnestar/sessionizer.svg)](https://scrutinizer-ci.com/g/minnestar/sessionizer/)
+
 
 ## Features
 
@@ -20,29 +21,72 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 
 ### Bootstrapping
 
-TBD.
+You'll need to install [VirtualBox][], [Vagrant][], and [Ansible][]
+first. VirtualBox and Vagrant both have Mac OS X installer packages, and
+Ansible can be installed either with Homebrew or with pip, the Python
+package manager.
 
-* Create seed data: `rake db:seed`
+[VirtualBox]: https://www.virtualbox.org/wiki/Downloads
+[Vagrant]: http://www.vagrantup.com/downloads.html
+[Ansible]: http://docs.ansible.com/intro_installation.html
 
-### Development 
+Once you've got those installed, you can bootstrap the project with:
+
+    $ cd vagrant && vagrant up
+
+This will create the box, install the gems, create the database (if it
+doesn't already exist), and start the app inside the box. To access it,
+add an entry in your /etc/hosts file like the following (or do the
+equivalent in dnsmasq.conf):
+
+    192.168.100.180 sessionizer.vm
+
+You can then visit <http://sessionizer.vm/>.
+
+To restart the app, you can ssh into the box and run:
+
+    $ vagrant ssh
+    vagrant$ sudo service unicorn-sessionizer restart
+
+    -- or -- 
+    vagrant$ railsup
+
+To re-run the provisioning scripts, which are idempotent, you can simply do:
+
+    $ vagrant provision
+
+This should bring the box back into its correct configuration if
+anything has gotten messed up.
+
+========
+
+This app also uses Mandrill for sending emails. The account is under
+
+user: casey at minnestar . org
+pass: <inside minne* one password> (ask casey or jamie)
+
+========
+
+### Development (seed data)
 
 For development, run `rake app:make_believe` to hydrate the database with sample
 data. It will reset the database, create an event, participants, timeslots, 
 sessions, and apply randomized participant interest. This does not run the 
 scheduling algorithm.
 
-## Deploying
-
-Sessionizer is designed to run on Heroku, though with a little setup you should be able to get it running anywhere.
+### Deploying to Heroku
 
 1. Create an application. Sessionizer runs on the default Cedar stack.
 2. Add the memcache add-on: `heroku addons:add memcached:5mb`
 3. Run `heroku run rake db:migrate`
 4. Run `herok run rake db:seed`
 5. Set a username and password for the Sessionizer admin: `heroku config:add SESSIONIZER_ADMIN_USER=foo SESSIONIZER_ADMIN_PASSWORD=bar`
-6. Create the first event by navigating to `/admin/events`
+6. Set a MANDRILL_MINNESTAR_USER, MANDRILL_MINNESTAR_PASSWORD
+7. Create the first event by navigating to `/admin/events` or using the
+   console
 
-## Automatic Scheduling
+
+### Automatic Scheduling
 
 Sessionizer can automatically generate a schedule for your event based on preferences expressed by the audience and attempting not to double-book presenters.
 
