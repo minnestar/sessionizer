@@ -1,0 +1,128 @@
+- name: Set up base development environment
+  hosts: all
+  vars_files:
+    - vars/application.yml
+  sudo: yes
+  tasks:
+    - apt: update_cache=yes upgrade=safe
+    - apt: name={{item}}
+      with_items:
+        - libssl-dev
+        - libreadline-dev
+        - libffi-dev
+        - ruby-dev
+        - nodejs
+        - phantomjs
+        - imagemagick
+        - git
+        - htop
+        - g++
+        - libsqlite3-dev
+    - copy:
+        src: files/bash_profile
+        dest: /home/vagrant/.profile
+    - copy:
+        src: files/bashrc
+        dest: /home/vagrant/.bashrc
+    - copy:
+        src: files/bash_aliases
+        dest: /home/vagrant/.bash_aliases
+
+- name: PostgreSQL database server
+  hosts: all
+  sudo: yes
+  vars:
+    pgbin: /usr/bin/psql
+  tasks:
+    - apt: name={{item}}
+      with_items:
+        - postgresql
+        - libpq-dev
+        - python-psycopg2
+        - postgresql-contrib
+    - postgresql_user: name=vagrant role_attr_flags=CREATEDB,NOSUPERUSER,NOCREATEROLE
+      sudo_user: postgres
+
+- name: Nginx web server
+  hosts: all
+  vars_files:
+    - vars/application.yml
+  sudo: yes
+  tasks:
+    - apt: name=nginx-core
+    - service: name=nginx state=started
+    - template:
+        src: templates/nginx.j2
+        dest: /etc/nginx/sites-available/{{app_name}}
+      notify:
+        - restart nginx
+    - file:
+        path: /etc/nginx/sites-enabled/{{app_name}}
+        state: link
+        src: /etc/nginx/sites-available/{{app_name}}
+      notify:
+        - restart nginx
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+- name: rbenv
+  hosts: all
+  vars:
+    rbenv_root: ~/.rbenv
+  tasks:
+    - git:
+        repo: https://github.com/sstephenson/rbenv.git
+        dest: "{{rbenv_root}}"
+    - git:
+        repo: https://github.com/sstephenson/ruby-build.git
+        dest: "{{rbenv_root}}/plugins/ruby-build"
+    - shell: rbenv install -s {{lookup('file', '../../src/.ruby-version')}}
+    - gem: name={{item}} user_install=no
+      environment:
+        RBENV_VERSION: "{{lookup('file', '../../src/.ruby-version')}}"
+      with_items:
+        - rake
+        - bundler
+
+- name: App bootstrap
+  hosts: all
+  vars_files:
+    - vars/application.yml
+  tasks:
+    - local_action:
+        module: stat
+        path: ../../src/config/database.yml
+      register: database_yml
+    - local_action:
+        module: template
+        src: templates/database.yml.j2/
+        dest: ../../src/config/database.yml
+      when: not database_yml.stat.exists
+    - local_action:
+        module: stat
+        path: ../../src/config/secrets.yml
+      register: secrets_yml
+    - local_action:
+        module: template
+        src: templates/secrets.yml.j2
+        dest: ../../src/config/secrets.yml
+      when: not secrets_yml.stat.exists
+    - command: bundle install chdir=/srv/{{app_name}}/
+    - command: bundle exec rake db:create chdir=/srv/{{app_name}}/
+      register: db_create
+    - command: bundle exec rake db:setup chdir=/srv/{{app_name}}/
+      when: db_create.stderr.find('{{app_name}}_development already exists') == -1
+    - template:
+        src: templates/cmd-in-screen.sh.j2
+        dest: "{{item.dest}}"
+        mode: 0755
+      with_items:
+        - dest: /home/vagrant/unicorn-screen.sh
+          command: 'bundle exec unicorn -c config/unicorn.development.rb'
+    - shell: ps -C 'screen -dmS {{app_name}}' -o cmd= | grep -qi '^screen -dmS {{app_name}}'
+      ignore_errors: yes
+      register: find_screen_session
+    - command: screen -dmS {{app_name}} -c /vagrant/devscreenrc
+      when: find_screen_session|failed
+    - file: path=/home/vagrant/app state=link src=/srv/{{app_name}}
