@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130304053929) do
+ActiveRecord::Schema.define(version: 20150319011702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,9 +59,11 @@ ActiveRecord::Schema.define(version: 20130304053929) do
     t.datetime "updated_at"
     t.string   "crypted_password"
     t.string   "persistence_token"
+    t.string   "perishable_token",  default: "", null: false
   end
 
   add_index "participants", ["email"], name: "index_participants_on_email", unique: true, using: :btree
+  add_index "participants", ["perishable_token"], name: "index_participants_on_perishable_token", using: :btree
 
   create_table "presentations", force: true do |t|
     t.integer  "session_id"
