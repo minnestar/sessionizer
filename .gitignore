@@ -11,9 +11,11 @@
 /src/db/*.sqlite3
 
 # Ignore all logfiles and tempfiles.
-/src/log/*.log
-/src/log/*.pid
-/src/tmp
+src/log/*.log
+src/log/*.pid
+src/tmp
+src/tmp/*.log
+src/tmp/cache/*
 
 .DS_Store
 /src/config/database.yml
