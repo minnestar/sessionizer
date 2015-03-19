@@ -39,6 +39,10 @@ class Participant < ActiveRecord::Base
     Notifier.password_reset_instructions(self).deliver!
   end
 
+  def attending_session?(session)
+    sessions_attending.include?(session)
+  end
+
 end
 
 

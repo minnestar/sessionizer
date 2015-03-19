@@ -1,7 +1,6 @@
-<% title("Sessions categorized as #{@category.name}") %>
-<h1>Sessions for <%= @category.name %> </h1>
-<p><%= add_sessions_button %></p>
 
+<% title("#{@category.name} Sessions") %>
+<p><%= add_sessions_button %></p>
 <% if @sessions.empty? %> 
   <div>
     <h2>There are no <%=  @category.name.downcase %> sessions yet.</h2>
@@ -12,3 +11,4 @@
   <%= render @sessions %>
 </ul>
 <% end%>
+<p><%= add_sessions_button %></p>
