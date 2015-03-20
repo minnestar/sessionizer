@@ -42,6 +42,7 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.include Authlogic::TestCase, type: :controller
+  config.include AuthenticationSupport, type: :feature
 
   config.before do
     #don't hold on to any memoized events
@@ -69,4 +70,6 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+
 end
+

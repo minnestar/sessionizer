@@ -24,7 +24,7 @@ Sessionizer.Attend = function() {
 
   return {
     setup: function() {
-      $("a#attend").click(Sessionizer.Attend.attend);
+      $("button#attend").click(Sessionizer.Attend.attend);
     },
 
     attend: function() {
@@ -35,9 +35,9 @@ Sessionizer.Attend = function() {
               type: 'POST',
               dataType: 'html',
               success: function(data, textStatus) {
-                $("div#flash_message_placeholder").after('<div id="flash_notice">Thanks for your interest in this session.</div>');
-                $("div#interested-in-attending").hide();
-                $("div#no-participants").hide();
+                $("div#interested-in-attending").after('<div id="flash_notice">Thanks for your interest in this session.</div>');
+                $("div#interested-in-attending").slideUp();
+                $("div#no-participants").fadeOut('fast');
                 $("ul#participants").prepend(data);
               },
               error: function(xmlhttp) {
