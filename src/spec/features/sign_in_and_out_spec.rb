@@ -16,7 +16,7 @@ feature "Manage Sessions" do
   end
 
   scenario "As a user with an account, I want to sign in and out" do
-    visit root_url
+    visit root_path
 
     click_link "Log in"
 
