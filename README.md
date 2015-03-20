@@ -74,6 +74,17 @@ data. It will reset the database, create an event, participants, timeslots,
 sessions, and apply randomized participant interest. This does not run the 
 scheduling algorithm.
 
+```
+ $ cd vagrant; vagrant ssh
+ $ cd /srv/sessionizer
+ $ bx rake app:make_believe
+```
+
+If you need to restart the unicorn processes within the virtual box you
+can alway use the alias `railsup`. 
+
+
+
 ### Deploying to Heroku
 
 1. Create an application. Sessionizer runs on the default Cedar stack.
@@ -84,23 +95,19 @@ scheduling algorithm.
 6. Set a MANDRILL_MINNESTAR_USER, MANDRILL_MINNESTAR_PASSWORD
 7. Create the first event by navigating to `/admin/events` or using the
    console
-
 8. Since the app is in a git subtree (src/ directory), you need to push
    the app to heroku like this
  
 from master  
 
 ```
-  $ git subtree push --prefix src master
+  $ git subtree push --prefix src heroku master
 ```
 
 or from master with a --force
 ```
   $ git push heroku `git subtree split --prefix src master`:master --force
 ```
-
-
-
 
 
 
