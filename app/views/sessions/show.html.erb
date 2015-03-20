@@ -76,10 +76,12 @@
 
     <% if @session.participants.any? %>
       <h3>Interested Participants</h3>
-      <ul class="sessionsList">
-        <%= render :partial => 'participant', :collection => @session.participants %>
-      </ul>
+    <% else %>
+      <h3 id="no-participants">No participants yet</h3>
     <% end %>
+    <ul class="sessionsList" id="participants">
+      <%= render :partial => 'participant', :collection => @session.participants %>
+    </ul>
 
   </div>
 </div>
