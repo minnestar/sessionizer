@@ -27,3 +27,12 @@ test:
   username: vagrant
   password:
 
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: sessionizer_test
+  pool: 5
+  username: vagrant
+  password:
+
+
