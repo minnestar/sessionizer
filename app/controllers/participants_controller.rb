@@ -30,9 +30,14 @@ class ParticipantsController < ApplicationController
 
   def create
     @participant.attributes = participant_params
-    @participant.save!
-    flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
-    redirect_to root_path
+    if @participant.save
+      flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
+      redirect_to root_path
+    else
+      flash[:error] = "There was a problem creating that account." 
+      render :new
+    end
+
   end
 
   private
