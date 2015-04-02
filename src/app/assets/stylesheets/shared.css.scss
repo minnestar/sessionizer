@@ -222,6 +222,11 @@ ul#menu {
       }
     }
   }
+
+  li.bar, li.demo {
+    float:right;
+  }
+
   .last {
     margin-right: 0;
   }
