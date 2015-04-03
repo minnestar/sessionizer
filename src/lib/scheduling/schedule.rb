@@ -55,6 +55,16 @@ module Scheduling
     def presenter_energy
       overlap_score(:presenters) * ctx.attendee_count
     end
+
+    # Gives lower & upper bounds on the possible range of attendance_energy
+    def attendance_energy_bounds
+      min_score = max_score = 0.0
+      count = ctx.each_session_set(:attendees) do |participant, session_set, penalty_callback|
+        min_score += 1.0 / session_set.size                                 # All sessions at the same time for this person
+        max_score += [ctx.timeslots.size / session_set.size.to_f, 1.0].min  # Person has a session of interest in every timeslot
+      end
+      (1 - max_score / count) .. (1 - min_score / count)
+    end
   
     def random_neighbor
       dup.random_neighbor!
@@ -100,6 +110,16 @@ module Scheduling
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
       s
+    end
+
+    def inspect_bounds
+      possible_range = self.attendance_energy_bounds
+      s = "Extreme bounds on possible result: the average participant cannot possibly attend...\n"
+      s << "    at worst #{'%03.3f' % ((1 - possible_range.end  ) * 100)}%\n"
+      s << "    at best  #{'%03.3f' % ((1 - possible_range.begin) * 100)}%\n"
+      s << "...of their sessions of interest."
+      s << " (Note that these are just limits on what is possible."
+      s << " Neither bounds is actually likely to be achievable.)"
     end
     
   private
