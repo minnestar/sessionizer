@@ -106,14 +106,21 @@ namespace :app do
     event = Event.current_event
     puts "Scheduling #{event.name}..."
     
+    schedule = Scheduling::Schedule.new event
+
     puts
     puts "Assigning sessions to time slots..."
-    schedule = Scheduling::Schedule.new event
-    annealer = Scheduling::Annealer.new :max_iter => 100000 * quality, :cooling_time => 5000000 * quality, :repetition_count => 1
+    annealer = Annealer.new(
+      :max_iter => 100000 * quality,
+      :cooling_time => 5000000 * quality,
+      :repetition_count => 1,
+      :log_to => STDOUT)
     best = annealer.anneal schedule
     puts "BEST SOLUTION:"
     p best
+    
     best.assign_rooms_and_save!
+    
     puts
     puts 'Congratulations. You have a schedule!'
   end
