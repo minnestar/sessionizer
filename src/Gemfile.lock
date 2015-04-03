@@ -27,6 +27,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    annealer (0.2)
     arel (5.0.1.20140414130214)
     authlogic (3.4.5)
       activerecord (>= 3.2)
@@ -221,6 +222,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annealer
   authlogic
   bcrypt-ruby (~> 3.1)
   cancancan
