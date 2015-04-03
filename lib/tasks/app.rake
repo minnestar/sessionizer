@@ -107,7 +107,9 @@ namespace :app do
     puts "Scheduling #{event.name}..."
     
     schedule = Scheduling::Schedule.new event
-
+    puts
+    puts schedule.inspect_bounds
+    
     puts
     puts "Assigning sessions to time slots..."
     annealer = Annealer.new(
