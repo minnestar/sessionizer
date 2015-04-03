@@ -5,7 +5,7 @@ require 'pp'
 unless Array.method_defined?(:sample)
   class Array
     def sample
-      self[rand(self.count)]
+      self[rand(self.size)]
     end
   end
 end
@@ -25,14 +25,14 @@ module Scheduling
       # Create a random schedule to start
       
       unassigned = ctx.sessions.shuffle
-      room_count = ctx.rooms.count
+      room_count = ctx.rooms.size
       ctx.timeslots.each do |slot|
         slot_sessions = unassigned.slice!(0, room_count)
-        slot_sessions << Unassigned.new while slot_sessions.count < room_count
+        slot_sessions << Unassigned.new while slot_sessions.size < room_count
         slot_sessions.each { |session| reschedule(session, slot)  }
       end
       unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{ctx.sessions.count} sessions, but only #{ctx.timeslots.count} times slots * #{room_count} rooms = #{ctx.timeslots.count * room_count} combinations."
+        raise "Not enough room / slot combinations! There are #{ctx.sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
       end
     end
     
@@ -41,7 +41,7 @@ module Scheduling
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }
       @slots_by_session.each { |session, slot| @sessions_by_slot[slot] << session }
     end
-  
+
     # This is the metric we're trying to minimize. It's called "energy" in simulated annealing by analogy to the
     # real-life physical process of annealing, in which a cooling material minimizes the energy of its chemical bonds.
     def energy
@@ -68,7 +68,7 @@ module Scheduling
       
       # Rotate their assignments
       slot_cycle.each_with_index do |old_slot, i|
-        new_slot = slot_cycle[(i+1) % slot_cycle.count]
+        new_slot = slot_cycle[(i+1) % slot_cycle.size]
         reschedule @sessions_by_slot[old_slot].sample, new_slot
       end
       
@@ -81,9 +81,9 @@ module Scheduling
         @sessions_by_slot.sort_by { |k,v| k.starts_at }.each do |slot_id, session_ids|
           slot = Timeslot.find(slot_id)
           puts slot
-          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.attendances.count }
+          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.attendances.size }
           sessions.zip(rooms_by_capacity) do |session, room|
-            puts "    #{session.categories.map(&:name).inspect} #{session.title} (#{session.attendances.count}) in #{room.name} (#{room.capacity})"
+            puts "    #{session.categories.map(&:name).inspect} #{session.title} (#{session.attendances.size}) in #{room.name} (#{room.capacity})"
             session.timeslot = slot
             session.room = room
             session.save!
@@ -124,7 +124,7 @@ module Scheduling
           overlaps += penalty_callback.call(slot)
         end
         
-        score += overlaps / session_set.count.to_f
+        score += overlaps / session_set.size.to_f
       end
       
       if count == 0
