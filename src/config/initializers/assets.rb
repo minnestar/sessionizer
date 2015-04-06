@@ -18,4 +18,10 @@ Rails.application.config.assets.precompile += %w( fancybox.png
   fancy_shadow_e.png
   fancy_shadow_s.png
   fancy_shadow_w.png
+  grid.css
+  schedule.css
+  schedule-print.css
+  schedule-mobile.css
+  schedule.js
+  fancybox/jquery.fancybox-1.3.4.css
 )
