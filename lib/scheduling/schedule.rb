@@ -36,8 +36,23 @@ module Scheduling
       @slots_by_session[session]
     end
 
+  private
+
+    attr_reader :ctx
+    
+    class Unassigned  # placeholder for empty room
+      def to_s
+        "<< open >>"
+      end
+    end
+
+  public
+
+    # ------------ Scoring ------------
+
     # This is the metric we're trying to minimize. It's called "energy" in simulated annealing by analogy to the
     # real-life physical process of annealing, in which a cooling material minimizes the energy of its chemical bonds.
+    #
     def energy
        attendance_energy + presenter_energy
     end
@@ -57,7 +72,26 @@ module Scheduling
       count = ctx.people.size
       (worst_score / count) .. (best_score / count)
     end
+
+  private
   
+    def score(role)
+      count = ctx.people.size
+      score = ctx.people.sum do |person|
+        person.send(role).score(self)
+      end
+      
+      if count == 0
+        1
+      else
+        score / count
+      end
+    end
+
+  public
+
+    # ------------ State space traversal ------------
+
     def random_neighbor
       dup.random_neighbor!
     end
@@ -76,7 +110,21 @@ module Scheduling
       
       self
     end
+
+  private
+
+    def reschedule(session, new_slot)
+      old_slot = @slots_by_session[session]
+      @sessions_by_slot[old_slot].delete(session) if old_slot
+      
+      @slots_by_session[session] = new_slot
+      @sessions_by_slot[new_slot] << session if new_slot
+    end
+
+  public
     
+    # ------------ Managing results ------------
+
     def assign_rooms_and_save!
       Session.transaction do
         rooms_by_capacity = ctx.rooms.sort_by { |r| -r.capacity }
@@ -115,35 +163,6 @@ module Scheduling
     end
     
   private
-
-    attr_reader :ctx
-    
-    def score(role)
-      count = ctx.people.size
-      score = ctx.people.sum do |person|
-        person.send(role).score(self)
-      end
-      
-      if count == 0
-        1
-      else
-        score / count
-      end
-    end
-
-    def reschedule(session, new_slot)
-      old_slot = @slots_by_session[session]
-      @sessions_by_slot[old_slot].delete(session) if old_slot
-      
-      @slots_by_session[session] = new_slot
-      @sessions_by_slot[new_slot] << session if new_slot
-    end
-    
-    class Unassigned
-      def to_s
-        "<< open >>"
-      end
-    end
 
     def format_percent(x)
       "#{'%1.3f' % (x * 100)}%"
