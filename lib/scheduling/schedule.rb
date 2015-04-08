@@ -12,18 +12,7 @@ module Scheduling
       @slots_by_session = {}                            # map from session to timeslot
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
       
-      # Create a random schedule to start
-      
-      unassigned = ctx.sessions.shuffle
-      room_count = ctx.rooms.size
-      ctx.timeslots.each do |slot|
-        slot_sessions = unassigned.slice!(0, room_count)
-        slot_sessions << Unassigned.new while slot_sessions.size < room_count
-        slot_sessions.each { |session| reschedule(session, slot)  }
-      end
-      unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{ctx.sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
-      end
+      randomize_schedule!
     end
     
     def initialize_copy(source)  # deep copy; called by dup
@@ -65,7 +54,7 @@ module Scheduling
       (1 - score(:presenting)) * ctx.people.count   # Presenter double-bookings trump attendance preferences
     end
 
-    # Gives lower & upper bounds on the possible range of attendance_energy
+    # Gives lower & upper bounds on the possible range of attendance_score
     def attendance_score_bounds
       best_score  = ctx.people.sum { |p| p.attending.best_possible_score }
       worst_score = ctx.people.sum { |p| p.attending.worst_possible_score }
@@ -92,6 +81,25 @@ module Scheduling
 
     # ------------ State space traversal ------------
 
+    # Reset to a completely random assignment of sessions to timelots, filling earlier slots first
+    # and adding Unassigned placeholders to openings in the schedule.
+    #
+    def randomize_schedule!
+      unassigned = ctx.sessions.shuffle
+      room_count = ctx.rooms.size
+      ctx.timeslots.each do |slot|
+        slot_sessions = unassigned.slice!(0, room_count)
+        slot_sessions << Unassigned.new while slot_sessions.size < room_count
+        slot_sessions.each { |session| schedule(session, slot)  }
+      end
+      unless unassigned.empty?
+        raise "Not enough room / slot combinations! There are #{ctx.sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
+      end
+    end
+
+    # Return a similar but slightly different schedule. Used by the annealing algorithm to explore
+    # the scheduling space.
+    #
     def random_neighbor
       dup.random_neighbor!
     end
@@ -105,7 +113,7 @@ module Scheduling
       # Rotate their assignments
       slot_cycle.each_with_index do |old_slot, i|
         new_slot = slot_cycle[(i+1) % slot_cycle.size]
-        reschedule @sessions_by_slot[old_slot].sample, new_slot
+        schedule @sessions_by_slot[old_slot].sample, new_slot
       end
       
       self
@@ -113,7 +121,7 @@ module Scheduling
 
   private
 
-    def reschedule(session, new_slot)
+    def schedule(session, new_slot)
       old_slot = @slots_by_session[session]
       @sessions_by_slot[old_slot].delete(session) if old_slot
       
