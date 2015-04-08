@@ -4,7 +4,7 @@ module Scheduling
 
   # A set of sessions which can be scored against a particular schedule.
   #
-  # This can represent the set of sessions an attendee is interested in seeing,
+  # This can represent either the set of sessions an attendee is interested in seeing,
   # or the set a presenter is presenting. Either way, we want sessions booked in
   # nonoverlapping timeslots.
   #
@@ -22,13 +22,13 @@ module Scheduling
       @superset.add(session_id) if @superset
     end
 
-    # Score if sessions are evenly distributed among all the timeslots.
+    # The score if sessions are evenly distributed among all available timeslots.
     #
     def best_possible_score
       [@ctx.timeslots.size / size.to_f, 1.0].min
     end
 
-    # Score if everything is in the same timeslot.
+    # The score if everything is in the same timeslot.
     #
     def worst_possible_score
       1.0 / size
@@ -51,10 +51,8 @@ module Scheduling
       overlaps / @sessions.size.to_f
     end
 
-    %i(size each empty?).each do |forwarded_method|
-      define_method(forwarded_method) do |*args, &block|
-        @sessions.send(forwarded_method, *args, &block)
-      end
+    def size
+      @sessions.size
     end
 
   end

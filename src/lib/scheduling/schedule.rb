@@ -1,20 +1,10 @@
-require 'set'
 require 'pp'
 
 
-unless Array.method_defined?(:sample)
-  class Array
-    def sample
-      self[rand(self.size)]
-    end
-  end
-end
-
-
-# Represents a particular schedule (i.e. assignment of sessions to rooms) for the purpose of annealing.
-# Scores the schedule and returns nearby variations.
-#
 module Scheduling
+  # Represents a particular schedule (i.e. assignment of sessions to rooms) for the purpose of annealing.
+  # Scores the schedule and returns nearby variations.
+  #
   class Schedule
     def initialize(event)
       @ctx = Scheduling::Context.new(event)
@@ -57,7 +47,7 @@ module Scheduling
     end
     
     def presenter_energy
-      overlap_score(:presenting) * ctx.attendee_count   # Presenter double-bookings trump attendance preferences
+      overlap_score(:presenting) * ctx.people.count   # Presenter double-bookings trump attendance preferences
     end
 
     # Gives lower & upper bounds on the possible range of attendance_energy

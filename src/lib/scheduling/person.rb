@@ -1,4 +1,8 @@
 module Scheduling
+
+  # Lightweight model for a person, who has a (possibly empty) set of sessions
+  # they'd like to attend, and another at which they're presenting.
+  #
   class Person
     attr_reader :id, :attending, :presenting
 
