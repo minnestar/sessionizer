@@ -1,11 +1,12 @@
-# ActiveModel access is slow enough that we create a stripped-down, in-memory version of the various
-# models we need to create a schedule, then run the annealer against this in-memory model.
-# This class sucks all the rooms, sessions and timeslots from the DB, and provides them during annealing.
-#
-# A Context, its Person objects, and their SessionSets do _not_ change during annealing.
-# The Schedule class contains all the state we're trying to optimize.
-#
 module Scheduling
+  
+  # ActiveModel access is slow enough that we create a stripped-down, in-memory version of the various
+  # models we need to create a schedule, then run the annealer against this in-memory model.
+  # This class sucks all the rooms, sessions and timeslots from the DB, and provides them during annealing.
+  #
+  # A Context, its Person objects, and their SessionSets do _not_ change during annealing.
+  # The Schedule class contains all the state we're trying to optimize.
+  #
   class Context
     
     attr_reader :sessions, :timeslots, :rooms
@@ -34,15 +35,11 @@ module Scheduling
       @people_by_id.values
     end
 
+  private
+    
     def person(id)
       @people_by_id[id]
     end
-    
-    def attendee_count
-      people.count
-    end
-  
-  private
     
     def load_sets(role, association_model)
       # This brute force iteration is hardly slick, but I'm too rusty on fancy ActiveRecord querying to care just now. -PPC
