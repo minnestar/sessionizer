@@ -144,7 +144,7 @@ module Scheduling
     
     def inspect
       s = "Schedule"
-      s << " | average participant can attend #{format_percent score(:attending)} of their sessions of interest"
+      s << " | average participant is #{format_percent score(:attending)} satisfied with schedule"
       s << " | presenter score = #{format_percent score(:presenting)} (we want 100)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
@@ -154,10 +154,10 @@ module Scheduling
 
     def inspect_bounds
       possible_range = self.attendance_score_bounds
-      s = "Extreme bounds on possible result: the average participant can possibly attend...\n"
-      s << "    at worst #{'%03.3f' % ((possible_range.begin) * 100)}%\n"
-      s << "    at best  #{'%03.3f' % ((possible_range.end  ) * 100)}%\n"
-      s << "...of their sessions of interest."
+      s = "Given the number of timeslots and sessions of interest, the average participant cannot possibly be...\n"
+      s << "    less than #{'%03.3f' % ((possible_range.begin) * 100)}%\n"
+      s << "    more than  #{'%03.3f' % ((possible_range.end  ) * 100)}%\n"
+      s << "...satisfied with the schedule, whatever it is."
       s << " (Note that these are just limits on what is possible."
       s << " Neither bounds is actually likely to be achievable.)"
     end
