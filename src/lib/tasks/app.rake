@@ -113,10 +113,9 @@ namespace :app do
     puts
     puts "Assigning sessions to time slots..."
     annealer = Annealer.new(
-      :max_iter => 100000 * quality,
-      :cooling_time => 5000000 * quality,
-      :repetition_count => 1,
-      :log_to => STDOUT)
+      max_iter: 10000 * quality,
+      repetition_count: quality.ceil,
+      log_to: STDOUT)
     best = annealer.anneal schedule
     puts "BEST SOLUTION:"
     p best
