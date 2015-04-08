@@ -49,17 +49,17 @@ module Scheduling
     end
     
     def attendance_energy
-      overlap_score :attendees
+      overlap_score :attending
     end
     
     def presenter_energy
-      overlap_score(:presenters) * ctx.attendee_count
+      overlap_score(:presenting) * ctx.attendee_count
     end
 
     # Gives lower & upper bounds on the possible range of attendance_energy
     def attendance_energy_bounds
       min_score = max_score = 0.0
-      count = ctx.each_session_set(:attendees) do |participant, session_set, penalty_callback|
+      count = ctx.each_session_set(:attending) do |participant, session_set, penalty_callback|
         min_score += 1.0 / session_set.size                                 # All sessions at the same time for this person
         max_score += [ctx.timeslots.size / session_set.size.to_f, 1.0].min  # Person has a session of interest in every timeslot
       end
