@@ -43,19 +43,19 @@ module Scheduling
     end
     
     def attendance_energy
-      overlap_score(:attending)
+      1 - score(:attending)
     end
     
     def presenter_energy
-      overlap_score(:presenting) * ctx.people.count   # Presenter double-bookings trump attendance preferences
+      (1 - score(:presenting)) * ctx.people.count   # Presenter double-bookings trump attendance preferences
     end
 
     # Gives lower & upper bounds on the possible range of attendance_energy
-    def attendance_energy_bounds
+    def attendance_score_bounds
       best_score  = ctx.people.sum { |p| p.attending.best_possible_score }
       worst_score = ctx.people.sum { |p| p.attending.worst_possible_score }
       count = ctx.people.size
-      (1 - best_score / count) .. (1 - worst_score / count)
+      (worst_score / count) .. (best_score / count)
     end
   
     def random_neighbor
@@ -96,8 +96,8 @@ module Scheduling
     
     def inspect
       s = "Schedule"
-      s << " | average participant can attend #{'%1.3f' % ((1 - attendance_energy) * 100)}% of their sessions of interest"
-      s << " | presenter exclusion score = #{presenter_energy} (we want zero)\n"
+      s << " | average participant can attend #{format_percent score(:attending)} of their sessions of interest"
+      s << " | presenter score = #{format_percent score(:presenting)} (we want 100)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
@@ -105,10 +105,10 @@ module Scheduling
     end
 
     def inspect_bounds
-      possible_range = self.attendance_energy_bounds
-      s = "Extreme bounds on possible result: the average participant cannot possibly attend...\n"
-      s << "    at worst #{'%03.3f' % ((1 - possible_range.end  ) * 100)}%\n"
-      s << "    at best  #{'%03.3f' % ((1 - possible_range.begin) * 100)}%\n"
+      possible_range = self.attendance_score_bounds
+      s = "Extreme bounds on possible result: the average participant can possibly attend...\n"
+      s << "    at worst #{'%03.3f' % ((possible_range.begin) * 100)}%\n"
+      s << "    at best  #{'%03.3f' % ((possible_range.end  ) * 100)}%\n"
       s << "...of their sessions of interest."
       s << " (Note that these are just limits on what is possible."
       s << " Neither bounds is actually likely to be achievable.)"
@@ -118,14 +118,14 @@ module Scheduling
 
     attr_reader :ctx
     
-    def overlap_score(role)
+    def score(role)
       count = ctx.people.size
       score = ctx.people.sum do |person|
         person.send(role).score(self)
       end
       
       if count == 0
-        0
+        1
       else
         score / count
       end
@@ -143,6 +143,10 @@ module Scheduling
       def to_s
         "<< open >>"
       end
+    end
+
+    def format_percent(x)
+      "#{'%1.3f' % (x * 100)}%"
     end
 
   end

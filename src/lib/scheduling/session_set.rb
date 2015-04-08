@@ -35,7 +35,7 @@ module Scheduling
     end
 
     def score(schedule)
-      return 0 if @sessions.empty?  # prevents divide by zero below
+      return 1 if @sessions.empty?  # prevents divide by zero below
       
       slots_used = Set.new
       overlaps = 0
@@ -48,7 +48,7 @@ module Scheduling
         overlaps += @penalty_callback.call(slot)
       end
 
-      overlaps / @sessions.size.to_f
+      1 - overlaps / @sessions.size.to_f
     end
 
     def size
