@@ -53,17 +53,17 @@ module Scheduling
     end
     
     def presenter_energy
-      overlap_score(:presenting) * ctx.attendee_count
+      ctx.attendee_count * overlap_score(
+        :presenting,
+        penalty_callback: ->(person,slot) { person.timeslot_penalty(slot) })
     end
 
     # Gives lower & upper bounds on the possible range of attendance_energy
     def attendance_energy_bounds
-      min_score = max_score = 0.0
-      count = ctx.each_session_set(:attending) do |participant, session_set, penalty_callback|
-        min_score += 1.0 / session_set.size                                 # All sessions at the same time for this person
-        max_score += [ctx.timeslots.size / session_set.size.to_f, 1.0].min  # Person has a session of interest in every timeslot
-      end
-      (1 - max_score / count) .. (1 - min_score / count)
+      best_score  = ctx.people.sum { |p| p.attending.best_possible_score }
+      worst_score = ctx.people.sum { |p| p.attending.worst_possible_score }
+      count = ctx.people.size
+      (1 - best_score / count) .. (1 - worst_score / count)
     end
   
     def random_neighbor
@@ -126,26 +126,25 @@ module Scheduling
 
     attr_reader :ctx
     
-    def overlap_score(role)
+    def overlap_score(role, penalty_callback: ->(*args) {0})
       
       score = 0.0
-      slots_used = Set.new
-      
-      count = ctx.each_session_set(role) do |participant, session_set, penalty_callback|
+      count = ctx.people.each do |person|
+        session_set = person.send(role)
         next if session_set.empty?  # prevents divide by zero
         
-        slots_used.clear
+        slots_used = Set.new
         overlaps = 0
         session_set.each do |session|
           slot = @slots_by_session[session]
           unless slots_used.add? slot
             overlaps += 1
           end
-          overlaps += penalty_callback.call(slot)
+          overlaps += penalty_callback.call(person, slot)
         end
         
         score += overlaps / session_set.size.to_f
-      end
+      end.size
       
       if count == 0
         0

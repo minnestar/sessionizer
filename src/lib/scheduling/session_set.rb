@@ -9,8 +9,8 @@ module Scheduling
   # nonoverlapping timeslots.
   #
   class SessionSet
-    def initialize(context, superset: nil)
-      @context = context
+    def initialize(ctx, superset: nil)
+      @ctx = ctx
       @superset = superset
 
       @sessions = Set.new
@@ -21,16 +21,16 @@ module Scheduling
       @superset.add(session_id) if @superset
     end
 
-    # The score for everything evenly distributed among all the timeslots.
+    # Score if sessions are evenly distributed among all the timeslots.
     #
     def best_possible_score
-      raise 'niy'
+      [@ctx.timeslots.size / size.to_f, 1.0].min
     end
 
-    # The score for everything in the same timeslot.
+    # Score if everything is in the same timeslot.
     #
     def worst_possible_score
-      raise 'niy'
+      1.0 / size
     end
 
     def score(schedule)
