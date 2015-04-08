@@ -9,9 +9,10 @@ module Scheduling
   # nonoverlapping timeslots.
   #
   class SessionSet
-    def initialize(ctx, superset: nil)
+    def initialize(ctx, superset: nil, penalty_callback: ->(*args) { 0 })
       @ctx = ctx
       @superset = superset
+      @penalty_callback = penalty_callback
 
       @sessions = Set.new
     end
@@ -34,7 +35,20 @@ module Scheduling
     end
 
     def score(schedule)
-      raise 'niy'
+      return 0 if @sessions.empty?  # prevents divide by zero below
+      
+      slots_used = Set.new
+      overlaps = 0
+
+      @sessions.each do |session|
+        slot = schedule.slot_for(session)
+        unless slots_used.add? slot
+          overlaps += 1
+        end
+        overlaps += @penalty_callback.call(slot)
+      end
+
+      overlaps / @sessions.size.to_f
     end
 
     %i(size each empty?).each do |forwarded_method|

@@ -42,6 +42,10 @@ module Scheduling
       @slots_by_session.each { |session, slot| @sessions_by_slot[slot] << session }
     end
 
+    def slot_for(session)
+      @slots_by_session[session]
+    end
+
     # This is the metric we're trying to minimize. It's called "energy" in simulated annealing by analogy to the
     # real-life physical process of annealing, in which a cooling material minimizes the energy of its chemical bonds.
     def energy
@@ -49,13 +53,11 @@ module Scheduling
     end
     
     def attendance_energy
-      overlap_score :attending
+      overlap_score(:attending)
     end
     
     def presenter_energy
-      ctx.attendee_count * overlap_score(
-        :presenting,
-        penalty_callback: ->(person,slot) { person.timeslot_penalty(slot) })
+      overlap_score(:presenting) * ctx.attendee_count   # Presenter double-bookings trump attendance preferences
     end
 
     # Gives lower & upper bounds on the possible range of attendance_energy
@@ -126,25 +128,11 @@ module Scheduling
 
     attr_reader :ctx
     
-    def overlap_score(role, penalty_callback: ->(*args) {0})
-      
-      score = 0.0
-      count = ctx.people.each do |person|
-        session_set = person.send(role)
-        next if session_set.empty?  # prevents divide by zero
-        
-        slots_used = Set.new
-        overlaps = 0
-        session_set.each do |session|
-          slot = @slots_by_session[session]
-          unless slots_used.add? slot
-            overlaps += 1
-          end
-          overlaps += penalty_callback.call(person, slot)
-        end
-        
-        score += overlaps / session_set.size.to_f
-      end.size
+    def overlap_score(role)
+      count = ctx.people.size
+      score = ctx.people.sum do |person|
+        person.send(role).score(self)
+      end
       
       if count == 0
         0
