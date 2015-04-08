@@ -61,9 +61,9 @@ module Scheduling
   private
     
     def self.build_sets(sessions, association_class)
-      # This brute force iteration is hardly slick, but I'm too rusty on fancy querying in Rails 2.3 to care just now. -PPC
+      # This brute force iteration is hardly slick, but I'm too rusty on fancy ActiveRecord querying to care just now. -PPC
       session_set = Hash.new { |h,k| h[k] = [] }
-      association_class.find(:all, :conditions => { :session_id => sessions }, :select => 'participant_id, session_id').each do |assoc|
+      association_class.where(session_id: sessions).select(:participant_id, :session_id).each do |assoc|
         session_set[assoc.participant_id] << assoc.session_id
       end
       puts "#{session_set.count} #{association_class.name.pluralize.humanize.downcase}"
