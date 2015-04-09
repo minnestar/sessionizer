@@ -32,6 +32,8 @@ gem 'formtastic'
 
 gem "fancybox-rails", "~> 0.2.1"
 
+gem 'annealer'
+
 # TODO
 gem 'icalendar', '~> 1.5.4'
 gem 'redcarpet', '~> 3.1'
