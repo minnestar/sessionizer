@@ -6,32 +6,36 @@
     position: fixed
     top: 0
     left: 0
-    width: 100%
+    width: 98%
     font:
       family: 'Helvetica Neue', 'Verdana', sans-serif
       weight: bold
     color: white
-    background: #999
     padding: 0.6em 2%
-    border-bottom: 1px solid #333
     box-shadow: 0 -0.2ex 1ex black
-    @each $browser in '', -webkit-, -moz-, -o-, -ms-
-      background-image: #{$browser}linear-gradient(top, #676AB1 0%, #8a8cc3 100%)
+    background: #676ab1
+
+    a
+      float: left
+      padding: 0 1ex
+      text-decoration: none
+      border-radius: 1em
+      &:link, &:hover, &:active, &:visited
+        color: white
+
     .timeslots
-      .timeslot
-        float: left
-        padding: 0 1ex
-        text-decoration: none
-        border-radius: 1em
-        &:link, &:hover, &:active, &:visited
-          color: white
-        &.selected
-          background: white
-          color: #667 !important
-        &.now
-          color: #FE8
-        &.now.selected
-          color: #9c8c29 !important
+      float: left
+    .maps
+      float: right
+
+    .timeslots .timeslot
+      &.selected
+        background: white
+        color: #667 !important
+      &.now
+        color: #FE8
+      &.now.selected
+        color: #9c8c29 !important
         
   
   .schedule-header
@@ -62,9 +66,7 @@
         padding: 1ex 1em
         border-radius: 2em
         border: 1px solid #888
-        background: #EEE
-        @each $browser in '', -webkit-, -moz-, -o-, -ms-
-          background-image: #{$browser}linear-gradient(top, #fff 0%, #f4f4f4 1%, #e8e8e8 49%, #ddd 50%, #c0c0c0 100%)
+        background: #e8e8e8
         color: #003
         white-space: nowrap
         text-decoration: none
@@ -73,8 +75,6 @@
           weight: bold
         &:active
           background: #333
-          @each $browser in '', -webkit-, -moz-, -o-, -ms-
-            background-image: #{$browser}linear-gradient(bottom, #222 0%, #333 50%, #222 100%)
           color: white
       a.disabled
         color: #AAA
@@ -92,15 +92,10 @@
           weight: 'Bold'
           size: 1.8em !important
         color: white
-        background: #999
         margin: 0 0 0.4em 0
         font-weight: bold
-        text-align: center
         padding: 0.3em 1em
-        outline: 1px solid #555
-        border-top: 1px solid #8a8cc3
-        @each $browser in '', -webkit-, -moz-, -o-, -ms-
-          background-image: #{$browser}linear-gradient(top, #676AB1 0%, #8a8cc3 100%)
+        background: #676ab1
     
       .sessions
         clear: both
