@@ -6,7 +6,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 98%;
     font-family: "Helvetica Neue", "Verdana", sans-serif;
     font-weight: bold;
     color: white;
@@ -20,14 +20,16 @@
     background-image: -o-linear-gradient(top, #676ab1 0%, #8a8cc3 100%);
     background-image: -ms-linear-gradient(top, #676ab1 0%, #8a8cc3 100%); }
 
-    #schedule-body .nav-top .timeslots, 
-    #schedule-body .nav-top .maps {
+    #schedule-body .nav-top .timeslots {
       float:left;
+    }
+    #schedule-body .nav-top .maps {
+      float:right;
     }
 
     #schedule-body .nav-top .maps a {
       float: left;
-      margin: 0.2em 1em;
+      margin: 0 1em;
       text-decoration: none;
       border-radius: 1em; }
 
