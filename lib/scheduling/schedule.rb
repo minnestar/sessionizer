@@ -148,9 +148,11 @@ module Scheduling
         @sessions_by_slot.sort_by { |k,v| k.starts_at }.each do |slot_id, session_ids|
           slot = Timeslot.find(slot_id)
           puts slot
-          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.attendances.size }
+          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.estimated_interest }
           sessions.zip(rooms_by_capacity) do |session, room|
-            puts "    #{session.categories.map(&:name).inspect} #{session.title} (#{session.attendances.size}) in #{room.name} (#{room.capacity})"
+            puts "    #{session.categories.map(&:name).inspect} #{session.title}" +
+                 " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
+                 " in #{room.name} (#{room.capacity})"
             session.timeslot = slot
             session.room = room
             session.save!
