@@ -43,15 +43,24 @@ module Scheduling
     # real-life physical process of annealing, in which a cooling material minimizes the energy of its chemical bonds.
     #
     def energy
-       attendance_energy + presenter_energy
+       (1 - attendance_score) +
+       (1 - presenter_score) * ctx.people.size  # Multiplier b/c presenter double-bookings trump attendance prefs
     end
     
-    def attendance_energy
-      1 - score(:attending)
+    # Average attendee satisfaction with the schedule, measured as the estimated fraction of the total value
+    # of all their desired sessions that this schedule will give them. (1 = perfect schedule for everyone;
+    # 0 = no attendees can attend any desired sessions at all.)
+    #
+    def attendance_score
+      score(:attending)
     end
     
-    def presenter_energy
-      (1 - score(:presenting)) * ctx.people.count   # Presenter double-bookings trump attendance preferences
+    # Average ability of presenter to present all the sessions they signed up for. For an optimized schedule,
+    # this should always be 1 unless a presenter created an inherent conflict (e.g. signing up to present more
+    # sessions than there are timeslots.)
+    #
+    def presenter_score
+      score(:presenting)   
     end
 
     # Gives lower & upper bounds on the possible range of attendance_score
@@ -152,8 +161,8 @@ module Scheduling
     
     def inspect
       s = "Schedule"
-      s << " | average participant is #{format_percent score(:attending)} satisfied with schedule"
-      s << " | presenter score = #{format_percent score(:presenting)} (we want 100)\n"
+      s << " | average participant is #{format_percent attendance_score} satisfied with schedule"
+      s << " | presenter score = #{format_percent presenter_score} (we want 100)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
