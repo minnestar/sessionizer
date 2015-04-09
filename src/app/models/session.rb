@@ -105,6 +105,36 @@ class Session < ActiveRecord::Base
     end
   end
 
+  # Estimates actual event-day interest for this session relative to other sessions,
+  # expressed as a corrected number of votes.
+  #
+  # Sessions that were created earlier tend to accumulate more votes, so the naive method
+  # of using raw vote count will underestimate interest in sessions created later.
+  # To fix that, we take the number of votes this session received as a proportion of all
+  # votes cast since it was created. We also include a normalizing factor for last-minute
+  # sessions created after most of the voting was already done.
+  #
+  def estimated_interest
+    @estimated_interest ||= begin
+      session_votes     = attendances.count.to_f
+      possible_votes    = event.attendances.where('attendances.created_at >= ?', created_at).count.to_f
+      session_count     = event.sessions.count.to_f
+      participant_count = event.participants.count.to_f
+
+      # For sessions created at the last minute, we don't have enough information to make
+      # a good estimate; both session_votes and possible_votes are too low. If we just divide
+      # session_votes / possible_votes, we'll get wildly inaccurate answers when the denominator
+      # is small.
+      #
+      # We therefore add some ghost "ballast votes" across the board to all sessions, so as to
+      # make estimated_interest tend toward the mean in cases when there are few real votes.
+
+      ballast_votes = 3.0
+
+      (session_votes + ballast_votes) / (possible_votes + ballast_votes * session_count) * participant_count
+    end
+  end
+
   private
 
   # assign the creator as the first presenter
