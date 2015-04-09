@@ -19,6 +19,16 @@ describe ApplicationHelper do
       expect(helper.markdown("foo\n\n* bar\n* baz")).
         to eq_ignoring_space "<p>foo</p><ul><li>bar</li><li>baz</li></ul>"
     end
+
+    it 'closes tags' do
+      expect(helper.markdown("<strong>foo\n\nbar <i>baz")).
+        to eq_ignoring_space "<p><strong>foo</strong></p><p>bar <i>baz</i></p>"
+    end
+
+    it 'sanitizes malformed tags' do
+      expect(helper.markdown("foo <strong bar")).
+        to eq_ignoring_space "<p>foo &lt;strong bar</p>"
+    end
   end
 end
 
