@@ -11,7 +11,11 @@ module ApplicationHelper
     return '' unless str
     @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML,
         :autolink => true, :space_after_headers => true)
-    @markdown.render(str).html_safe
+    close_tags(@markdown.render(str)).html_safe
+  end
+
+  def close_tags(html)
+    Nokogiri::HTML::DocumentFragment.parse(html).to_html
   end
 
   def add_sessions_button
