@@ -426,6 +426,9 @@ hr {
   border-radius: 10px;
   border: 1px solid #e8e8e8;
   margin-bottom: 20px;
+  img {
+    max-width: 100%;
+  }
 }
 
 .left  { float:left; }
