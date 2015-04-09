@@ -116,7 +116,7 @@ namespace :app do
     repetition_count =  (quality ** 0.4).ceil
     puts
     puts "Quality = #{quality}:    (adjust using 'quality' env var)"
-    puts "   #{repetition_count} cooling cycles"
+    puts "   #{repetition_count} cooling cycle(s)"
     puts "   * #{max_iter} iterations each"
     puts "   = #{repetition_count * max_iter} total iterations"
     puts
