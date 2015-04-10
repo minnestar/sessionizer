@@ -10,8 +10,8 @@ module Scheduling
       @attending  = SessionSet.new(ctx)
       @presenting = SessionSet.new(ctx,
         superset: @attending,            # Presenters don't necessarily upvote their own sessions, but they do attend!
-        penalty_callback: ->(slot) do    # Presenters may have other scheduling constraints beside double booking
-          @timeslot_penalties[slot]
+        penalty_callback: ->(slot_id) do    # Presenters may have other scheduling constraints beside double booking
+          @timeslot_penalties[slot_id]
         end)
       @timeslot_penalties = Hash.new(0)
     end

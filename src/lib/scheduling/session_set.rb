@@ -40,7 +40,7 @@ module Scheduling
       penalty = 0
 
       @sessions.each do |session|
-        slot = schedule.slot_for(session)
+        slot = schedule.slot_id_for(session)
         slot_session_count[slot] += 1
         penalty += @penalty_callback.call(slot)
       end
