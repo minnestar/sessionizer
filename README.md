@@ -132,6 +132,9 @@ You can tweak the schedule by creating PresenterTimeslotRestrictions (if a perso
 * [Paul Cantrell](http://innig.net/)
 * [Ben Edwards](http://www.alttext.com/)
 * [Casey Helbling](http://softwareforgood.com/team)
+* [Justin Coyne](https://twitter.com/j_coyne)
+* Cory Preus
+* [Jamie Thingelstad](http://thingelstad.com/)
 
 ## License
 
