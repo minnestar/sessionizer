@@ -44,6 +44,14 @@ describe SessionsController do
         expect(response).to be_successful
         expect(assigns[:sessions]).to eq [session]
       end
+
+      context "with JSON format" do
+        it "is successful" do
+          get :index, format: :json
+          expect(response).to be_successful
+          expect(response.content_type).to eq('application/json')
+        end
+      end
     end
   end
 

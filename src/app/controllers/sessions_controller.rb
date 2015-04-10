@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
   before_filter :verify_owner, only: [:update, :edit]
 
   respond_to :html
+  respond_to :json, only: :index
 
   def show
     @similar_sessions = []
