@@ -41,6 +41,8 @@ gem 'bcrypt-ruby', '~> 3.1'
 gem 'authlogic'
 gem 'cancancan'
 
+gem 'nokogiri'
+
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
