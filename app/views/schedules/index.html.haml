@@ -109,101 +109,104 @@
             scrollingToSlot = false
 
             // see below
-            $('#ios-bug-workaround').remove()
-          }, 10)
+            $('#ios-bug-workaround').remove();
+          }, 10);
         }
-      })
+      });
 
       // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
       // Adding and removing a div apparently forces it to generate its layout.
       if(mobile)
-        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body))
+        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body));
 
-      evt.stopPropagation()
-      return false
+      evt.stopPropagation();
+      return false;
     })
 
     $(window).scroll(function() {
-      if(!scrollingToSlot)
-        updateTimeslotNav()
-      return true
-    })
+      if(!scrollingToSlot) {
+        updateTimeslotNav();
+      }
+      return true;
+    });
 
 
     // Show current timeslot
 
     var showCurrentTimeslot = function() {
-      var curTime = Date.now(), eventStarted = false, foundCurrent = false
+      var curTime = Date.now();
+      var eventStarted = false;
+      var foundCurrent = false;
+
       $('.nav-top .timeslot').each(function(i, slot) {
         var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
             slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
 
-        var now = false
+        var now = false;
         if(curTime >= slotStart)
           eventStarted = true
         if(eventStarted && !foundCurrent && curTime <= slotEnd)
           now = foundCurrent = true
-        $(slot).toggleClass('now', now)
-      })
+        $(slot).toggleClass('now', now);
+      });
 
       setTimeout(showCurrentTimeslot, 30000);
     }
 
     showCurrentTimeslot();
 
-
     // Show / hide details
 
     var updateButtons = function() {
-      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
-      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
+      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0);
+      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0);
     }
     var updateButtonsDelayed = function() {
-      setTimeout(updateButtons, 410)
+      setTimeout(updateButtons, 410);
     }
 
-    $(updateButtons)
+    $(updateButtons);
 
     $('.session .header').click(function(evt) {
-      var session = $(evt.target).closest('.session')
-      session.find('.summary').slideToggle()
-      session.find('.description').slideToggle()
-      updateButtonsDelayed()
-      evt.stopPropagation()
-      return false
-    })
+      var session = $(evt.target).closest('.session');
+      session.find('.summary').slideToggle();
+      session.find('.description').slideToggle();
+      updateButtonsDelayed();
+      evt.stopPropagation();
+      return false;
+    });
 
     $('#show-all').click(function(evt) {
       if(mobile) {
-        $('.session .summary').hide()
-        $('.session .description').show()
-        updateButtons()
+        $('.session .summary').hide();
+        $('.session .description').show();
+        updateButtons();
       } else {
-        $('.session .summary').slideUp()
-        $('.session .description').slideDown()
-        updateButtonsDelayed()
+        $('.session .summary').slideUp();
+        $('.session .description').slideDown();
+        updateButtonsDelayed();
       }
-      evt.stopPropagation()
-      return false
+      evt.stopPropagation();
+      return false;
     })
 
     $('#hide-all').click(function(evt) {
       if(mobile) {
-        $('.session .summary').show()
-        $('.session .description').hide()
-        updateButtons()
+        $('.session .summary').show();
+        $('.session .description').hide();
+        updateButtons();
       } else {
-        $('.session .summary').slideDown()
-        $('.session .description').slideUp()
-        updateButtonsDelayed()
+        $('.session .summary').slideDown();
+        $('.session .description').slideUp();
+        updateButtonsDelayed();
       }
-      evt.stopPropagation()
-      return false
+      evt.stopPropagation();
+      return false;
     })
 
 
+    /// just open in a new window so they can zoom, etc
     // Map popups
-
     //$(".room").fancybox();
 
   })
