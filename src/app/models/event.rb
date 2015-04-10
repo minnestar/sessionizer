@@ -13,6 +13,7 @@ class Event < ActiveRecord::Base
 
   after_create :reset_current
 
+
   def self.current_event(opts = {})
     @current_event ||= begin
                          rel = Event.order(:date)
@@ -20,6 +21,47 @@ class Event < ActiveRecord::Base
                          rel.last
                        end
   end
+
+
+  # for future minnebars it would be great to have
+  # timeslots that are 'unscheduable' as well as
+  # a proper timeslot 'title' --clh
+  def timeslots_with_lunch
+
+    ts_with_title = self.timeslots.each_with_index do |t, idx|
+      t.title = "Session #{idx + 1}"
+      t
+    end
+
+    lunch = Timeslot.new(
+      title: "Lunch",
+      event_id: self.id,
+      starts_at: "2015-04-11 12:15:00",
+      ends_at: "2015-04-11 1:35:00",
+    )
+
+    ts_with_lunch = ts_with_title.insert(
+      ts_with_title.size / 2,
+      lunch
+    )
+
+    arrive = Timeslot.new(
+      title: "Arrive/Breakfast",
+      event_id: self.id,
+      starts_at: "2015-04-11 8:00:00",
+      ends_at: "2015-04-11 8:45:00",
+    )
+    session0 = Timeslot.new(
+      title: "Session 0",
+      event_id: self.id,
+      starts_at: "2015-04-11 8:45:00",
+      ends_at: "2015-04-11 9:05:00",
+    )
+
+    ts_with_lunch.insert( 0, session0 )
+    ts_with_lunch.insert( 0, arrive )
+  end
+
 
   def self.reset_current!
     @current_event = nil

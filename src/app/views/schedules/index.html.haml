@@ -7,9 +7,11 @@
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = slot.starts_at.in_time_zone.to_s(:usahhmm)
   .maps
-    %a.room{ :href => '/assets/maps/master-map.png' }
+    %a.room{ target: '_blank',
+             href: "#{asset_path('maps/master-map.png')}" }
       Map
-    %a.feedback{ :target => '_blank', 
+
+    %a.feedback{ :target => '_blank',
                  :href => 'http://minnebar2015.voicehive.com' }
       Feedback
 
@@ -23,40 +25,43 @@
     %h1
       = @event.name
       Session Schedule
-
   .timeslots
-    - @event.timeslots.each do |slot|
+    - @event.timeslots_with_lunch.each_with_index do |slot, idx|
       .timeslot{:id => "timeslot_#{slot.id}"}
         %h2
           = slot.starts_at.in_time_zone.to_s(:usahhmm)
           &ndash;
           = slot.ends_at.in_time_zone.to_s(:usahhmm)
+          &ndash;
+          = slot.title
 
-        .sessions
-          - session_columns_for_slot(slot) do |column|
-            .column
-              - column.each do |session|
+        - if slot.sessions.present?
+          .sessions
+            - session_columns_for_slot(slot) do |column|
+              .column
+                - column.each do |session|
 
-                .session
-                  .header
-                    .room{:href => "/assets/maps/#{session.room.name.downcase}.png"}
-                      = session.room.name
+                  .session
+                    .header
+                      - map_location = asset_path("maps/#{session.room.name.downcase}.png")
+                      .room{:href =>  "#{map_location}" }
+                        = session.room.name
 
-                    %h3.title= session.title
+                      %h3.title= session.title
 
-                    .presenters
-                      - session.presenters.each do |presenter|
-                        .presenter= presenter.name
+                      .presenters
+                        - session.presenters.each do |presenter|
+                          .presenter= presenter.name
 
-                  .description
-                    = markdown session.description
-                    .bios
-                      - session.presenters.each do |presenter|
-                        .bio
-                          .name= presenter.name
-                          = markdown(presenter.bio || "No bio.")
+                    .description
+                      = markdown session.description
+                      .bios
+                        - session.presenters.each do |presenter|
+                          .bio
+                            .name= presenter.name
+                            = markdown(presenter.bio || "No bio.")
 
-                  .summary= session.summary
+                    .summary= session.summary
 
 :javascript
   $(function() {
@@ -77,11 +82,12 @@
         }
         $('#' + slot.id + '_nav').toggleClass('selected', selected)
       })
-      return true
+      return true;
     }
-    updateTimeslotNav()
 
-    var scrollingToSlot = false
+    updateTimeslotNav();
+
+    var scrollingToSlot = false;
 
     $('.nav-top .timeslot').click(function(evt) {
       var link = $(evt.target)
@@ -140,10 +146,10 @@
         $(slot).toggleClass('now', now)
       })
 
-      setTimeout(showCurrentTimeslot, 30000)
+      setTimeout(showCurrentTimeslot, 30000);
     }
 
-    showCurrentTimeslot()
+    showCurrentTimeslot();
 
 
     // Show / hide details
@@ -198,7 +204,6 @@
 
     // Map popups
 
-    $(".room").fancybox()
-    $(".room").click(function() { return false })
+    //$(".room").fancybox();
 
   })
