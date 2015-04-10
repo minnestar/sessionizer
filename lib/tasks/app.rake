@@ -6,12 +6,12 @@ namespace :app do
     event = Event.current_event
     event.timeslots.destroy_all
 
-    start_times = ["9:40",
-                   "10:40",
-                   "11:40",
-                   "13:40",
-                   "14:40",
-                   "15:40"]
+    start_times = ["9:15",
+                   "10:15",
+                   "11:15",
+                   "13:45",
+                   "14:45",
+                   "15:45"]
 
 
     start_times.each do |st|
@@ -31,6 +31,7 @@ namespace :app do
       { :name => 'Minnetonka', :capacity => 100 },
       { :name => 'Harriet', :capacity => 100 },
       { :name => 'Calhoun', :capacity => 100 },
+      { :name => 'Brand', :capacity => 75 },
       { :name => 'Proverb-Edison', :capacity => 48 },
       { :name => 'Zeke Landres', :capacity => 40 },
       { :name => 'Learn', :capacity => 24 },
@@ -40,8 +41,8 @@ namespace :app do
       { :name => 'Stephen Leacock', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
       { :name => 'Gandhi', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
       { :name => 'Louis Pasteur', :capacity => 18 }, 
-      { :name => 'Texas', :capacity => 16 }, 
-      { :name => 'California', :capacity => 16 }
+      #{ :name => 'Texas', :capacity => 16 }, 
+      #{ :name => 'California', :capacity => 16 }
     ]
 
     rooms.each do |room|
