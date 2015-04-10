@@ -237,7 +237,7 @@ DEPENDENCIES
   haml
   icalendar (~> 1.5.4)
   jbuilder (~> 2.0)
-  jquery-rails (= 2.1.4)
+  jquery-rails
   nokogiri
   pg
   poltergeist
