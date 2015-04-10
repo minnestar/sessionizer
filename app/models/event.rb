@@ -58,8 +58,16 @@ class Event < ActiveRecord::Base
       ends_at: "2015-04-11 9:05:00",
     )
 
+    beer_me = Timeslot.new(
+      title: "Beer Me!",
+      event_id: self.id,
+      starts_at: "2015-04-11 4:45:00",
+      ends_at: "2015-04-11 7:00:00",
+    )
+
     ts_with_lunch.insert( 0, session0 )
     ts_with_lunch.insert( 0, arrive )
+    ts_with_lunch << beer_me
   end
 
 
