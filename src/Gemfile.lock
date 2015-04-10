@@ -238,6 +238,7 @@ DEPENDENCIES
   icalendar (~> 1.5.4)
   jbuilder (~> 2.0)
   jquery-rails
+  nokogiri
   pg
   poltergeist
   pry
