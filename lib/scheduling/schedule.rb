@@ -21,8 +21,8 @@ module Scheduling
       @slots_by_session.each { |session, slot| @sessions_by_slot[slot] << session }
     end
 
-    def slot_for(session)
-      @slots_by_session[session]
+    def slot_id_for(session_id)
+      @slots_by_session[session_id].id
     end
 
   private
