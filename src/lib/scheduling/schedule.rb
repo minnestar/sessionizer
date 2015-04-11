@@ -12,7 +12,7 @@ module Scheduling
       @slots_by_session = {}                            # map from session to timeslot
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
 
-      randomize_schedule!
+      fill_schedule!(event.sessions.includes(:timeslot).to_a)
     end
 
     def initialize_copy(source)  # deep copy; called by dup
@@ -90,19 +90,24 @@ module Scheduling
 
     # ------------ State space traversal ------------
 
-    # Reset to a completely random assignment of sessions to timelots, filling earlier slots first
-    # and adding Unassigned placeholders to openings in the schedule.
+    # Fill the schedule, using existing timeslots if any are present, assigning the remaining sessions
+    # randomly, then adding Unassigned placeholders to openings in the schedule.
     #
-    def randomize_schedule!
-      unassigned = ctx.sessions.shuffle
+    def fill_schedule!(sessions)
+      sessions.each do |session|
+        schedule(session.id, session.timeslot) if session.timeslot
+      end
+
+      unassigned = sessions.reject(&:timeslot)
       room_count = ctx.rooms.size
       ctx.timeslots.each do |slot|
-        slot_sessions = unassigned.slice!(0, room_count)
-        slot_sessions << Unassigned.new while slot_sessions.size < room_count
+        opening_count = room_count - @sessions_by_slot[slot].size
+        slot_sessions = (unassigned.slice!(0, opening_count) || []).map(&:id)
+        slot_sessions << Unassigned.new while slot_sessions.size < opening_count
         slot_sessions.each { |session| schedule(session, slot)  }
       end
       unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{ctx.sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
+        raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
       end
     end
 
