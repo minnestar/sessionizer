@@ -118,6 +118,19 @@ namespace :app do
 
   desc "restrict a presenter's timeslots"
   task :restrict => :environment do
+    unless ENV['PARTICIPANT'] && ENV['HOUR']
+      STDERR.puts 'Usage examples:
+
+        Prevent participant id 577 from presenting in the afternoon:
+        
+           heroku run PARTICIPANT=345 HOUR=12:30 AFTER=1 rake app:restrict
+        
+        Create soft preference for participant id 678 not to present first thing:
+        
+           heroku run PARTICIPANT=678 HOUR=9:45 BEFORE=1 WEIGHT=0.1 rake app:restrict
+        '
+    end
+
     d = Event.current_event.date
     hour = ENV["HOUR"].split(':')
     time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
@@ -129,6 +142,17 @@ namespace :app do
       presenter.restrict_before(time, weight)
     else
       presenter.restrict_after(time, weight)
+    end
+  end
+
+  desc 'show restrictions for current event'
+  task :show_restrictions => :environment do
+    PresenterTimeslotRestriction.all.each do |r|
+      next unless r.timeslot.event == Event.current_event
+      puts "#{r.participant.name}" +
+           " #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
+           " present at #{r.timeslot.starts_at.in_time_zone.to_s(:usahhmm) if r.timeslot}" +
+           " (weight=#{r.weight}); actual times: #{r.participant.sessions_presenting.map { |s| s.timeslot.starts_at.in_time_zone.to_s(:usahhmm)}}"
     end
   end
 
