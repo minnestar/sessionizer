@@ -77,7 +77,7 @@ scheduling algorithm.
 ```
  $ cd vagrant; vagrant ssh
  $ cd /srv/sessionizer
- $ bx rake app:make_believe
+ $ bundle exec rake app:make_believe
 ```
 
 If you need to restart the unicorn processes within the virtual box you
