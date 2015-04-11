@@ -1,3 +1,3 @@
 //= require jquery
 //= require fancybox
-//= require jquery.scrollTo-1.4.2-min
+//= require jquery.scrollTo.min

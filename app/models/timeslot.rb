@@ -9,7 +9,15 @@ class Timeslot < ActiveRecord::Base
 
   default_scope { order 'starts_at asc' }
 
+  attr_accessor :title
+
   def to_s
     "#{starts_at.in_time_zone.to_s(:hhmm)} - #{ends_at.in_time_zone.to_s(:hhmm)}"
   end
+
+
+  def title
+    @title ||= "Session #{id}"
+  end
+
 end

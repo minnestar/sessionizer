@@ -7,12 +7,17 @@
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = slot.starts_at.in_time_zone.to_s(:usahhmm)
   .maps
-    %a.room{ :href => '/assets/maps/master-map.png' }
+    %a.room{ target: '_blank',
+             href: "#{asset_path('maps/master-map.png')}" }
       Map
-    %a.feedback{ :target => '_blank', 
+
+    %a.feedback{ :target => '_blank',
                  :href => 'http://minnebar2015.voicehive.com' }
       Feedback
-
+    %a.twitter{  :target => '_blank',
+                 :href => "http://twitter.com/#minnebar" }
+      :escaped
+        #minnebar
 
 .schedule
   .schedule-header
@@ -23,40 +28,44 @@
     %h1
       = @event.name
       Session Schedule
-
   .timeslots
-    - @event.timeslots.each do |slot|
+    - @event.timeslots_with_lunch.each_with_index do |slot, idx|
       .timeslot{:id => "timeslot_#{slot.id}"}
         %h2
-          = slot.starts_at.in_time_zone.to_s(:usahhmm)
-          &ndash;
-          = slot.ends_at.in_time_zone.to_s(:usahhmm)
+          .time
+            = slot.starts_at.in_time_zone.to_s(:usahhmm)
+            &ndash;
+            = slot.ends_at.in_time_zone.to_s(:usahhmm)
+          .title
+            = slot.title
 
-        .sessions
-          - session_columns_for_slot(slot) do |column|
-            .column
-              - column.each do |session|
+        - if slot.sessions.present?
+          .sessions
+            - session_columns_for_slot(slot) do |column|
+              .column
+                - column.each do |session|
 
-                .session
-                  .header
-                    .room{:href => "/assets/maps/#{session.room.name.downcase}.png"}
-                      = session.room.name
+                  .session
+                    .header
+                      - map_location = asset_path("maps/#{session.room.name.downcase}.png")
+                      .room{:href =>  "#{map_location}" }
+                        = session.room.name
 
-                    %h3.title= session.title
+                      %h3.title= session.title
 
-                    .presenters
-                      - session.presenters.each do |presenter|
-                        .presenter= presenter.name
+                      .presenters
+                        - session.presenters.each do |presenter|
+                          .presenter= presenter.name
 
-                  .description
-                    = markdown session.description
-                    .bios
-                      - session.presenters.each do |presenter|
-                        .bio
-                          .name= presenter.name
-                          = markdown(presenter.bio || "No bio.")
+                    .description
+                      = markdown session.description
+                      .bios
+                        - session.presenters.each do |presenter|
+                          .bio
+                            .name= presenter.name
+                            = markdown(presenter.bio || "No bio.")
 
-                  .summary= session.summary
+                    .summary= session.summary
 
 :javascript
   $(function() {
@@ -77,11 +86,12 @@
         }
         $('#' + slot.id + '_nav').toggleClass('selected', selected)
       })
-      return true
+      return true;
     }
-    updateTimeslotNav()
 
-    var scrollingToSlot = false
+    updateTimeslotNav();
+
+    var scrollingToSlot = false;
 
     $('.nav-top .timeslot').click(function(evt) {
       var link = $(evt.target)
@@ -103,102 +113,104 @@
             scrollingToSlot = false
 
             // see below
-            $('#ios-bug-workaround').remove()
-          }, 10)
+            $('#ios-bug-workaround').remove();
+          }, 10);
         }
-      })
+      });
 
       // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
       // Adding and removing a div apparently forces it to generate its layout.
       if(mobile)
-        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body))
+        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body));
 
-      evt.stopPropagation()
-      return false
+      evt.stopPropagation();
+      return false;
     })
 
     $(window).scroll(function() {
-      if(!scrollingToSlot)
-        updateTimeslotNav()
-      return true
-    })
+      if(!scrollingToSlot) {
+        updateTimeslotNav();
+      }
+      return true;
+    });
 
 
     // Show current timeslot
 
     var showCurrentTimeslot = function() {
-      var curTime = Date.now(), eventStarted = false, foundCurrent = false
+      var curTime = Date.now();
+      var eventStarted = false;
+      var foundCurrent = false;
+
       $('.nav-top .timeslot').each(function(i, slot) {
         var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
             slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
 
-        var now = false
+        var now = false;
         if(curTime >= slotStart)
           eventStarted = true
         if(eventStarted && !foundCurrent && curTime <= slotEnd)
           now = foundCurrent = true
-        $(slot).toggleClass('now', now)
-      })
+        $(slot).toggleClass('now', now);
+      });
 
-      setTimeout(showCurrentTimeslot, 30000)
+      setTimeout(showCurrentTimeslot, 30000);
     }
 
-    showCurrentTimeslot()
-
+    showCurrentTimeslot();
 
     // Show / hide details
 
     var updateButtons = function() {
-      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0)
-      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0)
+      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0);
+      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0);
     }
     var updateButtonsDelayed = function() {
-      setTimeout(updateButtons, 410)
+      setTimeout(updateButtons, 410);
     }
 
-    $(updateButtons)
+    $(updateButtons);
 
     $('.session .header').click(function(evt) {
-      var session = $(evt.target).closest('.session')
-      session.find('.summary').slideToggle()
-      session.find('.description').slideToggle()
-      updateButtonsDelayed()
-      evt.stopPropagation()
-      return false
-    })
+      var session = $(evt.target).closest('.session');
+      session.find('.summary').slideToggle();
+      session.find('.description').slideToggle();
+      updateButtonsDelayed();
+      evt.stopPropagation();
+      return false;
+    });
 
     $('#show-all').click(function(evt) {
       if(mobile) {
-        $('.session .summary').hide()
-        $('.session .description').show()
-        updateButtons()
+        $('.session .summary').hide();
+        $('.session .description').show();
+        updateButtons();
       } else {
-        $('.session .summary').slideUp()
-        $('.session .description').slideDown()
-        updateButtonsDelayed()
+        $('.session .summary').slideUp();
+        $('.session .description').slideDown();
+        updateButtonsDelayed();
       }
-      evt.stopPropagation()
-      return false
+      evt.stopPropagation();
+      return false;
     })
 
     $('#hide-all').click(function(evt) {
       if(mobile) {
-        $('.session .summary').show()
-        $('.session .description').hide()
-        updateButtons()
+        $('.session .summary').show();
+        $('.session .description').hide();
+        updateButtons();
       } else {
-        $('.session .summary').slideDown()
-        $('.session .description').slideUp()
-        updateButtonsDelayed()
+        $('.session .summary').slideDown();
+        $('.session .description').slideUp();
+        updateButtonsDelayed();
       }
-      evt.stopPropagation()
-      return false
+      evt.stopPropagation();
+      return false;
     })
 
 
+    /// just open in a new window so they can zoom, etc
     // Map popups
-
-    $(".room").fancybox()
-    $(".room").click(function() { return false })
+    //$(".room").fancybox();
 
   })
