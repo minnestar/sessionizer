@@ -32,11 +32,12 @@
     - @event.timeslots_with_lunch.each_with_index do |slot, idx|
       .timeslot{:id => "timeslot_#{slot.id}"}
         %h2
-          = slot.starts_at.in_time_zone.to_s(:usahhmm)
-          &ndash;
-          = slot.ends_at.in_time_zone.to_s(:usahhmm)
-          &ndash;
-          = slot.title
+          .time
+            = slot.starts_at.in_time_zone.to_s(:usahhmm)
+            &ndash;
+            = slot.ends_at.in_time_zone.to_s(:usahhmm)
+          .title
+            = slot.title
 
         - if slot.sessions.present?
           .sessions
