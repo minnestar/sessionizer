@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.5'
+gem 'rails', '4.2.3'
 
 gem 'pg'
 #gem 'sqlite3'
@@ -30,6 +30,7 @@ gem 'spring',        group: :development
 
 gem 'haml'
 gem 'formtastic'
+gem 'responders', '~> 2.0'
 
 #gem "fancybox-rails", "~> 0.2.1"
 gem 'fancybox2-rails'
@@ -48,7 +49,7 @@ gem 'nokogiri'
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
-  gem "rspec-rails", "~> 2.0"
+  gem "rspec-rails", "~> 3.1"
   gem 'capybara'
   gem 'pry'
   gem 'coveralls', require: false
