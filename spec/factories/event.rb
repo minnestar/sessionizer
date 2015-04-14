@@ -6,7 +6,7 @@ FactoryGirl.define do
     date 30.days.since
 
     trait :full_event do
-      ignore do
+      transient do
         rooms_count 9
         timeslots_count 7
       end
