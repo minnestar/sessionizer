@@ -15,11 +15,12 @@ Sessionizer::Application.routes.draw do
 
   resources :participants, :except => [:destroy]
   resources :categories, only: :show
+  resources :events, only: :show
 
   match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
   match '/login' => 'user_sessions#create', :as => :login, :via => 'post'
   match '/logout' => 'user_sessions#destroy', :as => :logout, :via => 'delete'
-  
+
   resources :password_resets, :only => [ :new, :create, :edit, :update ]
 
   #something is still off here
