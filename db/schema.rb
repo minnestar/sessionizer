@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150319011702) do
+ActiveRecord::Schema.define(version: 20150414022055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,13 @@ ActiveRecord::Schema.define(version: 20150319011702) do
   end
 
   add_index "sessions", ["level_id"], name: "index_sessions_on_level_id", using: :btree
+
+  create_table "settings", force: true do |t|
+    t.boolean "show_schedule"
+    t.integer "current_event_id"
+  end
+
+  add_index "settings", ["current_event_id"], name: "index_settings_on_current_event_id", using: :btree
 
   create_table "timeslots", force: true do |t|
     t.integer  "event_id",   null: false
