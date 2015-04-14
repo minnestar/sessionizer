@@ -1,0 +1,18 @@
+<% title('Admin: Configuration') %>
+
+<%= form_tag admin_config_path, class: 'formtastic config' do %>
+  <fieldset class="inputs">
+    <ol>
+      <li class="boolean">
+        <%= label_tag do %>
+          <%= check_box_tag :show_schedule, 'true', settings.show_schedule? %>
+          Display sessions on the front page
+        <% end %>
+      </li>
+    </ol>
+  </fieldset>
+
+  <fieldset class="actions">
+    <%= submit_tag "Save" %>
+  </fieldset>
+<% end %>

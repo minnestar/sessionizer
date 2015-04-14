@@ -2,12 +2,22 @@ require 'spec_helper'
 
 describe SchedulesController do
   describe "#index" do
-    let!(:event) { create(:event, :full_event) }
-    let!(:event) { create(:event, :full_event) }
-    it "should be successful" do
-      get :index
-      expect(response).to be_successful
-      expect(assigns[:event]).to eq event
+    context "when settings says to show schedules" do
+      before { allow(Settings).to receive(:show_schedule?).and_return(true) }
+      let!(:event) { create(:event, :full_event) }
+      let!(:event) { create(:event, :full_event) }
+      it "should be successful" do
+        get :index
+        expect(response).to be_successful
+        expect(assigns[:event]).to eq event
+      end
+    end
+    context "when schedules are not yet displayed" do
+      before { allow(Settings).to receive(:show_schedule?).and_return(false) }
+      it "should redirect" do
+        get :index
+        expect(response).to redirect_to home_page_path
+      end
     end
   end
 
