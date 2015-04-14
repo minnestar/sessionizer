@@ -11,14 +11,15 @@
     <th>Timeslots</th>
     <th></th>
   </tr>
-    
+
   <% @events.each do |event| %>
-  <tr>
-    <td valign="top"><%= event.name %></td>
-    <td valign="top"><%= event.date %></td>
-    <td valign="top"><%= event.timeslots.map(&:to_s).join("<br>").html_safe %></td>
-    <td valign="top"><%= link_to 'Manage timeslots', admin_event_timeslots_path(event) %></td>
+    <tr>
+      <td valign="top"><%= event.name %></td>
+      <td valign="top"><%= event.date %></td>
+      <td valign="top"><%= event.timeslots.map(&:to_s).join("<br>").html_safe %></td>
+      <td valign="top"><%= link_to 'Manage timeslots', admin_event_timeslots_path(event) %></td>
+    </tr>
   <% end %>
-</ul>
+</table>
 
 <p><%= link_to 'Create new event', new_admin_event_path %></p>
