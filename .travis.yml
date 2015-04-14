@@ -1,4 +1,6 @@
 language: ruby
+cache: bundler
+sudo: false
 rvm:
   - 2.1
 
@@ -7,22 +9,14 @@ notifications:
     - jcoyne@justincoyne.com
     - casey@softwareforgood.com
 
-before_install:
-  - gem update --system
-  - gem --version
-    
 before_script:
   - cd src/
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.yml.travis config/database.yml
   - bundle install
-  - bundle exec rake db:migrate
 
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 bundler_args: --without development debug
-
-services:
-  - redis-server
