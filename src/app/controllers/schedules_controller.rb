@@ -1,5 +1,10 @@
 class SchedulesController < ApplicationController
   def index
+    unless Settings.show_schedule?
+      redirect_to home_page_path
+      return
+    end
+
     @event = Event.current_event :include => { :timeslots => { :sessions => [:room, :presenters] } }
     render :layout => 'schedule'
   end
