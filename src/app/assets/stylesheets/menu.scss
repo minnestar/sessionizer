@@ -1,6 +1,8 @@
 /*** Minne* Header ******************************************************************/
 
 $red: #EE383A;
+$green: #6AFB92;
+$blue: #43C6DB;
 
 .full-column {
   border-bottom: 1px solid #d1d9dc;
@@ -39,9 +41,19 @@ ul#menu {
         border-top: 3px solid #6a797d;
       }
     }
+
     &.hydra a:hover {
       border-top: 3px solid $red;
     }
+
+    &.wiki a:hover {
+      border-top: 3px solid $green;
+    }
+
+    &.projecthydra a:hover {
+      border-top: 3px solid $blue;
+    }
+
     a {
       span.description {
         font-size: 0.75em;
@@ -54,8 +66,8 @@ ul#menu {
     }
   }
 
-  li.bar, li.demo {
-    float:right;
+  li.wiki, li.projecthydra {
+    float: right;
   }
 
   .last {
