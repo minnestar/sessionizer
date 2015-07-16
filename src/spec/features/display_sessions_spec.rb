@@ -12,7 +12,7 @@ feature "View sessions" do
     end
     scenario "it shows the sessions" do
       visit root_path
-      expect(page).to have_content 'Sessions about development'
+      expect(page).to have_content 'Sessions about Development'
     end
   end
 end

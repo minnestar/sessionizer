@@ -8,7 +8,7 @@ describe PagesController do
       get :home
       expect(response).to be_successful
       expect(assigns[:recent_sessions]).to be_empty
-      expect(assigns[:development]).to be_kind_of Category
+      expect(assigns[:categories]).to all(be_kind_of Category)
     end
   end
 
@@ -17,7 +17,7 @@ describe PagesController do
       get :home
       expect(response).to be_successful
       expect(assigns[:recent_sessions]).to be_empty
-      expect(assigns[:development]).to be_kind_of Category
+      expect(assigns[:categories]).to all(be_kind_of Category)
     end
   end
 end
