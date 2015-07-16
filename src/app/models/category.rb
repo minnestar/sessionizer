@@ -9,4 +9,8 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def i18n_key
+    name.gsub(/&/, '').gsub(/\s+/, '_').downcase
+  end
+
 end

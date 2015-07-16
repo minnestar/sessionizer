@@ -13,4 +13,13 @@ describe Category do
     end
 
   end
+
+  describe "#i18n_key" do
+    before do
+      described_class.find_or_create_defaults
+    end
+    subject { described_class.find(3).i18n_key }
+
+    it { is_expected.to eq 'management_administration' }
+  end
 end

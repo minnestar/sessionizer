@@ -1,5 +1,5 @@
       <div class="column grid_<%= grid %>">
-        <h3>Sessions about <%= category.name %></h3>
+        <h3><%= t(".#{category.i18n_key}", default: "Sessions about #{category.name}") %></h3>
         <ul class="sessionsList">
           <%= render category.sessions.for_current_event.random_order.limit(5) %>
         </ul>

@@ -3,3 +3,7 @@
 
 en:
   conference: "HydraConnect"
+  pages:
+    category_grid:
+      management_administration: 'Management & Administration'
+      other: 'Other sessions'
