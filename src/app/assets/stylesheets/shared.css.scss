@@ -131,7 +131,7 @@ ul.sessionsList {
   list-style-type: none;
   @include columns(24em, 1em);
   li.attending {
-    background: image-url("hydra_tag.png") no-repeat 0 .1em;
+    background: image-url("hydra_tag.png") no-repeat -5px 3px;
   }
   li {
     margin: 0.6em 0;
