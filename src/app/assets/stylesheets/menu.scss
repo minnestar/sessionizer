@@ -1,5 +1,7 @@
 /*** Minne* Header ******************************************************************/
 
+$red: #EE383A;
+
 .full-column {
   border-bottom: 1px solid #d1d9dc;
 }
@@ -37,20 +39,8 @@ ul#menu {
         border-top: 3px solid #6a797d;
       }
     }
-    &.star a:hover {
-      border-top: 3px solid #ee383a;
-    }
-    &.bar a:hover {
-      border-top: 3px solid #444689;
-    }
-    &.demo a:hover {
-      border-top: 3px solid #FFCD32;
-    }
-    &.beat a:hover {
-      border-top: 3px solid #F89938;
-    }
-    &.start a:hover {
-      border-top: 3px solid #4CB848;
+    &.hydra a:hover {
+      border-top: 3px solid $red;
     }
     a {
       span.description {
@@ -74,28 +64,8 @@ ul#menu {
 }
 
 span {
-  &.star {
-    color: #EE383A;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.bar {
-    color: #444689;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.demo {
-    color: #FFCD32;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.beat {
-    color: #F89938;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.start {
-    color: #4CB848;
+  &.hydra {
+    color: $red;
     font-weight: 700;
     margin-left: 1px;
   }
