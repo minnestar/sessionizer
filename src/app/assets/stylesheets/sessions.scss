@@ -5,13 +5,11 @@ $grey: rgb(209, 217, 220);
 /* This is style for the button that says "Yes! I might attend" */
 .yellow {
   background: rgb(255,214,94);
-  background: image-url("hydra_tag.png");
   background: linear-gradient(top,  rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%);
 }
 
 .yellow:hover {
   background: rgb(254,191,4);
-  background: image-url("hydra_tag.png");
   background: linear-gradient(top,  rgba(254,191,4,1) 0%,rgba(255,214,94,1) 100%);
 }
 
@@ -112,5 +110,3 @@ $grey: rgb(209, 217, 220);
     max-width: 100%;
   }
 }
-
-
