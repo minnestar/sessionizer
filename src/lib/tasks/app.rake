@@ -60,26 +60,18 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      { name: 'Theater',         capacity: 250 },
-      { name: 'Nokomis',         capacity: 100 },
-      { name: 'Minnetonka',      capacity: 100 },
-      { name: 'Harriet',         capacity: 100 },
-      { name: 'Calhoun',         capacity: 100 },
-      # { name: 'Brand',           capacity: 75 },
-      { name: 'Proverb-Edison',  capacity: 48 },
-      { name: 'Zeke Landres',    capacity: 40 },
-      { name: 'Learn',           capacity: 24 },
-      { name: 'Challenge',       capacity: 24 }, 
-      { name: 'Discovery',       capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Tackle',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Louis Pasteur',   capacity: 18 }, 
-      { name: 'Texas',           capacity: 16 }, 
-      # { name: 'California',      capacity: 16 },
-      { name: 'Florida',         capacity: 12 }, # TV, no projector
-      { name: 'Georgia',         capacity: 12 }, # TV, no projector
-      { name: 'Kansas',          capacity: 10 }, # TV, no projector
+      { :name => 'Workshop #1 - Room 351', :capacity => 35 },
+      { :name => 'Workshop #2 - Room 352', :capacity => 35 },
+      { :name => 'Workshop #3 - Room 301', :capacity => 40 },
+      { :name => 'Workshop #4 - Room 401', :capacity => 40 },
+      { :name => 'Breakout #1 - Room 289', :capacity => 12 },
+      { :name => 'Breakout #2 - Room 342', :capacity => 12 },
+      { :name => 'Breakout #3 - Room 446', :capacity => 30 },
+      { :name => 'Breakout #4 - Room 448', :capacity => 30 },
+      { :name => 'Great Room #1 - Room 201', :capacity => 130 },
+      { :name => 'Great Room #2 - Room 202', :capacity => 70 },
+      #{ :name => 'Texas', :capacity => 16 },
+      #{ :name => 'California', :capacity => 16 }
     ]
 
     rooms.each do |room|
@@ -126,11 +118,11 @@ namespace :app do
       STDERR.puts 'Usage examples:
 
         Prevent participant id 577 from presenting in the afternoon:
-        
+
            heroku run PARTICIPANT=345 HOUR=12:30 AFTER=1 rake app:restrict
-        
+
         Create soft preference for participant id 678 not to present first thing:
-        
+
            heroku run PARTICIPANT=678 HOUR=9:45 BEFORE=1 WEIGHT=0.1 rake app:restrict
         '
     end
@@ -337,7 +329,7 @@ namespace :app do
     puts "The biggie:"
     puts "#{multivoting_count} participants (#{"%1.1f" % multivoting_rate}% of those voting) expressed interest in multiple sessions"
     puts
-    
+
     puts "Distribution of number of sessions of interest"
     puts "(How many people expressed interest in n sessions?)"
     puts
@@ -357,7 +349,7 @@ namespace :app do
     frequency_dump(
       event.sessions.map { |s| ((Time.now - s.created_at) / 1.day).floor })
     puts
-    
+
     participants = event.participants.includes(:sessions_attending)
   end
 
@@ -424,11 +416,11 @@ namespace :app do
     puts 'Reset DB.'
     Rake::Task['db:reset'].invoke
 
-    puts 'Create categories' 
+    puts 'Create categories'
     Category.find_or_create_defaults
 
     puts 'Creating event...'
-    event = Event.create(name: FFaker::HipsterIpsum.words(3).join(' '), date: 1.month.from_now) 
+    event = Event.create(name: FFaker::HipsterIpsum.words(3).join(' '), date: 1.month.from_now)
 
     puts 'Creating timeslots...'
     Rake::Task['app:create_timeslots'].invoke
@@ -438,7 +430,7 @@ namespace :app do
 
     puts 'Creating 100 participants...'
     progress = ProgressBar.create(title: 'Participants', total: 1000)
-    100.times do 
+    100.times do
       participant = Participant.new
       participant.name = FFaker::Name.name
       participant.email = FFaker::Internet.safe_email
@@ -451,11 +443,11 @@ namespace :app do
 
     puts 'Creating sessions...'
     sessions_total = Room.count * Timeslot.count
-    sessions_total.times do 
+    sessions_total.times do
       session = Session.new
       session.title = FFaker::HipsterIpsum.phrase
       session.description = FFaker::HipsterIpsum.paragraph
-      session.participant = Participant.order('RANDOM()').first 
+      session.participant = Participant.order('RANDOM()').first
       session.event = event
       session.categories << Category.order('RANDOM()').first
       session.save!
@@ -464,9 +456,9 @@ namespace :app do
       interest = (0..high).to_a.sample
 
       puts session.title
-      participant_progress = ProgressBar.create(title: "  Interest: #{interest}", total: interest) 
-      interest.times do 
-        p = Participant.order('RANDOM()').first 
+      participant_progress = ProgressBar.create(title: "  Interest: #{interest}", total: interest)
+      interest.times do
+        p = Participant.order('RANDOM()').first
         unless session.participants.include?(p)
           a = Attendance.new
           a.session = session
@@ -494,25 +486,25 @@ end
 
 # OPTION 2
 # reg/bfast -  8:00 -  8:45
-# session 0 -  8:45 -  9:30 
+# session 0 -  8:45 -  9:30
 # -------------------------
 # session 1 -  9:40 - 10:30
 # session 2 - 10:40 - 11:30
 # session 3 - 11:40 - 12:30
 # -------------------------
-# Lunch       12:40 -  1:30 
+# Lunch       12:40 -  1:30
 # -------------------------
 # session 4    1:40 -  2:30
 # session 5    2:40 -  3:30
-# session 6    3:40 -  4:30 
+# session 6    3:40 -  4:30
 # -------------------------
-# HH           4:30 --> 
- 
+# HH           4:30 -->
+
 
 #
 # 16 rooms
 # 6 * 16 = 96
-# 73 sessions  
+# 73 sessions
 #
 #8:00 - 9:00 - Registration & Light Breakfast
 #9:00 - 9:50 - Session 0 - Opening Remarks and Featured Session with David Hussman | Devjam
@@ -528,33 +520,33 @@ end
 #
 # OPTION 2
 # reg/bfast -  8:00 -  8:45
-# session 0 -  8:45 -  9:30 
+# session 0 -  8:45 -  9:30
 # -------------------------
 # session 1 -  9:40 - 10:30
 # session 2 - 10:40 - 11:30
 # session 3 - 11:40 - 12:30
 # -------------------------
-# Lunch       12:40 -  1:30 
+# Lunch       12:40 -  1:30
 # -------------------------
 # session 4    1:40 -  2:30
 # session 5    2:40 -  3:30
-# session 6    3:40 -  4:30 
+# session 6    3:40 -  4:30
 # -------------------------
-# HH           4:30 --> 
- 
+# HH           4:30 -->
+
 
 # OPTION 3
 # reg/bfast -  8:00 -  9:00
-# session 0 -  9:00 -  9:50 
+# session 0 -  9:00 -  9:50
 # -------------------------
 # session 1 - 10:00 - 10:45
 # session 2 - 10:55 - 11:40
 # session 3 - 11:50 - 12:35
 # -------------------------
-# Lunch       12:30 -  1:30 
+# Lunch       12:30 -  1:30
 # -------------------------
 # session 4    1:30 -  2:15
 # session 5    2:25 -  3:10
 # session 6    3:20 -  4:05
 # -------------------------
-# HH           4:05 --> 
+# HH           4:05 -->
