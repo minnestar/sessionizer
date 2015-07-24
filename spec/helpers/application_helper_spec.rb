@@ -57,10 +57,10 @@ describe ApplicationHelper do
         to eq_ignoring_space '<p>foo <img src="http://bar.com" width="100" height="200" alt="bar"> bar</p>'
     end
 
-    {iframe: true, script: false, nonstandard: true}.each do |tag, preserve_nested|
+    [:iframe, :script, :nonstandard].each do |tag|
       it "strips <#{tag}> tags" do
         expect(helper.markdown("foo <#{tag}>bar</#{tag}> baz")).
-          to eq_ignoring_space "<p>foo #{'bar' if preserve_nested} baz</p>"
+          to eq_ignoring_space "<p>foo bar baz</p>"
       end
     end
   end
