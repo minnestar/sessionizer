@@ -1,0 +1,103 @@
+/*** Minne* Header ******************************************************************/
+
+.full-column {
+  border-bottom: 1px solid #d1d9dc;
+}
+
+.center-column {
+  width: 65em;
+  margin: 0 auto;
+  text-align: left;
+  clear: both;
+}
+
+ul#menu {
+  margin: 0 1px;
+  padding: 0;
+  font-size: 12px;
+  li {
+    font-size: 1.3em;
+    float: left;
+    margin-right: 0.05em;
+    padding: 0;
+    display: block;
+    list-style: none;
+    a {
+      &:link, &:visited {
+        display: block;
+        padding: 7px 0 10px;
+        line-height: 1em;
+        width: 9.5em;
+        color: #6a797d;
+        text-decoration: none;
+        border-top: 3px solid #fff;
+        text-transform: lowercase;
+      }
+      &:hover {
+        border-top: 3px solid #6a797d;
+      }
+    }
+    &.star a:hover {
+      border-top: 3px solid #ee383a;
+    }
+    &.bar a:hover {
+      border-top: 3px solid #444689;
+    }
+    &.demo a:hover {
+      border-top: 3px solid #FFCD32;
+    }
+    &.beat a:hover {
+      border-top: 3px solid #F89938;
+    }
+    &.start a:hover {
+      border-top: 3px solid #4CB848;
+    }
+    a {
+      span.description {
+        font-size: 0.75em;
+        color: #d1d9dc;
+        text-transform: lowercase;
+      }
+      &.selected {
+        border-top: 3px solid #6a797d;
+      }
+    }
+  }
+
+  li.bar, li.demo {
+    float:right;
+  }
+
+  .last {
+    margin-right: 0;
+  }
+}
+
+span {
+  &.star {
+    color: #EE383A;
+    font-weight: 700;
+    margin-left: 1px;
+  }
+  &.bar {
+    color: #444689;
+    font-weight: 700;
+    margin-left: 1px;
+  }
+  &.demo {
+    color: #FFCD32;
+    font-weight: 700;
+    margin-left: 1px;
+  }
+  &.beat {
+    color: #F89938;
+    font-weight: 700;
+    margin-left: 1px;
+  }
+  &.start {
+    color: #4CB848;
+    font-weight: 700;
+    margin-left: 1px;
+  }
+}
+
