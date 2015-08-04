@@ -11,7 +11,7 @@
 #
 production: 
   stack: cedar
-  app: sessionizer
+  app: sheltered-earth-4978
   tag: production/*
   config:
     BUNDLE_WITHOUT: "development:test"
