@@ -7,13 +7,11 @@ namespace :app do
     event.timeslots.destroy_all
 
     start_times = ["09:00",
-                   "09:55",
-                   "10:50",
-                   "11:45",
-
-                   "13:45",
-                   "14:40",
-                   "15:35" ]
+                   "10:00",
+                   "11:00",
+                   "13:30",
+                   "14:30",
+                   "15:30"]
 
     start_times.each_with_index do |st, idx|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
@@ -27,31 +25,18 @@ namespace :app do
 
     event.timeslots.create!(
       title: "Lunch",
-      starts_at: Time.zone.parse("#{event.date.to_s} 12:15:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 1:35:00"),
+      starts_at: Time.zone.parse("#{event.date.to_s} 11:50:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 1:30:00"),
       schedulable: false
     )
 
     event.timeslots.create!(
-      title: "Arrive/Breakfast",
-      starts_at: Time.zone.parse("#{event.date.to_s} 8:00:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 8:35:00"),
+      title: "Lunch",
+      starts_at: Time.zone.parse("#{(event.date + 1).to_s} 11:50:00"),
+      ends_at: Time.zone.parse("#{(event.date + 1).to_s} 1:30:00"),
       schedulable: false
     )
 
-    event.timeslots.create!(
-      title: "Session 0",
-      starts_at: Time.zone.parse("#{event.date.to_s} 8:35:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 8:55:00"),
-      schedulable: false
-    )
-
-    event.timeslots.create!(
-      title: "Beer Me!",
-      starts_at: Time.zone.parse("#{event.date.to_s} 16:45:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 19:00:00"),
-      schedulable: false
-    )
   end
 
   desc 'create default rooms for most recent event. Will nuke old rooms.'
