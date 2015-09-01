@@ -65,7 +65,7 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  HOST = 'localhost'
+  HOST = ENV['HEROKU_URL']
   config.action_mailer.default_url_options = { host: HOST }
   ActionMailer::Base.smtp_settings = {
     user_name: Rails.application.secrets.mandrill_username,
