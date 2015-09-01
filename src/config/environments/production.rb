@@ -65,11 +65,12 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  HOST = 'sessions.minnestar.org'
+  HOST = 'localhost'
   config.action_mailer.default_url_options = { host: HOST }
   ActionMailer::Base.smtp_settings = {
-    :user_name => Rails.application.secrets.mandrill_username,
-    :password => Rails.application.secrets.mandrill_password,
+    user_name: Rails.application.secrets.mandrill_username,
+    password: Rails.application.secrets.mandrill_password,
+    #user_name: 'alicia@curationexperts.com', password: 'U6XZh8uopA8aRiweDxmF3A',
     :address => 'smtp.mandrillapp.com',
     :port => 587,
     :authentication => 'login',
