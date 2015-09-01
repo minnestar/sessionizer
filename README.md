@@ -92,7 +92,7 @@ can alway use the alias `railsup`.
 3. Run `heroku run rake db:migrate`
 4. Run `herok run rake db:seed`
 5. Set a username and password for the Sessionizer admin: `heroku config:add SESSIONIZER_ADMIN_USER=foo SESSIONIZER_ADMIN_PASSWORD=bar`
-6. Set a MANDRILL_MINNESTAR_USER, MANDRILL_MINNESTAR_PASSWORD
+6. Set a MANDRILL_MINNESTAR_USERNAME, MANDRILL_MINNESTAR_PASSWORD
 7. Create the first event by navigating to `/admin/events` or using the
    console
 8. Since the app is in a git subtree (src/ directory), you need to push
