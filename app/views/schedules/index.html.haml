@@ -37,7 +37,7 @@
       = @event.name
       Session Schedule
   .timeslots
-    - @event.timeslots_with_lunch.each_with_index do |slot, idx|
+    - @event.timeslots.each_with_index do |slot, idx|
       .timeslot{:id => "timeslot_#{slot.id}"}
         %h2
           .time
