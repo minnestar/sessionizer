@@ -20,7 +20,7 @@ class Admin::TimeslotsController < Admin::AdminController
   private
 
   def timeslot_params
-    params.require(controller_name.singularize).permit(:starts_at, :ends_at, :event_id)
+    params.require(controller_name.singularize).permit(:starts_at, :ends_at, :event_id, :schedulable, :title)
   end
 
 end

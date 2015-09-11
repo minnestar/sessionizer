@@ -26,7 +26,7 @@ describe Admin::TimeslotsController do
   describe "#create" do
     it "should be successful" do
       expect {
-        post :create, event_id: event, timeslot: {event_id: event, starts_at: '2015-05-03 12:00:00', ends_at: '2015-05-03 12:50:00' }
+        post :create, event_id: event, timeslot: { event_id: event, starts_at: '2015-05-03 12:00:00', ends_at: '2015-05-03 12:50:00', schedulable: '1', title: "A timeslot has entered the event!" }
       }.to change { event.timeslots.count }.by(1)
       expect(response).to redirect_to admin_event_timeslots_path
     end
