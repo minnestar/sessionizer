@@ -38,12 +38,10 @@
       Session Schedule
   .timeslots
     - @event.timeslots.each_with_index do |slot, idx|
-      .timeslot{:id => "timeslot_#{slot.id}"}
+      .timeslot{ id: "timeslot_#{slot.id}" }
         %h2
           .time
-            = slot.starts_at.in_time_zone.to_s(:usahhmm)
-            &ndash;
-            = slot.ends_at.in_time_zone.to_s(:usahhmm)
+            = slot.date_range.to_s(with_day: false)
           .title
             = slot.title
 

@@ -1,11 +1,23 @@
 class Admin::TimeslotsController < Admin::AdminController
-  load_resource :event
-  load_resource :timeslot, through: :event
+  load_resource :event, only: [:index, :new, :create]
+  load_resource :timeslot, through: :event, only: [:index, :new, :create]
+  load_resource :timeslot, only: [:edit, :update]
 
   def index
   end
 
   def new
+  end
+
+  def edit
+  end
+
+  def update
+    if @timeslot.update timeslot_params
+      redirect_to admin_event_timeslots_path(event_id: @timeslot.event_id)
+    else
+      render :edit
+    end
   end
 
   def create
