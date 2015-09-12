@@ -14,4 +14,18 @@ describe Timeslot do
       expect { timeslot.destroy }.to change { PresenterTimeslotRestriction.count }.by(-1)
     end
   end
+
+  context "to_s" do
+    let(:timeslot) { build(:timeslot_1) }
+
+    context "when with_day is set" do
+      subject { timeslot.to_s(with_day: true) }
+      it { is_expected.to eq 'Sun  9:00 -  9:50 Session 1' }
+    end
+
+    context "no args" do
+      subject { timeslot.to_s }
+      it { is_expected.to eq ' 9:00 -  9:50 Session 1' }
+    end
+  end
 end
