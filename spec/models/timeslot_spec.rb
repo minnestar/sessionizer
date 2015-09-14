@@ -16,7 +16,8 @@ describe Timeslot do
   end
 
   context "to_s" do
-    let(:timeslot) { build(:timeslot_1) }
+    let(:event) { build(:event, date: Date.parse('2015-09-13')) }
+    let(:timeslot) { build(:timeslot_1, event: event) }
 
     context "when with_day is set" do
       subject { timeslot.to_s(with_day: true) }
