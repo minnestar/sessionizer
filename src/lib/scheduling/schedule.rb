@@ -8,13 +8,13 @@ module Scheduling
   class Schedule
     def initialize(event)
       @ctx = Scheduling::Context.new(event)
-      
+
       @slots_by_session = {}                            # map from session to timeslot
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
-      
+
       randomize_schedule!
     end
-    
+
     def initialize_copy(source)  # deep copy; called by dup
       @slots_by_session = @slots_by_session.dup
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }
@@ -28,7 +28,7 @@ module Scheduling
   private
 
     attr_reader :ctx
-    
+
     class Unassigned  # placeholder for empty room
       def to_s
         "<< open >>"
@@ -46,7 +46,7 @@ module Scheduling
        (1 - attendance_score) +
        (1 - presenter_score) * ctx.people.size  # Multiplier b/c presenter double-bookings trump attendance prefs
     end
-    
+
     # Average attendee satisfaction with the schedule, measured as the estimated fraction of the total value
     # of all their desired sessions that this schedule will give them. (1 = perfect schedule for everyone;
     # 0 = no attendees can attend any desired sessions at all.)
@@ -54,13 +54,13 @@ module Scheduling
     def attendance_score
       score(:attending)
     end
-    
+
     # Average ability of presenter to present all the sessions they signed up for. For an optimized schedule,
     # this should always be 1 unless a presenter created an inherent conflict (e.g. signing up to present more
     # sessions than there are timeslots.)
     #
     def presenter_score
-      score(:presenting)   
+      score(:presenting)
     end
 
     # Gives lower & upper bounds on the possible range of attendance_score
@@ -72,13 +72,13 @@ module Scheduling
     end
 
   private
-  
+
     def score(role)
       count = ctx.people.size
       score = ctx.people.sum do |person|
         person.send(role).score(self)
       end
-      
+
       if count == 0
         1
       else
@@ -112,19 +112,19 @@ module Scheduling
     def random_neighbor
       dup.random_neighbor!
     end
-    
+
     def random_neighbor!
       # Choose 2 or more random sessions in distinct time slots
       k = 1.0 / (ctx.timeslots.size - 1)
       cycle_size = 1 + ((1 + k) / (rand + k)).floor
       slot_cycle = ctx.timeslots.shuffle.slice(0, cycle_size)
-      
+
       # Rotate their assignments
       slot_cycle.each_with_index do |old_slot, i|
         new_slot = slot_cycle[(i+1) % slot_cycle.size]
         schedule @sessions_by_slot[old_slot].sample, new_slot
       end
-      
+
       self
     end
 
@@ -133,13 +133,13 @@ module Scheduling
     def schedule(session, new_slot)
       old_slot = @slots_by_session[session]
       @sessions_by_slot[old_slot].delete(session) if old_slot
-      
+
       @slots_by_session[session] = new_slot
       @sessions_by_slot[new_slot] << session if new_slot
     end
 
   public
-    
+
     # ------------ Managing results ------------
 
     def assign_rooms_and_save!
@@ -160,7 +160,7 @@ module Scheduling
         end
       end
     end
-    
+
     def inspect
       s = "Schedule"
       s << " | average participant is #{format_percent attendance_score} satisfied with schedule"
@@ -180,7 +180,7 @@ module Scheduling
       s << " (Note that these are just limits on what is possible."
       s << " Neither bounds is actually likely to be achievable.)"
     end
-    
+
   private
 
     def format_percent(x)
