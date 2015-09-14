@@ -32,8 +32,9 @@ Sessionizer::Application.routes.draw do
     resource :config, only: [:show, :create]
     resources :sessions
     resources :events do
-      resources :timeslots
+      resources :timeslots, only: [:index, :new, :create]
     end
+    resources :timeslots, only: [:edit, :update]
     resources :presenters, only: [:index, :edit, :update] do
       collection do
         get 'export'

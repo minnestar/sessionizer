@@ -1,12 +1,12 @@
 namespace :app do
 
   desc 'create default timeslots for the most recent event'
-  task :create_timeslots => :environment do
+  task create_timeslots: :environment do
     session_length = 50.minutes
     event = Event.current_event
     event.timeslots.destroy_all
 
-    start_times = ["9:15",
+    start_times = ["09:15",
                    "10:15",
                    "11:15",
                    "13:45",
@@ -14,10 +14,43 @@ namespace :app do
                    "15:45"]
 
 
-    start_times.each do |st|
+    start_times.each_with_index do |st, idx|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
-      event.timeslots.create!(:starts_at => starts, :ends_at => starts + session_length)
+      event.timeslots.create!(
+        title: "Session #{idx + 1}",
+        starts_at: starts,
+        ends_at: starts + session_length,
+        schedulable: true
+      )
     end
+
+    event.timeslots.create!(
+      title: "Lunch",
+      starts_at: Time.zone.parse("#{event.date.to_s} 12:15:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 1:35:00"),
+      schedulable: false
+    )
+
+    event.timeslots.create!(
+      title: "Arrive/Breakfast",
+      starts_at: Time.zone.parse("#{event.date.to_s} 8:00:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 8:45:00"),
+      schedulable: false
+    )
+
+    event.timeslots.create!(
+      title: "Session 0",
+      starts_at: Time.zone.parse("#{event.date.to_s} 8:45:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 9:05:00"),
+      schedulable: false
+    )
+
+    event.timeslots.create!(
+      title: "Beer Me!",
+      starts_at: Time.zone.parse("#{event.date.to_s} 4:45:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 7:00:00"),
+      schedulable: false
+    )
   end
 
   desc 'create default rooms for most recent event. Will nuke old rooms.'
