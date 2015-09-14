@@ -27,6 +27,7 @@ Sessionizer::Application.routes.draw do
   get '/schedule' => 'schedules#index', as: :schedule
   get '/schedule.ics' => 'schedules#ical', as: :schedule_ics
 
+  resource :admin, controller: 'admin', only: [:show]
   namespace :admin do
     resource :config, only: [:show, :create]
     resources :sessions
