@@ -131,19 +131,30 @@ namespace :app do
       presenter.restrict_after(time, weight)
     end
   end
-    
-  
-  desc 'create a schedule for most recent event'
+
+  desc 'clear the current schedule (DANGER: Irreversible!!!). You must do the before generating a new schedule'
+  task clear_schedule: :environment do
+    event = Event.current_event
+    event.sessions.each { |s| s.update(timeslot_id: nil) }
+  end
+
+  # We can schedule certain sessions into blocks before running
+  # the scheduler. These sessions will not get scheduled elsewhere.
+  # However the scheduler will pay no-attention to them, so you probably
+  # only want to place them into Timeslots where schedulable is false.
+  # For example you may place a "Presenters Luncheon, rm 123" during the
+  # "Lunch" timeslot.
+  desc 'create a schedule for most recent event. Only unassigned sessions will be scheduled.'
   task :generate_schedule => :environment do
     quality = (ENV['quality'] || 1).to_f
-    
+
     event = Event.current_event
     puts "Scheduling #{event.name}..."
-    
+
     schedule = Scheduling::Schedule.new event
     puts
     puts schedule.inspect_bounds
-    
+
     puts
     puts "Assigning sessions to time slots..."
     max_iter         = ((quality ** 0.6) * 2000).ceil
@@ -162,9 +173,9 @@ namespace :app do
     best = annealer.anneal schedule
     puts "BEST SOLUTION:"
     p best
-    
+
     best.assign_rooms_and_save!
-    
+
     puts
     puts 'Congratulations. You have a schedule!'
   end
