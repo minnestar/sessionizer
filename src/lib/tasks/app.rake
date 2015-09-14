@@ -134,8 +134,15 @@ namespace :app do
 
   desc 'clear the current schedule (DANGER: Irreversible!!!). You must do the before generating a new schedule'
   task clear_schedule: :environment do
-    event = Event.current_event
-    event.sessions.each { |s| s.update(timeslot_id: nil) }
+    STDOUT.puts "Are you sure? This destroys the existing schedule and you will not be\n" \
+      "able to retrieve it. You should back up the database before doing this.\n\nIf you are really sure, type \"SCHEDULE ARMAGEDDON\" now (anything else to cancel)..."
+    input = STDIN.gets.strip
+    if input == 'SCHEDULE ARMAGEDDON'
+      Event.current_event.sessions.update_all(timeslot_id: nil)
+      STDOUT.puts "\nThe current schedule has been erased."
+    else
+      STDOUT.puts "\nNo changes made."
+    end
   end
 
   # We can schedule certain sessions into blocks before running

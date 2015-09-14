@@ -12,7 +12,7 @@ module Scheduling
     attr_reader :sessions, :timeslots, :rooms
 
     def initialize(event)
-      @sessions = event.sessions.where(timeslot: nil).select(:id).map(&:id)
+      @sessions = event.sessions.where(timeslot: nil).pluck(:id)
       @timeslots = event.timeslots.where(schedulable: true)
       @rooms = event.rooms
       @people_by_id = Hash.new { |h,id| h[id] = Person.new(self, id) }
