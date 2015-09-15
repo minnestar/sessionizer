@@ -5,7 +5,7 @@
                   :href=> "#timeslot_#{slot.id}",
                   :startsAt => slot.starts_at.in_time_zone.to_i,
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
-        = slot.starts_at.in_time_zone.to_s(:usahhmm)
+        = pill_label(slot)
   .maps
     %a.room{ target: '_blank',
              href: "#{asset_path('maps/master-map.png')}" }
