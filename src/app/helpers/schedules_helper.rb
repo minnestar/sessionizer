@@ -1,7 +1,14 @@
 module SchedulesHelper
 
   def pill_label(slot)
-    slot.starts_at.in_time_zone.to_s(:usahhmm)
+    day = slot.starts_at.strftime('%a')
+    day = case day
+    when 'Thur'
+      'Th'
+    else
+      day.first
+    end
+    "#{day} #{slot.starts_at.in_time_zone.to_s(:usahhmm)}"
   end
 
   def session_columns_for_slot(slot, &block)
