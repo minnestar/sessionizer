@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Admin::TimeslotsController do
-  let(:event) { create(:event) }
+  let(:event) { create(:event, date: Date.parse('2015-10-15')) }
 
   describe "#index" do
     let!(:timeslot) { create(:timeslot, event: event) }
@@ -20,6 +20,7 @@ describe Admin::TimeslotsController do
       expect(response).to be_successful
       expect(assigns[:event]).to eq event
       expect(assigns[:timeslot]).to be_kind_of Timeslot
+      expect(assigns[:timeslot].starts_at).to eq Date.parse('2015-10-15').in_time_zone
     end
   end
 
