@@ -3,7 +3,7 @@ module SchedulesHelper
   def pill_label(slot)
     day = slot.starts_at.strftime('%a')
     day = case day
-    when 'Thur'
+    when 'Thu'
       'Th'
     else
       day.first
