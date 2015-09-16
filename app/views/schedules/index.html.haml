@@ -1,32 +1,4 @@
-.nav-top
-  .timeslots
-    - @event.timeslots.each do |slot|
-      %a.timeslot{:id => "timeslot_#{slot.id}_nav",
-                  :href=> "#timeslot_#{slot.id}",
-                  :startsAt => slot.starts_at.in_time_zone.to_i,
-                  :endsAt   => slot.ends_at  .in_time_zone.to_i }
-        = pill_label(slot)
-  .maps
-    %a.room{ target: '_blank',
-             href: "#{asset_path('maps/master-map.png')}" }
-      Map
-    %a.room{ target: '_blank',
-             href: "#{asset_path('maps/li-meeting-rooms.png')}" }
-      LI Map
-
-    %a.room{ target: '_blank',
-             href: "http://minnestar.org/minnebar-faq/" }
-      FAQ
-
-    %a.twitter{  :target => '_blank',
-                 :href => "http://twitter.com/#minnebar" }
-      :escaped
-        #minnebar
-
-    %a.feedback{ :target => '_blank',
-                 :href => 'http://minnebar2015.voicehive.com' }
-      Feedback
-
+= render 'header'
 .schedule
   .schedule-header
     .controls
