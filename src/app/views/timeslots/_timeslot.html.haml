@@ -1,4 +1,4 @@
-.timeslot{ id: "timeslot_#{timeslot.id}" }
+.timeslot{ id: "timeslot_#{timeslot.id}", data: { day: slot.starts_at.to_date.strftime('%A') } }
   %h2
     .time
       = timeslot.date_range.to_s(with_day: false)
