@@ -25,6 +25,8 @@ class Session < ActiveRecord::Base
   
   scope :random_order, -> { order('random()') }
 
+  scope :schedulable, -> { where(room_id: nil) }
+
   validates_presence_of :description
   validates_presence_of :event_id
   validates_presence_of :participant_id
