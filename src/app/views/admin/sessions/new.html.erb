@@ -6,7 +6,7 @@
   <%= f.inputs do %>
     <%= f.input :title %>
 
-    <%= f.input :name, :label => 'Presenter Name' %>
+    <%= f.input :participant, label: 'Presenter Name', collection: Participant.order('name ASC').all %>
     <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <b>**bold**</b>, <i>*italic*</i>, [link](http://example.com)'.html_safe %>
     <%= f.input :summary, :label => 'Short description of the session (for the program)' %>
 
