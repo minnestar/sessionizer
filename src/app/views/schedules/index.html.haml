@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 - cache [current_participant.nil?] + event_schedule_cache_key(@event), expires_in: 10.minutes do
   = render 'header'
   .schedule
@@ -23,16 +24,16 @@
       // Jump to timeslot
 
       var updateTimeslotNav = function() {
+       $('.pill').toggleClass('selected', false);
         var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
         var foundCurrent = false
         $($('.schedule .timeslot').get().reverse()).each(function(i, slot) {
-          var selected = false;
-          if($(slot).offset().top <= scrollTop) {
+          $slot = $(slot);
+          if($slot.offset().top <= scrollTop) {
             if(!foundCurrent)
-              selected = true
+              $('#' + $slot.data('day') + '_nav').toggleClass('selected', true)
             foundCurrent = true
           }
-          $('#' + slot.id + '_nav').toggleClass('selected', selected)
         })
         return true;
       }
@@ -43,16 +44,16 @@
 
       $('.nav-top .timeslot').click(function(evt) {
         var link = $(evt.target)
-        slotIdSel = link.attr('href')
+        slotDaySel = link.attr('href').replace(/#/, '');
         $('.nav-top .timeslot').toggleClass('selected', false)
-        $(slotIdSel + '_nav').toggleClass('selected', true)
+        $(slotDaySel + '_nav').toggleClass('selected', true)
 
         // Temporarily force clicked time slot to be highlighted,
         // even if it's near the end of the page & doesn't make it
         // past the top edge of the window.
         scrollingToSlot = true
 
-        $.scrollTo($(slotIdSel), {
+        $.scrollTo($('.timeslot[data-day="' + slotDaySel +'"]'), {
           duration: (mobile ? 0 : 500),
           offset: { left: 0, top: -$('.nav-top').height() },
           onAfter: function() {
@@ -78,6 +79,106 @@
       $(window).scroll(function() {
         if(!scrollingToSlot) {
           updateTimeslotNav();
+=======
+= render 'header'
+.schedule
+  .schedule-header
+    .controls
+      %a#hide-all(href='#') Hide all details
+      %a#show-all(href='#') Show all details
+      .clr
+    %h1
+      = @event.name
+      Session Schedule
+  .timeslots
+<<<<<<< a28a327892b5ec6de93b72da92f4f76f22072803
+    = render @event.timeslots
+=======
+    - @event.timeslots.each_with_index do |slot, idx|
+      .timeslot{ id: "timeslot_#{slot.id}", data: { day: slot.starts_at.to_date.strftime('%A') } }
+        %h2
+          .time
+            = slot.date_range.to_s(with_day: true)
+          .title
+            = slot.title
+
+        - if slot.sessions.present?
+          .sessions
+            - session_columns_for_slot(slot) do |column|
+              .column
+                - column.each do |session|
+
+                  .session
+                    .header
+                      - map_location = asset_path("maps/#{session.room.name.downcase}.png")
+                      .room{:href =>  "#{map_location}" }
+                        = session.room.name
+
+                      %h3.title= session.title
+
+                      .presenters
+                        - session.presenters.each do |presenter|
+                          .presenter= presenter.name
+
+                    .description
+                      = markdown session.description
+                      .bios
+                        - session.presenters.each do |presenter|
+                          .bio
+                            .name= presenter.name
+                            = markdown(presenter.bio || "No bio.")
+
+                    .summary= session.summary
+>>>>>>> Update header pills to just have day
+
+:javascript
+  $(function() {
+    var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+
+
+    // Jump to timeslot
+
+    var updateTimeslotNav = function() {
+      $('.pill').toggleClass('selected', false);
+      var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
+      var foundCurrent = false
+      $($('.schedule .timeslot').get().reverse()).each(function(i, slot) {
+        $slot = $(slot);
+        if($slot.offset().top <= scrollTop) {
+          if(!foundCurrent)
+            $('#' + $slot.data('day') + '_nav').toggleClass('selected', true)
+          foundCurrent = true
+        }
+      })
+      return true;
+    }
+
+    updateTimeslotNav();
+
+    var scrollingToSlot = false;
+
+    $('.nav-top .timeslot').click(function(evt) {
+      var link = $(evt.target)
+      slotDaySel = link.attr('href').replace(/#/, '');
+      $('.nav-top .timeslot').toggleClass('selected', false)
+      $(slotDaySel + '_nav').toggleClass('selected', true)
+
+      // Temporarily force clicked time slot to be highlighted,
+      // even if it's near the end of the page & doesn't make it
+      // past the top edge of the window.
+      scrollingToSlot = true
+      $.scrollTo($('.timeslot[data-day="' + slotDaySel +'"]'), {
+        duration: (mobile ? 0 : 500),
+        offset: { left: 0, top: -$('.nav-top').height() },
+        onAfter: function() {
+          setTimeout(function() {
+            // Make nav bar show true position again on next scroll
+            scrollingToSlot = false
+
+            // see below
+            $('#ios-bug-workaround').remove();
+          }, 10);
+>>>>>>> Update header pills to just have day
         }
         return true;
       });
