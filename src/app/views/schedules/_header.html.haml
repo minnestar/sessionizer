@@ -7,8 +7,7 @@
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = pill_label(slot)
   .maps
-    %a.room{ target: '_blank',
-             href: "#{asset_path('maps/map_hub.svg')}" }
+    %a.room{ target: '_blank', href: "#{event_map_path}" }
       Map
     %a.room{ target: '_blank',
              href: "#{asset_path('maps/map_b1.svg')}" }
