@@ -2,6 +2,7 @@ Sessionizer::Application.routes.draw do
   root to: 'schedules#index'
 
   get '/home' => 'pages#home', as: :home_page
+  get '/map' => 'pages#map', as: :event_map
 
   resources :sessions, :only => [:index, :show, :new, :create, :update, :edit] do
     collection do
