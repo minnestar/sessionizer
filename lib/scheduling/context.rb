@@ -1,5 +1,4 @@
 module Scheduling
-
   # ActiveModel access is slow enough that we create a stripped-down, in-memory version of the various
   # models we need to create a schedule, then run the annealer against this in-memory model.
   # This class sucks all the rooms, sessions and timeslots from the DB, and provides them during annealing.
@@ -8,13 +7,12 @@ module Scheduling
   # The Schedule class contains all the state we're trying to optimize.
   #
   class Context
-
     attr_reader :sessions, :timeslots, :rooms
 
     def initialize(event)
       @sessions = event.sessions.where(timeslot: nil).pluck(:id)
       @timeslots = event.timeslots.where(schedulable: true)
-      @rooms = event.rooms
+      @rooms = event.rooms.where(schedulable: true)
       @people_by_id = Hash.new { |h,id| h[id] = Person.new(self, id) }
 
       load_sets :attending,  Attendance

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150911192254) do
+ActiveRecord::Schema.define(version: 20150920192518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,11 +83,12 @@ ActiveRecord::Schema.define(version: 20150911192254) do
   add_index "presenter_timeslot_restrictions", ["timeslot_id", "participant_id"], name: "present_timeslot_participant_unique", unique: true, using: :btree
 
   create_table "rooms", force: :cascade do |t|
-    t.integer  "event_id",   null: false
-    t.string   "name",       null: false
+    t.integer  "event_id",                   null: false
+    t.string   "name",                       null: false
     t.integer  "capacity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "schedulable", default: true
   end
 
   create_table "sessions", force: :cascade do |t|
