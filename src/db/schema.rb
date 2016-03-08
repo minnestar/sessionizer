@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20150920192518) do
   add_index "attendances", ["session_id", "participant_id"], name: "index_attendances_on_session_id_and_participant_id", unique: true, using: :btree
 
   create_table "categories", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
   end
 
   add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
@@ -41,25 +41,25 @@ ActiveRecord::Schema.define(version: 20150920192518) do
   add_index "categorizations", ["category_id", "session_id"], name: "index_categorizations_on_category_id_and_session_id", unique: true, using: :btree
 
   create_table "events", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.date     "date",       null: false
+    t.string   "name",       limit: 255, null: false
+    t.date     "date",                   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "levels", force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 255
   end
 
   create_table "participants", force: :cascade do |t|
-    t.string   "name"
-    t.string   "email"
+    t.string   "name",              limit: 255
+    t.string   "email",             limit: 255
     t.text     "bio"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "crypted_password"
-    t.string   "persistence_token"
-    t.string   "perishable_token",  default: "", null: false
+    t.string   "crypted_password",  limit: 255
+    t.string   "persistence_token", limit: 255
+    t.string   "perishable_token",  limit: 255, default: "", null: false
   end
 
   add_index "participants", ["email"], name: "index_participants_on_email", unique: true, using: :btree
@@ -83,8 +83,8 @@ ActiveRecord::Schema.define(version: 20150920192518) do
   add_index "presenter_timeslot_restrictions", ["timeslot_id", "participant_id"], name: "present_timeslot_participant_unique", unique: true, using: :btree
 
   create_table "rooms", force: :cascade do |t|
-    t.integer  "event_id",                   null: false
-    t.string   "name",                       null: false
+    t.integer  "event_id",               null: false
+    t.string   "name",       limit: 255, null: false
     t.integer  "capacity"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -92,17 +92,17 @@ ActiveRecord::Schema.define(version: 20150920192518) do
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer  "participant_id",                 null: false
-    t.string   "title",                          null: false
-    t.text     "description",                    null: false
-    t.boolean  "panel",          default: false, null: false
-    t.boolean  "projector",      default: false, null: false
+    t.integer  "participant_id",                             null: false
+    t.string   "title",          limit: 255,                 null: false
+    t.text     "description",                                null: false
+    t.boolean  "panel",                      default: false, null: false
+    t.boolean  "projector",                  default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id"
     t.integer  "timeslot_id"
     t.integer  "room_id"
-    t.string   "summary"
+    t.string   "summary",        limit: 255
     t.integer  "level_id"
   end
 
@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 20150920192518) do
   add_index "settings", ["current_event_id"], name: "index_settings_on_current_event_id", using: :btree
 
   create_table "timeslots", force: :cascade do |t|
-    t.integer  "event_id",                   null: false
+    t.integer  "event_id",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "starts_at"
