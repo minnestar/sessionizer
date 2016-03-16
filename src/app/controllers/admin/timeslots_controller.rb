@@ -7,6 +7,10 @@ class Admin::TimeslotsController < Admin::AdminController
   end
 
   def new
+    # Set some useful defaults
+    @timeslot.starts_at = @event.date
+    @timeslot.ends_at = @event.date
+    @timeslot.title = "Session #{@event.sessions.count + 1}"
   end
 
   def edit
