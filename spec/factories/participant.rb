@@ -5,7 +5,7 @@ FactoryGirl.define do
       "person#{n}"
     end
 
-    email { "#{name}@example.com" }
+    email { "#{name.gsub(/\s/, '_')}@example.com" }
     password 'sekret'
 
     factory :joe do

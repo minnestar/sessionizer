@@ -1,6 +1,5 @@
 class Admin::SessionsController < Admin::AdminController
   before_filter :load_sessions, only: :index
-  before_filter :build_presenter, only: :create
   load_resource
   respond_to :html
 
@@ -27,15 +26,15 @@ class Admin::SessionsController < Admin::AdminController
   def build_presenter
     name = params[:session].delete(:name)
     # find exact match by name
-    @presenter = Participant.first_or_initialize(name: name).tap do |p|
+    Participant.where(name: name).first_or_initialize do |p|
       p.save(validate: false) if p.new_record?
     end
   end
 
   def create
+    @session.participant = build_presenter
     @session.attributes = session_params
     @session.event = Event.current_event
-    @session.participant = @presenter
     @session.timeslot_id = params[:session][:timeslot_id]
     @session.room_id = params[:session][:room_id]
 
