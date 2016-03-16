@@ -15,6 +15,17 @@ class Admin::EventsController < Admin::AdminController
     redirect_to admin_events_path
   end
 
+  def edit
+  end
+
+  def update
+    if @event.update(event_params)
+      redirect_to admin_events_path
+    else
+      render :edit
+    end
+  end
+
   private
 
   def event_params
