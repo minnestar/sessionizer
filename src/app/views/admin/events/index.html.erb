@@ -4,7 +4,7 @@
 
 <p>The most recent event is the current event for session creation.</p>
 
-<table>
+<table class="table">
   <tr>
     <th>Event Name</th>
     <th>Event Date</th>
@@ -14,10 +14,10 @@
 
   <% @events.each do |event| %>
     <tr>
-      <td valign="top"><%= event.name %></td>
-      <td valign="top"><%= event.date %></td>
-      <td valign="top"><%= event.timeslots.map(&:to_s).join("<br>").html_safe %></td>
-      <td valign="top"><%= link_to 'Manage timeslots', admin_event_timeslots_path(event) %></td>
+      <td><%= event.name %></td>
+      <td><%= event.date %></td>
+      <td><%= event.timeslots.count %> (<%= link_to 'manage', admin_event_timeslots_path(event) %>)</td>
+      <td><%= link_to "Edit", edit_admin_event_path(event) %></td>
     </tr>
   <% end %>
 </table>
