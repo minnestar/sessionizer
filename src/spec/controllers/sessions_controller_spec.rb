@@ -7,9 +7,10 @@ describe SessionsController do
   end
 
   let(:user) { create(:participant) }
+  let(:event) { create(:event) }
 
   context "with an existing session" do
-    let!(:session) { create(:session) }
+    let!(:session) { create(:session, event: event) }
 
     describe "update" do
       it "should not be updatable by someone who doesn't own it" do
@@ -66,6 +67,25 @@ describe SessionsController do
           expect(response).to be_successful
           expect(response.content_type).to eq('application/json')
           expect(response.body).to eq SessionsJsonBuilder.new.to_json([session])
+        end
+      end
+
+      describe "when there are multiple events" do
+        let!(:event2) { create :event }
+        let!(:joe) { create :joe }
+        let!(:session2) { create(:session, event: event2, participant: joe) }
+        before do
+          Settings.instance.update_attribute(:current_event_id, event.id)
+        end
+
+        it "should allow exporting previous events" do
+          get :index, { event_id: event2.id }
+          expect(response).to be_successful
+          expect(assigns[:sessions]).to eq [session2]
+
+          get :index, { event_id: event.id }
+          expect(response).to be_successful
+          expect(assigns[:sessions]).to eq [session]
         end
       end
     end
