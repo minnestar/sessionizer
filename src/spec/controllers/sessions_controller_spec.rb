@@ -38,6 +38,21 @@ describe SessionsController do
       end
     end
 
+    describe "export" do
+      it "should be successful" do
+        get :export
+        expect(response).to be_successful
+        expect(assigns[:sessions]).to eq [session]
+      end
+    end
+    describe "popularity" do
+      it "should be successful" do
+        get :popularity
+        expect(response).to be_successful
+        expect(assigns[:sessions]).to eq [session]
+      end
+    end
+
     describe "index" do
       it "should be successful" do
         get :index
@@ -46,10 +61,11 @@ describe SessionsController do
       end
 
       context "with JSON format" do
-        it "is successful" do
+        it "is successful and have all the things" do
           get :index, format: :json
           expect(response).to be_successful
           expect(response.content_type).to eq('application/json')
+          expect(response.body).to eq SessionsJsonBuilder.new.to_json([session])
         end
       end
     end
