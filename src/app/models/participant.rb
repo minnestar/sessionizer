@@ -43,6 +43,10 @@ class Participant < ActiveRecord::Base
     sessions_attending.include?(session)
   end
 
+  def github_profile_url
+    "https://github.com/#{self.github_profile_username}"
+  end
+
 end
 
 

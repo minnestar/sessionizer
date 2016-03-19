@@ -43,6 +43,7 @@ describe Admin::SessionsController do
     let(:category) { Category.last }
     before do
       Participant.destroy_all
+      create(:participant, name: "Joe Schmoe")
     end
 
     context "with valid values" do
