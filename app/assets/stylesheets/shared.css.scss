@@ -1,5 +1,6 @@
 $white: #fff;
 $grey: rgb(209, 217, 220);
+$minnebar-purple: #414D87;
 
 body {
   background-color: #fff;
@@ -40,7 +41,7 @@ a {
   img {
     border: none;
   }
-  color: #0000FF;
+  color: $minnebar-purple;
 }
 
 .clear {
@@ -219,4 +220,6 @@ h4 {
   font-size: 1.1em;
 }
 
-
+.smaller {
+  font-size: 0.8em;
+}
