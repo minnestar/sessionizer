@@ -28,7 +28,12 @@ class SessionsController < ApplicationController
   end
 
   def index
-    @sessions = Event.current_event.sessions
+    if params[:event_id].present?
+      @event = Event.find(params[:event_id])
+    else
+      @event = Event.current_event
+    end
+    @sessions = @event.sessions
     respond_with @sessions do |format|
       format.json {
         render json: SessionsJsonBuilder.new.to_json(@sessions.uniq.flatten)
