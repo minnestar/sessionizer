@@ -29,7 +29,12 @@ class SessionsController < ApplicationController
 
   def index
     @sessions = Event.current_event.sessions
-    respond_with(@sessions)
+    respond_with @sessions do |format|
+      format.json {
+        render json: SessionsJsonBuilder.new.to_json(@sessions.uniq.flatten)
+      }
+      format.html
+    end
   end
 
   def create
@@ -61,12 +66,12 @@ class SessionsController < ApplicationController
   end
 
   def export
-    @sessions = Event.current_event.sessions.all(:order => 'lower(title) asc')
+    @sessions = Event.current_event.sessions.all.order('lower(title) asc')
     render :layout => 'export'
   end
 
   def popularity
-    @sessions = Event.current_event.sessions.with_attendence_count.all(:order => "COALESCE(attendence_count, 0) desc")
+    @sessions = Event.current_event.sessions.with_attendence_count.all.order("COALESCE(attendence_count, 0) desc")
     render :layout => 'export'
   end
 

@@ -215,7 +215,7 @@ namespace :app do
       participant.email = FFaker::Internet.safe_email
       participant.password = 'standard'
       participant.bio = FFaker::Lorem.paragraph if [true, false].sample
-      participant.twitter_handle = Faker::Internet.user_name(participant.name) if [true, false].sample
+      participant.twitter_handle = FFaker::Internet.user_name(participant.name) if [true, false].sample
       participant.save!
       progress.increment
     end

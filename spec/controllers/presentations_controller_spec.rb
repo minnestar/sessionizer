@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe PresentationsController do
   let(:session) { create(:session) }
+
   describe "#index" do
     it "should be successful" do
       get :index, session_id: session

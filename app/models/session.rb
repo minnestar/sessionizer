@@ -83,6 +83,13 @@ class Session < ActiveRecord::Base
     presenters.map(&:name)
   end
 
+  def other_presenters
+    presenters.reject{ |p| p == self.participant }
+  end
+  def other_presenter_names
+    other_presenters.map(&:name)
+  end
+
 
   def attending?(user)
     return false if user.nil?
@@ -135,10 +142,15 @@ class Session < ActiveRecord::Base
     end
   end
 
+  def to_h
+    SessionsJsonBuilder.new.to_hash(self)
+  end
+
   private
 
   # assign the creator as the first presenter
   def create_presenter
     presentations.create(participant: participant)
   end
+
 end
