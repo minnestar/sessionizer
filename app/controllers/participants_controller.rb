@@ -43,7 +43,9 @@ class ParticipantsController < ApplicationController
   private
 
   def participant_params
-    params.require(controller_name.singularize).permit(:name, :email, :password, :bio)
+    params.require(controller_name.singularize).permit(:name, :email, :password,
+                                                       :bio, :github_profile_username,
+                                                       :twitter_handle)
   end
 
   def verify_owner

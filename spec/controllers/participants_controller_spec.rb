@@ -24,7 +24,10 @@ describe ParticipantsController do
 
   describe "#create" do
     it "should be successful" do
-      post :create, participant: { name: 'Alan Turing', email: 'tapewriter@example.org', password: 'infinite-memory' }
+      post :create, participant: { name: 'Alan Turing', 
+                                   email: 'tapewriter@example.org', 
+                                   password: 'infinite-memory'
+      }
       expect(response).to redirect_to root_path
       expect(flash[:notice]).to eq "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
     end
@@ -39,15 +42,21 @@ describe ParticipantsController do
   end
 
   context "when the logged in user operates on someone elses record" do
+    let(:luke) { create(:luke) }
+    before do
+      activate_authlogic
+      ParticipantSession.create(luke)
+    end
+      
     describe "#edit" do
-      it "should be successful" do
+      it "should be not be allowed" do
         get :edit, id: participant
         expect(response).to be_redirect
       end
     end
 
     describe "#update" do
-      it "should be successful" do
+      it "will not be allowed" do
         put :update, id: participant, participant: { name: 'Alan Kay' }
         expect(response).to be_redirect
         expect(participant.reload.name).to_not eq 'Alan Kay'
@@ -58,12 +67,13 @@ describe ParticipantsController do
   context "when the logged in user operates on their own record" do
     before do
       activate_authlogic
-      ParticipantSession.create(participant)
+      ParticipantSession.create(joe)
     end
+    let(:joe) { create(:joe) }
 
     describe "#edit" do
       it "should be successful" do
-        get :edit, id: participant
+        get :edit, id: joe
         expect(response).to be_successful
         expect(assigns(:participant)).to be_kind_of Participant
       end
@@ -71,9 +81,21 @@ describe ParticipantsController do
 
     describe "#update" do
       it "should be successful" do
-        put :update, id: participant, participant: { name: 'Alan Kay' }
-        expect(response).to redirect_to participant
-        expect(participant.reload.name).to eq 'Alan Kay'
+        put :update, id: joe, participant: { name: 'schmoe, joe' }
+        expect(response).to redirect_to joe
+        expect(joe.reload.name).to eq 'schmoe, joe'
+      end
+
+      describe "more attributes are not required" do
+        it "should be successful" do
+          put :update, id: joe, participant: {
+              twitter_handle: 'schmoe',
+              github_profile_username: 'jschmoe'
+            }
+          expect(response).to be_redirect
+          expect(joe.reload.twitter_handle).to eq 'schmoe'
+          expect(joe.github_profile_username).to eq 'jschmoe'
+        end
       end
     end
   end

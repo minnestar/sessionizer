@@ -1,0 +1,35 @@
+.timeslot{ id: "timeslot_#{timeslot.id}" }
+  %h2
+    .time
+      = timeslot.date_range.to_s(with_day: false)
+    .title
+      = timeslot.title
+
+  - if timeslot.sessions.present?
+    .sessions
+      - session_columns_for_slot(timeslot) do |column|
+        .column
+          - column.each do |session|
+
+            .session
+              .header
+                - map_location = asset_path("maps/#{session.room.name.downcase}.png")
+                .room{:href =>  "#{map_location}" }
+                  = session.room.name
+
+                %h3.title= session.title
+
+                .presenters
+                  - session.presenters.each do |presenter|
+                    .presenter= presenter.name
+
+              .description
+                = markdown session.description
+                .bios
+                  - session.presenters.each do |presenter|
+                    .bio
+                      .name= presenter.name
+                      = markdown(presenter.bio || "No bio.")
+
+              .summary= session.summary
+
