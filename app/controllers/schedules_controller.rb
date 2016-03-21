@@ -1,12 +1,12 @@
 class SchedulesController < ApplicationController
   def index
-    unless Settings.show_schedule?
+    unless Settings.show_schedule? || params[:force]
       redirect_to home_page_path
       return
     end
-
-    @event = Event.current_event :include => { :timeslots => { :sessions => [:room, :presenters] } }
-    render :layout => 'schedule'
+    use_cache = !params[:force]
+    @event = schedule(event(use_cache))
+    render layout: 'schedule'
   end
 
   def ical
@@ -55,4 +55,22 @@ class SchedulesController < ApplicationController
     render :text => cal.to_ical, :content_type => 'text/calendar'
   end
 
+  protected
+
+  def schedule(event)
+    Rails.cache.fetch("#{event.cache_key}/schedule") do
+      Event.includes(timeslots: { sessions: [:room, :presenters] }).find(event.id)
+    end
+  end
+
+  # @param [TrueClass, FalseClass] cached Fetch the event from the cache?
+  def event(cached)
+    if cached
+      Rails.cache.fetch("current_event", expires_in: 10.minutes) do
+        Event.current_event
+      end
+    else
+      Event.current_event
+    end
+  end
 end
