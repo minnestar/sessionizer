@@ -24,7 +24,14 @@ module Scheduling
     #
     def best_possible_score
       slot_count = @ctx.timeslots.size
-      [slot_count * slot_value(size.to_f / slot_count), 1.0].min
+      even_split_floor = size / slot_count
+      big_slots = size % slot_count
+      small_slots = slot_count - big_slots
+      [
+        small_slots * slot_value(even_split_floor)    + 
+          big_slots * slot_value(even_split_floor + 1),
+        1.0
+      ].min
     end
 
     # The score if everything is in the same timeslot.
@@ -32,6 +39,8 @@ module Scheduling
     def worst_possible_score
       1.0 / size
     end
+
+    # TODO: random_schedule_score
 
     def score(schedule)
       return 1 if @sessions.empty?  # prevents divide by zero below
