@@ -36,7 +36,7 @@ class Participant < ActiveRecord::Base
 
   def deliver_password_reset_instructions!
     reset_perishable_token!
-    Notifier.password_reset_instructions(self).deliver!
+    Notifier.password_reset_instructions(self).deliver_now!
   end
 
   def attending_session?(session)
