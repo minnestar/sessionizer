@@ -16,6 +16,8 @@ describe SessionsJsonBuilder do
       expect(h[:presenter_twitter_handle]).to be session.participant.twitter_handle
       expect(h[:presenter_github_username]).to be session.participant.github_profile_username
       expect(h[:presenter_github_og_image]).to be session.participant.github_og_image
+      expect(session.participant.bio).to_not be_nil
+      expect(h[:presenter_bio]).to be session.participant.bio
       expect(h[:session_title]).to be session.title
       expect(h[:summary]).to be session.summary
       expect(h[:description]).to be session.description
