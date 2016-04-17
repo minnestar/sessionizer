@@ -1,11 +1,13 @@
 <% title('All Sessions') %>
 (most recently added first)
-<div class="row">
-  <p><%= add_sessions_button %></p>
-  <div class="column grid_10" style="margin-left:0px">
-    <ul class="sessionsList">
-      <%= render @sessions %>
-    </ul>
-  </div>
-</div>
 
+<% cache [Session.maximum(:updated_at), current_participant] do %>
+  <div class="row">
+    <p><%= add_sessions_button %></p>
+    <div class="column grid_10" style="margin-left:0px">
+      <ul class="sessionsList">
+        <%= render @sessions %>
+      </ul>
+    </div>
+  </div>
+<% end %>
