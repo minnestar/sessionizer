@@ -12,7 +12,7 @@ feature "Gauging interest in a session" do
 
   scenario "As a guest, I want to express my interest", js: true do
 
-    click_link "A neat talk"
+    click_link "A neat talk", match: :first
     page.find("#attend").click
 
     fill_in "Name", with: "Dennis Ritchie"
@@ -28,7 +28,7 @@ feature "Gauging interest in a session" do
   scenario "As a signed in user I want to express my interest", js: true do
     sign_in_user user
 
-    click_link "A neat talk"
+    click_link "A neat talk", match: :first
     page.find("#attend").click
 
     expect(page).to have_content 'Thanks for your interest in this session.'

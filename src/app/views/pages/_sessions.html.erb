@@ -2,10 +2,16 @@
 
     <h2>A Sampling of Sessions</h2>
     <ul class="sessionsList">
+      <%= render @random_sessions %>
+    </ul>
+    <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
+
+    <h2>Recently Added</h2>
+    <ul class="sessionsList">
       <%= render @recent_sessions %>
     </ul>
-
     <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
+    
     <div class="row">
       <%= render 'category_grid', category: @categories.first, grid: 3 %>
       <%= render 'category_grid', category: @categories.second, grid: 3 %>

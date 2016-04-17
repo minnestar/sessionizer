@@ -21,7 +21,9 @@ class Session < ActiveRecord::Base
 
   scope :for_current_event, -> { where(event_id: Event.current_event.id) }
 
-  scope :random_order, -> { order('random()') }  # Slow, but fast enough when only ~100 rows
+  scope :recent, -> { order('created_at desc') }
+  
+  scope :random_order, -> { order('random()') }
 
   validates_presence_of :description
   validates_presence_of :event_id
