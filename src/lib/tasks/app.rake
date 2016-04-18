@@ -240,6 +240,57 @@ namespace :app do
     end
   end
 
+  desc 'print a summary of data that will affect the quality of the generated schedule'
+  task :analyze_scheduler_input_quality => :environment do
+    def frequencies(elems)
+      elems.each_with_object(Hash.new(0)) do |elem, counts|
+        counts[elem] += 1
+      end
+    end
+
+    def frequency_dump(values)
+      freqs = frequencies(values)
+      max = freqs.map(&:last).max
+      freqs.sort_by(&:first).each do |value, count|
+        print "         %3d   %3d " % [value, count]
+        puts '━' * (60.0 * count / max).round
+      end
+    end
+
+    event = if event_id = ENV['event']
+      Event.find(event_id)
+    else
+      Event.current_event
+    end
+
+    participant_count = event.participants.uniq.count
+    vote_counts = frequencies(event.attendances.map(&:participant_id))
+    multivoting_count = vote_counts.select { |_, count| count > 1 }.count
+    multivoting_rate = 100.0 * multivoting_count / participant_count
+
+    puts "Stats for #{event.name}"
+    puts
+    puts "#{event.sessions.count} sessions"
+    puts "#{participant_count} participants who voted"
+    puts "#{event.attendances.count} attendances"
+    puts
+    puts "The biggie:"
+    puts "#{multivoting_count} participants (#{"%1.1f" % multivoting_rate}% of those voting) expressed interest in multiple sessions"
+    puts
+    puts "Distribution of number of sessions of interest"
+    puts "(How many people expressed interest in n sessions?)"
+    puts
+    puts "    sessions | people"
+    frequency_dump(vote_counts.values)
+    puts
+    puts "Distribution of voting windows"
+    puts "(How many sessions have been available for voting for at least n days?)"
+    puts
+    puts "        days | sessions"
+    frequency_dump(
+      event.sessions.map { |s| ((Time.now - s.created_at) / 1.day).floor })
+  end
+
   desc 'Reset and hydrate the database with dummy data.'
   task :make_believe => :environment do
     require 'ffaker'
