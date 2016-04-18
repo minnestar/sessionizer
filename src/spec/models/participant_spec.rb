@@ -8,6 +8,12 @@ describe Participant do
     it "can be constructed with a github username" do
       expect(luke.github_profile_url).to eq "https://github.com/look"
     end
+
+    it "pulls github og image if the github username is changed" do
+      luke.github_profile_username = 'lof'
+      expect(luke).to receive(:slurp_github_og_info)
+      luke.save
+    end
   end
 
   describe "timeslot restrictions" do

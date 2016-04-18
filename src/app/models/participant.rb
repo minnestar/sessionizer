@@ -1,3 +1,6 @@
+require 'nokogiri'
+require 'open-uri'
+
 class Participant < ActiveRecord::Base
   has_many :sessions
   has_many :attendances
@@ -8,6 +11,8 @@ class Participant < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
+
+  before_save :slurp_github_og_info, if: :github_profile_username_changed?
 
   acts_as_authentic do |config|
     config.crypto_provider = Authlogic::CryptoProviders::BCrypt
@@ -45,6 +50,26 @@ class Participant < ActiveRecord::Base
 
   def github_profile_url
     "https://github.com/#{self.github_profile_username}"
+  end
+
+  def slurp_github_og_info
+    logger.debug "slurp github og info"
+
+    return if self.github_profile_username.blank?
+
+    begin
+      doc = Nokogiri::HTML(open(github_profile_url))
+
+      nodes = doc.xpath("//head/meta [@property='og:image']")
+      self.github_og_image = nodes.first.attributes['content'].value
+
+      nodes = doc.xpath("//head/meta [@property='og:url']")
+      self.github_og_url = nodes.first.attributes['content'].value
+
+    rescue StandardError => err
+      logger.error err.message
+    end
+
   end
 
 end
