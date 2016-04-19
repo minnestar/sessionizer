@@ -23,27 +23,54 @@ module Scheduling
     # The score if sessions are evenly distributed among all available timeslots.
     #
     def best_possible_score
-      slot_count = @ctx.timeslots.size
-      even_split_floor = size / slot_count
-      big_slots = size % slot_count
-      small_slots = slot_count - big_slots
-      [
-        small_slots * slot_value(even_split_floor)    + 
-          big_slots * slot_value(even_split_floor + 1),
-        1.0
-      ].min
+      return 1 if empty?
+
+      @best_possible_score ||= begin
+        slot_count = @ctx.timeslots.size
+        even_split_floor = size / slot_count
+        big_slots = size % slot_count
+        small_slots = slot_count - big_slots
+        [
+          small_slots * slot_value(even_split_floor)    + 
+            big_slots * slot_value(even_split_floor + 1),
+          1.0
+        ].min
+      end
     end
 
     # The score if everything is in the same timeslot.
     #
     def worst_possible_score
+      return 1 if empty?
       1.0 / size
     end
 
-    # TODO: random_schedule_score
+    # The average score of a randomly assigned schedule. This is a good baseline
+    # for what the scheduler is trying to improve on — more so than worst_possible_score,
+    # which tends to be far worse than any actual schedule would generate.
+    #
+    def random_schedule_score
+      return 1 if empty?
+
+      slot_count = @ctx.timeslots.size
+
+      @@random_schedule_scores ||= {}
+      @@random_schedule_scores[[slot_count, size]] ||= begin
+        # Someone more knowledgeable than me can probably find
+        # a closed form for this. But brute force works!
+        trials = 1000
+        total = 0
+        trials.times do
+          counts = [0] * slot_count
+          size.times { counts[rand(slot_count)] += 1 }
+          total += counts.sum { |c| slot_value(c) }
+        end
+        total / trials.to_f
+      end
+    end
 
     def score(schedule)
-      return 1 if @sessions.empty?  # prevents divide by zero below
+      return 1 if empty?
       
       slot_session_count = Hash.new(0)
       penalty = 0
@@ -63,6 +90,10 @@ module Scheduling
 
     def size
       @sessions.size
+    end
+
+    def empty?
+      @sessions.empty?
     end
 
   private
