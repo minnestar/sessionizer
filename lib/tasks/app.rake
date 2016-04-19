@@ -256,7 +256,7 @@ namespace :app do
       freqs = frequencies(values)
       max = freqs.map(&:last).max
       freqs.sort_by(&:first).each do |value, count|
-        print "         %3d   %3d " % [value, count]
+        print "       %3d   %3d " % [value, count]
         puts '━' * (60.0 * count / max).round
       end
     end
@@ -281,18 +281,60 @@ namespace :app do
     puts "The biggie:"
     puts "#{multivoting_count} participants (#{"%1.1f" % multivoting_rate}% of those voting) expressed interest in multiple sessions"
     puts
+    
     puts "Distribution of number of sessions of interest"
     puts "(How many people expressed interest in n sessions?)"
     puts
-    puts "    sessions | people"
+    puts "  sessions | people"
     frequency_dump(vote_counts.values)
     puts
+    
     puts "Distribution of voting windows"
     puts "(How many sessions have been available for voting for at least n days?)"
     puts
-    puts "        days | sessions"
+    puts "      days | sessions"
     frequency_dump(
       event.sessions.map { |s| ((Time.now - s.created_at) / 1.day).floor })
+    puts
+    
+    participants = event.participants.includes(:sessions_attending)
+
+    puts "Most popular sessions"
+    puts
+    event.sessions
+      .select('
+        sessions.title,
+        (select count(*) from attendances where session_id = sessions.id) as attendance_count')
+      .order('attendance_count desc')
+      .limit(24)
+      .each do |session|
+        puts "    %3d %s" % [session.attendance_count, session.title]
+      end
+    puts
+
+    puts "Most common pairwise attendance overlaps"
+    puts
+    pairs = Attendance.connection.select_rows("
+        select a1.session_id s1,
+               a2.session_id s2,
+               count(*)
+          from attendances a1,
+               attendances a2,
+               sessions s1,
+               sessions s2
+         where a1.participant_id = a2.participant_id
+           and a1.session_id < a2.session_id
+           and a1.session_id = s1.id
+           and a2.session_id = s2.id
+           and s1.event_id = #{event.id} -- ugh...how do binds work w/select_rows?!?
+           and s2.event_id = #{event.id}
+      group by s1, s2
+      order by count desc
+         limit 36")
+    pairs.each do |s1_id, s2_id, count|
+      s1, s2 = [s1_id, s2_id].map { |id| Session.find(id) }
+      puts "    %3d  %-36.36s  +  %-36.36s" % [count, s1.title, s2.title]
+    end
   end
 
   desc 'Reset and hydrate the database with dummy data.'
