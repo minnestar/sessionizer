@@ -67,12 +67,16 @@ module Scheduling
       score(:presenting)
     end
 
-    # Gives lower & upper bounds on the possible range of attendance_score
-    def attendance_score_bounds
-      best_score  = ctx.people.sum { |p| p.attending.best_possible_score }
-      worst_score = ctx.people.sum { |p| p.attending.worst_possible_score }
-      count = ctx.people.size
-      (worst_score / count) .. (best_score / count)
+    # Gives bounds on the possible range of attendance_score. Returns [best, random, worst] scores.
+    def attendance_score_metrics
+      count = ctx.people.size.to_f
+      %i(
+        worst_possible_score
+        random_schedule_score
+        best_possible_score
+      ).map do |metric|
+        ctx.people.sum { |p| p.attending.send(metric) } / count
+      end
     end
 
   private
@@ -171,9 +175,13 @@ module Scheduling
     end
 
     def inspect
-      s = "Schedule"
-      s << " | average participant is #{format_percent attendance_score} satisfied with schedule"
-      s << " | presenter score = #{format_percent presenter_score} (we want 100)\n"
+      worst_score, random_score, best_score = self.attendance_score_metrics
+      attendance_score_scaled = (attendance_score - random_score) / (best_score - random_score)
+
+      s = "Schedule\n"
+      s << "| quality = #{format_percent attendance_score_scaled} (100% is unachievable; > 50% is good)\n"
+      s << "| satisfaction score = #{format_percent attendance_score} of possible value ()\n"
+      s << "| presenter score    = #{format_percent presenter_score} (if < 100 then speakers are double-booked)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
@@ -181,13 +189,21 @@ module Scheduling
     end
 
     def inspect_bounds
-      possible_range = self.attendance_score_bounds
-      s = "Given the number of timeslots and sessions of interest, the average participant cannot possibly be...\n"
-      s << "    less than #{'%03.3f' % ((possible_range.begin) * 100)}%\n"
-      s << "    more than #{'%03.3f' % ((possible_range.end  ) * 100)}%\n"
-      s << "...satisfied with the schedule, whatever it is."
-      s << " (Note that these are just limits on what is possible."
-      s << " Neither bounds is actually likely to be achievable.)"
+      worst_score, random_score, best_score = self.attendance_score_metrics
+      s =  "If we could give everyone a different schedule optimized just for them,\n"
+      s << "the schedule quality could be...\n"
+      s << "\n"
+      s << "    at worst #{'%03.3f' % ((worst_score) * 100)}%\n"
+      s << "     at best #{'%03.3f' % ((best_score ) * 100)}%\n"
+      s << "\n"
+      s << "Note that these are outer limits on what is possible.\n"
+      s << "Neither the best nor the worst score is likely to be achievable.\n"
+      s << "\n"
+      s << "If we pick a schedule at random, its score will be about\n"
+      s << "\n"
+      s << "             #{'%03.3f' % ((random_score) * 100)}%\n"
+      s << "\n"
+      s << "...and that's what we're trying to improve on.\n"
     end
 
   private
