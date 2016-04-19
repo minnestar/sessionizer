@@ -175,7 +175,7 @@ namespace :app do
 
   # We can schedule certain sessions into blocks before running
   # the scheduler. These sessions will not get scheduled elsewhere.
-  # However the scheduler will pay no-attention to them, so you probably
+  # However the scheduler will pay no attention to them, so you probably
   # only want to place them into Timeslots where schedulable is false.
   # For example you may place a "Presenters Luncheon, rm 123" during the
   # "Lunch" timeslot.
@@ -266,12 +266,6 @@ namespace :app do
       end
     end
 
-    event = if event_id = ENV['event']
-      Event.find(event_id)
-    else
-      Event.current_event
-    end
-
     participant_count = event.participants.uniq.count
     vote_counts = frequencies(event.attendances.map(&:participant_id))
     multivoting_count = vote_counts.select { |_, count| count > 1 }.count
@@ -308,17 +302,26 @@ namespace :app do
     puts
     
     participants = event.participants.includes(:sessions_attending)
+  end
 
+  task :analyze_session_popularity => :environment do
     puts "Most popular sessions"
     puts
+    timeslots = event.timeslots.where(schedulable: true).order(:starts_at)
     event.sessions
       .select('
+        sessions.id,
         sessions.title,
+        sessions.timeslot_id,
         (select count(*) from attendances where session_id = sessions.id) as attendance_count')
-      .order('attendance_count desc')
-      .limit(24)
+      .order('attendance_count desc, id')
+      .limit(64)
       .each do |session|
-        puts "    %3d %s" % [session.attendance_count, session.title]
+        puts "%s %3d %s" % [
+          timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
+          session.attendance_count,
+          session.title
+        ]
       end
     puts
 
@@ -340,10 +343,17 @@ namespace :app do
            and s2.event_id = #{event.id}
       group by s1, s2
       order by count desc
-         limit 36")
+         limit 128")
     pairs.each do |s1_id, s2_id, count|
       s1, s2 = [s1_id, s2_id].map { |id| Session.find(id) }
-      puts "    %3d  %-36.36s  +  %-36.36s" % [count, s1.title, s2.title]
+      status = if !s1.timeslot_id || !s2.timeslot_id
+        '(unscheduled)'
+      elsif s1.timeslot_id == s2.timeslot_id
+        'CONFLICT'
+      else
+        ''
+      end
+      puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title, s2.title, status]
     end
   end
 
@@ -409,6 +419,17 @@ namespace :app do
     end
 
   end
+
+private
+
+  def event
+    @event ||= if event_id = ENV['event']
+      Event.find(event_id)
+    else
+      Event.current_event
+    end
+  end
+
 end
 
 
