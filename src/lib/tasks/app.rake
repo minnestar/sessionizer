@@ -257,7 +257,12 @@ namespace :app do
       max = freqs.map(&:last).max
       freqs.sort_by(&:first).each do |value, count|
         print "       %3d   %3d " % [value, count]
-        puts '━' * (60.0 * count / max).round
+        print '━' * (60.0 * count / max).round
+        if block_given?
+          print ' '
+          yield value, count
+        end
+        puts
       end
     end
 
@@ -286,9 +291,14 @@ namespace :app do
     puts "(How many people expressed interest in n sessions?)"
     puts
     puts "  sessions | people"
-    frequency_dump(vote_counts.values)
+    frequency_dump(vote_counts.values) do |vote_count, freq|
+      if freq == 1
+        participant_id = vote_counts.select { |_, count| vote_count == count }.first.first
+        print "  (#{Participant.find(participant_id).name})"
+      end
+    end
     puts
-    
+
     puts "Distribution of voting windows"
     puts "(How many sessions have been available for voting for at least n days?)"
     puts
