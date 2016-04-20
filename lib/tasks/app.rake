@@ -147,6 +147,8 @@ namespace :app do
     else
       presenter.restrict_after(time, weight)
     end
+    puts "#{presenter.name} now excluded from following timeslots:"
+    puts presenter.presenter_timeslot_restrictions.map(&:timeslot).join("\n")
   end
 
   desc 'show restrictions for current event'
