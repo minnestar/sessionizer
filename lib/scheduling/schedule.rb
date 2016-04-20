@@ -12,7 +12,11 @@ module Scheduling
       @slots_by_session = {}                            # map from session to timeslot
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
 
-      fill_schedule!(event.sessions.includes(:timeslot).to_a)
+      fill_schedule!(
+        event.sessions
+          .where(manually_scheduled: false)
+          .includes(:timeslot)
+          .to_a)
     end
 
     def initialize_copy(source)  # deep copy; called by dup
