@@ -59,23 +59,26 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      { :name => 'Theater', :capacity => 250 },
-      { :name => 'Nokomis', :capacity => 100 },
-      { :name => 'Minnetonka', :capacity => 100 },
-      { :name => 'Harriet', :capacity => 100 },
-      { :name => 'Calhoun', :capacity => 100 },
-      { :name => 'Brand', :capacity => 75 },
-      { :name => 'Proverb-Edison', :capacity => 48 },
-      { :name => 'Zeke Landres', :capacity => 40 },
-      { :name => 'Learn', :capacity => 24 },
-      { :name => 'Challenge', :capacity => 24 }, 
-      { :name => 'Discovery', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Tackle', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Stephen Leacock', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Gandhi', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Louis Pasteur', :capacity => 18 }, 
-      #{ :name => 'Texas', :capacity => 16 }, 
-      #{ :name => 'California', :capacity => 16 }
+      { name: 'Theater',         capacity: 250 },
+      { name: 'Nokomis',         capacity: 100 },
+      { name: 'Minnetonka',      capacity: 100 },
+      { name: 'Harriet',         capacity: 100 },
+      { name: 'Calhoun',         capacity: 100 },
+      # { name: 'Brand',           capacity: 75 },
+      { name: 'Proverb-Edison',  capacity: 48 },
+      { name: 'Zeke Landres',    capacity: 40 },
+      { name: 'Learn',           capacity: 24 },
+      { name: 'Challenge',       capacity: 24 }, 
+      { name: 'Discovery',       capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Tackle',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Louis Pasteur',   capacity: 18 }, 
+      { name: 'Texas',           capacity: 16 }, 
+      # { name: 'California',      capacity: 16 },
+      { name: 'Florida',         capacity: 12 }, # TV, no projector
+      { name: 'George',          capacity: 12 }, # TV, no projector
+      { name: 'Kansas',          capacity: 10 }, # TV, no projector
     ]
 
     rooms.each do |room|
