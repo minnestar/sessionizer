@@ -308,19 +308,21 @@ namespace :app do
     puts "Most popular sessions"
     puts
     timeslots = event.timeslots.where(schedulable: true).order(:starts_at)
+    puts "#{' ' * timeslots.count} raw est title                                    presenters"
+    puts "#{' ' * timeslots.count} --- --- ---------------------------------------- ----------"
     event.sessions
       .select('
-        sessions.id,
-        sessions.title,
-        sessions.timeslot_id,
+        sessions.*,
         (select count(*) from attendances where session_id = sessions.id) as attendance_count')
       .order('attendance_count desc, id')
       .limit(64)
       .each do |session|
-        puts "%s %3d %s" % [
+        puts "%s %3d %3d %-40.40s %s" % [
           timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
           session.attendance_count,
-          session.title
+          session.estimated_interest,
+          session.title,
+          session.presenters.map(&:email).join(", ")
         ]
       end
     puts
