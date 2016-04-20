@@ -47,8 +47,8 @@ namespace :app do
 
     event.timeslots.create!(
       title: "Beer Me!",
-      starts_at: Time.zone.parse("#{event.date.to_s} 4:45:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 7:00:00"),
+      starts_at: Time.zone.parse("#{event.date.to_s} 16:45:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 19:00:00"),
       schedulable: false
     )
   end
