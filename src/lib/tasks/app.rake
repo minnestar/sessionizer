@@ -222,7 +222,7 @@ namespace :app do
       export = {
         sessions: Hash[
           Event.current_event.sessions.map do |session|
-            [session.id, { slot: session.timeslot.id, room: session.room.id }]
+            [session.id, { slot: session.timeslot_id, room: session.room_id }]
           end
         ]
       }
@@ -236,8 +236,8 @@ namespace :app do
     Event.transaction do
       export['sessions'].each do |sid, opts|
         session = Session.find(sid)
-        session.timeslot = Timeslot.find(opts['slot'])
-        session.room = Room.find(opts['room'])
+        session.timeslot = (Timeslot.find(opts['slot']) if opts['slot'])
+        session.room = (Room.find(opts['room']) if opts['room'])
         puts "#{session.timeslot} #{session.title} [#{session.room.name}]"
         session.save!
       end
