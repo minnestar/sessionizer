@@ -192,8 +192,8 @@ namespace :app do
 
     puts
     puts "Assigning sessions to time slots..."
-    max_iter         = ((quality ** 0.5) * 2000).ceil
-    repetition_count =  (quality ** 0.5).ceil
+    max_iter         = (quality ** 0.5 * 6000).ceil
+    repetition_count = (quality ** 0.5 / 3).ceil
     puts
     puts "Quality = #{quality}:    (adjust using 'quality' env var)"
     puts "   #{repetition_count} cooling cycle(s)"
