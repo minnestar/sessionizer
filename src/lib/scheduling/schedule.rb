@@ -163,7 +163,7 @@ module Scheduling
           puts slot
           sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.estimated_interest }
           sessions.zip(rooms_by_capacity) do |session, room|
-            puts "    #{session.categories.map(&:name).inspect} #{session.title}" +
+            puts "    #{session.id} #{session.title}" +
                  " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
                  " in #{room.name} (#{room.capacity})"
             session.timeslot = slot
