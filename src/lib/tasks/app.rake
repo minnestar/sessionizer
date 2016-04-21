@@ -2,17 +2,18 @@ namespace :app do
 
   desc 'create default timeslots for the most recent event'
   task create_timeslots: :environment do
-    session_length = 50.minutes
+    session_length = 45.minutes
     event = Event.current_event
     event.timeslots.destroy_all
 
-    start_times = ["09:15",
-                   "10:15",
-                   "11:15",
-                   "13:45",
-                   "14:45",
-                   "15:45"]
+    start_times = ["09:00",
+                   "09:55",
+                   "10:50",
+                   "11:45",
 
+                   "13:45",
+                   "14:40",
+                   "15:35" ]
 
     start_times.each_with_index do |st, idx|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
@@ -34,21 +35,21 @@ namespace :app do
     event.timeslots.create!(
       title: "Arrive/Breakfast",
       starts_at: Time.zone.parse("#{event.date.to_s} 8:00:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 8:45:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 8:35:00"),
       schedulable: false
     )
 
     event.timeslots.create!(
       title: "Session 0",
-      starts_at: Time.zone.parse("#{event.date.to_s} 8:45:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 9:05:00"),
+      starts_at: Time.zone.parse("#{event.date.to_s} 8:35:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 8:55:00"),
       schedulable: false
     )
 
     event.timeslots.create!(
       title: "Beer Me!",
-      starts_at: Time.zone.parse("#{event.date.to_s} 4:45:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 7:00:00"),
+      starts_at: Time.zone.parse("#{event.date.to_s} 16:45:00"),
+      ends_at: Time.zone.parse("#{event.date.to_s} 19:00:00"),
       schedulable: false
     )
   end
@@ -59,23 +60,26 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      { :name => 'Theater', :capacity => 250 },
-      { :name => 'Nokomis', :capacity => 100 },
-      { :name => 'Minnetonka', :capacity => 100 },
-      { :name => 'Harriet', :capacity => 100 },
-      { :name => 'Calhoun', :capacity => 100 },
-      { :name => 'Brand', :capacity => 75 },
-      { :name => 'Proverb-Edison', :capacity => 48 },
-      { :name => 'Zeke Landres', :capacity => 40 },
-      { :name => 'Learn', :capacity => 24 },
-      { :name => 'Challenge', :capacity => 24 }, 
-      { :name => 'Discovery', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Tackle', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Stephen Leacock', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Gandhi', :capacity => 23 }, # Lower so smaller sessions get put in there: no video recording
-      { :name => 'Louis Pasteur', :capacity => 18 }, 
-      #{ :name => 'Texas', :capacity => 16 }, 
-      #{ :name => 'California', :capacity => 16 }
+      { name: 'Theater',         capacity: 250 },
+      { name: 'Nokomis',         capacity: 100 },
+      { name: 'Minnetonka',      capacity: 100 },
+      { name: 'Harriet',         capacity: 100 },
+      { name: 'Calhoun',         capacity: 100 },
+      # { name: 'Brand',           capacity: 75 },
+      { name: 'Proverb-Edison',  capacity: 48 },
+      { name: 'Zeke Landres',    capacity: 40 },
+      { name: 'Learn',           capacity: 24 },
+      { name: 'Challenge',       capacity: 24 }, 
+      { name: 'Discovery',       capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Tackle',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      { name: 'Louis Pasteur',   capacity: 18 }, 
+      { name: 'Texas',           capacity: 16 }, 
+      # { name: 'California',      capacity: 16 },
+      { name: 'Florida',         capacity: 12 }, # TV, no projector
+      { name: 'George',          capacity: 12 }, # TV, no projector
+      { name: 'Kansas',          capacity: 10 }, # TV, no projector
     ]
 
     rooms.each do |room|
