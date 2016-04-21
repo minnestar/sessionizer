@@ -58,7 +58,7 @@ class SchedulesController < ApplicationController
   protected
 
   def schedule(event)
-    Rails.cache.fetch("#{event.cache_key}/schedule") do
+    Rails.cache.fetch("#{event.cache_key}/schedule", expires_in: 10.minutes) do
       Event.includes(timeslots: { sessions: [:room, :presenters] }).find(event.id)
     end
   end
