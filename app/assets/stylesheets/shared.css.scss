@@ -2,6 +2,15 @@ $white: #fff;
 $grey: rgb(209, 217, 220);
 $minnebar-purple: #414D87;
 
+@mixin columns($width, $gap) {
+  column-width: $width;
+  column-gap: $gap;
+  -moz-column-width: $width;
+  -moz-column-gap: $gap;
+  -webkit-column-width: $width;
+  -webkit-column-gap: $gap;
+}
+
 body {
   background-color: #fff;
   font-family: 'Helvetica Neue', Verdana, Helvetica, sans-serif;
@@ -120,13 +129,16 @@ ul.sessionsList {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  @include columns(24em, 1em);
   li.attending {
     background: image-url("minnebar.png") no-repeat 0 .1em;
   }
   li {
-    margin: 16px 0;
+    margin: 0.6em 0;
     padding-left: 1.8em;
     letter-spacing: -0.05em;
+    display: inline-block;  // prevent column break
+    width: 100%;
     a {
       &:link, &:visited {
         font: 700 1.2em / 1.2em;
