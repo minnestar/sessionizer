@@ -19,7 +19,11 @@ class Session < ActiveRecord::Base
 
   scope :with_attendence_count, -> { select('*').joins("LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id") }
 
-  scope :for_current_event, lambda { where(event_id: Event.current_event.id) }
+  scope :for_current_event, -> { where(event_id: Event.current_event.id) }
+
+  scope :recent, -> { order('created_at desc') }
+  
+  scope :random_order, -> { order('random()') }
 
   validates_presence_of :description
   validates_presence_of :event_id
