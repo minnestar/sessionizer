@@ -91,45 +91,7 @@
       = @event.name
       Session Schedule
   .timeslots
-<<<<<<< a28a327892b5ec6de93b72da92f4f76f22072803
     = render @event.timeslots
-=======
-    - @event.timeslots.each_with_index do |slot, idx|
-      .timeslot{ id: "timeslot_#{slot.id}", data: { day: slot.starts_at.to_date.strftime('%A') } }
-        %h2
-          .time
-            = slot.date_range.to_s(with_day: true)
-          .title
-            = slot.title
-
-        - if slot.sessions.present?
-          .sessions
-            - session_columns_for_slot(slot) do |column|
-              .column
-                - column.each do |session|
-
-                  .session
-                    .header
-                      - map_location = asset_path("maps/#{session.room.name.downcase}.png")
-                      .room{:href =>  "#{map_location}" }
-                        = session.room.name
-
-                      %h3.title= session.title
-
-                      .presenters
-                        - session.presenters.each do |presenter|
-                          .presenter= presenter.name
-
-                    .description
-                      = markdown session.description
-                      .bios
-                        - session.presenters.each do |presenter|
-                          .bio
-                            .name= presenter.name
-                            = markdown(presenter.bio || "No bio.")
-
-                    .summary= session.summary
->>>>>>> Update header pills to just have day
 
 :javascript
   $(function() {
