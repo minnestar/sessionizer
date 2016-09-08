@@ -68,14 +68,13 @@ Rails.application.configure do
   HOST = ENV['HEROKU_URL']
   config.action_mailer.default_url_options = { host: HOST }
   ActionMailer::Base.smtp_settings = {
-    user_name: Rails.application.secrets.mandrill_username,
     password: Rails.application.secrets.mandrill_password,
-    #user_name: 'alicia@curationexperts.com', password: 'U6XZh8uopA8aRiweDxmF3A',
-    :address => 'smtp.mandrillapp.com',
+    :user_name => 'hydracon16@gmail.com',
+    :address => 'smtp.gmail.com',
     :port => 587,
-    :authentication => 'login',
+    :authentication => :plain,
     :enable_starttls_auto => true,
-    :domain => HOST
+    :domain => 'gmail.com'
   }
 
   config.action_mailer.perform_deliveries = true
