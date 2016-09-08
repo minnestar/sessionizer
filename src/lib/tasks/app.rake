@@ -2,16 +2,13 @@ namespace :app do
 
   desc 'create default timeslots for the most recent event'
   task create_timeslots: :environment do
-    session_length = 45.minutes
+    session_length = 50.minutes
     event = Event.current_event
     event.timeslots.destroy_all
 
     start_times = ["09:00",
                    "10:00",
-                   "11:00",
-                   "13:30",
-                   "14:30",
-                   "15:30"]
+                   "11:10"]
 
     start_times.each_with_index do |st, idx|
       starts = Time.zone.parse("#{event.date.to_s} #{st}")
@@ -23,20 +20,6 @@ namespace :app do
       )
     end
 
-    event.timeslots.create!(
-      title: "Lunch",
-      starts_at: Time.zone.parse("#{event.date.to_s} 11:50:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 1:30:00"),
-      schedulable: false
-    )
-
-    event.timeslots.create!(
-      title: "Lunch",
-      starts_at: Time.zone.parse("#{(event.date + 1).to_s} 11:50:00"),
-      ends_at: Time.zone.parse("#{(event.date + 1).to_s} 1:30:00"),
-      schedulable: false
-    )
-
   end
 
   desc 'create default rooms for most recent event. Will nuke old rooms.'
@@ -45,18 +28,11 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      { :name => 'Workshop #1 - Room 351', :capacity => 35 },
-      { :name => 'Workshop #2 - Room 352', :capacity => 35 },
-      { :name => 'Workshop #3 - Room 301', :capacity => 40 },
-      { :name => 'Workshop #4 - Room 401', :capacity => 40 },
-      { :name => 'Breakout #1 - Room 289', :capacity => 12 },
-      { :name => 'Breakout #2 - Room 342', :capacity => 12 },
-      { :name => 'Breakout #3 - Room 446', :capacity => 30 },
-      { :name => 'Breakout #4 - Room 448', :capacity => 30 },
-      { :name => 'Great Room #1 - Room 201', :capacity => 130 },
-      { :name => 'Great Room #2 - Room 202', :capacity => 70 },
-      #{ :name => 'Texas', :capacity => 16 },
-      #{ :name => 'California', :capacity => 16 }
+      { :name => 'Commonwealth Salon',      :capacity => 100 },
+      { :name => 'McKim Conference Room A', :capacity => 100 },
+      { :name => 'McKim Conference Room B', :capacity => 100 },
+      { :name => 'Orientation Room',        :capacity => 50 },
+      { :name => 'Gusatavino Room',         :capacity => 180 },
     ]
 
     rooms.each do |room|
