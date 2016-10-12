@@ -51,7 +51,8 @@ gem 'nokogiri'
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
-  gem "rspec-rails"
+  gem "rspec-rails", "~> 3.1"
+  gem 'rails-controller-testing'
   gem 'capybara'
   gem 'pry'
   gem 'coveralls', require: false
