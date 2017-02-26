@@ -1,6 +1,6 @@
 class PasswordResetsController < ApplicationController
   # Method from: http://github.com/binarylogic/authlogic_example/blob/master/app/controllers/application_controller.rb
-  before_filter :load_participant_using_perishable_token, :only => [ :edit, :update ]
+  before_action :load_participant_using_perishable_token, :only => [ :edit, :update ]
 
   def new
   end

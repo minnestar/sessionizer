@@ -13,8 +13,8 @@ describe SessionsController do
     let!(:session) { create(:session, event: event) }
 
     describe "update" do
-      it "should not be updatable by someone who doesn't own it" do
-        post :update, id: session, session: { description: 'Lulz' }
+      it "is not updatable by someone who doesn't own it" do
+        patch :update, params: { id: session, session: { description: 'Lulz' } }
         expect(response).to redirect_to session
       end
 
@@ -25,7 +25,7 @@ describe SessionsController do
         let(:category) { Category.last }
 
         it "should be updatable" do
-          put :update, id: session, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' }
+          patch :update, params: { id: session, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' } }
           expect(response).to redirect_to session
           expect(assigns[:session].title).to eq 'new title'
         end
@@ -34,7 +34,7 @@ describe SessionsController do
 
     describe "edit" do
       it "should not be editable by someone who doesn't own it" do
-        get :edit, id: session
+        get :edit, params: {id: session}
         expect(response).to redirect_to session
       end
     end
@@ -79,11 +79,11 @@ describe SessionsController do
         end
 
         it "should allow exporting previous events" do
-          get :index, { event_id: event2.id }
+          get :index, params: { event_id: event2.id }
           expect(response).to be_successful
           expect(assigns[:sessions]).to eq [session2]
 
-          get :index, { event_id: event.id }
+          get :index, params: { event_id: event.id }
           expect(response).to be_successful
           expect(assigns[:sessions]).to eq [session]
         end
@@ -99,7 +99,7 @@ describe SessionsController do
       it "creates a new session " do
 
         expect {
-          post :create, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' }
+          post :create, params: { session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' } }
         }.to change { Session.count }.by(1)
         expect(response).to redirect_to assigns[:session]
         expect(assigns[:session].title).to eq 'new title'
@@ -114,7 +114,7 @@ describe SessionsController do
       it "shows the errors" do
 
         expect {
-          post :create, session: { title: ''}
+          post :create, params: { session: { title: ''} }
         }.not_to change { Session.count }
         expect(response).to render_template('new')
       end

@@ -52,7 +52,7 @@ class SchedulesController < ApplicationController
       end
     end
 
-    render :text => cal.to_ical, :content_type => 'text/calendar'
+    render plain: cal.to_ical, :content_type => 'text/calendar'
   end
 
   protected

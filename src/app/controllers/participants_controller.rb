@@ -1,7 +1,7 @@
 class ParticipantsController < ApplicationController
   respond_to :html
   load_resource
-  before_filter :verify_owner, :only => [:edit, :update]
+  before_action :verify_owner, :only => [:edit, :update]
 
   def index
     respond_to do |format|

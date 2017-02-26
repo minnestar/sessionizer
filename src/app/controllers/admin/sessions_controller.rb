@@ -1,5 +1,5 @@
 class Admin::SessionsController < Admin::AdminController
-  before_filter :load_sessions, only: :index
+  before_action :load_sessions, only: :index
   load_resource
   respond_to :html
 

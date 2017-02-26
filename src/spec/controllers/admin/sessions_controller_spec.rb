@@ -24,7 +24,7 @@ describe Admin::SessionsController do
       let(:category) { Category.last }
 
       it "should be updatable" do
-        put :update, id: session, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' }
+        patch :update, params: { id: session, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' } }
         expect(response).to redirect_to admin_sessions_path
         expect(assigns[:session].title).to eq 'new title'
       end
@@ -32,7 +32,7 @@ describe Admin::SessionsController do
 
     describe "edit" do
       it "should be successful" do
-        get :edit, id: session
+        get :edit, params: {id: session}
         expect(response).to be_successful
       end
     end
@@ -51,7 +51,7 @@ describe Admin::SessionsController do
 
         expect {
           expect {
-            post :create, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2', name: "Ada Lovelace"}
+            post :create, params: { session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2', name: "Ada Lovelace"} }
           }.to change { Session.count }.by(1)
         }.to change { Participant.count }.by(1)
         expect(response).to redirect_to admin_sessions_path
@@ -67,7 +67,7 @@ describe Admin::SessionsController do
       it "shows the errors" do
 
         expect {
-          post :create, session: { title: ''}
+          post :create, params: { session: { title: ''} }
         }.not_to change { Session.count }
         expect(response).to render_template('new')
       end
