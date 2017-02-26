@@ -92,23 +92,25 @@
   tasks:
     - local_action:
         module: stat
-        path: ../src/config/database.yml
+        path: ../../src/config/database.yml
       register: database_yml
     - local_action:
         module: template
         src: templates/database.yml.j2
-        dest: ../src/config/database.yml
+        dest: ../../src/config/database.yml
       when: not database_yml.stat.exists
     - local_action:
         module: stat
-        path: ../src/config/secrets.yml
+        path: ../../src/config/secrets.yml
       register: secrets_yml
     - local_action:
         module: template
         src: templates/secrets.yml.j2
-        dest: ../src/config/secrets.yml
+        dest: ../../src/config/secrets.yml
       when: not secrets_yml.stat.exists
     - command: bundle install chdir=/srv/{{app_name}}/
+    - command: bundle install chdir=/srv/{{app_name}}/
+    - command: ./bin/rails db:environment:set RAILS_ENV=development chdir=/srv/{{app_name}}/
     - command: bundle exec rake db:create chdir=/srv/{{app_name}}/
       register: db_create
     - command: bundle exec rake db:setup chdir=/srv/{{app_name}}/
