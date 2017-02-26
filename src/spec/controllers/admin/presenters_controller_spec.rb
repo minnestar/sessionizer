@@ -16,7 +16,7 @@ describe Admin::PresentersController do
 
   describe "#edit" do
     it "should be successful" do
-      get :edit, id: presenter
+      get :edit, params: {id: presenter}
       expect(response).to be_successful
       expect(assigns[:presenter]).to eq presenter
     end
@@ -24,9 +24,10 @@ describe Admin::PresentersController do
 
   describe "#update" do
     it "should be successful" do
-      put :update, id: presenter, participant: {
-        name: 'The father of LISP', email: 'g@example.org', bio: "Functionally just another dude"
-      }
+      put :update, params: {id: presenter, participant: {
+                                  name: 'The father of LISP', email: 'g@example.org', bio: "Functionally just another dude"
+                                }
+                            }
       expect(response).to redirect_to admin_presenters_path
       expect(flash[:success]).to eq "Presenter updated."
       expect(assigns[:presenter]).to eq presenter

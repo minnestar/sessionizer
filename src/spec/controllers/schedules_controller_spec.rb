@@ -26,7 +26,7 @@ describe SchedulesController do
       let!(:event) { create(:event, :full_event) }
       it "is successful" do
         expect(controller).to receive(:event).with(false).and_call_original
-        get :index, force: true
+        get :index, params: {force: true}
         expect(response).to be_successful
         expect(assigns[:event]).to eq event
       end

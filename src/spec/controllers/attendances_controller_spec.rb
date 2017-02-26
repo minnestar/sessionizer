@@ -16,7 +16,7 @@ describe AttendancesController do
         context "and the format is html" do
           it "should record the interest" do
             expect {
-              post :create, session_id: session
+              post :create, params: {session_id: session}
             }.to change { session.attendances.count }.by(1)
             expect(response).to redirect_to session
             expect(flash[:notice]).to eq "Thanks for your interest in this session."
@@ -26,7 +26,7 @@ describe AttendancesController do
         context "and the format is json" do
           it "should record the interest" do
             expect {
-              post :create, session_id: session, format: :json
+              post :create, params: {session_id: session}, format: :json
             }.to change { session.attendances.count }.by(1)
             expect(response).to be_successful
             expect(response).to render_template "sessions/_participant"
@@ -46,7 +46,7 @@ describe AttendancesController do
 
         it "should render a problem" do
           expect {
-            post :create, session_id: session, format: :json
+            post :create, params: {session_id: session, format: :json}
           }.to_not change { session.attendances.count }
           expect(response).to render_template "sessions/_new_participant"
           expect(response.status).to eq 422
@@ -61,8 +61,11 @@ describe AttendancesController do
         context "and the format is html" do
           it "should record the interest" do
             expect {
-              post :create, session_id: session, attendance: {
-                name: 'Charles Babbage', email: 'chuck_engine_light@example.org', password: 'analytical' }
+              post :create, params: {session_id: session, attendance: {
+                                                  name: 'Charles Babbage',
+                                                  email: 'chuck_engine_light@example.org',
+                                                  password: 'analytical' }
+                                    }
             }.to change { session.attendances.count }.by(1)
             expect(response).to redirect_to session
             expect(flash[:notice]).to eq "Thanks for your interest in this session."
