@@ -2,7 +2,7 @@ module AuthenticationSupport
 
   def sign_in_user(user)
     
-    visit root_path
+    visit home_page_path
 
     click_link "Log in"
 
