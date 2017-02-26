@@ -2,8 +2,8 @@
 class SessionsController < ApplicationController
 
   load_resource only: [:new, :show, :edit, :create, :update]
-  before_filter :verify_session, only: [:new, :create, :update, :edit]
-  before_filter :verify_owner, only: [:update, :edit]
+  before_action :verify_session, only: [:new, :create, :update, :edit]
+  before_action :verify_owner, only: [:update, :edit]
 
   respond_to :html
   respond_to :json, only: :index
@@ -36,7 +36,7 @@ class SessionsController < ApplicationController
     @sessions = @event.sessions.order('created_at desc')
     respond_with @sessions do |format|
       format.json {
-        render json: SessionsJsonBuilder.new.to_json(@sessions.uniq.flatten)
+        render json: SessionsJsonBuilder.new.to_json(@sessions.uniq)
       }
       format.html
     end
