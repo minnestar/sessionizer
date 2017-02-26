@@ -13,8 +13,10 @@
 # Ignore all logfiles and tempfiles.
 /src/log/*
 /src/tmp/*
+/src/tmp/cache*
 !/src/log/.keep
 !/src/tmp/.keep
+!/src/tmp/cache/.keep
 
 .DS_Store
 /src/config/database.yml
