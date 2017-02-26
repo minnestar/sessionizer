@@ -1,5 +1,5 @@
 class Admin::PresentersController < Admin::AdminController
-  before_filter :load_presenters, only: [:index, :export]
+  before_action :load_presenters, only: [:index, :export]
   load_resource class: 'Participant'
   respond_to :html
 
@@ -21,13 +21,13 @@ class Admin::PresentersController < Admin::AdminController
   end
 
   def export
-    render text: @presenters.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime::TEXT
+    render body: @presenters.map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime[:text]
   end
 
   # export a list of all presenters from every event
   def export_all
     participant_ids = Session.all.map(&:presenter_ids)
-    render text: Participant.find(participant_ids).map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime::TEXT
+    render body: Participant.find(participant_ids).map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime[:text]
   end
 
   private

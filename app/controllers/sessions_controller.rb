@@ -36,7 +36,7 @@ class SessionsController < ApplicationController
     @sessions = @event.sessions.order('created_at desc')
     respond_with @sessions do |format|
       format.json {
-        render json: SessionsJsonBuilder.new.to_json(@sessions.uniq)
+        render json: SessionsJsonBuilder.new.to_json(@sessions.distinct)
       }
       format.html
     end

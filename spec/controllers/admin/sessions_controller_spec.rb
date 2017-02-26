@@ -32,7 +32,7 @@ describe Admin::SessionsController do
 
     describe "edit" do
       it "should be successful" do
-        get :edit, id: session
+        get :edit, params: {id: session}
         expect(response).to be_successful
       end
     end

@@ -34,7 +34,7 @@ describe SessionsController do
 
     describe "edit" do
       it "should not be editable by someone who doesn't own it" do
-        get :edit, id: session
+        get :edit, params: {id: session}
         expect(response).to redirect_to session
       end
     end
@@ -79,11 +79,11 @@ describe SessionsController do
         end
 
         it "should allow exporting previous events" do
-          get :index, { event_id: event2.id }
+          get :index, params: { event_id: event2.id }
           expect(response).to be_successful
           expect(assigns[:sessions]).to eq [session2]
 
-          get :index, { event_id: event.id }
+          get :index, params: { event_id: event.id }
           expect(response).to be_successful
           expect(assigns[:sessions]).to eq [session]
         end

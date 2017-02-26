@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_filter :create_participant, only: :create
+  before_action :create_participant, only: :create
 
   load_resource :session
 
