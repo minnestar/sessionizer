@@ -6,7 +6,7 @@ FactoryGirl.define do
     end
 
     email { "#{name.gsub(/\s/, '_')}@example.com" }
-    password 'sekret'
+    password 'sekret123456789'
 
     factory :joe do
       email "joe@example.com"

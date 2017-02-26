@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.2.4'
 
-gem 'rails', '4.2.3'
+gem 'rails', '4.2.8'
 
 gem 'pg'
 #gem 'sqlite3'
@@ -51,7 +51,7 @@ gem 'nokogiri'
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
-  gem "rspec-rails", "~> 3.1"
+  gem "rspec-rails"
   gem 'capybara'
   gem 'pry'
   gem 'coveralls', require: false

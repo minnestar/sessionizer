@@ -13,7 +13,7 @@ feature "Manage Sessions" do
 
     fill_in 'participant_name', with: 'Jack Johnson'
     fill_in 'Your email', with: 'jack@example.com'
-    fill_in 'Password', with: 's00persekret'
+    fill_in 'Password', with: 's00persekret12345'
     click_button "Create Participant"
 
     all(".add-sessions-button").first.click
