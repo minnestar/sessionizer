@@ -4,7 +4,7 @@ class UserSessionsController < ApplicationController
   end
 
   def create
-    @participant_session = ParticipantSession.new(params[:participant_session])
+    @participant_session = ParticipantSession.new(participant_session_params)
     if @participant_session.save
       flash[:notice] = "You're logged in. Welcome back."
       redirect_to root_path
@@ -20,4 +20,11 @@ class UserSessionsController < ApplicationController
     flash[:notice] = 'You have been logged out.'
     redirect_to root_path
   end
+
+   private
+
+  def participant_session_params
+    params.require(:participant_session).permit(:email, :password)
+  end
+
 end

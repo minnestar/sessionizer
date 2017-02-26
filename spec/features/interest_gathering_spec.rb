@@ -17,7 +17,7 @@ feature "Gauging interest in a session" do
 
     fill_in "Name", with: "Dennis Ritchie"
     fill_in "Email", with: "c-lang@example.org"
-    fill_in "Password", with: "c4ever!"
+    fill_in "Password", with: "c4ever!!!!!!!!!"
     click_button "Register"
 
     expect(page).to have_content 'Thanks for your interest in this session.'
