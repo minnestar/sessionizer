@@ -1,7 +1,7 @@
 <% title('All Sessions') %>
 (most recently added first)
 
-<% cache [@sessions, current_participant] do %>
+<% cache [@sessions, current_participant] do  # fragment contains user-specific info %>
   <div class="row">
     <p><%= add_sessions_button %></p>
     <div class="column grid_10" style="margin-left:0px">
