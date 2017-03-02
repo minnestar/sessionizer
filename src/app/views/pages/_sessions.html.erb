@@ -1,4 +1,5 @@
-  <%= cache Session.maximum(:updated_at), expires_in: 20.seconds do %>
+  <%# Note that fragment contains user-specific info, must be cached per user %>
+  <%= cache [Session.maximum(:updated_at), current_participant], expires_in: 20.seconds do %>
 
     <h2>A Sampling of Sessions</h2>
     <ul class="sessionsList">
