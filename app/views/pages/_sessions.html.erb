@@ -1,4 +1,4 @@
-  <%= cache Session.maximum(:updated_at), expires_in: 20.seconds do %>
+  <%= cache [Session.maximum(:updated_at), current_participant], expires_in: 20.seconds do %>
 
     <h2>A Sampling of Sessions</h2>
     <ul class="sessionsList">
