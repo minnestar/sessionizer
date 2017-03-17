@@ -201,8 +201,8 @@ namespace :app do
 
     puts
     puts "Assigning sessions to time slots..."
-    repetition_count = (quality ** 0.5 / 3).ceil
     max_iter         = (quality ** 0.5 * 12000).ceil
+    repetition_count = 1  # because generate_schedule now supports manual re-running
     puts
     puts "Quality = #{quality}:    (adjust using 'quality' env var)"
     puts "   #{repetition_count} cooling cycle(s)"
