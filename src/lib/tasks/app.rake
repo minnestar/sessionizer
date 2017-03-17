@@ -153,12 +153,19 @@ namespace :app do
 
   desc 'show restrictions for current event'
   task :show_restrictions => :environment do
-    PresenterTimeslotRestriction.all.each do |r|
-      next unless r.timeslot.event == Event.current_event
-      puts "#{r.participant.name}" +
-           " #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
-           " present at #{r.timeslot.starts_at.in_time_zone.to_s(:usahhmm) if r.timeslot}" +
-           " (weight=#{r.weight}); actual times: #{r.participant.sessions_presenting.map { |s| s.timeslot.starts_at.in_time_zone.to_s(:usahhmm)}}"
+    restrictions_grouped = PresenterTimeslotRestriction
+      .where('timeslot_id in (select id from timeslots where event_id = ?)', Event.current_event.id)
+      .group_by(&:participant)
+    restrictions_grouped.each do |presenter, restrictions|
+      puts "#{presenter.name}"
+      sessions = presenter.sessions_presenting.where('event_id = ?', Event.current_event.id)
+      puts "  who is presenting #{sessions.map(&:title).join("\n                and ")}"
+      restrictions.each do |r|
+        puts "  #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
+             " present at #{r.timeslot}" +
+             " (weight=#{r.weight})"
+      end
+      puts "  and is scheduled for: #{presenter.sessions_presenting.map { |s| s.timeslot }.join(", ")}"
     end
   end
 
