@@ -247,7 +247,7 @@ namespace :app do
         session = Session.find(sid)
         session.timeslot = (Timeslot.find(opts['slot']) if opts['slot'])
         session.room = (Room.find(opts['room']) if opts['room'])
-        puts "#{session.timeslot} #{session.title} [#{session.room.name}]"
+        puts "#{session.timeslot} #{session.title} [#{session.room&.name}]"
         session.save!
       end
     end
