@@ -201,8 +201,8 @@ namespace :app do
 
     puts
     puts "Assigning sessions to time slots..."
-    max_iter         = (quality ** 0.5 * 6000).ceil
     repetition_count = (quality ** 0.5 / 3).ceil
+    max_iter         = (quality ** 0.5 * 12000).ceil
     puts
     puts "Quality = #{quality}:    (adjust using 'quality' env var)"
     puts "   #{repetition_count} cooling cycle(s)"
@@ -213,6 +213,11 @@ namespace :app do
     annealer = Annealer.new(
       repetition_count: repetition_count,
       cooling_time: 100 * repetition_count,
+      cooling_func: (
+        lambda do |iter_count|
+          Math.exp(-(iter_count + 15000) / (100 * repetition_count))
+        end
+      ),
       max_iter: max_iter,
       log_to: STDOUT)
     best = annealer.anneal schedule
