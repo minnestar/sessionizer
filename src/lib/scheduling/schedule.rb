@@ -179,9 +179,9 @@ module Scheduling
       attendance_score_scaled = (attendance_score - random_score) / (best_score - random_score)
 
       s = "Schedule\n"
-      s << "| quality = #{format_percent attendance_score_scaled} (100% is unachievable; > 50% is good)\n"
-      s << "| satisfaction score = #{format_percent attendance_score} of possible value ()\n"
-      s << "| presenter score    = #{format_percent presenter_score} (if < 100 then speakers are double-booked)\n"
+      s << "| quality vs. random = #{format_percent attendance_score_scaled} (0% is no better than random; 100% is unachievable; > 50% is good)\n"
+      s << "| absolute satisfaction = #{format_percent attendance_score} of impossibly perfect schedule\n"
+      s << "| presenter score = #{format_percent presenter_score} (if < 100 then speakers are double-booked)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end

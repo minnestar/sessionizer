@@ -348,7 +348,7 @@ namespace :app do
       end
     puts
 
-    puts "Most common pairwise attendance overlaps"
+    puts "Scheduling overlaps that will upset the most people"
     puts
     pairs = Attendance.connection.select_rows("
         select a1.session_id s1,
