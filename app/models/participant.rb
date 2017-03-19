@@ -15,7 +15,7 @@ class Participant < ActiveRecord::Base
   end
 
   def restrict_after(datetime, weight=1, event=Event.current_event)
-    event.timeslots.each do |timeslot|
+    event.timeslots.select do |timeslot|
       if timeslot.ends_at >= datetime
         self.presenter_timeslot_restrictions.create!(
           timeslot: timeslot,
@@ -25,7 +25,7 @@ class Participant < ActiveRecord::Base
   end
 
   def restrict_before(datetime, weight=1, event=Event.current_event)
-    event.timeslots.each do |timeslot|
+    event.timeslots.select do |timeslot|
       if timeslot.starts_at <= datetime
         self.presenter_timeslot_restrictions.create!(
           timeslot: timeslot,

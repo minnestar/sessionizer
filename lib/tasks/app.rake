@@ -142,11 +142,18 @@ namespace :app do
 
     weight = ENV['WEIGHT'] || 1
 
-    if ENV['BEFORE']
+    matched = if ENV['BEFORE']
       presenter.restrict_before(time, weight)
-    else
+    elsif ENV['AFTER']
       presenter.restrict_after(time, weight)
+    else
+      raise "Please specify either BEFORE=1 or AFTER=1 in the env"
     end
+
+    if matched.empty?
+      raise "Your time constraints matched no timeslots. (Did you forget to use 24-hour format for afternoon times?)"
+    end
+
     puts "#{presenter.name} now excluded from following timeslots:"
     puts presenter.presenter_timeslot_restrictions.map(&:timeslot).join("\n")
   end
