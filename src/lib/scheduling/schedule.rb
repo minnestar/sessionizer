@@ -2,7 +2,7 @@ require 'pp'
 
 
 module Scheduling
-  # Represents a particular schedule (i.e. assignment of sessions to rooms) for the purpose of annealing.
+  # Represents a particular schedule (i.e. assignment of sessions to timeslots) for the purpose of annealing.
   # Scores the schedule and returns nearby variations.
   #
   class Schedule
@@ -107,9 +107,8 @@ module Scheduling
       end
 
       unassigned = sessions.reject(&:timeslot)
-      room_count = ctx.rooms.size
       ctx.timeslots.each do |slot|
-        opening_count = room_count - @sessions_by_slot[slot].size
+        opening_count = ctx.room_count - @sessions_by_slot[slot].size
         slot_sessions = (unassigned.slice!(0, opening_count) || []).map(&:id)
         slot_sessions << Unassigned.new while slot_sessions.size < opening_count
         slot_sessions.each { |session| schedule(session, slot)  }
@@ -155,19 +154,17 @@ module Scheduling
 
     # ------------ Managing results ------------
 
-    def assign_rooms_and_save!
+    def save!
       Session.transaction do
-        rooms_by_capacity = ctx.rooms.sort_by { |r| -r.capacity }
-        @sessions_by_slot.sort_by { |k,v| k.starts_at }.each do |slot_id, session_ids|
+        @sessions_by_slot.each do |slot_id, session_ids|
           slot = Timeslot.find(slot_id)
           puts slot
-          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.estimated_interest }
-          sessions.zip(rooms_by_capacity) do |session, room|
+          sessions = Session.find(session_ids.reject { |s| Unassigned === s })
+          sessions.each do |session|
             puts "    #{session.id} #{session.title}" +
-                 " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
-                 " in #{room.name} (#{room.capacity})"
+                 " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)"
             session.timeslot = slot
-            session.room = room
+            session.room = nil  # Rooms have to be reassigned after rearranging timeslots
             session.save!
           end
         end

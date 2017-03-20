@@ -142,7 +142,7 @@ class Session < ActiveRecord::Base
         sessions_by_id[row.session_id].attendance_count = row.attendance_count
       end
 
-    nil
+    sessions
   end
 
   # Estimates actual event-day interest for this session relative to other sessions,
