@@ -116,11 +116,15 @@ class Session < ActiveRecord::Base
     end
   end
 
+  # The raw number of votes for this session.
+  #
+  # To avoid O(n) queries, use preload_attendance_counts if you’ll be calling this on a
+  # collection of sessions.
+  #
   def attendance_count
     @attendance_count ||= attendances.count
   end
-
-  attr_writer :attendance_count
+  attr_writer :attendance_count  # for preload
 
   def self.preload_attendance_counts(sessions)
     sessions_by_id = {}
@@ -128,6 +132,8 @@ class Session < ActiveRecord::Base
       sessions_by_id[session.id] = session
     end
     
+    # Surely there’s a Rails helper for this?
+    # But I can’t find it — only some abandoned gems.
     Attendance
       .select("session_id, count(*) as attendance_count")
       .where('session_id in (?)', sessions_by_id.keys)
