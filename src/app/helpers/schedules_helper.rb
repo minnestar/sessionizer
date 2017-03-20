@@ -83,11 +83,7 @@ private
   end
 
   def session_sort_order(session)
-    if room = session.room
-      [-room.capacity, room.name]
-    else
-      [0, ""]
-    end
+    [-session.attendance_count, session.room&.name || ""]
   end
 
   def estimated_height(session)
