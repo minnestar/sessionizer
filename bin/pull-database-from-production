@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+psql postgres postgres -c 'drop database sessionizer_development;' || echo 'Database already dropped'
+PGUSER=vagrant heroku pg:pull DATABASE sessionizer_development --app sessionizer2016
+psql sessionizer_development postgres -c 'grant all on all tables in schema public to vagrant;'
