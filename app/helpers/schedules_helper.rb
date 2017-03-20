@@ -12,6 +12,8 @@ module SchedulesHelper
     end
   end
 
+private
+
   def stable_room_order_session_columns_for_slot(slot, &block)
     sessions = slot.sessions.sort_by { |s| session_sort_order(s) }
     split = (sessions.size+1) / 2
@@ -19,9 +21,9 @@ module SchedulesHelper
     yield sessions[split..-1]
   end
 
-  ##
   # Attempt to divide these sessions into two roughly equal groups of roughly equal height.
   # (Without this, the fully expanded details grow very lopsided.)
+  #
   def balanced_session_columns_for_slot(slot, &block)
 
     unassigned = slot.sessions.sort_by { |s| -estimated_height(s) }
@@ -75,8 +77,6 @@ module SchedulesHelper
 
     columns.each(&block)
   end
-
-private
 
   def session_sort_order(session)
     [-session.attendance_count, session.room&.name || ""]
