@@ -189,13 +189,14 @@ namespace :app do
     end
   end
 
-  # We can schedule certain sessions into blocks before running
-  # the scheduler. These sessions will not get scheduled elsewhere.
-  # However the scheduler will pay no attention to them, so you probably
-  # only want to place them into Timeslots where schedulable is false.
-  # For example you may place a "Presenters Luncheon, rm 123" during the
-  # "Lunch" timeslot.
-  desc 'create a schedule for most recent event. Only unassigned sessions will be scheduled.'
+  # CAUTION! This task wipes and regenerates the schedule, removing any existing room & timeslot
+  # assignments.
+  #
+  # To prevent this task from altering a particualr session's timeslot and room, use:
+  #
+  #   session.update_attributes(manually_scheduled: true)
+  #
+  desc 'Create a schedule for the current event. DANGER: Wipes existing schedule!'
   task :generate_schedule => :environment do
     quality = (ENV['quality'] || 1).to_f
 
@@ -231,10 +232,45 @@ namespace :app do
     puts "BEST SOLUTION:"
     p best
 
-    best.assign_rooms_and_save!
+    best.save!
 
     puts
     puts 'Congratulations. You have a schedule!'
+  end
+
+  desc 'assign scheduled sessions to rooms'
+  task :assign_rooms => :environment do
+    Session.transaction(isolation: :serializable) do
+      already_assigned_count = 0
+      reassign_existing_rooms = (ENV['reassign_rooms'].to_i != 0)
+
+      rooms_by_capacity = event.rooms.sort_by { |r| -r.capacity }
+      event.timeslots.where(schedulable: true).order('starts_at').each do |slot|
+        puts slot
+        sessions = Session.preload_attendance_counts(slot.sessions)
+          .sort_by { |s| -s.estimated_interest }
+
+        unless reassign_existing_rooms
+          assigned, unassigned = sessions.partition(&:room_id?)
+          sessions = unassigned
+          already_assigned_count += assigned.size
+        end
+
+        sessions.zip(rooms_by_capacity) do |session, room|
+          puts "    #{session.id} #{session.title}" +
+               " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
+               " in #{room.name} (#{room.capacity})"
+          session.room = room
+          session.save!
+        end
+      end
+
+      if already_assigned_count > 0
+        puts
+        puts "WARNING: #{already_assigned_count} sessions already had rooms assigned. " \
+          "Use reassign_rooms=1 to redo these existing room assignements based on updated vote tallies."
+      end
+    end
   end
 
   desc 'export schedule for import to another node (for running annealer locally & exporting to heroku)'
