@@ -68,7 +68,7 @@ module SchedulesHelper
 
     columns.map! { |col| col.sort_by { |s| session_sort_order(s) } }
     unless columns[0].empty? || columns[1].empty?
-      if session_room_capacity(columns[0].first) < session_room_capacity(columns[1].first)
+      if columns[0].first.attendance_count < columns[1].first.attendance_count
         columns = [columns[1], columns[0]]
       end
     end
@@ -77,10 +77,6 @@ module SchedulesHelper
   end
 
 private
-
-  def session_room_capacity(session)
-    session.room&.capacity || 0
-  end
 
   def session_sort_order(session)
     [-session.attendance_count, session.room&.name || ""]
