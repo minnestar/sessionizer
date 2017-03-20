@@ -13,5 +13,6 @@ module Sessionizer
     # -- all .rb files in that directory are automatically loaded.
 
     config.eager_load_paths << config.root.join('lib') 
+    config.time_zone = 'US/Central'
   end
 end
