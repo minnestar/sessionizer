@@ -1,8 +1,11 @@
-#schedule-body
-  font-size: 0.6em !important
-  .nav-top
-    display: none
-  .schedule-header
-    padding-top: 1em
-    .hint, .controls
+@media print
+  #schedule-body
+    font-size: 0.6em !important
+    .nav-top
       display: none
+    .schedule-header
+      padding-top: 1em
+      .hint, .controls
+        display: none
+    .timeslot
+      outline: 6px solid red

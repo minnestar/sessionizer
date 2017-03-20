@@ -59,7 +59,13 @@ class SchedulesController < ApplicationController
 
   def schedule(event)
     Rails.cache.fetch("#{event.cache_key}/schedule", expires_in: 10.minutes) do
-      Event.includes(timeslots: { sessions: [:room, :presenters] }).find(event.id)
+      event = Event.includes(timeslots: { sessions: [:room, :presenters] }).find(event.id)
+
+      # Preload vote counts in order to sort sessions by popularity
+      Session.preload_attendance_counts(
+        event.timeslots.map(&:sessions).flatten)
+
+      event
     end
   end
 

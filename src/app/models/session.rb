@@ -116,6 +116,35 @@ class Session < ActiveRecord::Base
     end
   end
 
+  # The raw number of votes for this session.
+  #
+  # To avoid O(n) queries, use preload_attendance_counts if you’ll be calling this on a
+  # collection of sessions.
+  #
+  def attendance_count
+    @attendance_count ||= attendances.count
+  end
+  attr_writer :attendance_count  # for preload
+
+  def self.preload_attendance_counts(sessions)
+    sessions_by_id = {}
+    sessions.each do |session|
+      sessions_by_id[session.id] = session
+    end
+    
+    # Surely there’s a Rails helper for this?
+    # But I can’t find it — only some abandoned gems.
+    Attendance
+      .select("session_id, count(*) as attendance_count")
+      .where('session_id in (?)', sessions_by_id.keys)
+      .group('session_id')
+      .each do |row|
+        sessions_by_id[row.session_id].attendance_count = row.attendance_count
+      end
+
+    nil
+  end
+
   # Estimates actual event-day interest for this session relative to other sessions,
   # expressed as a corrected number of votes.
   #
@@ -127,7 +156,7 @@ class Session < ActiveRecord::Base
   #
   def estimated_interest
     @estimated_interest ||= begin
-      session_votes     = attendances.count.to_f
+      session_votes     = attendance_count.to_f
       possible_votes    = event.attendances.where('attendances.created_at >= ?', created_at).count.to_f
       session_count     = event.sessions.count.to_f
       participant_count = event.participants.count.to_f

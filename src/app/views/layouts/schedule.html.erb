@@ -3,11 +3,8 @@
   <head>
     <%= csrf_meta_tags %>
     <title><%= @event.name %> &ndash; Session Schedule</title>
-    <%= stylesheet_link_tag 'grid' %>
-    <%= stylesheet_link_tag 'schedule', :media => 'screen, print' %>
-    <%= stylesheet_link_tag 'schedule-print', :media => 'print' %>
-    <%= stylesheet_link_tag 'schedule-mobile', :media => 'screen' %>
-    <%= javascript_include_tag 'schedule' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
     <%= favicon_link_tag 'favicon.ico' %>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">

@@ -12,16 +12,18 @@ module SchedulesHelper
     end
   end
 
+private
+
   def stable_room_order_session_columns_for_slot(slot, &block)
-    sessions = slot.sessions.sort_by { |s| [-s.room.capacity, s.room.name] }
+    sessions = slot.sessions.sort_by { |s| session_sort_order(s) }
     split = (sessions.size+1) / 2
     yield sessions[0...split]
     yield sessions[split..-1]
   end
 
-  ##
   # Attempt to divide these sessions into two roughly equal groups of roughly equal height.
   # (Without this, the fully expanded details grow very lopsided.)
+  #
   def balanced_session_columns_for_slot(slot, &block)
 
     unassigned = slot.sessions.sort_by { |s| -estimated_height(s) }
@@ -66,9 +68,9 @@ module SchedulesHelper
 
     # Now yield each column with session sorted by room size.
 
-    columns.map! { |col| col.sort_by { |s| [-s.room.capacity, s.room.name] } }
+    columns.map! { |col| col.sort_by { |s| session_sort_order(s) } }
     unless columns[0].empty? || columns[1].empty?
-      if columns[0].first.room.capacity < columns[1].first.room.capacity
+      if columns[0].first.attendance_count < columns[1].first.attendance_count
         columns = [columns[1], columns[0]]
       end
     end
@@ -76,7 +78,9 @@ module SchedulesHelper
     columns.each(&block)
   end
 
-private
+  def session_sort_order(session)
+    [-session.attendance_count, session.room&.name || ""]
+  end
 
   def estimated_height(session)
     if session.instance_variable_get(:@estimated_height).blank?
