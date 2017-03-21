@@ -156,11 +156,11 @@ module Scheduling
 
     def save!
       Session.transaction do
-        @sessions_by_slot.each do |slot_id, session_ids|
-          slot = Timeslot.find(slot_id)
+        ctx.timeslots.sort_by(&:starts_at).each do |slot|
           puts slot
-          sessions = Session.find(session_ids.reject { |s| Unassigned === s })
-          sessions.each do |session|
+          sessions = Session.find(
+            @sessions_by_slot[slot].reject { |s| Unassigned === s })
+          sessions.sort_by { |s| -s.attendance_count }.each do |session|
             puts "    #{session.id} #{session.title}" +
                  " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)"
             session.timeslot = slot
