@@ -34,11 +34,7 @@ private
     first = true
     until unassigned.empty?
       if unassigned.size == 1 && columns[0].size == columns[1].size  # odd number of sessions, so last one can go in either column
-        i = if heights[0] < heights[1]
-          0
-        else
-          1
-        end
+        i = (heights[0] < heights[1]) ? 1 : 0
       end
 
       if first
