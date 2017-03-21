@@ -114,7 +114,7 @@ module Scheduling
         slot_sessions.each { |session| schedule(session, slot)  }
       end
       unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
+        raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{ctx.room_count} rooms = #{ctx.timeslots.size * ctx.room_count} combinations."
       end
     end
 
