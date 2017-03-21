@@ -384,7 +384,7 @@ namespace :app do
       end
     puts
 
-    puts "Scheduling overlaps that will upset the most people"
+    puts "Scheduling conflicts that would upset the most people"
     puts
     pairs = Attendance.connection.select_rows("
         select a1.session_id s1,
@@ -408,7 +408,7 @@ namespace :app do
       status = if !s1.timeslot_id || !s2.timeslot_id
         '(unscheduled)'
       elsif s1.timeslot_id == s2.timeslot_id
-        'CONFLICT'
+        'CONFLICT AS SCHEDULED'
       else
         ''
       end
