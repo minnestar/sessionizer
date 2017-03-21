@@ -142,21 +142,37 @@ namespace :app do
 
     weight = ENV['WEIGHT'] || 1
 
-    if ENV['BEFORE']
+    matched = if ENV['BEFORE']
       presenter.restrict_before(time, weight)
-    else
+    elsif ENV['AFTER']
       presenter.restrict_after(time, weight)
+    else
+      raise "Please specify either BEFORE=1 or AFTER=1 in the env"
     end
+
+    if matched.empty?
+      raise "Your time constraints matched no timeslots. (Did you forget to use 24-hour format for afternoon times?)"
+    end
+
+    puts "#{presenter.name} now excluded from following timeslots:"
+    puts presenter.presenter_timeslot_restrictions.map(&:timeslot).join("\n")
   end
 
   desc 'show restrictions for current event'
   task :show_restrictions => :environment do
-    PresenterTimeslotRestriction.all.each do |r|
-      next unless r.timeslot.event == Event.current_event
-      puts "#{r.participant.name}" +
-           " #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
-           " present at #{r.timeslot.starts_at.in_time_zone.to_s(:usahhmm) if r.timeslot}" +
-           " (weight=#{r.weight}); actual times: #{r.participant.sessions_presenting.map { |s| s.timeslot.starts_at.in_time_zone.to_s(:usahhmm)}}"
+    restrictions_grouped = PresenterTimeslotRestriction
+      .where('timeslot_id in (select id from timeslots where event_id = ?)', Event.current_event.id)
+      .group_by(&:participant)
+    restrictions_grouped.each do |presenter, restrictions|
+      puts "#{presenter.name}"
+      sessions = presenter.sessions_presenting.where('event_id = ?', Event.current_event.id)
+      puts "  who is presenting #{sessions.map(&:title).join("\n                and ")}"
+      restrictions.each do |r|
+        puts "  #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
+             " present at #{r.timeslot}" +
+             " (weight=#{r.weight})"
+      end
+      puts "  and is scheduled for: #{presenter.sessions_presenting.map { |s| s.timeslot }.join(", ")}"
     end
   end
 
@@ -173,13 +189,14 @@ namespace :app do
     end
   end
 
-  # We can schedule certain sessions into blocks before running
-  # the scheduler. These sessions will not get scheduled elsewhere.
-  # However the scheduler will pay no-attention to them, so you probably
-  # only want to place them into Timeslots where schedulable is false.
-  # For example you may place a "Presenters Luncheon, rm 123" during the
-  # "Lunch" timeslot.
-  desc 'create a schedule for most recent event. Only unassigned sessions will be scheduled.'
+  # CAUTION! This task wipes and regenerates the schedule, removing any existing room & timeslot
+  # assignments.
+  #
+  # To prevent this task from altering a particualr session's timeslot and room, use:
+  #
+  #   session.update_attributes(manually_scheduled: true)
+  #
+  desc 'Create a schedule for the current event. DANGER: Wipes existing schedule!'
   task :generate_schedule => :environment do
     quality = (ENV['quality'] || 1).to_f
 
@@ -192,8 +209,8 @@ namespace :app do
 
     puts
     puts "Assigning sessions to time slots..."
-    max_iter         = ((quality ** 0.5) * 2000).ceil
-    repetition_count =  (quality ** 0.5).ceil
+    max_iter         = (quality ** 0.5 * 12000).ceil
+    repetition_count = 1  # because generate_schedule now supports manual re-running
     puts
     puts "Quality = #{quality}:    (adjust using 'quality' env var)"
     puts "   #{repetition_count} cooling cycle(s)"
@@ -204,16 +221,56 @@ namespace :app do
     annealer = Annealer.new(
       repetition_count: repetition_count,
       cooling_time: 100 * repetition_count,
+      cooling_func: (
+        lambda do |iter_count|
+          Math.exp(-(iter_count + 15000) / (100 * repetition_count))
+        end
+      ),
       max_iter: max_iter,
       log_to: STDOUT)
     best = annealer.anneal schedule
     puts "BEST SOLUTION:"
     p best
 
-    best.assign_rooms_and_save!
+    best.save!
 
     puts
     puts 'Congratulations. You have a schedule!'
+  end
+
+  desc 'assign scheduled sessions to rooms'
+  task :assign_rooms => :environment do
+    Session.transaction(isolation: :serializable) do
+      already_assigned_count = 0
+      reassign_existing_rooms = (ENV['reassign_rooms'].to_i != 0)
+
+      rooms_by_capacity = event.rooms.sort_by { |r| -r.capacity }
+      event.timeslots.where(schedulable: true).order('starts_at').each do |slot|
+        puts slot
+        sessions = Session.preload_attendance_counts(slot.sessions)
+          .sort_by { |s| -s.estimated_interest }
+
+        unless reassign_existing_rooms
+          assigned, unassigned = sessions.partition(&:room_id?)
+          sessions = unassigned
+          already_assigned_count += assigned.size
+        end
+
+        sessions.zip(rooms_by_capacity) do |session, room|
+          puts "    #{session.id} #{session.title}" +
+               " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
+               " in #{room.name} (#{room.capacity})"
+          session.room = room
+          session.save!
+        end
+      end
+
+      if already_assigned_count > 0
+        puts
+        puts "WARNING: #{already_assigned_count} sessions already had rooms assigned. " \
+          "Use reassign_rooms=1 to redo these existing room assignements based on updated vote tallies."
+      end
+    end
   end
 
   desc 'export schedule for import to another node (for running annealer locally & exporting to heroku)'
@@ -222,7 +279,7 @@ namespace :app do
       export = {
         sessions: Hash[
           Event.current_event.sessions.map do |session|
-            [session.id, { slot: session.timeslot.id, room: session.room.id }]
+            [session.id, { slot: session.timeslot_id, room: session.room_id }]
           end
         ]
       }
@@ -236,11 +293,126 @@ namespace :app do
     Event.transaction do
       export['sessions'].each do |sid, opts|
         session = Session.find(sid)
-        session.timeslot = Timeslot.find(opts['slot'])
-        session.room = Room.find(opts['room'])
-        puts "#{session.timeslot} #{session.title} [#{session.room.name}]"
+        session.timeslot = (Timeslot.find(opts['slot']) if opts['slot'])
+        session.room = (Room.find(opts['room']) if opts['room'])
+        puts "#{session.timeslot} #{session.title} [#{session.room&.name}]"
         session.save!
       end
+    end
+  end
+
+  desc 'print a summary of data that will affect the quality of the generated schedule'
+  task :analyze_scheduler_input_quality => :environment do
+    def frequencies(elems)
+      elems.each_with_object(Hash.new(0)) do |elem, counts|
+        counts[elem] += 1
+      end
+    end
+
+    def frequency_dump(values)
+      freqs = frequencies(values)
+      max = freqs.map(&:last).max
+      freqs.sort_by(&:first).each do |value, count|
+        print "       %3d   %3d " % [value, count]
+        print '━' * (60.0 * count / max).round
+        if block_given?
+          print ' '
+          yield value, count
+        end
+        puts
+      end
+    end
+
+    participant_count = event.participants.uniq.count
+    vote_counts = frequencies(event.attendances.map(&:participant_id))
+    multivoting_count = vote_counts.select { |_, count| count > 1 }.count
+    multivoting_rate = 100.0 * multivoting_count / participant_count
+
+    puts "Stats for #{event.name}"
+    puts
+    puts "#{event.sessions.count} sessions"
+    puts "#{participant_count} participants who voted"
+    puts "#{event.attendances.count} attendances"
+    puts
+    puts "The biggie:"
+    puts "#{multivoting_count} participants (#{"%1.1f" % multivoting_rate}% of those voting) expressed interest in multiple sessions"
+    puts
+    
+    puts "Distribution of number of sessions of interest"
+    puts "(How many people expressed interest in n sessions?)"
+    puts
+    puts "  sessions | people"
+    frequency_dump(vote_counts.values) do |vote_count, freq|
+      if freq == 1
+        participant_id = vote_counts.select { |_, count| vote_count == count }.first.first
+        print "  (#{Participant.find(participant_id).name})"
+      end
+    end
+    puts
+
+    puts "Distribution of voting windows"
+    puts "(How many sessions have been available for voting for at least n days?)"
+    puts
+    puts "      days | sessions"
+    frequency_dump(
+      event.sessions.map { |s| ((Time.now - s.created_at) / 1.day).floor })
+    puts
+    
+    participants = event.participants.includes(:sessions_attending)
+  end
+
+  task :analyze_session_popularity => :environment do
+    puts "Most popular sessions"
+    puts
+    timeslots = event.timeslots.where(schedulable: true).order(:starts_at)
+    puts "#{' ' * timeslots.count} raw est title                                    presenters"
+    puts "#{' ' * timeslots.count} --- --- ---------------------------------------- ----------"
+    event.sessions
+      .select('
+        sessions.*,
+        (select count(*) from attendances where session_id = sessions.id) as attendance_count')
+      .order('attendance_count desc, id')
+      .limit(64)
+      .each do |session|
+        puts "%s %3d %3d %-40.40s %s" % [
+          timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
+          session.attendance_count,
+          session.estimated_interest,
+          session.title,
+          session.presenters.map(&:email).join(", ")
+        ]
+      end
+    puts
+
+    puts "Scheduling conflicts that would upset the most people"
+    puts
+    pairs = Attendance.connection.select_rows("
+        select a1.session_id s1,
+               a2.session_id s2,
+               count(*)
+          from attendances a1,
+               attendances a2,
+               sessions s1,
+               sessions s2
+         where a1.participant_id = a2.participant_id
+           and a1.session_id < a2.session_id
+           and a1.session_id = s1.id
+           and a2.session_id = s2.id
+           and s1.event_id = #{event.id} -- ugh...how do binds work w/select_rows?!?
+           and s2.event_id = #{event.id}
+      group by s1, s2
+      order by count desc
+         limit 128")
+    pairs.each do |s1_id, s2_id, count|
+      s1, s2 = [s1_id, s2_id].map { |id| Session.find(id) }
+      status = if !s1.timeslot_id || !s2.timeslot_id
+        '(unscheduled)'
+      elsif s1.timeslot_id == s2.timeslot_id
+        'CONFLICT AS SCHEDULED'
+      else
+        ''
+      end
+      puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title, s2.title, status]
     end
   end
 
@@ -306,6 +478,17 @@ namespace :app do
     end
 
   end
+
+private
+
+  def event
+    @event ||= if event_id = ENV['event']
+      Event.find(event_id)
+    else
+      Event.current_event
+    end
+  end
+
 end
 
 

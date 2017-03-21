@@ -40,7 +40,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.0)
       public_suffix (~> 2.0, >= 2.0.2)
-    annealer (0.2)
+    annealer (0.3)
     arel (7.1.4)
     authlogic (3.5.0)
       activerecord (>= 3.2, < 5.1)

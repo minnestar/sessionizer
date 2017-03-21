@@ -142,7 +142,7 @@ class Session < ActiveRecord::Base
         sessions_by_id[row.session_id].attendance_count = row.attendance_count
       end
 
-    nil
+    sessions
   end
 
   # Estimates actual event-day interest for this session relative to other sessions,
@@ -156,10 +156,10 @@ class Session < ActiveRecord::Base
   #
   def estimated_interest
     @estimated_interest ||= begin
-      session_votes     = attendance_count.to_f
-      possible_votes    = event.attendances.where('attendances.created_at >= ?', created_at).count.to_f
-      session_count     = event.sessions.count.to_f
-      participant_count = event.participants.count.to_f
+      session_votes  = attendance_count.to_f
+      possible_votes = event.attendances.where('attendances.created_at >= ?', created_at).count.to_f
+      session_count  = event.sessions.count.to_f
+      total_votes    = event.attendances.count.to_f
 
       # For sessions created at the last minute, we don't have enough information to make
       # a good estimate; both session_votes and possible_votes are too low. If we just divide
@@ -169,9 +169,8 @@ class Session < ActiveRecord::Base
       # We therefore add some ghost "ballast votes" across the board to all sessions, so as to
       # make estimated_interest tend toward the mean in cases when there are few real votes.
 
-      ballast_votes = 3.0
-
-      (session_votes + ballast_votes) / (possible_votes + ballast_votes * session_count) * participant_count
+      ballast_votes = 10.0
+      session_votes / (possible_votes + ballast_votes * session_count) * total_votes      
     end
   end
 

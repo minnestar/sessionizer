@@ -2,7 +2,7 @@ require 'pp'
 
 
 module Scheduling
-  # Represents a particular schedule (i.e. assignment of sessions to rooms) for the purpose of annealing.
+  # Represents a particular schedule (i.e. assignment of sessions to timeslots) for the purpose of annealing.
   # Scores the schedule and returns nearby variations.
   #
   class Schedule
@@ -12,7 +12,11 @@ module Scheduling
       @slots_by_session = {}                            # map from session to timeslot
       @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
 
-      fill_schedule!(event.sessions.includes(:timeslot).to_a)
+      fill_schedule!(
+        event.sessions
+          .where(manually_scheduled: false)
+          .includes(:timeslot)
+          .to_a)
     end
 
     def initialize_copy(source)  # deep copy; called by dup
@@ -63,12 +67,16 @@ module Scheduling
       score(:presenting)
     end
 
-    # Gives lower & upper bounds on the possible range of attendance_score
-    def attendance_score_bounds
-      best_score  = ctx.people.sum { |p| p.attending.best_possible_score }
-      worst_score = ctx.people.sum { |p| p.attending.worst_possible_score }
-      count = ctx.people.size
-      (worst_score / count) .. (best_score / count)
+    # Gives bounds on the possible range of attendance_score. Returns [best, random, worst] scores.
+    def attendance_score_metrics
+      count = ctx.people.size.to_f
+      %i(
+        worst_possible_score
+        random_schedule_score
+        best_possible_score
+      ).map do |metric|
+        ctx.people.sum { |p| p.attending.send(metric) } / count
+      end
     end
 
   private
@@ -99,15 +107,14 @@ module Scheduling
       end
 
       unassigned = sessions.reject(&:timeslot)
-      room_count = ctx.rooms.size
       ctx.timeslots.each do |slot|
-        opening_count = room_count - @sessions_by_slot[slot].size
+        opening_count = ctx.room_count - @sessions_by_slot[slot].size
         slot_sessions = (unassigned.slice!(0, opening_count) || []).map(&:id)
         slot_sessions << Unassigned.new while slot_sessions.size < opening_count
         slot_sessions.each { |session| schedule(session, slot)  }
       end
       unless unassigned.empty?
-        raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{room_count} rooms = #{ctx.timeslots.size * room_count} combinations."
+        raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{ctx.room_count} rooms = #{ctx.timeslots.size * ctx.room_count} combinations."
       end
     end
 
@@ -147,19 +154,17 @@ module Scheduling
 
     # ------------ Managing results ------------
 
-    def assign_rooms_and_save!
+    def save!
       Session.transaction do
-        rooms_by_capacity = ctx.rooms.sort_by { |r| -r.capacity }
-        @sessions_by_slot.sort_by { |k,v| k.starts_at }.each do |slot_id, session_ids|
-          slot = Timeslot.find(slot_id)
+        ctx.timeslots.sort_by(&:starts_at).each do |slot|
           puts slot
-          sessions = Session.find(session_ids.reject { |s| Unassigned === s }).sort_by { |s| -s.estimated_interest }
-          sessions.zip(rooms_by_capacity) do |session, room|
-            puts "    #{session.categories.map(&:name).inspect} #{session.title}" +
-                 " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
-                 " in #{room.name} (#{room.capacity})"
+          sessions = Session.find(
+            @sessions_by_slot[slot].reject { |s| Unassigned === s })
+          sessions.sort_by { |s| -s.attendance_count }.each do |session|
+            puts "    #{session.id} #{session.title}" +
+                 " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)"
             session.timeslot = slot
-            session.room = room
+            session.room = nil  # Rooms have to be reassigned after rearranging timeslots
             session.save!
           end
         end
@@ -167,9 +172,13 @@ module Scheduling
     end
 
     def inspect
-      s = "Schedule"
-      s << " | average participant is #{format_percent attendance_score} satisfied with schedule"
-      s << " | presenter score = #{format_percent presenter_score} (we want 100)\n"
+      worst_score, random_score, best_score = self.attendance_score_metrics
+      attendance_score_scaled = (attendance_score - random_score) / (best_score - random_score)
+
+      s = "Schedule\n"
+      s << "| quality vs. random = #{format_percent attendance_score_scaled} (0% is no better than random; 100% is unachievable; > 50% is good)\n"
+      s << "| absolute satisfaction = #{format_percent attendance_score} of impossibly perfect schedule\n"
+      s << "| presenter score = #{format_percent presenter_score} (if < 100 then speakers are double-booked)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
@@ -177,13 +186,21 @@ module Scheduling
     end
 
     def inspect_bounds
-      possible_range = self.attendance_score_bounds
-      s = "Given the number of timeslots and sessions of interest, the average participant cannot possibly be...\n"
-      s << "    less than #{'%03.3f' % ((possible_range.begin) * 100)}%\n"
-      s << "    more than #{'%03.3f' % ((possible_range.end  ) * 100)}%\n"
-      s << "...satisfied with the schedule, whatever it is."
-      s << " (Note that these are just limits on what is possible."
-      s << " Neither bounds is actually likely to be achievable.)"
+      worst_score, random_score, best_score = self.attendance_score_metrics
+      s =  "If we could give everyone a different schedule optimized just for them,\n"
+      s << "the schedule quality could be...\n"
+      s << "\n"
+      s << "    at worst #{'%03.3f' % ((worst_score) * 100)}%\n"
+      s << "     at best #{'%03.3f' % ((best_score ) * 100)}%\n"
+      s << "\n"
+      s << "Note that these are outer limits on what is possible.\n"
+      s << "Neither the best nor the worst score is likely to be achievable.\n"
+      s << "\n"
+      s << "If we pick a schedule at random, its score will be about\n"
+      s << "\n"
+      s << "             #{'%03.3f' % ((random_score) * 100)}%\n"
+      s << "\n"
+      s << "...and that's what we're trying to improve on.\n"
     end
 
   private
