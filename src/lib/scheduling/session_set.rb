@@ -77,6 +77,7 @@ module Scheduling
 
       @sessions.each do |session|
         slot = schedule.slot_id_for(session)
+        next unless slot  # happens when session is manually_scheduled & not in a timeslot
         slot_session_count[slot] += 1
         penalty += @penalty_callback.call(slot)
       end

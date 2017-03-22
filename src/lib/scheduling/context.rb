@@ -10,7 +10,7 @@ module Scheduling
     attr_reader :sessions, :timeslots, :room_count
 
     def initialize(event)
-      @sessions = event.sessions.where(manually_scheduled: false).pluck(:id)
+      @sessions = event.sessions.pluck(:id)
       @timeslots = event.timeslots.where(schedulable: true)
       @room_count = event.rooms.where(schedulable: true).count
       @people_by_id = Hash.new { |h,id| h[id] = Person.new(self, id) }
