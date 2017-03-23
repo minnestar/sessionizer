@@ -187,6 +187,8 @@ namespace :app do
 
     best.save!
 
+    best.dump_presenter_conflicts
+
     puts
     puts 'Congratulations. You have a schedule!'
   end
