@@ -4,8 +4,7 @@ class AttendancesController < ApplicationController
   load_resource :session
 
   def create
-    @attendance = @session.attendances.build
-    @attendance.participant = current_participant
+    @attendance = @session.attendances.find_or_initialize_by(participant: current_participant)
     if @attendance.save
       respond_to do |format|
         format.html do
@@ -24,6 +23,11 @@ class AttendancesController < ApplicationController
         end
       end
     end
+  end
+
+  def destroy
+    return render :unauthorized unless current_participant
+    @session.attendances.where(participant: current_participant).destroy_all
   end
 
   private

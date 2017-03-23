@@ -135,7 +135,7 @@ ul.sessionsList {
   }
   li {
     margin: 0.6em 0;
-    padding-left: 1.8em;
+    padding-left: 2.2em;
     letter-spacing: -0.05em;
     display: inline-block;  // prevent column break
     width: 100%;
@@ -165,6 +165,37 @@ ul.sessionsList {
   }
 }
 
+.toggle-attending {
+  display: inline-block;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+
+  width: 1.8em;
+  height: 1.8em;
+  margin-bottom: -1.8em;
+  float: left;
+  position: relative;
+  left: -2.4em;
+  top: 0.1em;
+
+  color: transparent;  // Text is for accessibility only
+
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  &[data-session-attending="true"] {
+    background-image: image-url("session-attending-true.svg");
+  }
+  &[data-session-attending="false"] {
+    background-image: image-url("session-attending-false.svg");
+  }
+  &.loading {
+    background-image: image-url("loading.svg") !important;
+    pointer-events: none;
+  }
+}
 
 .clearboth {
   clear: both;
