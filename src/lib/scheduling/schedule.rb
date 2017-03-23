@@ -190,6 +190,21 @@ module Scheduling
       end
     end
 
+    def dump_presenter_conflicts
+      unhappy_presenters = ctx.people.select do |person|
+        person.presenting.score(self) < 1
+      end
+
+      if unhappy_presenters.any?
+        puts
+        puts "WARNING! The following presenters have problems with this schedule:"
+        unhappy_presenters.each do |person|
+          puts "    #{person.id} #{Participant.find(person.id).name}"
+        end
+        puts
+      end
+    end
+
     def inspect
       worst_score, random_score, best_score = self.attendance_score_metrics
       attendance_score_scaled = (attendance_score - random_score) / (best_score - random_score)
@@ -197,7 +212,7 @@ module Scheduling
       s = "Schedule\n"
       s << "| quality vs. random = #{format_percent attendance_score_scaled} (0% is no better than random; 100% is unachievable; > 50% is good)\n"
       s << "| absolute satisfaction = #{format_percent attendance_score} of impossibly perfect schedule\n"
-      s << "| presenter score = #{format_percent presenter_score} (if < 100 then speakers are double-booked)\n"
+      s << "| presenter score = #{format_percent presenter_score} (if < 100 then presenters have conflicts)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
