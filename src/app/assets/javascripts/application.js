@@ -22,13 +22,15 @@ Sessionizer.Attend = function() {
     return window.location.href + '/attendance.json';
   }
 
-  function sendAttendanceRequest(attending, opts) {
-console.log(attending);
+  function sendAttendanceRequest(opts) {
     opts.beforeSend = function(xhr) {
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     };
     opts.dataType = 'html';
-    opts.type = attending ? 'POST' : 'DELETE';
+    if(opts.hasOwnProperty('attending')) {
+      opts.type = opts.attending ? 'POST' : 'DELETE';
+      delete opts.attending;
+    }
 
     $.ajax(opts);
   }
@@ -40,8 +42,9 @@ console.log(attending);
     },
 
     attend: function() {
-      sendAttendanceRequest(true, {
+      sendAttendanceRequest({
         url: attendanceUrl(),
+        attending: true,
         success: function(data, textStatus) {
           $("div#interested-in-attending").after('<div id="flash_notice">Thanks for your interest in this session.</div>');
           $("div#interested-in-attending").slideUp();
@@ -57,13 +60,15 @@ console.log(attending);
     },
 
     toggle: function(e) {
+      e.stopPropagation();
       $button = $(e.target)
       var sessionID = $button.data("session-id");
       var attending = $button.attr("data-session-attending") == "true";  // Don't let jQuery keep secret data; css needs data attr
 
       $button.addClass("loading");
-      sendAttendanceRequest(!attending, {
+      sendAttendanceRequest({
         url: "/sessions/" + sessionID + "/attendance.json",
+        attending: !attending,
         success: function(data, textStatus) {
           $button.removeClass("loading");
           $button.attr("data-session-attending", !attending);
@@ -71,6 +76,16 @@ console.log(attending);
         error: function(xmlhttp) {
           console.log("error", arguments);
           $button.removeClass("loading");
+        }
+      });
+    },
+
+    list: function(success) {
+      sendAttendanceRequest({
+        url: '/attendances',
+        success: success,
+        error: function(xmlhttp) {
+          console.log("error", arguments);
         }
       });
     }
