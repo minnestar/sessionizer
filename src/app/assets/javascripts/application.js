@@ -38,7 +38,18 @@ Sessionizer.Attend = function() {
   return {
     setup: function() {
       $("button#attend").click(Sessionizer.Attend.attend);
-      $(".toggle-attending").click(Sessionizer.Attend.toggle);
+
+      var $attendingToggles = $(".toggle-attendance");
+      if($attendingToggles.length > 0) {
+        $attendingToggles.click(Sessionizer.Attend.toggle);
+        
+        Sessionizer.Attend.list(function(sessionIDs) {
+          $attendingToggles.each(function(index, elem) {
+            sessionID = $(elem).attr('data-session-id');
+            $(elem).attr('data-session-attending', sessionIDs.indexOf(sessionID) != -1);
+          });
+        });
+      }
     },
 
     attend: function() {

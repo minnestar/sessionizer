@@ -16,15 +16,6 @@
     $(function() {
       var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
 
-      // Load favorite sessions
-
-      Sessionizer.Attend.list(function(sessionIDs) {
-        $('.toggle-attending').each(function(index, elem) {
-          sessionID = $(elem).attr('data-session-id');
-          $(elem).attr('data-session-attending', sessionIDs.indexOf(sessionID) != -1);
-        });
-      });
-
       // Jump to timeslot
 
       var updateTimeslotNav = function() {

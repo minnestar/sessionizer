@@ -165,7 +165,7 @@ ul.sessionsList {
   }
 }
 
-.toggle-attending {
+.toggle-attendance {
   display: inline-block;
   border: none;
   outline: none;
@@ -220,15 +220,15 @@ ul.sessionsList {
     float: left;
     color: #333;
     font-weight: 800;
-    text-shadow: 1px 1px rgba(0,0,0,0.2);
-    border-left: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(0,0,0,0.2);
   }
   .meta {
     text-indent: -9999px;
-    padding: 10px;
-    background: image-url("minnebar.png") no-repeat 1em .6em;
-    width: 1.8em;
-    border-right: 1px solid rgba(0,0,0,0.2);
+    padding: 0.7em;
+    margin: 0.2em;
+    background: image-url("session-attending-true.svg") no-repeat;
+    background-size: contain;
+    width: 1.6em;
     float: left;
   }
 }
