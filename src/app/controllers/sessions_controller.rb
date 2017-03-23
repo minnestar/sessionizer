@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
     else
       @event = Event.current_event
     end
-    @sessions = @event.sessions.order('created_at desc')
+    @sessions = @event.sessions.includes(:presenters).order('created_at desc')
     respond_with @sessions do |format|
       format.json {
         render json: SessionsJsonBuilder.new.to_json(@sessions.distinct)

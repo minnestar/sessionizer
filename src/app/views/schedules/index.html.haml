@@ -1,4 +1,4 @@
-- cache [@event.sessions.maximum(:updated_at), @event.timeslots.maximum(:updated_at)] do
+- cache [@event.sessions, @event.timeslots] do
   = render 'header'
   .schedule
     .schedule-header
