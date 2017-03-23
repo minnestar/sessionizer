@@ -44,12 +44,12 @@ describe AttendancesController do
           end
         end
 
-        it "should render a problem" do
+        it "should have no effect" do
           expect {
             post :create, params: {session_id: session, format: :json}
           }.to_not change { session.attendances.count }
-          expect(response).to render_template "sessions/_new_participant"
-          expect(response.status).to eq 422
+          expect(response).to be_successful
+          expect(response).to render_template "sessions/_participant"
         end
       end
     end

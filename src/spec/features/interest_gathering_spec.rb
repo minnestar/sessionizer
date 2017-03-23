@@ -32,7 +32,7 @@ feature "Gauging interest in a session" do
     page.find("#attend").click
 
     expect(page).to have_content 'Thanks for your interest in this session.'
-    expect(page).to have_selector 'ul#participants li', text: 'Hedy Lamarr'
+    expect(page).to have_selector 'ul#participants li', text: 'You!'
   end
 
 end
