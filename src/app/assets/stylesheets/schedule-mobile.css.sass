@@ -28,13 +28,15 @@
           font-size: 1.4em !important
         .sessions
           .column
-            width: 100% !important
+            width: 98% !important  // padding is 1% on each side
             .session
               padding: 1.4ex
               .toggle-attendance
                 float: right
-                margin: 0 0 1em 1em
+                margin: 0 0 0.5em 1em
                 left: 0
+              .room
+                padding-top: 0  // because * is on right now, and baseline-aligned room looks funny next to it
 
 @media all and (max-width: 29em)
   #schedule-body
