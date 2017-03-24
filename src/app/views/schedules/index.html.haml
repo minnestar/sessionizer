@@ -11,7 +11,7 @@
         Session Schedule
       - if current_participant.nil?
         %p
-          = link_to 'Log in', new_login_path(after_login: schedule_path(foo: 'bar'))
+          = link_to 'Log in', new_login_path(after_login: schedule_path)
           to mark your favorite sessions
     .timeslots
       = render event_timeslots
