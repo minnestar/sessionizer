@@ -147,6 +147,16 @@ class Session < ActiveRecord::Base
     sessions
   end
 
+  def self.largest_attendance_first(sessions)
+    preload_attendance_counts(sessions)
+      .sort_by(&:expected_attendance)
+      .reverse
+  end
+
+  def expected_attendance
+    manual_attendance_estimate || attendance_count
+  end
+
   # Estimates actual event-day interest for this session relative to other sessions,
   # expressed as a corrected number of votes.
   #
