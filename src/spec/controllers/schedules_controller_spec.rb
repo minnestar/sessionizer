@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SchedulesController do
   describe "#index" do
+    render_views
+
     before { Rails.cache.clear }
 
     let!(:event) { create(:event, :full_event) }
