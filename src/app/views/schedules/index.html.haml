@@ -1,4 +1,4 @@
-- cache [@event.sessions, @event.timeslots] do
+- cache [current_participant.nil?, @event.sessions, @event.timeslots] do
   = render 'header'
   .schedule
     .schedule-header
@@ -9,6 +9,10 @@
       %h1
         = @event.name
         Session Schedule
+      - if current_participant.nil?
+        %p
+          = link_to 'Log in', new_login_path(after_login: schedule_path(foo: 'bar'))
+          to mark your favorite sessions
     .timeslots
       = render event_timeslots
 
