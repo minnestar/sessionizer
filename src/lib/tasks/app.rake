@@ -78,7 +78,7 @@ namespace :app do
       { name: 'Texas',           capacity: 16 }, 
       # { name: 'California',      capacity: 16 },
       { name: 'Florida',         capacity: 12 }, # TV, no projector
-      { name: 'George',          capacity: 12 }, # TV, no projector
+      { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Kansas',          capacity: 10 }, # TV, no projector
     ]
 
