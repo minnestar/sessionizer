@@ -1,6 +1,6 @@
 .nav-top
   .timeslots
-    - @event.timeslots.where(schedulable: true).each do |slot|
+    - event_timeslots.where(schedulable: true).each do |slot|
       %a.timeslot{:id => "timeslot_#{slot.id}_nav",
                   :href=> "#timeslot_#{slot.id}",
                   :startsAt => slot.starts_at.in_time_zone.to_i,

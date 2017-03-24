@@ -22,35 +22,87 @@ Sessionizer.Attend = function() {
     return window.location.href + '/attendance.json';
   }
 
+  function sendAttendanceRequest(opts) {
+    opts.beforeSend = function(xhr) {
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+    };
+    opts.dataType = 'html';
+    if(opts.hasOwnProperty('attending')) {
+      opts.type = opts.attending ? 'POST' : 'DELETE';
+      delete opts.attending;
+    }
+
+    $.ajax(opts);
+  }
+
   return {
     setup: function() {
       $("button#attend").click(Sessionizer.Attend.attend);
+
+      var $attendingToggles = $(".toggle-attendance");
+      if($attendingToggles.length > 0) {
+        $attendingToggles.click(Sessionizer.Attend.toggle);
+        
+        Sessionizer.Attend.list(function(sessionIDs) {
+          $attendingToggles.each(function(index, elem) {
+            sessionID = $(elem).attr('data-session-id');
+            $(elem).attr('data-session-attending', sessionIDs.indexOf(sessionID) != -1);
+          });
+        });
+      }
     },
 
     attend: function() {
-      $.ajax({url: attendanceUrl(),
-              beforeSend: function(xhr) {
-                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-              },
-              type: 'POST',
-              dataType: 'html',
-              success: function(data, textStatus) {
-                $("div#interested-in-attending").after('<div id="flash_notice">Thanks for your interest in this session.</div>');
-                $("div#interested-in-attending").slideUp();
-                $("div#no-participants").fadeOut('fast');
-                $("ul#participants").prepend(data);
-              },
-              error: function(xmlhttp) {
-                $("div#interested-in-attending").html(xmlhttp.responseText);
-              }
-             });
+      sendAttendanceRequest({
+        url: attendanceUrl(),
+        attending: true,
+        success: function(data, textStatus) {
+          $("div#interested-in-attending").after('<div id="flash_notice">Thanks for your interest in this session.</div>');
+          $("div#interested-in-attending").slideUp();
+          $("div#no-participants").fadeOut('fast');
+          $("ul#participants").prepend("<li><b>You!</b></li>");
+        },
+        error: function(xmlhttp) {
+          $("div#interested-in-attending").html(xmlhttp.responseText);
+        }
+      });
 
       return false;
+    },
+
+    toggle: function(e) {
+      e.stopPropagation();
+      $button = $(e.target)
+      var sessionID = $button.data("session-id");
+      var attending = $button.attr("data-session-attending") == "true";  // Don't let jQuery keep secret data; css needs data attr
+
+      $button.addClass("loading");
+      sendAttendanceRequest({
+        url: "/sessions/" + sessionID + "/attendance.json",
+        attending: !attending,
+        success: function(data, textStatus) {
+          $button.removeClass("loading");
+          $button.attr("data-session-attending", !attending);
+        },
+        error: function(xmlhttp) {
+          console.log("error", arguments);
+          $button.removeClass("loading");
+        }
+      });
+    },
+
+    list: function(success) {
+      sendAttendanceRequest({
+        url: '/attendances',
+        success: success,
+        error: function(xmlhttp) {
+          console.log("error", arguments);
+        }
+      });
     }
   };
 }();
 
 $(function() {
-    $(Sessionizer.Attend.setup);
-  });
-
+  $(Sessionizer.Attend.setup);
+});

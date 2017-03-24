@@ -3,16 +3,27 @@ class AttendancesController < ApplicationController
 
   load_resource :session
 
+  def index
+    if current_participant
+      render json: current_participant.sessions_attending
+        .where(event: Event.current_event)
+        .pluck(:id)
+    else
+      head :unauthorized
+    end
+  end
+
   def create
-    @attendance = @session.attendances.build
-    @attendance.participant = current_participant
+    @attendance = @session.attendances.find_or_initialize_by(participant: current_participant)
     if @attendance.save
       respond_to do |format|
+        # Appears after the user logs in by clicking on “Yes! I might attend” while logged out
         format.html do
           flash[:notice] = "Thanks for your interest in this session."
           redirect_to @session
         end
 
+        # Appears when user already logged in
         format.json do
           render :partial => 'sessions/participant', :formats => ['html'], :locals => { :participant => current_participant }
         end
@@ -24,6 +35,11 @@ class AttendancesController < ApplicationController
         end
       end
     end
+  end
+
+  def destroy
+    return head :unauthorized unless current_participant
+    @session.attendances.where(participant: current_participant).destroy_all
   end
 
   private

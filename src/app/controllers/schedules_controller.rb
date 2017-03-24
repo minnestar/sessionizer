@@ -4,8 +4,7 @@ class SchedulesController < ApplicationController
       redirect_to home_page_path
       return
     end
-    use_cache = !params[:force]
-    @event = schedule(event(use_cache))
+    @event = Event.current_event
     render layout: 'schedule'
   end
 
@@ -55,28 +54,21 @@ class SchedulesController < ApplicationController
     render plain: cal.to_ical, :content_type => 'text/calendar'
   end
 
-  protected
+  def event_timeslots
+    @event_timeslots ||= load_event.timeslots
+  end
+  helper_method :event_timeslots
 
-  def schedule(event)
-    Rails.cache.fetch("#{event.cache_key}/schedule", expires_in: 10.minutes) do
-      event = Event.includes(timeslots: { sessions: [:room, :presenters] }).find(event.id)
+  private
 
-      # Preload vote counts in order to sort sessions by popularity
-      Session.preload_attendance_counts(
-        event.timeslots.map(&:sessions).flatten)
+  def load_event
+    event = Event.includes(timeslots: { sessions: [:room, :presenters] }).find(Event.current_event.id)
 
-      event
-    end
+    # Preload vote counts in order to sort sessions by popularity
+    Session.preload_attendance_counts(
+      event.timeslots.map(&:sessions).flatten)
+
+    event
   end
 
-  # @param [TrueClass, FalseClass] cached Fetch the event from the cache?
-  def event(cached)
-    if cached
-      Rails.cache.fetch("current_event", expires_in: 10.minutes) do
-        Event.current_event
-      end
-    else
-      Event.current_event
-    end
-  end
 end

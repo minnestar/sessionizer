@@ -2,7 +2,8 @@
 module ApplicationHelper
 
   def edit(obj, &blk)
-    if logged_in? && obj == current_participant || (obj.respond_to?(:participant) && obj.participant == current_participant)
+    return unless logged_in?
+    if obj == current_participant || obj.try(:participant_id) == current_participant.id
       concat(capture(&blk))
     end
   end
@@ -28,5 +29,9 @@ module ApplicationHelper
 
   def add_sessions_button
     link_to image_tag('button-add-session.png', :title => 'Add session', :size => "215x43", :border=>"0"), new_session_path, class: 'add-sessions-button', title: "Add Session"
+  end
+
+  def toggle_attendance_button(session)
+    content_tag(:button, "Attending", class: "toggle-attendance", 'data-session-id': session.id)
   end
 end

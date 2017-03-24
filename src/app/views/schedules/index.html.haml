@@ -1,160 +1,160 @@
-= render 'header'
-.schedule
-  .schedule-header
-    .controls
-      %a#hide-all(href='#') Hide all details
-      %a#show-all(href='#') Show all details
-      .clr
-    %h1
-      = @event.name
-      Session Schedule
-  .timeslots
-    = render @event.timeslots
+- cache [@event.sessions, @event.timeslots] do
+  = render 'header'
+  .schedule
+    .schedule-header
+      .controls
+        %a#hide-all(href='#') Hide all details
+        %a#show-all(href='#') Show all details
+        .clr
+      %h1
+        = @event.name
+        Session Schedule
+    .timeslots
+      = render event_timeslots
 
-:javascript
-  $(function() {
-    var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
+  :javascript
+    $(function() {
+      var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm|mobile/i.test(navigator.userAgent.toLowerCase())
 
+      // Jump to timeslot
 
-    // Jump to timeslot
+      var updateTimeslotNav = function() {
+        var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
+        var foundCurrent = false
+        $($('.schedule .timeslot').get().reverse()).each(function(i, slot) {
+          var selected = false;
+          if($(slot).offset().top <= scrollTop) {
+            if(!foundCurrent)
+              selected = true
+            foundCurrent = true
+          }
+          $('#' + slot.id + '_nav').toggleClass('selected', selected)
+        })
+        return true;
+      }
 
-    var updateTimeslotNav = function() {
-      var scrollTop = $(window).scrollTop() + $('.nav-top').height() + 30
-      var foundCurrent = false
-      $($('.schedule .timeslot').get().reverse()).each(function(i, slot) {
-        var selected = false;
-        if($(slot).offset().top <= scrollTop) {
-          if(!foundCurrent)
-            selected = true
-          foundCurrent = true
-        }
-        $('#' + slot.id + '_nav').toggleClass('selected', selected)
+      updateTimeslotNav();
+
+      var scrollingToSlot = false;
+
+      $('.nav-top .timeslot').click(function(evt) {
+        var link = $(evt.target)
+        slotIdSel = link.attr('href')
+        $('.nav-top .timeslot').toggleClass('selected', false)
+        $(slotIdSel + '_nav').toggleClass('selected', true)
+
+        // Temporarily force clicked time slot to be highlighted,
+        // even if it's near the end of the page & doesn't make it
+        // past the top edge of the window.
+        scrollingToSlot = true
+
+        $.scrollTo($(slotIdSel), {
+          duration: (mobile ? 0 : 500),
+          offset: { left: 0, top: -$('.nav-top').height() },
+          onAfter: function() {
+            setTimeout(function() {
+              // Make nav bar show true position again on next scroll
+              scrollingToSlot = false
+
+              // see below
+              $('#ios-bug-workaround').remove();
+            }, 10);
+          }
+        });
+
+        // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
+        // Adding and removing a div apparently forces it to generate its layout.
+        if(mobile)
+          $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body));
+
+        evt.stopPropagation();
+        return false;
       })
-      return true;
-    }
 
-    updateTimeslotNav();
-
-    var scrollingToSlot = false;
-
-    $('.nav-top .timeslot').click(function(evt) {
-      var link = $(evt.target)
-      slotIdSel = link.attr('href')
-      $('.nav-top .timeslot').toggleClass('selected', false)
-      $(slotIdSel + '_nav').toggleClass('selected', true)
-
-      // Temporarily force clicked time slot to be highlighted,
-      // even if it's near the end of the page & doesn't make it
-      // past the top edge of the window.
-      scrollingToSlot = true
-
-      $.scrollTo($(slotIdSel), {
-        duration: (mobile ? 0 : 500),
-        offset: { left: 0, top: -$('.nav-top').height() },
-        onAfter: function() {
-          setTimeout(function() {
-            // Make nav bar show true position again on next scroll
-            scrollingToSlot = false
-
-            // see below
-            $('#ios-bug-workaround').remove();
-          }, 10);
+      $(window).scroll(function() {
+        if(!scrollingToSlot) {
+          updateTimeslotNav();
         }
+        return true;
       });
 
-      // Fix for iOS bug where "position: fixed" elems stop responding to touches after scrolling.
-      // Adding and removing a div apparently forces it to generate its layout.
-      if(mobile)
-        $('<div id="ios-bug-workaround">.</div>').appendTo($(document.body));
 
-      evt.stopPropagation();
-      return false;
-    })
+      // Show current timeslot
 
-    $(window).scroll(function() {
-      if(!scrollingToSlot) {
-        updateTimeslotNav();
+      var showCurrentTimeslot = function() {
+        var curTime = Date.now();
+        var eventStarted = false;
+        var foundCurrent = false;
+
+        $('.nav-top .timeslot').each(function(i, slot) {
+          var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
+              slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
+
+          var now = false;
+          if(curTime >= slotStart)
+            eventStarted = true
+          if(eventStarted && !foundCurrent && curTime <= slotEnd)
+            now = foundCurrent = true
+          $(slot).toggleClass('now', now);
+        });
+
+        setTimeout(showCurrentTimeslot, 30000);
       }
-      return true;
-    });
 
+      showCurrentTimeslot();
 
-    // Show current timeslot
+      // Show / hide details
 
-    var showCurrentTimeslot = function() {
-      var curTime = Date.now();
-      var eventStarted = false;
-      var foundCurrent = false;
+      var updateButtons = function() {
+        $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0);
+        $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0);
+      }
+      var updateButtonsDelayed = function() {
+        setTimeout(updateButtons, 410);
+      }
 
-      $('.nav-top .timeslot').each(function(i, slot) {
-        var slotStart = parseInt($(slot).attr('startsAt')) * 1000,
-            slotEnd   = parseInt($(slot).attr('endsAt')) * 1000
+      $(updateButtons);
 
-        var now = false;
-        if(curTime >= slotStart)
-          eventStarted = true
-        if(eventStarted && !foundCurrent && curTime <= slotEnd)
-          now = foundCurrent = true
-        $(slot).toggleClass('now', now);
+      $('.session .header').click(function(evt) {
+        var session = $(evt.target).closest('.session');
+        session.find('.summary').slideToggle();
+        session.find('.description').slideToggle();
+        updateButtonsDelayed();
+        evt.stopPropagation();
+        return false;
       });
 
-      setTimeout(showCurrentTimeslot, 30000);
-    }
+      $('#show-all').click(function(evt) {
+        if(mobile) {
+          $('.session .summary').hide();
+          $('.session .description').show();
+          updateButtons();
+        } else {
+          $('.session .summary').slideUp();
+          $('.session .description').slideDown();
+          updateButtonsDelayed();
+        }
+        evt.stopPropagation();
+        return false;
+      })
 
-    showCurrentTimeslot();
+      $('#hide-all').click(function(evt) {
+        if(mobile) {
+          $('.session .summary').show();
+          $('.session .description').hide();
+          updateButtons();
+        } else {
+          $('.session .summary').slideDown();
+          $('.session .description').slideUp();
+          updateButtonsDelayed();
+        }
+        evt.stopPropagation();
+        return false;
+      })
 
-    // Show / hide details
 
-    var updateButtons = function() {
-      $('#show-all').toggleClass('disabled', $('.summary:visible').length == 0);
-      $('#hide-all').toggleClass('disabled', $('.description:visible').length == 0);
-    }
-    var updateButtonsDelayed = function() {
-      setTimeout(updateButtons, 410);
-    }
+      /// just open in a new window so they can zoom, etc
+      // Map popups
+      //$(".room").fancybox();
 
-    $(updateButtons);
-
-    $('.session .header').click(function(evt) {
-      var session = $(evt.target).closest('.session');
-      session.find('.summary').slideToggle();
-      session.find('.description').slideToggle();
-      updateButtonsDelayed();
-      evt.stopPropagation();
-      return false;
-    });
-
-    $('#show-all').click(function(evt) {
-      if(mobile) {
-        $('.session .summary').hide();
-        $('.session .description').show();
-        updateButtons();
-      } else {
-        $('.session .summary').slideUp();
-        $('.session .description').slideDown();
-        updateButtonsDelayed();
-      }
-      evt.stopPropagation();
-      return false;
     })
-
-    $('#hide-all').click(function(evt) {
-      if(mobile) {
-        $('.session .summary').show();
-        $('.session .description').hide();
-        updateButtons();
-      } else {
-        $('.session .summary').slideDown();
-        $('.session .description').slideUp();
-        updateButtonsDelayed();
-      }
-      evt.stopPropagation();
-      return false;
-    })
-
-
-    /// just open in a new window so they can zoom, etc
-    // Map popups
-    //$(".room").fancybox();
-
-  })

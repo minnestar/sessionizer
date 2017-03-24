@@ -2,15 +2,20 @@ require 'spec_helper'
 
 describe SchedulesController do
   describe "#index" do
+    render_views
+
     before { Rails.cache.clear }
+
+    let!(:event) { create(:event, :full_event) }
+    let!(:session) { create(:session, title: "Session #{rand}", event: event, timeslot: event.timeslots.first) }
+
     context "when settings says to show schedules" do
       before { allow(Settings).to receive(:show_schedule?).and_return(true) }
-      let!(:event) { create(:event, :full_event) }
       it "is successful" do
-        expect(controller).to receive(:event).with(true).and_call_original
         get :index
         expect(response).to be_successful
         expect(assigns[:event]).to eq event
+        expect(response.body).to match(session.title)
       end
     end
 
@@ -23,12 +28,11 @@ describe SchedulesController do
     end
 
     context "when schedules are not yet displayed, but they really want to see it anyway" do
-      let!(:event) { create(:event, :full_event) }
       it "is successful" do
-        expect(controller).to receive(:event).with(false).and_call_original
         get :index, params: {force: true}
         expect(response).to be_successful
         expect(assigns[:event]).to eq event
+        expect(response.body).to match(session.title)
       end
     end
   end
