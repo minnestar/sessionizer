@@ -1,5 +1,6 @@
 Sessionizer::Application.routes.draw do
-  root to: 'schedules#index'
+  #root to: 'schedules#index'
+  root to: 'pages#home'
 
   get '/home' => 'pages#home', as: :home_page
 
