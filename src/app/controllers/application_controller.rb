@@ -28,4 +28,15 @@ class ApplicationController < ActionController::Base
       redirect_to new_login_path
     end
   end
+
+  def event_schedule_cache_key(event)
+    [
+      event,
+      event.sessions,
+      event.participants,
+      event.timeslots,
+      event.rooms
+    ]
+  end
+  helper_method :event_schedule_cache_key
 end
