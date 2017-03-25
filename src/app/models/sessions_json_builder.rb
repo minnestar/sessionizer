@@ -20,7 +20,7 @@ class SessionsJsonBuilder
       categories: s.categories.map(&:name),
       other_presenter_names: s.other_presenter_names,
       other_presenter_ids: s.other_presenters.map(&:id),
-      attendance_count: s.attendances.count,
+      attendance_count: s.attendance_count,
       created_at: s.created_at.utc,
       updated_at: s.updated_at.utc
     }

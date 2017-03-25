@@ -33,12 +33,20 @@ class SessionsController < ApplicationController
     else
       @event = Event.current_event
     end
-    @sessions = @event.sessions.includes(:presenters).order('created_at desc')
-    respond_with @sessions do |format|
-      format.json {
-        render json: SessionsJsonBuilder.new.to_json(@sessions.distinct)
-      }
-      format.html
+
+    respond_to do |format|
+      format.json do
+        render json: (
+          cache ['sessions.json'] + event_schedule_cache_key(@event), expires_in: 10.minutes do
+            SessionsJsonBuilder.new.to_json(
+              Session.preload_attendance_counts(
+                sessions_for_event(@event)))
+          end
+        )
+      end
+      format.html do
+        @sessions = sessions_for_event(@event)
+      end
     end
   end
 
@@ -89,4 +97,14 @@ class SessionsController < ApplicationController
   def verify_owner
     redirect_to @session if @session.participant != current_participant
   end
+
+private
+
+  def sessions_for_event(event)
+    @event.sessions
+      .includes(:presenters, :categories, :participant, :room, :timeslot, :level)
+      .order('created_at desc')
+      .distinct
+  end
+
 end

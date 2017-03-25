@@ -1,4 +1,4 @@
-- cache [current_participant.nil?, @event.sessions, @event.timeslots] do
+- cache [current_participant.nil?] + event_schedule_cache_key(@event), expires_in: 10.minutes do
   = render 'header'
   .schedule
     .schedule-header
