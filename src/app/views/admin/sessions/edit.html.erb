@@ -7,6 +7,7 @@
   <%= f.inputs do %>
     <%= f.input :title %>
 
+    <%= f.input :participant, label: 'Presenter Name', collection: Participant.order('name ASC').all %>
     <div>
       By <%= @session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %>
     </div>

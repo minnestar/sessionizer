@@ -49,7 +49,7 @@ class Admin::SessionsController < Admin::AdminController
   private
 
   def session_params
-    params.require(controller_name.singularize).permit(:title, :description, :summary, :level_id, :room_id, :timeslot_id, :category_ids => [])
+    params.require(controller_name.singularize).permit(:title, :description, :summary, :level_id, :room_id, :timeslot_id, :participant_id, :category_ids => [])
   end
 
 
