@@ -17,37 +17,37 @@ class SchedulesController < ApplicationController
     cal = Icalendar::Calendar.new
 
     # Set up timezone
-    cal.timezone do
-      timezone_id             "America/Chicago"
+    cal.timezone do |t|
+      t.tzid = "America/Chicago"
 
-      daylight do
-        timezone_offset_from  "-0600"
-        timezone_offset_to    "-0500"
-        timezone_name         "CDT"
-        dtstart               "19700308T020000"
-        add_recurrence_rule   "FREQ=YEARLY;BYMONTH=3;BYDAY=2SU"
+      t.daylight do |d|
+        d.tzoffsetfrom = "-0600"
+        d.tzoffsetto   = "-0500"
+        d.tzname       = "CDT"
+        d.dtstart      = "19700308T020000"
+        d.rrule        = "FREQ=YEARLY;BYMONTH=3;BYDAY=2SU"
       end
 
-      standard do
-        timezone_offset_from  "-0500"
-        timezone_offset_to    "-0600"
-        timezone_name         "CST"
-        dtstart               "19701101T020000"
-        add_recurrence_rule   "FREQ=YEARLY;BYMONTH=11;BYDAY=1SU"
+      t.standard do |s|
+        s.tzoffsetfrom = "-0500"
+        s.tzoffsetto   = "-0600"
+        s.tzname       = "CST"
+        s.dtstart      = "19701101T020000"
+        s.rrule        = "FREQ=YEARLY;BYMONTH=11;BYDAY=1SU"
       end
     end
 
     sessions.each do |session|
       next if session.timeslot.nil?
 
-      cal.event do
-        summary session.title
-        organizer   "", :CN => session.presenter_names.join("\\, ")
-        description session.summary
-        dtstart     session.timeslot.starts_at.to_datetime
-        dtend       session.timeslot.ends_at.to_datetime
+      cal.event do |e|
+        e.summary     = session.title
+        e.organizer   = Icalendar::Values::CalAddress.new('', cn: session.presenter_names.join("\\, "))
+        e.description = session.summary
+        e.dtstart     = session.timeslot.starts_at.to_datetime
+        e.dtend       = session.timeslot.ends_at.to_datetime
 
-        location    session.room.name
+        e.location    = session.room.name
       end
     end
 
