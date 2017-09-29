@@ -101,7 +101,7 @@ GEM
       temple (>= 0.8.0)
       tilt
     i18n (0.8.6)
-    icalendar (1.5.4)
+    icalendar (2.4.1)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -272,7 +272,7 @@ DEPENDENCIES
   ffaker
   formtastic
   haml
-  icalendar (~> 1.5.4)
+  icalendar (~> 2.4)
   jbuilder (~> 2.0)
   jquery-rails
   nokogiri
