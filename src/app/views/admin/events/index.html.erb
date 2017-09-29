@@ -14,7 +14,7 @@
 
   <% @events.each do |event| %>
     <tr>
-      <td><%= event.name %></td>
+      <td><%= link_to event.name, [:admin, event] %></td>
       <td><%= event.date %></td>
       <td><%= event.timeslots.count %> (<%= link_to 'manage', admin_event_timeslots_path(event) %>)</td>
       <td><%= link_to "Edit", edit_admin_event_path(event) %></td>

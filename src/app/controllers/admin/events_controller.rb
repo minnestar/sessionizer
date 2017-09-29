@@ -15,6 +15,9 @@ class Admin::EventsController < Admin::AdminController
     redirect_to admin_events_path
   end
 
+  def show
+  end
+
   def edit
   end
 
