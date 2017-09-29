@@ -2,7 +2,10 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  conference: "HydraConnect"
+  conference: "Samvera Connect"
+  conference_full: "Samvera Connect 2017"
+  wiki: "https://wiki.duraspace.org/display/samvera/Samvera+Connect+2017"
+  registration: "http://events.r20.constantcontact.com/register/event?oeidk=a07ee4jxg51fe96a06f&llr=5iy95gcab"
   pages:
     category_grid:
       management_administration: 'Management & Administration'
