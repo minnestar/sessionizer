@@ -234,6 +234,8 @@ namespace :app do
 
     best.save!
 
+    best.dump_presenter_conflicts
+
     puts
     puts 'Congratulations. You have a schedule!'
   end
@@ -247,8 +249,7 @@ namespace :app do
       rooms_by_capacity = event.rooms.sort_by { |r| -r.capacity }
       event.timeslots.where(schedulable: true).order('starts_at').each do |slot|
         puts slot
-        sessions = Session.preload_attendance_counts(slot.sessions)
-          .sort_by { |s| -s.estimated_interest }
+        sessions = Session.largest_attendance_first(slot.sessions)
 
         unless reassign_existing_rooms
           assigned, unassigned = sessions.partition(&:room_id?)
@@ -364,24 +365,25 @@ namespace :app do
   task :analyze_session_popularity => :environment do
     puts "Most popular sessions"
     puts
+    puts "vot = Raw vote total"
+    puts "exp = Expected attendance"
+    puts "      (❗ indicates manual override of vote tally)"
+    puts
+    puts "Dots in leftmost columns show timeslot assignments"
+    puts
     timeslots = event.timeslots.where(schedulable: true).order(:starts_at)
-    puts "#{' ' * timeslots.count} raw est title                                    presenters"
-    puts "#{' ' * timeslots.count} --- --- ---------------------------------------- ----------"
-    event.sessions
-      .select('
-        sessions.*,
-        (select count(*) from attendances where session_id = sessions.id) as attendance_count')
-      .order('attendance_count desc, id')
-      .limit(64)
-      .each do |session|
-        puts "%s %3d %3d %-40.40s %s" % [
-          timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
-          session.attendance_count,
-          session.estimated_interest,
-          session.title,
-          session.presenters.map(&:email).join(", ")
-        ]
-      end
+    puts "#{' ' * timeslots.count} vot exp  ID title                               presenters"
+    puts "#{' ' * timeslots.count} --- ---  ---------------------------------------- ----------"
+    Session.largest_attendance_first(event.sessions).each do |session|
+      puts "%s %3d %3s%s %-40.40s %s" % [
+        timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
+        session.attendance_count,
+        session.expected_attendance,
+        session.manual_attendance_estimate? ? "❗" : " ", 
+        "#{session.id} #{session.title}",
+        session.presenters.map(&:email).join(", ")
+      ]
+    end
     puts
 
     puts "Scheduling conflicts that would upset the most people"

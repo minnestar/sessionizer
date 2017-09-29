@@ -10,9 +10,19 @@ module Scheduling
     attr_reader :sessions, :timeslots, :room_count
 
     def initialize(event)
-      @sessions = event.sessions.where(manually_scheduled: false).pluck(:id)
       @timeslots = event.timeslots.where(schedulable: true)
       @room_count = event.rooms.where(schedulable: true).count
+
+      # A presenter can have a session that we're manually keeping out of the schedule by making it
+      # manually_scheduled and assigning either no timeslot (like Indie Arcade) or an unschedulable
+      # timeslot (like Session 0). The scoring system would count that as an unresolvable problem
+      # for the presenter, since it wants every one of their sessions to be in a schedulable timeslot.
+      # We therefore ignore those sessions altogether for scheduling purposes.
+      #
+      @sessions = event.sessions
+        .where("not manually_scheduled or timeslot_id in (?)", @timeslots.map(&:id))
+        .pluck(:id)
+
       @people_by_id = Hash.new { |h,id| h[id] = Person.new(self, id) }
 
       load_sets :attending,  Attendance

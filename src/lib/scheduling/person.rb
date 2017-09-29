@@ -7,6 +7,7 @@ module Scheduling
     attr_reader :id, :attending, :presenting
 
     def initialize(ctx, id)
+      @id = id
       @attending  = SessionSet.new(ctx)
       @presenting = SessionSet.new(ctx,
         superset: @attending,            # Presenters don't necessarily upvote their own sessions, but they do attend!

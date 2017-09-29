@@ -1,5 +1,5 @@
+require 'set'
 require 'pp'
-
 
 module Scheduling
   # Represents a particular schedule (i.e. assignment of sessions to timeslots) for the purpose of annealing.
@@ -9,31 +9,31 @@ module Scheduling
     def initialize(event)
       @ctx = Scheduling::Context.new(event)
 
-      @slots_by_session = {}                            # map from session to timeslot
-      @sessions_by_slot = Hash.new { |h,k| h[k] = [] }  # map from timeslot to array of sessions
+      @slots_by_session = {}                # map from session to timeslot
+      @sessions_by_slot = empty_array_hash  # map from timeslot to array of sessions
+      @schedulable_sessions = Set.new       # sessions we’re allowed to move around
 
       fill_schedule!(
         event.sessions
-          .where(manually_scheduled: false)
           .includes(:timeslot)
           .to_a)
     end
 
     def initialize_copy(source)  # deep copy; called by dup
       @slots_by_session = @slots_by_session.dup
-      @sessions_by_slot = Hash.new { |h,k| h[k] = [] }
+      @sessions_by_slot = empty_array_hash
       @slots_by_session.each { |session, slot| @sessions_by_slot[slot] << session }
     end
 
     def slot_id_for(session_id)
-      @slots_by_session[session_id].id
+      @slots_by_session[session_id]&.id
     end
 
   private
 
     attr_reader :ctx
 
-    class Unassigned  # placeholder for empty room
+    class EmptyRoom  # placeholder for empty room, which can be swapped with real sessions
       def to_s
         "<< open >>"
       end
@@ -99,23 +99,34 @@ module Scheduling
     # ------------ State space traversal ------------
 
     # Fill the schedule, using existing timeslots if any are present, assigning the remaining sessions
-    # randomly, then adding Unassigned placeholders to openings in the schedule.
+    # randomly, then adding empty placeholders to openings in the schedule.
     #
     def fill_schedule!(sessions)
       sessions.each do |session|
         schedule(session.id, session.timeslot) if session.timeslot
       end
 
-      unassigned = sessions.reject(&:timeslot)
+      @schedulable_sessions += sessions.reject(&:manually_scheduled).map(&:id)
+
+      unassigned = sessions.reject(&:timeslot).reject(&:manually_scheduled)
       ctx.timeslots.each do |slot|
         opening_count = ctx.room_count - @sessions_by_slot[slot].size
         slot_sessions = (unassigned.slice!(0, opening_count) || []).map(&:id)
-        slot_sessions << Unassigned.new while slot_sessions.size < opening_count
+        while slot_sessions.size < opening_count
+          placeholder = EmptyRoom.new
+          slot_sessions << placeholder
+          @schedulable_sessions << placeholder
+        end
         slot_sessions.each { |session| schedule(session, slot)  }
       end
       unless unassigned.empty?
         raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{ctx.room_count} rooms = #{ctx.timeslots.size * ctx.room_count} combinations."
       end
+
+      @schedulable_timeslots = ctx.timeslots.select do |slot|
+        schedulable_sessions_in_slot(slot).any?
+      end
+      puts "#{ctx.timeslots.size - @schedulable_timeslots.size} timeslot(s) have no movable sessions"
     end
 
     # Return a similar but slightly different schedule. Used by the annealing algorithm to explore
@@ -127,20 +138,28 @@ module Scheduling
 
     def random_neighbor!
       # Choose 2 or more random sessions in distinct time slots
-      k = 1.0 / (ctx.timeslots.size - 1)
+      k = 1.0 / (@schedulable_timeslots.size - 1)
       cycle_size = 1 + ((1 + k) / (rand + k)).floor
-      slot_cycle = ctx.timeslots.shuffle.slice(0, cycle_size)
+      slot_cycle = @schedulable_timeslots.shuffle.slice(0, cycle_size)
 
       # Rotate their assignments
       slot_cycle.each_with_index do |old_slot, i|
         new_slot = slot_cycle[(i+1) % slot_cycle.size]
-        schedule @sessions_by_slot[old_slot].sample, new_slot
+        schedule random_schedulable_session(old_slot), new_slot
       end
 
       self
     end
 
   private
+
+    def schedulable_sessions_in_slot(slot)
+      @schedulable_sessions & @sessions_by_slot[slot]
+    end
+
+    def random_schedulable_session(slot)
+      schedulable_sessions_in_slot(slot).to_a.sample
+    end
 
     def schedule(session, new_slot)
       old_slot = @slots_by_session[session]
@@ -159,7 +178,7 @@ module Scheduling
         ctx.timeslots.sort_by(&:starts_at).each do |slot|
           puts slot
           sessions = Session.find(
-            @sessions_by_slot[slot].reject { |s| Unassigned === s })
+            schedulable_sessions_in_slot(slot).reject { |s| EmptyRoom === s })
           sessions.sort_by { |s| -s.attendance_count }.each do |session|
             puts "    #{session.id} #{session.title}" +
                  " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)"
@@ -171,6 +190,21 @@ module Scheduling
       end
     end
 
+    def dump_presenter_conflicts
+      unhappy_presenters = ctx.people.select do |person|
+        person.presenting.score(self) < 1
+      end
+
+      if unhappy_presenters.any?
+        puts
+        puts "WARNING! The following presenters have problems with this schedule:"
+        unhappy_presenters.each do |person|
+          puts "    #{person.id} #{Participant.find(person.id).name}"
+        end
+        puts
+      end
+    end
+
     def inspect
       worst_score, random_score, best_score = self.attendance_score_metrics
       attendance_score_scaled = (attendance_score - random_score) / (best_score - random_score)
@@ -178,7 +212,7 @@ module Scheduling
       s = "Schedule\n"
       s << "| quality vs. random = #{format_percent attendance_score_scaled} (0% is no better than random; 100% is unachievable; > 50% is good)\n"
       s << "| absolute satisfaction = #{format_percent attendance_score} of impossibly perfect schedule\n"
-      s << "| presenter score = #{format_percent presenter_score} (if < 100 then speakers are double-booked)\n"
+      s << "| presenter score = #{format_percent presenter_score} (if < 100 then presenters have conflicts)\n"
       ctx.timeslots.each do |slot|
         s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
       end
@@ -207,6 +241,10 @@ module Scheduling
 
     def format_percent(x)
       "#{'%1.3f' % (x * 100)}%"
+    end
+
+    def empty_array_hash
+      Hash.new { |h,k| h[k] = [] }
     end
 
   end

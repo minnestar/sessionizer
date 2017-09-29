@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160420042853) do
+ActiveRecord::Schema.define(version: 20170324203935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,19 +90,20 @@ ActiveRecord::Schema.define(version: 20160420042853) do
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer  "participant_id",                                 null: false
-    t.string   "title",              limit: 255,                 null: false
-    t.text     "description",                                    null: false
-    t.boolean  "panel",                          default: false, null: false
-    t.boolean  "projector",                      default: false, null: false
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.integer  "participant_id",                                         null: false
+    t.string   "title",                      limit: 255,                 null: false
+    t.text     "description",                                            null: false
+    t.boolean  "panel",                                  default: false, null: false
+    t.boolean  "projector",                              default: false, null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
     t.integer  "event_id"
     t.integer  "timeslot_id"
     t.integer  "room_id"
-    t.string   "summary",            limit: 255
+    t.string   "summary",                    limit: 255
     t.integer  "level_id"
-    t.boolean  "manually_scheduled",             default: false, null: false
+    t.boolean  "manually_scheduled",                     default: false, null: false
+    t.integer  "manual_attendance_estimate"
     t.index ["level_id"], name: "index_sessions_on_level_id", using: :btree
   end
 
