@@ -1,0 +1,20 @@
+<h1><%= @event.name %></h1>
+<p><%= @event.date.to_formatted_s(:long) %></p>
+
+<h2>Rooms <small><%= link_to "add", new_admin_event_room_path(@event) %></small></h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Capacity</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @event.rooms.each do |room| %>
+    <tr>
+      <td><%= room.name %></td>
+      <td><%= room.capacity %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
