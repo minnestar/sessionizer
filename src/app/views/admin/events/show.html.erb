@@ -12,7 +12,7 @@
   <tbody>
   <% @event.rooms.each do |room| %>
     <tr>
-      <td><%= room.name %></td>
+      <td><%= link_to room.name, edit_admin_room_path(room) %></td>
       <td><%= room.capacity %></td>
     </tr>
   <% end %>
