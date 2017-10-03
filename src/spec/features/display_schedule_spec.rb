@@ -1,14 +1,16 @@
 require 'spec_helper'
 
-feature "Displaying the schedule" do
+RSpec.feature "Displaying the schedule" do
   let(:event) { create(:event, :full_event) }
 
   before do
+    allow(Settings).to receive(:show_schedule?).and_return true
     create(:session, timeslot: event.timeslots.first, event: event)
   end
 
-  scenario "should draw the schedule page" do
+  scenario "drawing the schedule page" do
     visit '/schedule'
+
     expect(page).to have_content "Stuff about things"
   end
 end

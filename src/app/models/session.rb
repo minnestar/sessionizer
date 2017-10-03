@@ -22,8 +22,11 @@ class Session < ActiveRecord::Base
   scope :for_current_event, -> { where(event_id: Event.current_event.id) }
 
   scope :recent, -> { order('created_at desc') }
-  
+
   scope :random_order, -> { order('random()') }
+
+  # This allows us to filter out prescheduled sessions (like breaks or lunch)
+  scope :unscheduled, -> { where(timeslot_id: nil) }
 
   validates_presence_of :description
   validates_presence_of :event_id
@@ -131,7 +134,7 @@ class Session < ActiveRecord::Base
     sessions.each do |session|
       sessions_by_id[session.id] = session
     end
-    
+
     # Surely there’s a Rails helper for this?
     # But I can’t find it — only some abandoned gems.
     Attendance
@@ -180,7 +183,7 @@ class Session < ActiveRecord::Base
       # make estimated_interest tend toward the mean in cases when there are few real votes.
 
       ballast_votes = 10.0
-      session_votes / (possible_votes + ballast_votes * session_count) * total_votes      
+      session_votes / (possible_votes + ballast_votes * session_count) * total_votes
     end
   end
 
