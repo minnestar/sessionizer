@@ -7,10 +7,10 @@
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = pill_label(slot)
   .maps
-    =link_to "Unconfernce signup", home_page_path
+    =link_to t('signup'), home_page_path
 
     %a.room{ target: '_blank',
-             href: "#{asset_path('maps/central-floor-plan.png')}" }
+             href: asset_path('maps/central-floor-plan.png') }
       = t 'map'
 
     %a.twitter{ target: '_blank', href: "http://twitter.com/#samveraconnect" }
