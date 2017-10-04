@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::PresentersController do
+RSpec.describe Admin::PresentersController do
 
   let(:presenter) { FactoryGirl.create(:participant, name: 'John McCarthy', email: 'parens@example.org') }
   let(:event) { FactoryGirl.create(:event) }
@@ -22,16 +22,34 @@ describe Admin::PresentersController do
     end
   end
 
-  describe "#update" do
-    it "should be successful" do
-      put :update, params: {id: presenter, participant: {
-                                  name: 'The father of LISP', email: 'g@example.org', bio: "Functionally just another dude"
-                                }
-                            }
-      expect(response).to redirect_to admin_presenters_path
-      expect(flash[:success]).to eq "Presenter updated."
-      expect(assigns[:presenter]).to eq presenter
-      expect(assigns[:presenter].name).to eq 'The father of LISP'
+  describe '#update' do
+    context 'setting all fields' do
+      it 'is successful' do
+        put :update, params: { id: presenter,
+                               participant: {
+                                 name: 'The father of LISP',
+                                 email: 'g@example.org',
+                                 bio: 'Functionally just another dude'
+                               } }
+        expect(response).to redirect_to admin_presenters_path
+        expect(flash[:success]).to eq 'Presenter updated.'
+        expect(assigns[:presenter]).to eq presenter
+        expect(assigns[:presenter].name).to eq 'The father of LISP'
+      end
+    end
+
+    context 'when the presenter is not valid (created by Admin::SessionsController)' do
+      let(:presenter) { Participant.new.tap { |p| p.save(validate: false) } }
+
+      it 'allows updating some fields' do
+        put :update, params: { id: presenter,
+                               participant: {
+                                 name: 'The father of LISP'
+                               } }
+        expect(response).to redirect_to admin_presenters_path
+        expect(flash[:success]).to eq 'Presenter updated.'
+        expect(presenter.reload.name).to eq 'The father of LISP'
+      end
     end
   end
 
