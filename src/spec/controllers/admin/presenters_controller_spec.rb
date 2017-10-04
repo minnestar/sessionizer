@@ -44,11 +44,15 @@ RSpec.describe Admin::PresentersController do
       it 'allows updating some fields' do
         put :update, params: { id: presenter,
                                participant: {
-                                 name: 'The father of LISP'
+                                 name: 'The father of LISP',
+                                 email: ''
                                } }
         expect(response).to redirect_to admin_presenters_path
         expect(flash[:success]).to eq 'Presenter updated.'
-        expect(presenter.reload.name).to eq 'The father of LISP'
+        presenter.reload
+        expect(presenter.name).to eq 'The father of LISP'
+        expect(presenter.email).to be_nil
+
       end
     end
   end
