@@ -3,10 +3,27 @@
 <h2><%= link_to 'Add a session', new_admin_session_path %></h2>
 
 <div class="row">
-  <div class="column grid_6" style="margin-left:0px">
-   <ul class="sessionsList">
-      <%= render :partial => 'session', :collection => @sessions %>
-   </ul>
+  <div class="">
+   <table class="table sessionsList">
+     <thead>
+       <th>Time</th>
+       <th>Room</th>
+       <th>Title</th>
+       <th>Presenter</th>
+       <th><span class="sr-only">Action</span></th>
+     </thead>
+     <tbody>
+       <% @sessions.each do |session| %>
+       <tr>
+         <td><%= session.timeslot.try(:starts_at).try(:to_s, :usahhmm) + ' - ' +
+                 session.timeslot.try(:ends_at).try(:to_s, :usahhmm) if session.timeslot %></td>
+         <td><%= session.room.try(:name) %></td>
+         <td class="title"><%= link_to session.title, session %></td>
+         <td><%= session.presenters.map {|p| link_to p.name.presence || '(no name)', p }.to_sentence.html_safe %></td>
+         <td><%= link_to 'edit', edit_admin_session_path(session) %></td>
+       </tr>
+       <% end %>
+     </tbody>
+   </table>
   </div>
 </div>
-
