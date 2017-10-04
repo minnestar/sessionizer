@@ -33,8 +33,12 @@ class Admin::PresentersController < Admin::AdminController
 
   private
 
+  # Cast blank values to nil (e.g. 'email' => '') because this trips a uniqueness
+  # constraint in the database.
   def presenter_params
-    params.require(:participant).permit(:name, :email, :bio)
+    params.require(:participant).permit(:name, :email, :bio).to_h.each_with_object({}) do |(k, v), h|
+      h[k] = v.blank? ? nil : v
+    end
   end
 
 
