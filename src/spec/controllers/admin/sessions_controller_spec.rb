@@ -12,11 +12,17 @@ describe Admin::SessionsController do
   context "with an existing session" do
     let!(:session) { create(:session, event: event) }
 
-    describe "index" do
-      it "should set the sessions" do
+    describe '#index' do
+      let(:slot_1) { create(:timeslot_1, event: event) }
+      let(:slot_2) { create(:timeslot_2, event: event) }
+
+      let!(:session3) { create(:session, event: event, timeslot: slot_2) }
+      let!(:session2) { create(:session, event: event, timeslot: slot_1) }
+
+      it 'sorts the sessions by timeslot start time' do
         get :index
         expect(response).to be_successful
-        expect(assigns[:sessions]).to eq [session]
+        expect(assigns[:sessions]).to eq [session2, session3, session]
       end
     end
 
@@ -82,4 +88,3 @@ describe Admin::SessionsController do
     end
   end
 end
-
