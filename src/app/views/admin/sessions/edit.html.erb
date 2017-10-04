@@ -8,7 +8,7 @@
     <%= f.input :title %>
 
     <div>
-      By <%= @session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %>
+      By <%= @session.presenters.map { |p| link_to p.name.presence || '(No name)', edit_admin_presenter_path(p) }.to_sentence.html_safe %>
     </div>
 
     <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <b>**bold**</b>, <i>*italic*</i>, [link](http://example.com)'.html_safe %>

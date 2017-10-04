@@ -12,12 +12,13 @@ class Admin::PresentersController < Admin::AdminController
   end
 
   def update
-    if @presenter.update(presenter_params)
-      flash[:success] = "Presenter updated."
-      redirect_to admin_presenters_path
-    else
-      render :edit
-    end
+    # We may only want to update the name here but leave the email address blank
+    # so skip validations.  This presenter may have been created by
+    # Admin::SessionsController, which does not set an email address.
+    @presenter.attributes = presenter_params
+    @presenter.save(validate: false)
+    flash[:success] = "Presenter updated."
+    redirect_to admin_presenters_path
   end
 
   def export
