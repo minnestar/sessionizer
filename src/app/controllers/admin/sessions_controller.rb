@@ -26,8 +26,13 @@ class Admin::SessionsController < Admin::AdminController
   def build_presenter
     name = params[:session].delete(:name)
     # find exact match by name
-    Participant.where(name: name).first_or_initialize do |p|
-      p.save(validate: false) if p.new_record?
+    if name.present?
+      Participant.where(name: name).first_or_initialize do |p|
+        p.save(validate: false) if p.new_record?
+      end
+    else
+      # Create a blank participant. We can add a name/email to this person later.
+      Participant.new.tap { |p| p.save(validate: false) }
     end
   end
 

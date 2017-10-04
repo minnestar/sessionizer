@@ -63,6 +63,28 @@ describe Admin::SessionsController do
       end
     end
 
+    context 'when name is left blank' do
+      let(:session_params) do
+        {
+          session: {
+            title: 'new title',
+            description: 'new description',
+            name: ''
+          }
+        }
+      end
+
+      it 'creates a new session with a new user' do
+        expect {
+          post :create, params: session_params
+        }.to change { Session.count }.by(1)
+         .and change { Participant.count }.by(1)
+        expect(response).to redirect_to admin_sessions_path
+        expect(assigns[:session].title).to eq 'new title'
+        expect(assigns[:session].participant.name).to be_nil
+      end
+    end
+
     context "with invalid values" do
       it "shows the errors" do
 
@@ -82,4 +104,3 @@ describe Admin::SessionsController do
     end
   end
 end
-
