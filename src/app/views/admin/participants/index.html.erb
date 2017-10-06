@@ -1,0 +1,13 @@
+<h1>Participants</h1>
+<p><%= link_to "Create Participant", new_admin_participant_path %></p>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render partial: 'participant', collection: @participants %>
+  </tbody>
+</table>

@@ -38,6 +38,8 @@ Sessionizer::Application.routes.draw do
     end
     resources :timeslots, only: [:edit, :update]
     resources :rooms, only: [:edit, :update]
+    resources :sessions
+    resources :participants
     resources :presenters, only: [:index, :edit, :update] do
       collection do
         get 'export'
