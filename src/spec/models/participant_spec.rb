@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Participant do
+RSpec.describe Participant do
 
   describe "github profile url" do
     let(:luke)  { create(:luke) }
@@ -46,7 +46,22 @@ describe Participant do
         expect(luke.presenter_timeslot_restrictions.map(&:timeslot)).to eq [time1, time2]
       end
     end
-
   end
 
+  describe '#tokenized_name' do
+    subject { participant.tokenized_name }
+    let(:participant) { described_class.new(name: name) }
+
+    context 'when name is multiple words' do
+      let(:name) { 'Carlos Antonio da Silva' }
+      it { is_expected.to eq %w[Carlos Antonio da Silva] }
+    end
+
+    context 'when name is nil' do
+      # this case occurs when the participant is created in
+      # Admin::SessionsController where validation is skipped
+      let(:name) { nil }
+      it { is_expected.to eq [] }
+    end
+  end
 end

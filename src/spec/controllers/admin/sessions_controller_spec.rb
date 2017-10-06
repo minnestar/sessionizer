@@ -82,4 +82,3 @@ describe Admin::SessionsController do
     end
   end
 end
-

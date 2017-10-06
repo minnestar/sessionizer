@@ -6,7 +6,7 @@ class ParticipantsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render :json => @participants.map { |p| {:value => p.name, :tokens => p.name.split(" "), :id => p.id} }
+        render json: @participants.map { |p| { value: p.name, tokens: p.tokenized_name, id: p.id} }
       end
     end
   end
@@ -34,7 +34,7 @@ class ParticipantsController < ApplicationController
       flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
       redirect_to root_path
     else
-      flash[:error] = "There was a problem creating that account." 
+      flash[:error] = "There was a problem creating that account."
       render :new
     end
 
