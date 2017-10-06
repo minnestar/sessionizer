@@ -39,8 +39,12 @@ describe SchedulesController do
 
   describe "#ical" do
     let(:timeslot) { create(:timeslot) }
-    let!(:session) { create(:session, timeslot: timeslot, event: timeslot.event) }
-
+    let!(:session) do
+      create(:session,
+             event: timeslot.event,
+             timeslot: timeslot,
+             participant: create(:luke))
+    end
     it "is successful" do
       get :ical
       expect(response).to be_successful
