@@ -47,6 +47,9 @@ class Participant < ActiveRecord::Base
     "https://github.com/#{self.github_profile_username}"
   end
 
+  def tokenized_name
+    # sessions created via Admin::SessionsController may not set a name
+    return [] unless name
+    name.split(' ')
+  end
 end
-
-
