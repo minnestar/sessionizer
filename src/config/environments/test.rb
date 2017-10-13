@@ -42,9 +42,9 @@ Rails.application.configure do
   ActionMailer::Base.smtp_settings = {
     :user_name => Rails.application.secrets.smtp_username,
     :password => Rails.application.secrets.smtp_password,
-    :address => 'smtp.mandrillapp.com',
+    :address => ENV['SMTP_SERVER'],
     :port => 587,
-    :authentication => 'login',
+    :authentication => :plain,
     :enable_starttls_auto => true,
     :domain => HOST
   }

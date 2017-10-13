@@ -70,16 +70,16 @@ Rails.application.configure do
   ActionMailer::Base.smtp_settings = {
     :user_name => Rails.application.secrets.smtp_username,
     :password => Rails.application.secrets.smtp_password,
-    :address => 'smtp.mandrillapp.com',
+    :address => ENV['SMTP_SERVER'],
     :port => 587,
-    :authentication => 'login',
+    :authentication => :plain,
     :enable_starttls_auto => true,
-    :domain => 'gmail.com'
+    :domain => HOST
   }
 
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: "no-reply@samvera.org" }
+  config.action_mailer.default_options = { from: 'no-reply@samvera.org' }
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
