@@ -104,6 +104,7 @@ private
     @event.sessions
       .includes(:presenters, :categories, :participant, :room, :timeslot, :level)
       .order('created_at desc')
+      .unscheduled  # Don't show our scheduled ahead of time sessions
       .distinct
   end
 
