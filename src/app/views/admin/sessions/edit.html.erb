@@ -21,6 +21,8 @@
 
     <%= f.input :room_id, :as => :select, :collection => Event.current_event.rooms %>
     <%= f.input :timeslot_id, :as => :select, :collection => Event.current_event.timeslots %>
+    <%= f.input :manually_scheduled %>
+    
 
   <% end %>
 
