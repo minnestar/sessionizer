@@ -106,9 +106,9 @@ module Scheduling
         schedule(session.id, session.timeslot) if session.timeslot
       end
 
-      @schedulable_sessions += sessions.reject(&:manually_scheduled).map(&:id)
-
       unassigned = sessions.reject(&:timeslot).reject(&:manually_scheduled)
+      @schedulable_sessions += unassigned.map(&:id)
+
       ctx.timeslots.each do |slot|
         opening_count = ctx.room_count - @sessions_by_slot[slot].size
         slot_sessions = (unassigned.slice!(0, opening_count) || []).map(&:id)
