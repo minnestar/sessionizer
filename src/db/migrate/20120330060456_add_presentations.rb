@@ -1,4 +1,4 @@
-class AddPresentations < ActiveRecord::Migration
+class AddPresentations < ActiveRecord::Migration[4.2]
   def self.up
     create_table :presentations, :force => true do |t|
       t.integer :session_id
