@@ -29,7 +29,7 @@ class Admin::RoomsController < Admin::AdminController
   private
 
   def room_params
-    params.require(controller_name.singularize).permit(:name, :capacity)
+    params.require(controller_name.singularize).permit(:name, :capacity, :schedulable)
   end
 
 end
