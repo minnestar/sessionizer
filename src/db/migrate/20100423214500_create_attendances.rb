@@ -1,4 +1,4 @@
-class CreateAttendances < ActiveRecord::Migration
+class CreateAttendances < ActiveRecord::Migration[4.2]
   def self.up
     create_table :attendances do |t|
       t.belongs_to :session, :null => false
