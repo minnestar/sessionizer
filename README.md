@@ -39,7 +39,7 @@ doesn't already exist), and start the app inside the box. To access it,
 add an entry in your /etc/hosts file like the following (or do the
 equivalent in dnsmasq.conf):
 
-    192.168.100.180 sessionizer.vm
+    192.168.100.185 sessionizer.vm
 
 You can then visit <http://sessionizer.vm/>.
 
