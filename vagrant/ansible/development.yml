@@ -40,8 +40,11 @@
         - libpq-dev
         - python-psycopg2
         - postgresql-contrib
-    - postgresql_user: name=vagrant role_attr_flags=CREATEDB,NOSUPERUSER,NOCREATEROLE
-      sudo_user: postgres
+    - name: setup the vagrant postgresql user
+      postgresql_user: name=vagrant role_attr_flags=CREATEDB,NOSUPERUSER,NOCREATEROLE
+      remote_user: root
+      become: yes
+      become_user: postgres
 
 - name: Nginx web server
   hosts: all
