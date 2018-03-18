@@ -69,7 +69,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = 'ansible/development.yml'
 
     # Uncomment to debug provisioning
-    ansible.verbose = 'vvvv'
+    ansible.verbose = 'v'
   end
 
   # Enable provisioning with CFEngine. CFEngine Community packages are
