@@ -59,8 +59,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # information on available options.
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "#{APP_NAME}"
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.name = APP_NAME
+
+    vb.memory = 2048
+    vb.cpus = 2
   end
 
   config.vm.provision 'ansible' do |ansible|
