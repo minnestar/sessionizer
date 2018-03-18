@@ -128,6 +128,7 @@ div.sidebar-box {
 ul.sessionsList {
   margin: 0;
   padding: 0;
+  padding-right: 2.2em;
   list-style-type: none;
   @include columns(24em, 1em);
   li.attending {
