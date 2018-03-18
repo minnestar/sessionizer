@@ -112,9 +112,8 @@
         dest: ../../src/config/secrets.yml
       when: not secrets_yml.stat.exists
     - command: bundle install chdir=/srv/{{app_name}}/
-    - command: bundle install chdir=/srv/{{app_name}}/
+    - command: ./bin/rails db:create RAILS_ENV=development chdir=/srv/{{app_name}}/
     - command: ./bin/rails db:environment:set RAILS_ENV=development chdir=/srv/{{app_name}}/
-    - command: bundle exec rake db:create chdir=/srv/{{app_name}}/
       register: db_create
     - command: bundle exec rake db:setup chdir=/srv/{{app_name}}/
       when: db_create.stderr.find('{{app_name}}_development already exists') == -1
