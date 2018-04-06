@@ -23,6 +23,7 @@ feature "Authentication and account creation things" do
 
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
+    check 'Remember me'
     click_button "Log in"
 
     expect(page).to have_content "You're logged in. Welcome back."
@@ -32,7 +33,7 @@ feature "Authentication and account creation things" do
     expect(page).to have_content "You have been logged out."
   end
 
-  scenario "As a user can register a new account" do
+  scenario "As a user I can register a new account" do
     visit root_path
 
     click_link "Log in"
@@ -47,7 +48,6 @@ feature "Authentication and account creation things" do
     expect(page).to have_content "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend" 
     expect(page).to have_content "Welcome #{name}"
   end
-
 
   scenario "As a user I try to register a new account with an already taken email address" do
     visit root_path
@@ -67,4 +67,3 @@ feature "Authentication and account creation things" do
     end
   end
 end
-

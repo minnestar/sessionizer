@@ -6,6 +6,10 @@
 
     <%= f.input :email, :label => 'Email' %>
     <%= f.input :password, :label => 'Password', :as => :password %>
+    <%= f.label :remember_me do %>
+      <%= f.check_box :remember_me %>
+      Remember me
+    <% end %>
   <% end %>
 
   <%= f.actions do %>
