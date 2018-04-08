@@ -25,10 +25,10 @@ class UserSessionsController < ApplicationController
     redirect_to root_path
   end
 
-   private
+  private
 
   def participant_session_params
-    params.require(:participant_session).permit(:email, :password)
+    params.require(:participant_session).permit(:email, :password, :remember_me)
   end
 
 end
