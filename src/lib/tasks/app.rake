@@ -80,6 +80,11 @@ namespace :app do
       { name: 'Florida',         capacity: 12 }, # TV, no projector
       { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Kansas',          capacity: 10 }, # TV, no projector
+
+      { name: 'Nebraska',        capacity: 10 },
+      { name: 'New York',        capacity: 9 },
+      { name: 'Pennsylvania',    capacity: 9 },
+      { name: 'Maryland',        capacity: 9 },
     ]
 
     rooms.each do |room|
