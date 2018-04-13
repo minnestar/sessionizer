@@ -10,6 +10,17 @@
   <% edit(@session) do %>
     (<%= link_to 'manage presenters', session_presentations_path(@session) %>)
   <% end %>
+
+  <% if Settings.show_schedule? && @session.timeslot  %>
+      |
+      <b><%= @session.timeslot.date_range.to_s(with_day: false) %></b>
+      <% if @session.room %>
+        in <b><%= @session.room.name %></b>
+      <% end %>
+      |
+      <%= link_to 'View Schedule', schedule_path(force: 1) %>
+  <% end %>
+
 </p>
 
 <div class="row">
