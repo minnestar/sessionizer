@@ -1,4 +1,4 @@
-class AddMoreAttributesToParticipant < ActiveRecord::Migration
+class AddMoreAttributesToParticipant < ActiveRecord::Migration[4.2]
   def change
     add_column :participants, :github_profile_username, :string #github username
     add_column :participants, :github_og_image, :string # github avatar
