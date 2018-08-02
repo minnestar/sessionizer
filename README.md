@@ -19,7 +19,10 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 
 ## Running
 
-### Bootstrapping
+### Bootstrapping (Quick Way)
+Go to the README-ruby_on_racetracks.md file in this repository for the quick way to set up and run this app on your local machine.
+
+### Bootstrapping (Slow Way)
 
 You'll need to install [VirtualBox][], [Vagrant][], and [Ansible][]
 first. VirtualBox and Vagrant both have Mac OS X installer packages, and
