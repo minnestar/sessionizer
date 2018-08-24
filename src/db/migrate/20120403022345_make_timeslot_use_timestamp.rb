@@ -1,4 +1,4 @@
-class MakeTimeslotUseTimestamp < ActiveRecord::Migration
+class MakeTimeslotUseTimestamp < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :timeslots, :starts_at
     remove_column :timeslots, :ends_at

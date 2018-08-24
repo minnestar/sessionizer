@@ -1,4 +1,4 @@
-class MakeParticipantAuthenticatable < ActiveRecord::Migration
+class MakeParticipantAuthenticatable < ActiveRecord::Migration[4.2]
   def up
     add_column :participants, :crypted_password, :string
     add_column :participants, :persistence_token, :string
