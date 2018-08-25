@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id         :integer          not null, primary key
+#  name       :string           not null
+#  date       :date             not null
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class Event < ActiveRecord::Base
   has_many :sessions, dependent: :destroy
   has_many :timeslots, dependent: :destroy

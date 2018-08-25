@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: timeslots
+#
+#  id          :integer          not null, primary key
+#  event_id    :integer          not null
+#  created_at  :datetime
+#  updated_at  :datetime
+#  starts_at   :datetime
+#  ends_at     :datetime
+#  schedulable :boolean          default(TRUE)
+#  title       :string
+#
+
 class Timeslot < ActiveRecord::Base
   belongs_to :event
   has_many :sessions, dependent: :nullify
