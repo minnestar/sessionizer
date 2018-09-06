@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: participants
+#
+#  id                      :integer          not null, primary key
+#  name                    :string
+#  email                   :string
+#  bio                     :text
+#  created_at              :datetime
+#  updated_at              :datetime
+#  crypted_password        :string
+#  persistence_token       :string
+#  perishable_token        :string           default(""), not null
+#  github_profile_username :string
+#  github_og_image         :string
+#  github_og_url           :string
+#  twitter_handle          :string
+#
+
 class Participant < ActiveRecord::Base
   has_many :sessions
   has_many :attendances

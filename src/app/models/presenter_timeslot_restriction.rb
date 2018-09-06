@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: presenter_timeslot_restrictions
+#
+#  id             :integer          not null, primary key
+#  participant_id :integer
+#  timeslot_id    :integer
+#  weight         :float
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
 class PresenterTimeslotRestriction < ActiveRecord::Base
   belongs_to :timeslot
   belongs_to :participant

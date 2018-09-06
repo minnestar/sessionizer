@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: settings
+#
+#  id               :integer          not null, primary key
+#  show_schedule    :boolean
+#  current_event_id :integer
+#
+
 class Settings < ActiveRecord::Base
 
   def self.instance

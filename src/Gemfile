@@ -67,3 +67,10 @@ end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
 gem 'rails_12factor', group: :production
+
+
+group :development do
+  gem 'annotate', '2.7.4' # Adds comments listing parameters and the output of "rails routes"
+  gem 'railroady', '1.5.3' # Generates block diagrams
+  gem 'rails-erd', '1.5.2' # Generates block diagrams
+end

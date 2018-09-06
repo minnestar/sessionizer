@@ -41,6 +41,9 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     annealer (0.3)
+    annotate (2.7.4)
+      activerecord (>= 3.2, < 6.0)
+      rake (>= 10.4, < 13.0)
     arel (8.0.0)
     authlogic (3.6.0)
       activerecord (>= 3.2, < 5.2)
@@ -59,6 +62,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    choice (0.2.0)
     cliver (0.3.2)
     coderay (1.1.2)
     coffee-rails (4.2.2)
@@ -139,6 +143,7 @@ GEM
     rack (2.0.3)
     rack-test (0.7.0)
       rack (>= 1.0, < 3)
+    railroady (1.5.3)
     rails (5.1.4)
       actioncable (= 5.1.4)
       actionmailer (= 5.1.4)
@@ -158,6 +163,11 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
+    rails-erd (1.5.2)
+      activerecord (>= 3.2)
+      activesupport (>= 3.2)
+      choice (~> 0.2.0)
+      ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     rails_12factor (0.0.3)
@@ -199,6 +209,7 @@ GEM
       rspec-mocks (~> 3.6.0)
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
+    ruby-graphviz (1.2.3)
     ruby-progressbar (1.9.0)
     sass (3.5.1)
       sass-listen (~> 4.0.0)
@@ -260,6 +271,7 @@ PLATFORMS
 
 DEPENDENCIES
   annealer
+  annotate (= 2.7.4)
   authlogic
   bcrypt-ruby (~> 3.1)
   cancancan
@@ -279,8 +291,10 @@ DEPENDENCIES
   pg
   poltergeist
   pry
+  railroady (= 1.5.3)
   rails (= 5.1.4)
   rails-controller-testing
+  rails-erd (= 1.5.2)
   rails_12factor
   redcarpet (~> 3.1)
   responders (~> 2.0)
@@ -298,4 +312,4 @@ RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   1.15.4
+   1.16.2

@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: sessions
+#
+#  id                         :integer          not null, primary key
+#  participant_id             :integer          not null
+#  title                      :string           not null
+#  description                :text             not null
+#  panel                      :boolean          default(FALSE), not null
+#  projector                  :boolean          default(FALSE), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  event_id                   :integer
+#  timeslot_id                :integer
+#  room_id                    :integer
+#  summary                    :string
+#  level_id                   :integer
+#  manually_scheduled         :boolean          default(FALSE), not null
+#  manual_attendance_estimate :integer
+#
+
 require "spec_helper"
 
 describe Session do
