@@ -90,7 +90,7 @@ can alway use the alias `railsup`.
 1. Create an application. Sessionizer runs on the default Cedar stack.
 2. Add the memcache add-on: `heroku addons:add memcached:5mb`
 3. Run `heroku run rake db:migrate`
-4. Run `herok run rake db:seed`
+4. Run `heroku run rake db:seed`
 5. Set a username and password for the Sessionizer admin: `heroku config:add SESSIONIZER_ADMIN_USER=foo SESSIONIZER_ADMIN_PASSWORD=bar`
 6. Set a MANDRILL_MINNESTAR_USERNAME, MANDRILL_MINNESTAR_PASSWORD
 7. Create the first event by navigating to `/admin/events` or using the
