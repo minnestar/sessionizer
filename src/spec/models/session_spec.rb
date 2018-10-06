@@ -84,6 +84,36 @@ describe Session do
     assert session.errors[:timeslot_id]
   end
 
+  it 'should allow rooms to be swapped' do
+    room1 = create(:room)
+    room2 = create(:room)
+    slot1 = create(:timeslot_1)
+
+    Session.new(:title => 'Session 1', :description => 'First session').tap do |s|
+      s.timeslot = slot1
+      s.room = room1
+      s.participant = joe
+      s.event = event
+      s.save!
+    end
+    session1 = Session.last
+    
+    Session.new(:title => 'Session 2', :description => 'Second session').tap do |s|
+      s.timeslot = slot1
+      s.room = room2
+      s.participant = luke
+      s.event = event
+      s.save!
+    end
+    session2 = Session.last
+
+    assert_equal(session1.room, room1)
+    assert_equal(session2.room, room2)
+    Session.swap_rooms(session1, session2)
+    assert_equal(session1.room, room2)
+    assert_equal(session2.room, room1)
+  end
+
   describe "#recommended_sessions" do
 
     it "should order based on recommendation strength" do
