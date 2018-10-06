@@ -36,24 +36,22 @@
 
 <div class="column grid_5">
   <h3>Presenting Sessions</h3>
-
   <% if @participant.sessions_presenting.empty? %>
     <p>This person isn't presenting any sessions.</p>
+  <% else %>
+    <ul class="sessionsList">
+      <%= render :partial => 'session', :collection => @participant.sessions_presenting.for_current_event %>
+    </ul>
   <% end %>
-
-  <ul class="sessionsList">
-    <%= render :partial => 'session', :collection => @participant.sessions_presenting.for_current_event %>
-  </ul>
 </div>
 
 <div class="column grid_5">
   <h3>Participating Sessions</h3>
-
   <% if @participant.sessions_attending.empty? %>
     <p>This person hasn't expressed interested in any sessions yet.</p>
+  <% else %>
+    <ul class="sessionsList">
+      <%= render :partial => 'session', :collection => @participant.sessions_attending.for_current_event %>
+    </ul>
   <% end %>
- 
-  <ul class="sessionsList">
-    <%= render :partial => 'session', :collection => @participant.sessions_attending.for_current_event %>
-  </ul>
 </div>
