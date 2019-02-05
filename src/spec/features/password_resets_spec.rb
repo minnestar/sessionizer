@@ -18,9 +18,17 @@ feature 'Password reset' do
     # Event needed until Pull Request #202 is merged into the code base
     Event.create!(name: 'Event 1', date: Time.now)
 
+    # Enter an invalid email address
+    visit new_password_reset_path
+    fill_in 'email', with: 'not_exist@example.com'
+    click_button 'Reset Password'
+    assert page.has_text?('No participant was found with email address not_exist@example.com')
+
+    # Enter a valid email address
     visit new_password_reset_path
     fill_in 'email', with: user.email
     click_button 'Reset Password'
+    assert page.has_text?('Instructions to reset your password have been emailed to you')
 
     # Open and follow instructions
     open_email(user.email)
