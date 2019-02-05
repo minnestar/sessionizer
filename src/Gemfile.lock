@@ -59,13 +59,10 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-<<<<<<< HEAD
-=======
     capybara-email (3.0.1)
       capybara (>= 2.4, < 4.0)
       mail
     choice (0.2.0)
->>>>>>> 0658425... Added integration test of the password reset process
     cliver (0.3.2)
     coderay (1.1.2)
     coffee-rails (4.2.2)
