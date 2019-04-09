@@ -19,7 +19,7 @@ var Sessionizer = {};
 
 Sessionizer.Attend = function() {
   function attendanceUrl() {
-    return window.location.href + '/attendance.json';
+    return window.location.origin + window.location.pathname + '/attendance.json';
   }
 
   function sendAttendanceRequest(opts) {
