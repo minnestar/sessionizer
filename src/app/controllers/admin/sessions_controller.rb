@@ -52,8 +52,7 @@ class Admin::SessionsController < Admin::AdminController
     params.require(controller_name.singularize).permit(:title, :description, :summary, :level_id, :room_id, :timeslot_id, :category_ids => [])
   end
 
-
   def load_sessions
-    @sessions ||= Event.current_event.sessions.sort_by{ |s| -s.created_at.to_i}
+    @sessions ||= Event.current_event.sessions.includes(:timeslot).order('timeslots.starts_at asc')
   end
 end
