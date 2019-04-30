@@ -1,6 +1,10 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # BEGIN: needed for email confirmations
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  # END: needed for email confirmations
+
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped

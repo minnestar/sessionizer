@@ -18,6 +18,7 @@ Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'capybara/email/rspec'
 require 'authlogic/test_case'
 
 
