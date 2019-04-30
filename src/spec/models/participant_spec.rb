@@ -46,7 +46,20 @@ describe Participant do
         expect(luke.presenter_timeslot_restrictions.map(&:timeslot)).to eq [time1, time2]
       end
     end
-
   end
 
+  describe '#attending session' do
+    let!(:session1) { create(:session) }
+    let!(:joe)  { create(:joe) }  
+
+    it 'the attending_session? method should yield false when user has not expressed interest in session' do
+      expect(joe.attending_session?(session1)).to eq false
+    end
+
+    it 'the attending_session? method should yield true when user has expressed interest in session' do
+      Attendance.create(participant_id: joe.id,
+                        session_id: session1.id)
+      expect(joe.attending_session?(session1)).to eq true
+    end
+  end
 end
