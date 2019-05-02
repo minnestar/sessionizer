@@ -7,7 +7,7 @@ class UserSessionsController < ApplicationController
   end
 
   def create
-    @participant_session = ParticipantSession.new(participant_session_params)
+    @participant_session = ParticipantSession.new(participant_session_params.to_h)
     if @participant_session.save
       flash[:notice] = "You're logged in. Welcome back."
       redirect_to session[:after_login] || root_path
