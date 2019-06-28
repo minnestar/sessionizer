@@ -6,6 +6,16 @@
     <%= stylesheet_link_tag 'application' %>
     <%= favicon_link_tag 'favicon.ico' %>
     <%= yield(:head) %>
+
+    <meta property="og:title" content="<%= yield(:title) || t('conference') %>" />
+    <meta name="twitter:title" content="<%= yield(:title) || t('conference') %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= image_url 'twitter-card.png' %>">
+    <% if meta_description %>
+    <meta property="og:description" content="<%= meta_description %>" />
+    <meta name="twitter:description" content="<%= meta_description %>">
+    <meta name="description" content="<%= meta_description %>">
+    <% end %>
   </head>
 
   <body>
