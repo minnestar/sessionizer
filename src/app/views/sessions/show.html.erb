@@ -29,6 +29,7 @@
     <% if @session.description.present? %>
     <div class="session_description">
       <%= markdown @session.description %>
+      <% content_for :meta_description, @session.description %>
       <ul class="tags">
         <%= render :partial => 'category', :collection => @session.categories %>
       </ul>

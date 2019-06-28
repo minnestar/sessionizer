@@ -21,6 +21,10 @@ module ApplicationHelper
     Nokogiri::HTML::DocumentFragment.parse(html).to_html
   end
 
+  def meta_description
+    content_for?(:meta_description) ? content_for(:meta_description) : 'Minnebar'
+  end
+
   def sanitize_html(html)
     sanitize html,
       tags: %w(a img b i em strong p br ul ol li),
