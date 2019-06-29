@@ -119,6 +119,8 @@ a {
 
 div.sidebar-box {
   background: none repeat scroll 0 0 #CDCEEB;
+  border: 1px solid darken(#CDCEEB, 20%);
+  border-radius: 3px;
   padding-left: 1em;
   padding-right: 1em;
   padding-bottom: 1em;
@@ -266,4 +268,17 @@ h4 {
 
 .smaller {
   font-size: 0.8em;
+}
+
+.page-title {
+  margin: 5px 0;
+}
+
+.participant-links {
+  float: right;
+  margin: 14px 0;
+}
+
+.page-heading {
+  margin-bottom: 1rem;
 }
