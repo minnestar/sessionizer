@@ -6,7 +6,7 @@ class PasswordResetsController < ApplicationController
   end
 
   def create
-    @participant = Participant.find_by_email(params[:email])
+    @participant = Participant.find_by_case_insensitive_email(params[:email])
     if @participant
       @participant.deliver_password_reset_instructions!
       flash[:notice] = "Instructions to reset your password have been emailed to you"

@@ -47,6 +47,9 @@ class Participant < ActiveRecord::Base
     "https://github.com/#{self.github_profile_username}"
   end
 
+  def self.find_by_case_insensitive_email(email)
+    where(['lower(email) = ?', email.to_s.downcase]).first
+  end
 end
 
 
