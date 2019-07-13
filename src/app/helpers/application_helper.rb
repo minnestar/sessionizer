@@ -17,6 +17,20 @@ module ApplicationHelper
     sanitize_html(close_tags(@markdown.render(str))).html_safe
   end
 
+  def trusted_markdown(str)
+    return '' unless str
+
+    @markdown ||= Redcarpet::Markdown.new(
+      Redcarpet::Render::HTML.new,
+      {
+        autolink: true,
+        space_after_headers: true
+      }
+    )
+
+    sanitize(close_tags(@markdown.render(str))).html_safe
+  end
+
   def close_tags(html)
     Nokogiri::HTML::DocumentFragment.parse(html).to_html
   end

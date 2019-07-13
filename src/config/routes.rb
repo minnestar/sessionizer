@@ -32,6 +32,7 @@ Sessionizer::Application.routes.draw do
   namespace :admin do
     resource :config, only: [:show, :create]
     resources :sessions
+    resources :markdown_contents, path: 'markdown-contents'
     resources :events do
       resources :timeslots, only: [:index, :new, :create]
       resources :rooms, only: [:new, :create]
