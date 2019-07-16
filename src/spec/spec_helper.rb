@@ -59,7 +59,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation, {:except => %w[categories]}
+    DatabaseCleaner.strategy = :truncation, { except: %w[categories markdown_contents]}
   end
 
   config.before(:each) do
