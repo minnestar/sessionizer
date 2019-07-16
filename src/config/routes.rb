@@ -3,7 +3,7 @@ Sessionizer::Application.routes.draw do
 
   get '/home' => 'pages#home', as: :home_page
 
-  resources :sessions, :only => [:index, :show, :new, :create, :update, :edit] do
+  resources :sessions, :only => [:index, :show, :new, :create, :update, :edit, :destroy] do
     collection do
       get :words
       get :export

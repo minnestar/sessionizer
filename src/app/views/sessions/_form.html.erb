@@ -1,6 +1,6 @@
 <%= semantic_form_for(@session) do |f| %>
 
- <%= f.inputs do %>
+  <%= f.inputs do %>
     <%= f.input :title %>
     <%= f.input :description, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <b>**bold**</b>, <i>*italic*</i>, [link](http://example.com)'.html_safe %>
 
@@ -11,7 +11,13 @@
 
     <%= f.input :categories, :as => :check_boxes %>
     <%= f.input :level, :as => :select, :label => 'Topic level' %>
- <% end %>
+  <% end %>
 
- <%= f.actions %>
+  <%= f.actions %>
+
+  <% if @session.persisted? %>
+    <div class="right">
+      <%= button_to 'Delete Session', session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </div>
+  <% end %>
 <% end %>
