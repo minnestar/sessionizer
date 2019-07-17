@@ -46,6 +46,12 @@ class Admin::SessionsController < Admin::AdminController
     end
   end
 
+  def destroy
+    @session.destroy!
+    flash[:notice] = "Session has been deleted"
+    redirect_to '/admin/sessions'
+  end
+
   private
 
   def session_params
