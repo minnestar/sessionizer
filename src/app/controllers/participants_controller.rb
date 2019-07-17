@@ -24,28 +24,40 @@ class ParticipantsController < ApplicationController
   end
 
   def update
-    @participant.update(participant_params)
+    @participant.update(participant_params.except(:code_of_conduct_agreement))
+    create_code_of_conduct_agreement_if_not_exists!
     respond_with(@participant)
   end
 
   def create
-    @participant.attributes = participant_params
+    @participant.attributes = participant_params.except(:code_of_conduct_agreement)
     if @participant.save
+      create_code_of_conduct_agreement_if_not_exists!
       flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
       redirect_to root_path
     else
-      flash[:error] = "There was a problem creating that account." 
+      flash[:error] = "There was a problem creating that account."
       render :new
     end
+  end
 
+  def create_code_of_conduct_agreement_if_not_exists!
+    if participant_params[:code_of_conduct_agreement] == '1' && @participant.signed_code_of_conduct_for_current_event? == false
+      CodeOfConductAgreement.create!({
+        participant_id: @participant.id,
+        event_id: Event.current_event.id,
+      })
+    end
   end
 
   private
 
   def participant_params
-    params.require(controller_name.singularize).permit(:name, :email, :password,
-                                                       :bio, :github_profile_username,
-                                                       :twitter_handle)
+    params.require(controller_name.singularize).permit(
+      :name, :email, :password,
+      :bio, :github_profile_username,
+      :twitter_handle, :code_of_conduct_agreement
+    )
   end
 
   def verify_owner

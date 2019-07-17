@@ -8,6 +8,15 @@
     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials. Use JUST your name. For joint sessions, you will be able to add co-presenters." %>
     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
     <%= f.input :password, :label => 'Password' %>
+    <%=
+      f.input :code_of_conduct_agreement,
+        as: :boolean,
+        label: 'I agree to the Code of Conduct governing this event',
+        input_html: {
+          checked: @participant.signed_code_of_conduct_for_current_event?,
+          disabled: @participant.signed_code_of_conduct_for_current_event?
+        }
+    %>
  <% end %>
 
   <%= f.actions %>

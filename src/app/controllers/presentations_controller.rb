@@ -17,6 +17,10 @@ class PresentationsController < ApplicationController
       flash[:error] = "Sorry, no presenter named '#{params[:name]}' was found. Please try again."
       redirect_to session_presentations_path(@session)
       return
+    elsif participant.signed_code_of_conduct_for_current_event? == false
+      flash[:error] = "Sorry, '#{params[:name]}' hasn't signed the Code of Conduct for this event."
+      redirect_to session_presentations_path(@session)
+      return
     end
 
     presentation = @session.presentations.new

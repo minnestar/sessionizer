@@ -50,7 +50,7 @@ html[xmlns] form.formtastic fieldset ol li { display: block; }
 form.formtastic fieldset ol li.required { }
 form.formtastic fieldset ol li.optional { }
 form.formtastic fieldset ol li.error { }
-  
+
 
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ form.formtastic fieldset ol li.hidden { display:none; }
 
 /* BOOLEAN OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.boolean label { padding-left:25%; width:auto; }
+form.formtastic fieldset ol li.boolean label { padding-left:0%; width:auto; }
 form.formtastic fieldset ol li.boolean label input { margin:0 0.5em 0 0.2em; }
 
 
@@ -133,6 +133,6 @@ form.formtastic fieldset ol li.date fieldset ol li label,
 form.formtastic fieldset ol li.time fieldset ol li label,
 form.formtastic fieldset ol li.datetime fieldset ol li label { display:none; }
 
-form.formtastic fieldset ol li.date fieldset ol li label input, 
-form.formtastic fieldset ol li.time fieldset ol li label input, 
+form.formtastic fieldset ol li.date fieldset ol li label input,
+form.formtastic fieldset ol li.time fieldset ol li label input,
 form.formtastic fieldset ol li.datetime fieldset ol li label input { display:inline; margin:0; padding:0;  }

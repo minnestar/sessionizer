@@ -11,6 +11,13 @@
 
     <%= f.input :categories, :as => :check_boxes %>
     <%= f.input :level, :as => :select, :label => 'Topic level' %>
+    <%=
+      f.input :code_of_conduct_agreement,
+        as: :boolean,
+        required: true,
+        label: 'I agree to the Code of Conduct governing this event',
+        input_html: { checked: current_participant.signed_code_of_conduct_for_current_event? }
+    %>
  <% end %>
 
  <%= f.actions %>
