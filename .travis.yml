@@ -20,3 +20,9 @@ env:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 bundler_args: --without development debug
+
+before_deploy:
+  - git reset --hard
+deploy:
+  provider: heroku
+  on: master
