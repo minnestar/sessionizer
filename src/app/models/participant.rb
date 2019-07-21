@@ -43,6 +43,8 @@ class Participant < ActiveRecord::Base
   end
 
   def signed_code_of_conduct_for_current_event?
+    return false if Event.current_event.nil?
+
     CodeOfConductAgreement.where({
       participant_id: id,
       event_id: Event.current_event.id,
