@@ -86,7 +86,7 @@ GEM
     fancybox2-rails (0.2.7)
       railties (>= 3.1.0)
     ffaker (2.7.0)
-    ffi (1.9.18)
+    ffi (1.11.1)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
