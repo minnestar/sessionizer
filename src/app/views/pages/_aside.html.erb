@@ -5,6 +5,6 @@
   </div>
 
   <div class="sidebar-box">
-    <%= trusted_markdown MarkdownContent.find_by_slug('homepage-summary').markdown %>
+    <%= markdown MarkdownContent.find_by_slug('homepage-summary').markdown, trusted: true %>
   </div>
 </div>

@@ -8,27 +8,20 @@ module ApplicationHelper
     end
   end
 
-  def markdown(str)
-    return '' unless str
-    @markdown ||= Redcarpet::Markdown.new(
-        Redcarpet::Render::HTML.new,
-        autolink: true,
-        space_after_headers: true)
-    sanitize_html(close_tags(@markdown.render(str))).html_safe
-  end
-
-  def trusted_markdown(str)
+  def markdown(str, trusted: false)
     return '' unless str
 
     @markdown ||= Redcarpet::Markdown.new(
       Redcarpet::Render::HTML.new,
-      {
-        autolink: true,
-        space_after_headers: true
-      }
+      autolink: true,
+      space_after_headers: true
     )
 
-    sanitize(close_tags(@markdown.render(str))).html_safe
+    if trusted
+      sanitize(close_tags(@markdown.render(str))).html_safe
+    else
+      sanitize_html(close_tags(@markdown.render(str))).html_safe
+    end
   end
 
   def close_tags(html)

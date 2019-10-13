@@ -6,7 +6,7 @@
 
 <h2>Rendered Markdown</h2>
 <div>
-  <%= trusted_markdown @markdown_content.markdown =%>
+  <%= markdown @markdown_content.markdown, trusted: true =%>
 </div>
 
 <%= link_to 'Edit', [:edit, :admin, @markdown_content] %>
