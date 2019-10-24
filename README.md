@@ -11,7 +11,7 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 * Sessions with multiple presenters
 * Participants can express interest in sessions
 * Collaborative recommendation engine for recommending sessions based on similarity of interest
-* Automatic scheduling algorithm that uses simulated annealing to minimize presenter overlap an maximize attendee attendance preferences 
+* Automatic scheduling algorithm that uses simulated annealing to minimize presenter overlap an maximize attendee attendance preferences
 * Mobile optimized display of schedule
 * iCalendar feed of schedule
 * Administrative backend for editing sessions
@@ -48,7 +48,7 @@ To restart the app, you can ssh into the box and run:
     $ vagrant ssh
     vagrant$ sudo service unicorn-sessionizer restart
 
-    -- or -- 
+    -- or --
     vagrant$ railsup
 
 To re-run the provisioning scripts, which are idempotent, you can simply do:
@@ -70,8 +70,8 @@ pass: <inside minne* one password> (ask casey or jamie)
 ### Development (seed data)
 
 For development, run `rake app:make_believe` to hydrate the database with sample
-data. It will reset the database, create an event, participants, timeslots, 
-sessions, and apply randomized participant interest. This does not run the 
+data. It will reset the database, create an event, participants, timeslots,
+sessions, and apply randomized participant interest. This does not run the
 scheduling algorithm.
 
 ```
@@ -81,7 +81,7 @@ scheduling algorithm.
 ```
 
 If you need to restart the unicorn processes within the virtual box you
-can alway use the alias `railsup`. 
+can alway use the alias `railsup`.
 
 
 
@@ -97,8 +97,8 @@ can alway use the alias `railsup`.
    console
 8. Since the app is in a git subtree (src/ directory), you need to push
    the app to heroku like this
- 
-from master  
+
+from master
 
 ```
   $ git subtree push --prefix src heroku master
@@ -125,6 +125,9 @@ Once the scheduler has run, you can see what it produced by visiting `/schedule`
 
 You can tweak the schedule by creating PresenterTimeslotRestrictions (if a person can only present during certain timeslots) or by manually swapping scheduled rooms after the schedule has been created (see `Session.swap_rooms`).
 
+## Code of Conduct
+
+Minnestar is dedicated to providing a harassment-free experience for everyone. All conversations and discussions on GitHub (code, commit comments, issues, pull requests) must be respectful and harassment-free. By contributing to this project, you are agreeing to the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Contributors
 
@@ -138,4 +141,4 @@ You can tweak the schedule by creating PresenterTimeslotRestrictions (if a perso
 
 ## License
 
-This project is open source under the MIT license. See `LICENSE.txt` for details.
+This project is open source under the MIT license. See [LICENSE](src/LICENSE.txt) for details.
