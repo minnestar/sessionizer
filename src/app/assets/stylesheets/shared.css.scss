@@ -1,6 +1,11 @@
 $white: #fff;
 $grey: rgb(209, 217, 220);
-$minnebar-purple: #414D87;
+
+// brand colors
+$minnebar-purple: #6066ae;
+$minnestar-red: #f05555;
+$minnestar-purple: #44478a;
+$minnestar-blue: #0994ca;
 
 @mixin columns($width, $gap) {
   column-width: $width;
@@ -13,7 +18,7 @@ $minnebar-purple: #414D87;
 
 body {
   background-color: #fff;
-  font-family: 'Helvetica Neue', Verdana, Helvetica, sans-serif;
+  font-family: "proxima-nova", helvetica, sans-serif;
   font-size: 14px;
   margin: 0;
   color: #111111;
@@ -21,7 +26,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "HelveticaNeue", "Helvetica Neue", "Verdana", sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
 }
 
@@ -29,6 +34,7 @@ h1 {
   margin: 1.5em 0 0 0;
   font: 700 24px / 24px;
   color: #666;
+  text-transform: uppercase;
   span.edit {
     font-size: 50%;
     color: gray;
@@ -44,13 +50,14 @@ h2 {
   margin: 10px 0;
   font: 300 18px / 18px;
   color: #666;
+  text-transform: uppercase;
 }
 
 a {
   img {
     border: none;
   }
-  color: $minnebar-purple;
+  color: $minnestar-red;
 }
 
 .clear {
@@ -117,14 +124,57 @@ a {
   }
 }
 
+input {
+  min-height: 2em;
+}
+
+a.button,
+button.button,
+input[type="submit"].button {
+  border: 2px solid $minnestar-red;
+  border-radius: 6px;
+  color: #949494;
+  padding: 7px 10px 6px;
+  background: transparent;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  .title {
+    padding: 10px;
+    float: left;
+    font-size: 1.25em;
+    font-weight: 800;
+  }
+
+  .meta {
+    text-indent: -9999px;
+    padding: 0.7em;
+    margin: 0.2em;
+    background: image-url("session-attending-true.svg") no-repeat;
+    background-size: contain;
+    width: 1.6em;
+    float: left;
+  }
+}
+a.button:hover, a.button:focus,
+button.button:hover, button.button:focus,
+input[type="submit"].button:hover, input[type="submit"].button:focus {
+  background: $minnestar-red;
+  color: #fefefe;
+  box-shadow: none;
+}
+
 div.sidebar-box {
-  background: none repeat scroll 0 0 #CDCEEB;
-  border: 1px solid darken(#CDCEEB, 20%);
+  background: none repeat scroll 0 0 #5f66af;
   border-radius: 3px;
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-bottom: 1em;
-  padding-top: 0.2em;
+  padding: 20px 15px;
+  color: #fff;
+  line-height: 1.6em;
+  h3 {
+    text-transform: uppercase;
+    font-size: 1.25em;
+
+  }
 }
 
 ul.sessionsList {
@@ -139,13 +189,12 @@ ul.sessionsList {
   li {
     margin: 0.6em 0;
     padding-left: 2.2em;
-    letter-spacing: -0.05em;
     display: inline-block;  // prevent column break
     width: 100%;
     a {
       &:link, &:visited {
         font: 700 1.2em / 1.2em;
-        color: #555;
+        color: #666;
         text-decoration: none;
       }
       &:hover, &:active {
@@ -157,7 +206,7 @@ ul.sessionsList {
       color: #AAA;
       a {
         &:link, &:visited {
-          color: #999;
+          color: #949494;
           text-decoration: none;
         }
         &:hover, &:active {
@@ -208,34 +257,6 @@ ul.sessionsList {
   padding-left: 1.8em;
 }
 
-.button {
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  border-radius: 25px;
-  border: 1px solid rgba(0,0,0,0.4) ;
-  box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.5),
-        0 0 1px 1px rgba(255,255,255,0.8),
-        0 0 0 1px rgba(0,0,0,0.06),
-        0 0 0 1px rgba(0,0,0,0.1);
-  cursor: pointer;
-  .title {
-    padding: 10px;
-    float: left;
-    color: #333;
-    font-weight: 800;
-    border-left: 1px solid rgba(0,0,0,0.2);
-  }
-  .meta {
-    text-indent: -9999px;
-    padding: 0.7em;
-    margin: 0.2em;
-    background: image-url("session-attending-true.svg") no-repeat;
-    background-size: contain;
-    width: 1.6em;
-    float: left;
-  }
-}
-
 h4 + p {
   margin-top:0em;
 }
@@ -256,12 +277,6 @@ footer{
   padding: 50px 0 100px 0;
 }
 
-.row .column h3 {
-  margin-top: 20px;
-  font-size: 1.5em;
-  color: #111;
-}
-
 h4 {
   font-size: 1.1em;
 }
@@ -272,6 +287,7 @@ h4 {
 
 .page-title {
   margin: 5px 0;
+  line-height: initial;
 }
 
 .participant-links {
