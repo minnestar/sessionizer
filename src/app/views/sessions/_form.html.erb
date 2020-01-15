@@ -13,11 +13,13 @@
     <%= f.input :level, :as => :select, :label => 'Topic level' %>
   <% end %>
 
-  <%= f.actions %>
+  <%= f.actions do %>
+    <%= f.button 'Update Session', :class => 'button'  %>
+  <% end %>
 
   <% if @session.persisted? %>
     <div class="right">
-      <%= button_to 'Delete Session', session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Delete Session', session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
     </div>
   <% end %>
 <% end %>
