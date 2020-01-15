@@ -23,11 +23,13 @@
 
   <% end %>
 
- <%= f.actions %>
+  <%= f.actions do %>
+    <%= f.button 'Edit Session', :class => 'button'  %>
+  <% end %>
 
   <% if @session.persisted? %>
     <div class="right">
-      <%= button_to 'Delete Session', admin_session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Delete Session', admin_session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
     </div>
   <% end %>
 <% end %>
