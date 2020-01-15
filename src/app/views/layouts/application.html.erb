@@ -4,8 +4,8 @@
     <%= csrf_meta_tags %>
     <title><%= yield(:title) || t('conference') %></title>
     <%= stylesheet_link_tag 'application' %>
-    <%= stylesheet_link_tag rel="stylesheet", href="https://use.typekit.net/vof3vrp.js" %>
-    <%= stylesheet_link_tag rel="stylesheet", href="https://fonts.googleapis.com/css?family=Roboto:500|Titillium+Web:400,600" %>
+    <%= stylesheet_link_tag "https://use.typekit.net/vof3vrp.js" %>
+    <%= stylesheet_link_tag "https://fonts.googleapis.com/css?family=Roboto:500|Titillium+Web:400,600" %>
     <%= favicon_link_tag 'favicon.ico' %>
     <%= yield(:head) %>
 
