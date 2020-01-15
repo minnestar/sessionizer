@@ -131,6 +131,7 @@ input {
 a.button,
 button.button,
 input[type="submit"].button {
+  font-family: 'Roboto', sans-serif;
   border: 2px solid $minnestar-red;
   border-radius: 6px;
   color: #949494;
@@ -174,6 +175,12 @@ div.sidebar-box {
     text-transform: uppercase;
     font-size: 1.25em;
 
+  }
+
+  a {
+    text-decoration: underline;
+    color: #fff;
+    font-weight: 700;
   }
 }
 
