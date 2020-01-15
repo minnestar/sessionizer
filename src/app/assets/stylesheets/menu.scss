@@ -1,4 +1,9 @@
 /*** Minne* Header ******************************************************************/
+// brand colors
+$minnebar-purple: #6066ae;
+$minnestar-red: #f05555;
+$minnestar-purple: #44478a;
+$minnestar-blue: #0994ca;
 
 .full-column {
   border-bottom: 1px solid #d1d9dc;
@@ -34,23 +39,8 @@ ul#menu {
         text-transform: lowercase;
       }
       &:hover {
-        border-top: 3px solid #6a797d;
+        border-top: 3px solid $minnestar-red;
       }
-    }
-    &.star a:hover {
-      border-top: 3px solid #ee383a;
-    }
-    &.bar a:hover {
-      border-top: 3px solid #444689;
-    }
-    &.demo a:hover {
-      border-top: 3px solid #FFCD32;
-    }
-    &.beat a:hover {
-      border-top: 3px solid #F89938;
-    }
-    &.start a:hover {
-      border-top: 3px solid #4CB848;
     }
     a {
       span.description {
@@ -66,6 +56,9 @@ ul#menu {
 
   li.bar, li.demo {
     float:right;
+    a {
+      padding: 30px 0 10px;
+    }
   }
 
   .last {
@@ -73,31 +66,4 @@ ul#menu {
   }
 }
 
-span {
-  &.star {
-    color: #EE383A;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.bar {
-    color: #444689;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.demo {
-    color: #FFCD32;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.beat {
-    color: #F89938;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-  &.start {
-    color: #4CB848;
-    font-weight: 700;
-    margin-left: 1px;
-  }
-}
 
