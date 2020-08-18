@@ -1,8 +1,15 @@
-<% title(t('conference') + ' Session Registration') %>
+<% title("#{@event&.name || t('conference')} Session Registration") %>
 
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
-    <p>Welcome to the <%= t('conference') %> session planning tool.</p>
+    <% if @event&.current? %>
+      <p>Welcome to the <%= t('conference') %> session planning tool.</p>
+    <% else %>
+      <p>
+        <b>This is a past event.</b>
+        <%= link_to "See sessions for the current #{t('conference')} >", home_page_path %>
+      </p>
+    <% end %>
 
     <% if @event %>
       <%= render 'sessions' %>

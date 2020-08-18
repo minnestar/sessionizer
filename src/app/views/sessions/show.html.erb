@@ -1,7 +1,9 @@
 <% title(@session.title) %>
 <% content_for :edit do %>
-  <% edit(@session) do %>
-    (<%= link_to 'edit', edit_session_path(@session) %>)
+  <% if @session.event.current? %>
+    <% edit(@session) do %>
+      (<%= link_to 'edit', edit_session_path(@session) %>)
+    <% end %>
   <% end %>
 <% end %>
 
@@ -10,6 +12,8 @@
   <% edit(@session) do %>
     (<%= link_to 'manage presenters', session_presentations_path(@session) %>)
   <% end %>
+
+  | at <%= link_to @session.event.name, @session.event %>
 
   <% if @session.timeslot && Settings.show_schedule? %>
       |
@@ -20,7 +24,6 @@
       |
       <%= link_to 'View Schedule', schedule_path(force: 1) %>
   <% end %>
-
 </p>
 
 <div class="row">
@@ -73,27 +76,29 @@
     <% end %>
   </div>
 
-  <div class="column grid_4">
+  <% if @session.event.current? %>
+    <div class="column grid_4">
 
-    <div id="interested-in-attending">
-      <% if !@session.attending?(current_participant) %>
-      <h3>Are you interested in this session?</h3>
-      <p>This will add your name to the list of interested participants. It will help us gauge interest for scheduling purposes.</p>
-      <button class="button yellow" id="attend">
-        <div class="meta">minnebar</div>
-        <div class="title">Yes! I might attend.</div>
-      </button>
+      <div id="interested-in-attending">
+        <% if !@session.attending?(current_participant) %>
+        <h3>Are you interested in this session?</h3>
+        <p>This will add your name to the list of interested participants. It will help us gauge interest for scheduling purposes.</p>
+        <button class="button yellow" id="attend">
+          <div class="meta">minnebar</div>
+          <div class="title">Yes! I might attend.</div>
+        </button>
+        <% end %>
+      </div>
+
+      <% if @session.participants.any? %>
+        <h3>Interested Participants</h3>
+      <% else %>
+        <h3 id="no-participants">No participants yet</h3>
       <% end %>
+      <ul class="sessionsList" id="participants">
+        <%= render :partial => 'participant', :collection => @session.participants %>
+      </ul>
+
     </div>
-
-    <% if @session.participants.any? %>
-      <h3>Interested Participants</h3>
-    <% else %>
-      <h3 id="no-participants">No participants yet</h3>
-    <% end %>
-    <ul class="sessionsList" id="participants">
-      <%= render :partial => 'participant', :collection => @session.participants %>
-    </ul>
-
-  </div>
+  <% end %>
 </div>

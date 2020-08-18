@@ -14,4 +14,11 @@ class Event < ActiveRecord::Base
   def self.current_event(opts = {})
     Event.order(:date).last
   end
+
+  def current?
+    if @current.nil?
+      @current = self == Event.current_event
+    end
+    @current
+  end
 end
