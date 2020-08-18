@@ -46,7 +46,7 @@ RSpec.configure do |config|
 
   config.before do
     #don't hold on to any memoized events
-    Event.instance_variable_set(:'@current_event', nil)
+    Event.instance_variable_set(:'@event', nil)
   end
 
   config.before(:suite) do

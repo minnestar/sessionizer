@@ -8,9 +8,8 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @current_event = @event
-        @recent_sessions = @current_event ? @current_event.sessions.limit(4).recent : []
-        @random_sessions = @current_event ? @current_event.sessions.limit(6).random_order : []
+        @recent_sessions = @event ? @event.sessions.limit(4).recent : []
+        @random_sessions = @event ? @event.sessions.limit(6).random_order : []
 
         @categories = Category.all.order('id')
       end
