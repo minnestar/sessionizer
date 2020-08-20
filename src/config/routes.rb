@@ -4,7 +4,7 @@ Sessionizer::Application.routes.draw do
   get '/home' => 'events#show', id: 'current', as: :home_page
 
   # Session actions available for all events
-  resources :events do
+  resources :events, :only => [:show] do
     resources :sessions, :only => [:index]
   end
 
