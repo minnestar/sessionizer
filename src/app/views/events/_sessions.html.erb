@@ -1,5 +1,5 @@
   <%# Note that fragment contains user-specific info, must be cached per user %>
-  <%= cache [Event.current_event.sessions, current_participant], expires_in: 5.minutes do %>
+  <%= cache [@event.sessions, current_participant], expires_in: 5.minutes do %>
 
     <h2>A Sampling of Sessions</h2>
     <ul class="sessionsList">
