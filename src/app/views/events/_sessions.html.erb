@@ -5,13 +5,13 @@
     <ul class="sessionsList">
       <%= render @random_sessions %>
     </ul>
-    <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
+    <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
 
     <h2>Recently Added</h2>
     <ul class="sessionsList">
       <%= render @recent_sessions %>
     </ul>
-    <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
+    <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
 
     <div class="row">
       <%= render 'category_grid', category: @categories.first, grid: 3 %>

@@ -1,5 +1,6 @@
 
-<% title("#{@category.name} Sessions") %>
+<% title("#{@category.name} Sessions at #{Event.current_event.name}") %>
+
 <p><%= add_sessions_button %></p>
 <% if @sessions.empty? %>
   <div>
