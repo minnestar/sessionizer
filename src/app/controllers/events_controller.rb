@@ -3,7 +3,7 @@ class EventsController < ApplicationController
     @event = if params[:id] == 'current'
       Event.current_event
     else
-      Event.includes(:sessions).find(params[:id])
+      Event.find(params[:id])
     end
 
     respond_to do |format|
