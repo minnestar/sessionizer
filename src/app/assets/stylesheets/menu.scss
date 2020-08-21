@@ -17,6 +17,7 @@ $minnestar-blue: #0994ca;
 }
 
 ul#menu {
+  font-family: "Roboto", sans-serif;
   margin: 0 1px;
   padding: 0;
   font-size: 12px;
@@ -33,10 +34,12 @@ ul#menu {
         padding: 7px 0 10px;
         line-height: 1em;
         width: 9.5em;
-        color: #6a797d;
+        color: $minnestar-blue;
+        font-weight: 400;
         text-decoration: none;
         border-top: 3px solid #fff;
-        text-transform: lowercase;
+        text-transform: uppercase;
+        letter-spacing: 1.6px;
       }
       &:hover {
         border-top: 3px solid $minnestar-red;
@@ -54,10 +57,19 @@ ul#menu {
     }
   }
 
-  li.bar, li.demo {
+  li.bar, li.demo, li.donate {
     float:right;
     a {
       padding: 30px 0 10px;
+    }
+  }
+
+  li.donate {
+    a.button {
+      padding: 7px 10px 6px;
+      margin: 24px 0 0;
+      width: auto;
+      border: 2px solid #f05555
     }
   }
 
