@@ -1,6 +1,8 @@
 <%= semantic_form_for([:admin, @event]) do |f| %>
-<%= f.semantic_errors %>
+  <%= f.semantic_errors %>
 
-<%= f.inputs %>
-<%= f.actions %>
+  <%= f.inputs %>
+  <%= f.actions do %>
+    <%= f.button 'Create Event', :class => 'button'  %>
+  <% end %>
 <% end %>

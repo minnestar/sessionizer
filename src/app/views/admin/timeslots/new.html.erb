@@ -2,5 +2,7 @@
 <%= f.semantic_errors %>
 
 <%= f.inputs %>
-<%= f.actions %>
+<%= f.actions do %>
+  <%= f.button 'Create Timeslot', :class => 'button'  %>
+<% end %>
 <% end %>

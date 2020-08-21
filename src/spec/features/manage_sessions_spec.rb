@@ -8,20 +8,20 @@ feature "Manage Sessions" do
   scenario "As a guest, I want to register " do
     visit root_path
 
-    all(".add-sessions-button").first.click
+    click_link "Add Session", match: :first
     click_link "Register here"
 
     fill_in 'participant_name', with: 'Jack Johnson'
     fill_in 'Your email', with: 'jack@example.com'
     fill_in 'Password', with: 's00persekret12345'
-    click_button "Create Participant"
+    click_button "Create My Account"
 
-    all(".add-sessions-button").first.click
+    click_link "Add Session", match: :first
 
     fill_in('Title', with: 'Rails 4 FTW')
     fill_in('Description', with: 'Rails Desc')
 
-    click_button 'Create Session'
+    click_button 'Update Session'
     expect(page).to have_content 'Thanks for adding your session.'
   end
 end

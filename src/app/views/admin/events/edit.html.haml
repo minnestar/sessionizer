@@ -1,4 +1,5 @@
 = semantic_form_for([:admin, @event]) do |f|
   = f.semantic_errors
   = f.inputs
-  = f.actions
+  = f.actions do
+    = f.button 'Update Event', :class => 'button'

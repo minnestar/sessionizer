@@ -1,5 +1,5 @@
       <div class="column grid_<%= grid %>">
-        <h3>Sessions about <%= category.name %></h3>
+        <h2><%= category.name %> Sessions</h2>
         <ul class="sessionsList">
           <%= render category.sessions.where(event: @event).random_order.limit(5) %>
         </ul>

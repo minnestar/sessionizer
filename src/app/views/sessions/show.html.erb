@@ -79,11 +79,11 @@
   <% if @session.event.current? %>
     <div class="column grid_4">
 
-      <div id="interested-in-attending">
+      <div id="interested-in-attending" class="interested-in-attending">
         <% if !@session.attending?(current_participant) %>
         <h3>Are you interested in this session?</h3>
         <p>This will add your name to the list of interested participants. It will help us gauge interest for scheduling purposes.</p>
-        <button class="button yellow" id="attend">
+        <button class="button" id="attend">
           <div class="meta">minnebar</div>
           <div class="title">Yes! I might attend.</div>
         </button>

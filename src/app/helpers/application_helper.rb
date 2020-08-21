@@ -32,7 +32,7 @@ module ApplicationHelper
   end
 
   def add_sessions_button
-    link_to image_tag('button-add-session.png', :title => 'Add session', :size => "215x43", :border=>"0"), new_session_path, class: 'add-sessions-button', title: "Add Session"
+    link_to 'Add Session', new_session_path, class: 'button', alt: "Add Session"
   end
 
   def toggle_attendance_button(session)
