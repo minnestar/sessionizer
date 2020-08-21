@@ -42,7 +42,7 @@ ul#menu {
         letter-spacing: 1.6px;
       }
       &:hover {
-        border-top: 3px solid $minnestar-red;
+        color: $minnestar-red;
       }
     }
     a {
@@ -69,7 +69,10 @@ ul#menu {
       padding: 7px 10px 6px;
       margin: 24px 0 0;
       width: auto;
-      border: 2px solid #f05555
+      border: 2px solid #f05555;
+      &:hover {
+        color: #ffffff;
+      }
     }
   }
 
