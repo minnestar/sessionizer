@@ -17,6 +17,7 @@
     <%= f.button 'Update Session', :class => 'button'  %>
   <% end %>
 
+  <!-- JENNA: This should be removed if it doesn't work -->
   <% if @session.persisted? %>
     <div class="right">
       <%= link_to 'Delete Session', session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>

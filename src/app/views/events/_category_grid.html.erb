@@ -1,7 +1,7 @@
       <div class="column grid_<%= grid %>">
         <h2><%= category.name %> Sessions</h2>
         <ul class="sessionsList">
-          <%= render category.sessions.for_current_event.random_order.limit(5) %>
+          <%= render category.sessions.where(event: @event).random_order.limit(5) %>
         </ul>
         <p class="more_sessions"><%= link_to 'See more...', category_path(category) %></p>
       </div>

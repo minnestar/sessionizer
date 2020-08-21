@@ -36,6 +36,8 @@ module ApplicationHelper
   end
 
   def toggle_attendance_button(session)
-    content_tag(:button, "Attending", class: "toggle-attendance", 'data-session-id': session.id)
+    if session.event.current?
+      content_tag(:button, "Attending", class: "toggle-attendance", 'data-session-id': session.id)
+    end
   end
 end
