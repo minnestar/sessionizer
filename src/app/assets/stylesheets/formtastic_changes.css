@@ -25,9 +25,10 @@ form.formtastic fieldset ol li ul.errors { margin:0.5em 0 0 0; }
 
 /* TEXTAREA OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.text textarea { width:100%; }
+form.formtastic fieldset ol li.text textarea { width:100%; padding: 5px 5px; border: 2px solid #ececec; box-shadow: none; border-radius: 5px; }
 
 
 form.formtastic fieldset ol li { width:100%; }
 
 
+form.formtastic fieldset ol input { padding: 5px 5px; border: 2px solid #ececec; box-shadow: none; border-radius: 5px;}
