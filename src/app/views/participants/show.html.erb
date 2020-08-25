@@ -37,13 +37,23 @@
 <div class="column grid_5">
   <h3>Presenting Sessions</h3>
 
-  <% if @participant.sessions_presenting.empty? %>
+  <% current_sessions_presenting = @participant.sessions_presenting.for_current_event %>
+  <% if current_sessions_presenting.empty? %>
     <p>This person isn't presenting any sessions.</p>
+  <% else %>
+    <ul class="sessionsList">
+      <%= render :partial => 'session', :collection => current_sessions_presenting %>
+    </ul>
   <% end %>
 
-  <ul class="sessionsList">
-    <%= render :partial => 'session', :collection => @participant.sessions_presenting.for_current_event %>
-  </ul>
+  <% past_sessions_present = @participant.sessions_presenting.for_past_events %>
+  <% if past_sessions_present.any? %>
+    <h3>Past Presentations</h3>
+
+    <ul class="sessionsList">
+      <%= render :partial => 'session', :collection => past_sessions_present %>
+    </ul>
+  <% end %>
 </div>
 
 <div class="column grid_5">

@@ -2,5 +2,7 @@
   <%= f.semantic_errors %>
 
   <%= f.inputs %>
-  <%= f.actions %>
+  <%= f.actions do %>
+    <%= f.button 'Add Room', :class => 'button'  %>
+  <% end %>
 <% end %>

@@ -40,12 +40,12 @@ feature "Authentication and account creation things" do
     click_link 'Register here'
 
     name = FFaker::Name.name
-    fill_in 'Your name*', with: name 
-    fill_in 'Your email', with: FFaker::Internet.safe_email 
-    fill_in 'Password*',  with: "anything, it doesnt matter" 
-    click_button "Create Participant"
+    fill_in 'Your name*', with: name
+    fill_in 'Your email', with: FFaker::Internet.safe_email
+    fill_in 'Password*',  with: "anything, it doesnt matter"
+    click_button "Create My Account"
 
-    expect(page).to have_content "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend" 
+    expect(page).to have_content "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend"
     expect(page).to have_content "Welcome #{name}"
   end
 
@@ -58,8 +58,8 @@ feature "Authentication and account creation things" do
     name = FFaker::Name.name
     fill_in 'Your name*', with: user.name
     fill_in 'Your email', with: user.email
-    fill_in 'Password', with: "anything, it doesnt matter" 
-    click_button "Create Participant"
+    fill_in 'Password', with: "anything, it doesnt matter"
+    click_button "Create My Account"
 
     expect(page).to have_content "There was a problem creating that account."
     within("#participant_email_input") do
