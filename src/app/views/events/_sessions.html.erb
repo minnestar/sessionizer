@@ -1,18 +1,18 @@
   <%# Note that fragment contains user-specific info, must be cached per user %>
-  <%= cache [Event.current_event.sessions, current_participant], expires_in: 5.minutes do %>
+  <%= cache [@event.sessions, current_participant], expires_in: 5.minutes do %>
 
     <h2>A Sampling of Sessions</h2>
     <ul class="sessionsList">
       <%= render @random_sessions %>
     </ul>
-    <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
+    <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
 
     <h2>Recently Added</h2>
     <ul class="sessionsList">
       <%= render @recent_sessions %>
     </ul>
-    <p class="more_sessions"><%= link_to 'See all sessions', sessions_path %></p>
-    
+    <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
+
     <div class="row">
       <%= render 'category_grid', category: @categories.first, grid: 3 %>
       <%= render 'category_grid', category: @categories.second, grid: 3 %>
@@ -25,10 +25,10 @@
 
     <div class="row">
       <%= render 'category_grid', category: @categories.fifth, grid: 6 %>
-   </div>
+    </div>
 
-   <div class="row">
-     <p><%= add_sessions_button %></p>
-   </div>
-  
+    <div class="clear"></div>
+    <p><%= add_sessions_button %></p>
+
+
   <% end %>

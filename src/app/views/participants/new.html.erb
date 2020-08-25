@@ -10,5 +10,7 @@
     <%= f.input :password, :label => 'Password' %>
  <% end %>
 
-  <%= f.actions %>
+  <%= f.actions do %>
+    <%= f.button 'Create My Account', :class => 'button'  %>
+  <% end %>
 <% end %>

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 class SessionsController < ApplicationController
 
-  load_resource only: [:new, :show, :edit, :create, :update]
-  before_action :verify_session, only: [:new, :create, :update, :edit]
-  before_action :verify_owner, only: [:update, :edit]
+  load_resource only: [:new, :show, :edit, :create, :update, :destroy]
+  before_action :verify_session, only: [:new, :create, :update, :edit, :destroy]
+  before_action :verify_owner, only: [:update, :edit, :destroy]
 
   respond_to :html
   respond_to :json, only: :index
@@ -27,11 +27,17 @@ class SessionsController < ApplicationController
     respond_with(@session)
   end
 
+  def destroy
+    @session.destroy!
+    flash[:notice] = "Your session has been deleted"
+    redirect_to '/'
+  end
+
   def index
-    if params[:event_id].present?
-      @event = Event.find(params[:event_id])
-    else
+    if params[:event_id].blank? || params[:event_id] == 'current'
       @event = Event.current_event
+    else
+      @event = Event.find(params[:event_id])
     end
 
     respond_to do |format|

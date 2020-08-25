@@ -1,8 +1,6 @@
 <div class="column grid_4">
 
-  <div class="add-session-now">
-    <%= add_sessions_button %>
-  </div>
+  <p><%= add_sessions_button %></p>
 
   <div class="sidebar-box">
     <%= markdown MarkdownContent.find_by_slug('homepage-summary').markdown, trusted: true %>
