@@ -12,7 +12,7 @@
     <%=
       f.input :code_of_conduct_agreement,
         as: :boolean,
-        label: 'I agree to the Code of Conduct governing this event',
+        label: ("I agree to the #{link_to 'Code of Conduct', 'https://minnestar.org/code-of-conduct'} governing this event.").html_safe,
         input_html: {
           checked: @participant.signed_code_of_conduct_for_current_event?,
           disabled: @participant.signed_code_of_conduct_for_current_event?
