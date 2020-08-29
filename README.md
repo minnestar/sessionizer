@@ -17,9 +17,18 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 * Administrative backend for editing sessions
 * Export of data for various purposes
 
-## Running
+## Development
 
-### Bootstrapping
+### Running locally
+
+To run locally, install the heroku command line tools from [here](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
+
+    $ cd src
+    $ heroku local
+
+You can then visit <http://localhost:5000>.
+
+### Running with Vagrant and VirtualBox
 
 You'll need to install [VirtualBox][], [Vagrant][], and [Ansible][]
 first. VirtualBox and Vagrant both have Mac OS X installer packages, and
@@ -49,6 +58,7 @@ To restart the app, you can ssh into the box and run:
     vagrant$ sudo service unicorn-sessionizer restart
 
     -- or --
+
     vagrant$ railsup
 
 To re-run the provisioning scripts, which are idempotent, you can simply do:
@@ -58,21 +68,24 @@ To re-run the provisioning scripts, which are idempotent, you can simply do:
 This should bring the box back into its correct configuration if
 anything has gotten messed up.
 
-========
+If you ever need to restart the unicorn processes within the virtual box you
+can alway use the alias `railsup`.
 
-This app also uses Mandrill for sending emails. The account is under
-
-user: casey at minnestar . org
-pass: <inside minne* one password> (ask casey or jamie)
-
-========
-
-### Development (seed data)
+### Seeding data for development
 
 For development, run `rake app:make_believe` to hydrate the database with sample
 data. It will reset the database, create an event, participants, timeslots,
 sessions, and apply randomized participant interest. This does not run the
 scheduling algorithm.
+
+Locally:
+
+```
+ $ cd src
+ $ bundle exec rake app:make_believe
+```
+
+From Vagrant:
 
 ```
  $ cd vagrant; vagrant ssh
@@ -80,19 +93,14 @@ scheduling algorithm.
  $ bundle exec rake app:make_believe
 ```
 
-If you need to restart the unicorn processes within the virtual box you
-can alway use the alias `railsup`.
+## Deploying to Heroku
 
-
-
-### Deploying to Heroku
-
-1. Create an application. Sessionizer runs on the default Cedar stack.
+1. Create an application. Sessionizer runs on the default `heroku-18` stack.
 2. Add the memcache add-on: `heroku addons:add memcached:5mb`
 3. Run `heroku run rake db:migrate`
 4. Run `heroku run rake db:seed`
 5. Set a username and password for the Sessionizer admin: `heroku config:add SESSIONIZER_ADMIN_USER=foo SESSIONIZER_ADMIN_PASSWORD=bar`
-6. Set a MANDRILL_MINNESTAR_USERNAME, MANDRILL_MINNESTAR_PASSWORD
+6. Set a MANDRILL_MINNESTAR_USERNAME, MANDRILL_MINNESTAR_PASSWORD - These can be omitted if this app is for testing.
 7. Create the first event by navigating to `/admin/events` or using the
    console
 8. Since the app is in a git subtree (src/ directory), you need to push
@@ -104,14 +112,12 @@ from master
   $ git subtree push --prefix src heroku master
 ```
 
-or from master with a --force
+or from a specific branch with a --force
 ```
-  $ git push heroku `git subtree split --prefix src master`:master --force
+  $ git push heroku `git subtree split --prefix src THE_BRANCH_NAME`:master --force
 ```
 
-
-
-### Automatic Scheduling
+## Automatic Scheduling
 
 Sessionizer can automatically generate a schedule for your event based on preferences expressed by the audience and attempting not to double-book presenters.
 
