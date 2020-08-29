@@ -124,7 +124,7 @@ a {
   }
 }
 
-input {
+input:not([type=checkbox]) {
   min-height: 2em;
 }
 

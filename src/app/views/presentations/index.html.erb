@@ -10,7 +10,7 @@
 
 <h2>Add presenters</h2>
 
-<p><strong>Note:</strong> In order to add a presenter to your session, they must be registered in the system and agreed to the Code of Conduct.</p>
+<p><strong>Note:</strong> In order to add a presenter to your session, they must be registered in the system and have agreed to the Code of Conduct.</p>
 
 <%= semantic_form_for([@session, @presentation]) do |f| %>
 <%= text_field_tag 'name', '', :placeholder => 'Type a name', :id => 'typeahead' %> <%= submit_tag 'Add', :id => 'add-presenter' %>
