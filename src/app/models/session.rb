@@ -23,7 +23,7 @@ class Session < ActiveRecord::Base
   scope :for_past_events, -> { where.not(event_id: Event.current_event.id).includes(:event).order('events.date desc') }
 
   scope :recent, -> { order('created_at desc') }
-  
+
   scope :random_order, -> { order('random()') }
 
   validates_presence_of :description
@@ -34,7 +34,7 @@ class Session < ActiveRecord::Base
   #validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
 
 
-  attr_accessor :name, :email
+  attr_accessor :name, :email, :code_of_conduct_agreement
 
   after_create :create_presenter
 
@@ -132,7 +132,7 @@ class Session < ActiveRecord::Base
     sessions.each do |session|
       sessions_by_id[session.id] = session
     end
-    
+
     # Surely there’s a Rails helper for this?
     # But I can’t find it — only some abandoned gems.
     Attendance
@@ -181,7 +181,7 @@ class Session < ActiveRecord::Base
       # make estimated_interest tend toward the mean in cases when there are few real votes.
 
       ballast_votes = 10.0
-      session_votes / (possible_votes + ballast_votes * session_count) * total_votes      
+      session_votes / (possible_votes + ballast_votes * session_count) * total_votes
     end
   end
 

@@ -9,6 +9,15 @@
     <%= f.input :github_profile_username, :label => 'Your GitHub username' %>
     <%= f.input :twitter_handle, :label => 'Your Twitter handle' %>
     <%= f.input :bio, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <strong>**bold**</strong>, <em>*italic*</em>, [link](http://example.com)'.html_safe %>
+    <%=
+      f.input :code_of_conduct_agreement,
+        as: :boolean,
+        label: 'I agree to the Code of Conduct governing this event',
+        input_html: {
+          checked: @participant.signed_code_of_conduct_for_current_event?,
+          disabled: @participant.signed_code_of_conduct_for_current_event?
+        }
+    %>
   <% end %>
 
   <%= f.actions do %>

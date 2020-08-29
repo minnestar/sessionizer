@@ -57,15 +57,25 @@ class SessionsController < ApplicationController
   end
 
   def create
-    @session.attributes = session_params
+    @session.attributes = session_params.except(:code_of_conduct_agreement)
     @session.participant = current_participant
     @session.event = Event.current_event
 
     if @session.save
+      create_code_of_conduct_agreement_if_not_exists!
       flash[:notice] = "Thanks for adding your session."
       redirect_to @session
     else
       render :action => 'new'
+    end
+  end
+
+  def create_code_of_conduct_agreement_if_not_exists!
+    if session_params[:code_of_conduct_agreement] == '1' && @session.participant.signed_code_of_conduct_for_current_event? == false
+      CodeOfConductAgreement.create!({
+        participant_id: @session.participant.id,
+        event_id: Event.current_event.id,
+      })
     end
   end
 
@@ -97,7 +107,17 @@ class SessionsController < ApplicationController
   private
 
   def session_params
-    params.require(controller_name.singularize).permit(:title, :description, :level_id, :name, :email, :category_ids => [])
+    params
+      .require(controller_name.singularize)
+      .permit(
+        :title,
+        :description,
+        :level_id,
+        :name,
+        :email,
+        :code_of_conduct_agreement,
+        :category_ids => []
+      )
   end
 
   def verify_owner
