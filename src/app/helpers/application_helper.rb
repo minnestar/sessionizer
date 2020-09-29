@@ -39,7 +39,9 @@ module ApplicationHelper
   end
 
   def add_sessions_button
-    link_to 'Add Session', new_session_path, class: 'button', alt: "Add Session"
+    if Settings.allow_new_sessions?
+      link_to 'Add Session', new_session_path, class: 'button', alt: "Add Session"
+    end
   end
 
   def toggle_attendance_button(session)

@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_17_012137) do
+ActiveRecord::Schema.define(version: 2020_09_29_151346) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -127,6 +128,7 @@ ActiveRecord::Schema.define(version: 2019_07_17_012137) do
   create_table "settings", id: :serial, force: :cascade do |t|
     t.boolean "show_schedule"
     t.integer "current_event_id"
+    t.boolean "allow_new_sessions", default: true, null: false
     t.index ["current_event_id"], name: "index_settings_on_current_event_id"
   end
 

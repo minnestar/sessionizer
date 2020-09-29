@@ -57,6 +57,10 @@ class SessionsController < ApplicationController
   end
 
   def create
+    unless Settings.allow_new_sessions?
+      return render status: 403, plain: 'Session submission is closed'
+    end
+
     @session.attributes = session_params.except(:code_of_conduct_agreement)
     @session.participant = current_participant
     @session.event = Event.current_event
@@ -127,7 +131,7 @@ class SessionsController < ApplicationController
 private
 
   def sessions_for_event(event)
-    @event.sessions
+    event.sessions
       .includes(:presenters, :categories, :participant, :room, :timeslot, :level)
       .order('created_at desc')
       .distinct
