@@ -101,6 +101,58 @@ namespace :app do
   end
 
 
+  desc 'set up multi-day timeslots for a remote event'
+  task create_remote_timeslots_and_rooms: :environment do
+    session_length = 45.minutes
+    event = Event.current_event
+    event.timeslots.destroy_all
+    event.rooms.destroy_all
+
+    dates = [
+      '2020-10-6',
+      '2020-10-8',
+      '2020-10-10',
+      '2020-10-13',
+      '2020-10-15',
+      '2020-10-17',
+    ]
+    times = [
+      '9:00',
+      '9:30',
+      '10:00',
+      '10:30',
+      '11:00',
+      '11:30',
+    ]
+    Timeslot.transaction do
+      dates.each.with_index do |date, day_num|
+        times.each.with_index do |time, session_num|
+          start_time = Time.zone.parse("#{date} #{time}")
+          event.timeslots.create!(
+            title: "Day #{day_num + 1} Session #{session_num + 1}",
+            starts_at: start_time,
+            ends_at: start_time + session_length,
+            schedulable: true
+          )
+        end
+      end
+    end
+    event.timeslots.each do |slot|
+      puts "Timeslot ##{slot.id}: #{slot.to_s(with_day: true)}"
+    end
+
+    rooms = [
+        { name: 'Sessions Track', capacity: 2 },
+        { name: 'Hallway Track', capacity: 1 },  # Preferentially schedules sessions in the Sessions Track
+    ]
+    Room.transaction do
+      rooms.each do |room|
+        event.rooms.create!(room)
+      end
+    end
+  end
+
+
   desc 'add a Presentation for each Session with the session owner, if it does not have one'
   task :presentationize => :environment do
     Session.all.each do |session|
