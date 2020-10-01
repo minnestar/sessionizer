@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 class Timeslot < ActiveRecord::Base
   belongs_to :event
   has_many :sessions, dependent: :nullify

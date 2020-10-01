@@ -6,6 +6,7 @@ Sessionizer::Application.routes.draw do
   # Session actions available for all events
   resources :events, :only => [:show] do
     resources :sessions, :only => [:index]
+    get '/schedule' => 'schedules#index'
   end
 
   # Session actions available only for the current event

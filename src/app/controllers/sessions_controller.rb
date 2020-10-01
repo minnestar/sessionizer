@@ -34,11 +34,7 @@ class SessionsController < ApplicationController
   end
 
   def index
-    if params[:event_id].blank? || params[:event_id] == 'current'
-      @event = Event.current_event
-    else
-      @event = Event.find(params[:event_id])
-    end
+    @event = event_from_params
 
     respond_to do |format|
       format.json do

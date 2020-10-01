@@ -11,8 +11,8 @@ class Event < ActiveRecord::Base
 
   validates_presence_of :name, :date
 
-  def self.current_event(opts = {})
-    Event.order(:date).last
+  def self.current_event
+    self.order(:date).last
   end
 
   def current?

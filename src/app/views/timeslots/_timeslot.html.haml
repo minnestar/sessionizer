@@ -1,7 +1,7 @@
 .timeslot{ id: "timeslot_#{timeslot.id}" }
 
-  - if @event.multiday?
-    - if @event.first_timeslots_of_day.include?(timeslot)
+  - if event.multiday?
+    - if event.first_timeslots_of_day.include?(timeslot)
       %h2
         .time= timeslot.date_range.start_day
     %h3
