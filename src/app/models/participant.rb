@@ -18,8 +18,8 @@ class Participant < ActiveRecord::Base
   end
 
   def restrict_after(datetime, weight=1, event=Event.current_event)
-    event.timeslots.select do |timeslot|
-      if timeslot.ends_at >= datetime
+    event.timeslots.each do |timeslot|
+      if timeslot.ends_at > datetime
         self.presenter_timeslot_restrictions.create!(
           timeslot: timeslot,
           weight:   weight)
@@ -28,8 +28,28 @@ class Participant < ActiveRecord::Base
   end
 
   def restrict_before(datetime, weight=1, event=Event.current_event)
-    event.timeslots.select do |timeslot|
-      if timeslot.starts_at <= datetime
+    event.timeslots.each do |timeslot|
+      if timeslot.starts_at < datetime
+        self.presenter_timeslot_restrictions.create!(
+          timeslot: timeslot,
+          weight:   weight)
+      end
+    end
+  end
+
+  def restrict_not_at(datetime, weight=1, event=Event.current_event)
+    event.timeslots.each do |timeslot|
+      if timeslot.ends_at < datetime || timeslot.starts_at > datetime
+        self.presenter_timeslot_restrictions.create!(
+          timeslot: timeslot,
+          weight:   weight)
+      end
+    end
+  end
+
+  def restrict_to_only(allowed_slots, weight=1, event=Event.current_event)
+    event.timeslots.each do |timeslot|
+      unless allowed_slots.include?(timeslot)
         self.presenter_timeslot_restrictions.create!(
           timeslot: timeslot,
           weight:   weight)

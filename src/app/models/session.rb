@@ -153,7 +153,7 @@ class Session < ActiveRecord::Base
   end
 
   def expected_attendance
-    manual_attendance_estimate || attendance_count
+    manual_attendance_estimate || (estimated_interest + attendance_count) / 2
   end
 
   # Estimates actual event-day interest for this session relative to other sessions,

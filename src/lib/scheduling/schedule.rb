@@ -177,14 +177,15 @@ module Scheduling
       Session.transaction do
         ctx.timeslots.sort_by(&:starts_at).each do |slot|
           puts slot
-          sessions = Session.find(
-            schedulable_sessions_in_slot(slot).reject { |s| EmptyRoom === s })
+          sessions = Session.find(@sessions_by_slot[slot].reject { |s| EmptyRoom === s })
           sessions.sort_by { |s| -s.attendance_count }.each do |session|
             puts "    #{session.id} #{session.title}" +
                  " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)"
-            session.timeslot = slot
-            session.room = nil  # Rooms have to be reassigned after rearranging timeslots
-            session.save!
+            unless session.manually_scheduled
+              session.timeslot = slot
+              session.room = nil  # Rooms have to be reassigned after rearranging timeslots
+              session.save!
+            end
           end
         end
       end
