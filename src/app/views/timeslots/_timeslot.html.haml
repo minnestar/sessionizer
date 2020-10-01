@@ -19,7 +19,7 @@
 
             .session
               .header
-                = toggle_attendance_button(session)
+                = toggle_attendance_button(event, session)
                 - if session.room
                   - map_location = asset_path("maps/#{session.room.name.downcase}.png")
                   .room{:href =>  "#{map_location}" }
