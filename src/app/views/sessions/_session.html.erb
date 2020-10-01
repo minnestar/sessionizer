@@ -1,5 +1,5 @@
 <li>
-  <%= toggle_attendance_button(@event, session) %>
+  <%= toggle_attendance_button(@event || session.event, session) %>
   <h4><%= link_to session.title, session %></h4> 
   <div class="presenter">by <%= session.presenters.map {|p| link_to p.name, p }.to_sentence.html_safe %></div>
   <% edit(session) do %>
