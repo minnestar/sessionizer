@@ -59,6 +59,15 @@ class SchedulesController < ApplicationController
   end
   helper_method :event_timeslots
 
+  def header_timeslots
+    @header_timeslots ||= if @event.multiday?
+      @event.first_timeslots_of_day
+    else
+      event_timeslots.where(schedulable: true)
+    end
+  end
+  helper_method :header_timeslots
+
   private
 
   def load_event

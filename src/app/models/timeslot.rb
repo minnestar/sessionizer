@@ -25,11 +25,11 @@ class Timeslot < ActiveRecord::Base
     end
 
     def to_s(with_day: false)
-      "#{start_day + ' ' if with_day}#{start_time} – #{end_time}"
+      "#{start_day + ' • ' if with_day}#{start_time} – #{end_time}"
     end
 
     def start_day
-      start.in_time_zone.strftime('%a')
+      start.in_time_zone.strftime('%a, %b %e')
     end
 
     def start_time
