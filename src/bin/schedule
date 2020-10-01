@@ -1,0 +1,22 @@
+#!/bin/bash
+
+while date; do
+    for q in 0.01 0.05 0.1 0.3 0.5 0.7 0.9 1.0 1.3 1.6 2.0; do
+        rails app:export_schedule >/tmp/minnebar-schedule-saved.json || exit
+
+        bin/pull-database-from-production
+        rails db:migrate && rails app:analyze_scheduler_input_quality
+
+        rake app:configure_sessions[/tmp/schedule-constraints.csv]
+
+        rails app:import_schedule < /tmp/minnebar-schedule-saved.json
+
+        echo "--------------------------------------------"
+        echo
+        echo $q
+        echo
+        quality=$q room_count_override=24 rails app:generate_schedule
+    done
+    echo "********************************************"
+    echo
+done
