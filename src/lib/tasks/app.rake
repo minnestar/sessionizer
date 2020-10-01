@@ -366,7 +366,7 @@ namespace :app do
 
         sessions.zip(rooms_by_capacity) do |session, room|
           puts "    #{session.id} #{session.title}" +
-               " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
+               " (#{'%1.1f' % session.expected_attendance} est: #{session.attendances.count} raw vote(s), #{'%1.1f' % session.estimated_interest} time-scaled)" +
                " in #{room.name} (#{room.capacity})"
           session.room = room
           session.save!
@@ -388,10 +388,10 @@ namespace :app do
         sessions: Hash[
           event.sessions.map do |session|
             [session.id, { slot: session.timeslot_id, room: session.room_id }]
-          end
+          end.sort_by(&:first)  # by session ID, to facilitate diffs
         ]
       }
-      puts export.to_json
+      puts JSON.pretty_generate(export)
     end
   end
 
@@ -487,7 +487,7 @@ namespace :app do
         session.attendance_count,
         session.expected_attendance,
         session.manual_attendance_estimate? ? "❗" : " ", 
-        "#{session.id} #{session.title}",
+        "#{session.id} #{session.title.remove_fancy_chars}",
         session.presenters.map(&:email).join(", ")
       ]
     end
@@ -521,7 +521,7 @@ namespace :app do
       else
         ''
       end
-      puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title, s2.title, status]
+      puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title.remove_fancy_chars, s2.title.remove_fancy_chars, status]
     end
   end
 
