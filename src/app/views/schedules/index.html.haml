@@ -1,4 +1,4 @@
-- cache [current_participant.nil?] + event_schedule_cache_key(@event), expires_in: 10.minutes do
+- cache [current_participant.nil?] + event_schedule_cache_key(event), expires_in: 10.minutes do
   = render 'header'
   .schedule
     .schedule-header
@@ -7,7 +7,7 @@
         %a#show-all(href='#') Show all details
         .clr
       %h1
-        = @event.name
+        = event.name
         Session Schedule
       - if current_participant.nil?
         %p

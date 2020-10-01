@@ -29,6 +29,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def event_from_params(includes: {})
+    query_base = Event.includes(**includes)
+    if params[:event_id].blank? || params[:event_id] == 'current'
+      query_base.current_event
+    else
+      query_base.includes(**includes).find(params[:event_id])
+    end
+  end
+
   def event_schedule_cache_key(event)
     [
       event,
@@ -39,4 +48,12 @@ class ApplicationController < ActionController::Base
     ]
   end
   helper_method :event_schedule_cache_key
+
+  def authenticate
+    if Rails.env.production?
+      authenticate_or_request_with_http_basic do |user_name, password|
+        user_name == ENV['SESSIONIZER_ADMIN_USER'] && password == ENV['SESSIONIZER_ADMIN_PASSWORD']
+      end
+    end
+  end
 end

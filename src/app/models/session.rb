@@ -24,7 +24,7 @@ class Session < ActiveRecord::Base
 
   scope :recent, -> { order('created_at desc') }
 
-  scope :random_order, -> { order('random()') }
+  scope :random_order, -> { order(Arel.sql('random()')) }
 
   validates_presence_of :description
   validates_presence_of :event_id

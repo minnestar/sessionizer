@@ -29,7 +29,7 @@ describe SchedulesController do
 
     context "when schedules are not yet displayed, but they really want to see it anyway" do
       it "is successful" do
-        get :index, params: {force: true}
+        get :index, params: {preview: true}
         expect(response).to be_successful
         expect(assigns[:event]).to eq event
         expect(response.body).to match(session.title)

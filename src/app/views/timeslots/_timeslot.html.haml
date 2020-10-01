@@ -1,9 +1,15 @@
 .timeslot{ id: "timeslot_#{timeslot.id}" }
-  %h2
-    .time
-      = timeslot.date_range.to_s(with_day: false)
-    .title
-      = timeslot.title
+
+  - if event.multiday?
+    - if event.first_timeslots_of_day.include?(timeslot)
+      %h2
+        .time= timeslot.date_range.start_day
+    %h3
+      .time= timeslot.date_range.to_s(with_day: false)
+  - else
+    %h2
+      .time= timeslot.date_range.to_s(with_day: false)
+      .title= timeslot.title
 
   - if timeslot.sessions.present?
     .sessions
@@ -13,7 +19,7 @@
 
             .session
               .header
-                = toggle_attendance_button(session)
+                = toggle_attendance_button(event, session)
                 - if session.room
                   - map_location = asset_path("maps/#{session.room.name.downcase}.png")
                   .room{:href =>  "#{map_location}" }

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 namespace :app do
 
   desc 'create default timeslots for the most recent event'

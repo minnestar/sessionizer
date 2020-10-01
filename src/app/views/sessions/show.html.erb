@@ -17,7 +17,7 @@
 
   <% if @session.timeslot && Settings.show_schedule? %>
       |
-      <b><%= @session.timeslot.date_range.to_s(with_day: false) %></b>
+      <b><%= @session.timeslot.date_range.to_s(with_day: @session.event.multiday?) %></b>
       <% if @session.room %>
         in <b><%= @session.room.name %></b>
       <% end %>
