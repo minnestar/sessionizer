@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+require 'csv'
 
 namespace :app do
 
@@ -132,59 +133,154 @@ namespace :app do
     puts "#{participant.name} (#{participant.id}) is now associated with #{session.title}"
   end
 
-  desc "restrict a presenter's timeslots"
-  task :restrict => :environment do
-    unless ENV['PARTICIPANT'] && ENV['HOUR']
-      STDERR.puts 'Usage examples:
+  desc 'read schedule constraints and session deletions from a CSV file'
+  task :configure_sessions, [:config_file] => :environment do |_, args|
+    if args[:config_file].blank?
+      STDERR.puts 'Usage:
 
-        Prevent participant id 577 from presenting in the afternoon:
-        
-           heroku run PARTICIPANT=345 HOUR=12:30 AFTER=1 rake app:restrict
-        
-        Create soft preference for participant id 678 not to present first thing:
-        
-           heroku run PARTICIPANT=678 HOUR=9:45 BEFORE=1 WEIGHT=0.1 rake app:restrict
-        '
+          rake app:configure_sessions[path/to/constraints.csv]
+
+        The CSV file must open with a header line with the following columns:
+
+          Name               Presenter or session name (must strictly match for deletion)
+          Presenter URL
+          Session URL
+          Constraints        See below
+          Notes              For humans; not parsed
+
+        The “Constraints” column accepts the following syntaxes:
+
+          >10:00am           Session must start at or after the given time
+          <12:00pm           Session must end at or before the given time
+          >1:00pm, <3:00pm   Session must fall entirely within give time range
+          @2:00pm            Session must be in the timeslot that includes the given time
+          manual             Do not let sessionizer schedule this session
+          delete             Soft-delete session by assigning to a nonexistent event
+
+        WARNING: This task removes all existing presenter-timeslot restrictions for the
+                 current event, so your CSV should be a complete list of ALL the restrictions.
+      '
+
+      exit 1
     end
 
-    d = Event.current_event.date
-    hour = ENV["HOUR"].split(':')
-    time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
-    presenter = Participant.find(ENV['PARTICIPANT'])
+    puts
+    puts "Clearing existing restrictions for #{event}..."
+    PresenterTimeslotRestriction.where(timeslot: Event.current_event.timeslot_ids).destroy_all
+    puts
 
-    weight = ENV['WEIGHT'] || 1
+    CSV.foreach(args[:config_file], headers: true) do |row|
+      def resolve_url(url, model_class)
+        presenter = unless url.blank?
+          unless url.strip =~ %r{https://sessions.minnestar.org/#{model_class.model_name.route_key}/(\d+)}
+            raise "Unable to parse #{model_class} URL: #{url}"
+          end
+          model_class.find($1)
+        end
+      end
 
-    matched = if ENV['BEFORE']
-      presenter.restrict_before(time, weight)
-    elsif ENV['AFTER']
-      presenter.restrict_after(time, weight)
-    else
-      raise "Please specify either BEFORE=1 or AFTER=1 in the env"
+      presenter = resolve_url(row["Presenter URL"], Participant)
+      session   = resolve_url(row["Session URL"], Session)
+
+      puts "Presenter:     #{presenter&.name || '–'}"
+      puts "Session:       #{session&.title || '–'}"
+      puts "Intended name: #{row['Name']}"
+      puts "Notes:         #{row['Notes']}"
+
+      if presenter && session
+        unless session.presenters.include?(presenter)
+          raise "The participant is not one of the presenters of the given session"
+        end
+      end
+
+      if session && session.event_id.abs != event.id
+        raise "Session does not belong to the current event: #{session}"
+      end
+
+      constraints = (row["Constraints"] || '').strip.downcase
+      if constraints.blank?
+        puts
+        print "    WARNING: no constraints specified"
+      elsif constraints == 'manual'
+        unless session
+          raise "Manual scheduling requires that you specify a specific Session URL"
+        end
+        puts "    Manually scheduled; sessionizer will not assign time or room"
+        session.manually_scheduled = true
+        session.save!
+      elsif constraints == 'delete'
+        if row["Name"] != session.title
+          raise "Name mismatch"
+        end
+        puts "    DELETING"
+        session.event_id = -session.event_id.abs
+        session.save!
+      else
+        if !presenter
+          presenter = session.presenters.select { |p| p.sessions.where(event: event).count == 1 }.first
+          if !presenter
+            raise "Cannot choose a single presenter to attach the time constraint to because there are multiple " +
+                  "presenters for this session, and all of them are presenting other sessions too."
+          end
+          puts "    Attaching time constraints to #{presenter.name}, who is not presenting any other sessions"
+        end
+        constraints.split(',').map(&:strip).each do |constraint|
+          puts "    #{constraint}"
+          unless %r{
+            (?<rule>    [<>@]   )
+                        \s*
+            (?<hour>    \d{1,2} )
+                        :
+            (?<minute>  \d{2}   )
+                        \s*
+            (?<ampm>    [ap]m   )
+          }mx =~ constraint
+            raise "Cannot parse constraint: #{constraint.inspect}"
+          end
+
+          hour = hour.to_i
+          minute = minute.to_i
+          hour = 0 if hour == 12
+          hour += 12 if ampm == "pm"
+          time = Time.zone.local(event.date.year, event.date.month, event.date.day, hour, minute)
+
+          case rule
+          when '<' then presenter.restrict_after(time, 1, event)
+          when '>' then presenter.restrict_before(time, 1, event)
+          when '@' then presenter.restrict_not_at(time, 1, event)
+          end
+        end
+        puts "    #{presenter.name} now restricted to the following timeslots:"
+        available_slots = event.timeslots.where(schedulable: true)
+        available_slots -= presenter.presenter_timeslot_restrictions
+          .where(timeslot: event.timeslot_ids)
+          .map(&:timeslot)
+        available_slots.each do |slot|
+          puts "      #{slot}"
+        end
+      end
+
+      puts
     end
-
-    if matched.empty?
-      raise "Your time constraints matched no timeslots. (Did you forget to use 24-hour format for afternoon times?)"
-    end
-
-    puts "#{presenter.name} now excluded from following timeslots:"
-    puts presenter.presenter_timeslot_restrictions.map(&:timeslot).join("\n")
   end
 
   desc 'show restrictions for current event'
   task :show_restrictions => :environment do
     restrictions_grouped = PresenterTimeslotRestriction
-      .where('timeslot_id in (select id from timeslots where event_id = ?)', Event.current_event.id)
+      .where('timeslot_id in (select id from timeslots where event_id = ?)', event.id)
       .group_by(&:participant)
     restrictions_grouped.each do |presenter, restrictions|
       puts "#{presenter.name}"
-      sessions = presenter.sessions_presenting.where('event_id = ?', Event.current_event.id)
-      puts "  who is presenting #{sessions.map(&:title).join("\n                and ")}"
+      sessions = presenter.sessions_presenting.where('event_id = ?', event.id)
+      puts "  who is presenting:"
+      sessions.map(&:title).each do |title|
+        puts "        #{title}"
+      end
       restrictions.each do |r|
         puts "  #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
              " present at #{r.timeslot}" +
              " (weight=#{r.weight})"
       end
-      puts "  and is scheduled for: #{presenter.sessions_presenting.map { |s| s.timeslot }.join(", ")}"
     end
   end
 
