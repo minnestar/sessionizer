@@ -194,7 +194,7 @@ namespace :app do
       "able to retrieve it. You should back up the database before doing this.\n\nIf you are really sure, type \"SCHEDULE ARMAGEDDON\" now (anything else to cancel)..."
     input = STDIN.gets.strip
     if input == 'SCHEDULE ARMAGEDDON'
-      Event.current_event.sessions.update_all(timeslot_id: nil)
+      event.sessions.update_all(timeslot_id: nil)
       STDOUT.puts "\nThe current schedule has been erased."
     else
       STDOUT.puts "\nNo changes made."
@@ -212,7 +212,6 @@ namespace :app do
   task :generate_schedule => :environment do
     quality = (ENV['quality'] || 1).to_f
 
-    event = Event.current_event
     puts "Scheduling #{event.name}..."
 
     schedule = Scheduling::Schedule.new event
@@ -291,7 +290,7 @@ namespace :app do
     Event.transaction do
       export = {
         sessions: Hash[
-          Event.current_event.sessions.map do |session|
+          event.sessions.map do |session|
             [session.id, { slot: session.timeslot_id, room: session.room_id }]
           end
         ]
