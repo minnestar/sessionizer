@@ -47,6 +47,16 @@ class Participant < ActiveRecord::Base
     end
   end
 
+  def restrict_to_only(allowed_slots, weight=1, event=Event.current_event)
+    event.timeslots.each do |timeslot|
+      unless allowed_slots.include?(timeslot)
+        self.presenter_timeslot_restrictions.create!(
+          timeslot: timeslot,
+          weight:   weight)
+      end
+    end
+  end
+
   def deliver_password_reset_instructions!
     reset_perishable_token!
     Notifier.password_reset_instructions(self).deliver_now!

@@ -206,6 +206,7 @@ namespace :app do
           <12:00pm           Session must end at or before the given time
           >1:00pm, <3:00pm   Session must fall entirely within give time range
           @2:00pm            Session must be in the timeslot that includes the given time
+          # 1 2 3            Session must be in one of these specific timeslot ids
           manual             Do not let sessionizer schedule this session
           delete             Soft-delete session by assigning to a nonexistent event
 
@@ -269,16 +270,25 @@ namespace :app do
         session.save!
       else
         if !presenter
-          presenter = session.presenters.select { |p| p.sessions.where(event: event).count == 1 }.first
+          presenter = session.presenters.select { |p| p.sessions_presenting.where(event: event).count == 1 }.first
           if !presenter
-            raise "Cannot choose a single presenter to attach the time constraint to because there are multiple " +
-                  "presenters for this session, and all of them are presenting other sessions too."
+            raise "Cannot choose a single presenter to attach the session-based time constraint to " +
+                  "because all the presenters for this session are presenting other sessions too."
           end
           puts "    Attaching time constraints to #{presenter.name}, who is not presenting any other sessions"
         end
         constraints.split(',').map(&:strip).each do |constraint|
           puts "    #{constraint}"
+
+          if /^#(?<ids>(\s*\d+\s*)+)$/ =~ constraint
+            presenter.restrict_to_only(
+              Timeslot.find(
+                ids.split))
+            next
+          end
+
           unless %r{
+            ^
             (?<rule>    [<>@]   )
                         \s*
             (?<hour>    \d{1,2} )
@@ -286,6 +296,7 @@ namespace :app do
             (?<minute>  \d{2}   )
                         \s*
             (?<ampm>    [ap]m   )
+            $
           }mx =~ constraint
             raise "Cannot parse constraint: #{constraint.inspect}"
           end
