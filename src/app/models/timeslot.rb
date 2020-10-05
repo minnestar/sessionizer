@@ -11,6 +11,10 @@ class Timeslot < ActiveRecord::Base
 
   default_scope { order 'starts_at asc' }
 
+  def self.at(datetime)
+    self.find_by('starts_at <= ? and ends_at >= ?', datetime, datetime)
+  end
+
   def to_s(with_day: false)
     "#{date_range.to_s(with_day: with_day)} #{title}"
   end
