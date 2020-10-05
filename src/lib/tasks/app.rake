@@ -103,7 +103,7 @@ namespace :app do
 
   desc 'set up multi-day timeslots for a remote event'
   task create_remote_timeslots_and_rooms: :environment do
-    session_length = 45.minutes
+    session_length = 25.minutes
     event = Event.current_event
     event.timeslots.destroy_all
     event.rooms.destroy_all
