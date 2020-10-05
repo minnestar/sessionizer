@@ -16,7 +16,7 @@ module SchedulesHelper
 private
 
   def stable_room_order_session_columns_for_slot(slot, &block)
-    sessions = slot.sessions.sort_by { |s| [-s.room&.capacity || "", s.room&.id || ""] }
+    sessions = slot.sessions.sort_by { |s| [-(s.room&.capacity || 0), s.room&.id || ""] }
     split = (sessions.size+1) / 2
     yield sessions[0...split]
     yield sessions[split..-1]
