@@ -2,13 +2,14 @@
   = render 'header'
   .schedule
     .schedule-header
-      .controls
-        %a#hide-all(href='#') Hide all details
-        %a#show-all(href='#') Show all details
-        .clr
       %h1
         = event.name
         Session Schedule
+      .controls
+        = link_to 'Join on Crowdcast', 'https://www.crowdcast.io/minnestar'
+        %a.button#hide-all(href='#') Hide all details
+        %a.button#show-all(href='#') Show all details
+      .clr
       - if current_participant.nil?
         %p
           = link_to 'Log in', new_login_path(after_login: schedule_path)
