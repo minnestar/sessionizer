@@ -44,8 +44,8 @@ class ApplicationController < ActionController::Base
       event.sessions,
       event.participants,
       event.timeslots,
-      event.rooms
-    ]
+      event.rooms,
+    ].map(&:cache_key)
   end
   helper_method :event_schedule_cache_key
 

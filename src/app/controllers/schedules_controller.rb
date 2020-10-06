@@ -57,12 +57,22 @@ class SchedulesController < ApplicationController
   end
 
   def event_timeslots
-    @event_timeslots ||= event.timeslots
+    @event_timeslots ||= begin
+      # Timeslots only get touched if schedule isn't cached.
+      # Do all the expensive preloading here.
+      timeslots = event.timeslots.includes(sessions: [:room, :presenters])
+
+      # Preload vote counts in order to sort sessions by popularity
+      Session.preload_attendance_counts(
+        timeslots.map(&:sessions).flatten)
+
+      timeslots
+    end
   end
   helper_method :event_timeslots
 
   def header_timeslots
-    @header_timeslots ||= if @event.multiday?
+    @header_timeslots ||= if event.multiday?
       @event.first_timeslots_of_day
     else
       event_timeslots.where(schedulable: true)
@@ -71,17 +81,7 @@ class SchedulesController < ApplicationController
   helper_method :header_timeslots
 
   def event
-    @event ||= begin
-      event = event_from_params(includes: { timeslots: { sessions: [:room, :presenters] } })
-      
-      if event
-        # Preload vote counts in order to sort sessions by popularity
-        Session.preload_attendance_counts(
-          event.timeslots.map(&:sessions).flatten)
-      end
-
-      event
-    end
+    @event ||= event_from_params
   end
   helper_method :event
 
