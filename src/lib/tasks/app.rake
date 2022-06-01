@@ -58,36 +58,37 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      { name: 'Bde Maka Ska',    capacity: 100 },
-      { name: 'Cabin',           capacity: 9 },
-      { name: 'California',      capacity: 16 },
+      { name: 'Alaska',           capacity: 96 },
+      # { name: 'Bde Maka Ska',    capacity: 100 },
+      # { name: 'Cabin',           capacity: 9 },
+      # { name: 'California',      capacity: 16 },
       { name: 'Challenge',       capacity: 24 }, 
-      { name: 'Cottage',         capacity: 8 },
+      # { name: 'Cottage',         capacity: 8 },
       { name: 'Discover',        capacity: 23 }, # no video recording
-      { name: 'Florida',         capacity: 12 }, # TV, no projector
-      { name: 'Georgia',         capacity: 12 }, # TV, no projector
+      # { name: 'Florida',         capacity: 12 }, # TV, no projector
+      # { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Harriet',         capacity: 100 },
-      { name: 'Kansas',          capacity: 10 }, # TV, no projector
+      # { name: 'Kansas',          capacity: 10 }, # TV, no projector
       { name: 'Learn',           capacity: 24 },
-      { name: 'Louis Pasteur',   capacity: 18 },
-      { name: 'Maryland',        capacity: 10 },
+      # { name: 'Louis Pasteur',   capacity: 18 },
+      # { name: 'Maryland',        capacity: 10 },
       { name: 'Minnetonka',      capacity: 100 },
-      { name: 'Nebraska',        capacity: 10 },
-      { name: 'Nevada',          capacity: 16 },
-      { name: 'New York',        capacity: 10 },
+      # { name: 'Nebraska',        capacity: 10 },
+      # { name: 'Nevada',          capacity: 16 },
+      # { name: 'New York',        capacity: 10 },
       { name: 'Nokomis',         capacity: 100 },
-      { name: 'Oklahoma',        capacity: 8 },
-      { name: 'Oregon',          capacity: 12 },
-      { name: 'Pennsylvania',    capacity: 10 },
+      # { name: 'Oklahoma',        capacity: 8 },
+      # { name: 'Oregon',          capacity: 12 },
+      # { name: 'Pennsylvania',    capacity: 10 },
       { name: 'Proverb-Edison',  capacity: 48 },
-      { name: 'South Carolina',  capacity: 6 },
+      # { name: 'South Carolina',  capacity: 6 },
       { name: 'Tackle',          capacity: 23 }, # no video recording
-      { name: 'Texas',           capacity: 16 }, 
+      # { name: 'Texas',           capacity: 16 }, 
       { name: 'Theater',         capacity: 250 },
-      { name: 'Washington',      capacity: 7 },
+      # { name: 'Washington',      capacity: 7 },
       { name: 'Zeke Landres',    capacity: 40 },
 
-      # –––––– Not in use this year ––––––
+      # –––––– Suboptimal rooms, reserved for more dire need ––––––
       # { name: 'Brand',           capacity: 75 },
       # { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
       # { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
