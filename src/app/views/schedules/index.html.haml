@@ -55,7 +55,7 @@
 
         $.scrollTo($(slotIdSel), {
           duration: (mobile ? 0 : 500),
-          offset: { left: 0, top: -$('.nav-top').height() },
+          offset: { left: 0, top: -$('.nav-top').outerHeight() + 0.5 },
           onAfter: function() {
             setTimeout(function() {
               // Make nav bar show true position again on next scroll
