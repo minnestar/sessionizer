@@ -30,11 +30,12 @@ class ApplicationController < ActionController::Base
   end
 
   def event_from_params(includes: {})
-    query_base = Event.includes(**includes)
+    query_base = Event
+    query_base = query_base.includes(**includes) unless includes.empty?
     if params[:event_id].blank? || params[:event_id] == 'current'
       query_base.current_event
     else
-      query_base.includes(**includes).find(params[:event_id])
+      query_base.find(params[:event_id])
     end
   end
 
