@@ -3,6 +3,9 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
+
+  # Database does not work in GitHub Workflows if host parameter is not specified
+  host: localhost
   pool: 5
   username: vagrant
   password: 

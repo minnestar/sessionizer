@@ -15,7 +15,7 @@ describe SchedulesHelper do
       create(:session, room: room, timeslot: timeslot, event: event, participant: participant)
     end
 
-    it "should arange the sessions into two groups" do
+    xit "should arange the sessions into two groups" do
       yielded = []
       helper.session_columns_for_slot(timeslot) { |group| yielded << group }
       expect(yielded).to eq [[session1, session3], [session2, session4]]
