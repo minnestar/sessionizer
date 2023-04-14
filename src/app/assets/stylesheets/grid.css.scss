@@ -29,3 +29,38 @@
 	width: auto;
 	display: inline-block;
 }
+@media screen and (max-width: 600px) {
+	.center-column {
+		box-sizing: border-box;
+		max-width: 100%;
+		padding: 1em;
+	}
+	.row {    
+		max-width: 100%;    
+	}
+	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10 {    
+		max-width: 100%;      
+		clear: both;
+	}
+	h1 {
+		line-height: 1em;
+	}
+	ul.sessionsList li {
+		padding-left: 0;
+	}
+	.more_sessions {
+		padding-left: 0;
+	}
+	h2 {
+		margin-top: 1.5em;
+	}
+	.add-session-now:nth-of-type(1) { /* Hides the second "Add Session" button, because otherwise they're stacked. */
+		display: none;
+	}
+	div.sidebar-box {
+		background: none;
+	    	padding-left: 0;
+		padding-right: 0;
+		padding-bottom: 0;
+	}
+}
