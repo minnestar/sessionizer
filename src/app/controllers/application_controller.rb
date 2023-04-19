@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
     current_participant_session.present?
   end
 
-  def verify_session
+  def authenticate_participant
     unless logged_in?
       flash[:notice] = 'You must be logged in to do that. Please log in or create a new account and try again.'
       redirect_to new_login_path
@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :event_schedule_cache_key
 
-  def authenticate
+  def authenticate_admin
     if Rails.env.production?
       authenticate_or_request_with_http_basic do |user_name, password|
         user_name == ENV['SESSIONIZER_ADMIN_USER'] && password == ENV['SESSIONIZER_ADMIN_PASSWORD']

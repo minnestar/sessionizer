@@ -1,6 +1,6 @@
 class SchedulesController < ApplicationController
 
-  before_action :authenticate, if: -> { params[:preview] }
+  before_action :authenticate_participant, if: -> { params[:preview] }
 
   def index
     unless schedule_visible?
