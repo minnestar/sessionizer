@@ -1,5 +1,11 @@
-- cache [current_participant.nil?] + event_schedule_cache_key(event), expires_in: 10.minutes do
+- cache [current_participant.nil?, schedule_public?] + event_schedule_cache_key(event), expires_in: 10.minutes do
   = render 'header'
+
+  - unless schedule_public?
+    .draft-schedule-warning
+      %h1 Draft
+      Subject to change
+
   .schedule
     .schedule-header
       %h1
