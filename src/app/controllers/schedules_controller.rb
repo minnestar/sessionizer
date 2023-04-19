@@ -3,7 +3,7 @@ class SchedulesController < ApplicationController
   before_action :authenticate, if: -> { params[:preview] }
 
   def index
-    if !event || schedule_hidden?
+    unless schedule_visible?
       redirect_to home_page_path
       return
     end
@@ -85,8 +85,17 @@ class SchedulesController < ApplicationController
   end
   helper_method :event
 
-  def schedule_hidden?
-    event.current? && !Settings.show_schedule? && !params[:preview]
+  # Is the schedule live and available to the general public?
+  def schedule_public?
+    event && (
+      !event.current? ||        # All past schedules are public
+      Settings.show_schedule?)  # Current event schedule has explicit go-live flag
+  end
+  helper_method :schedule_public?
+
+  # Should we honor this request to show the schedule?
+  def schedule_visible?
+     schedule_public? || params[:preview]
   end
 
 end
