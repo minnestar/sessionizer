@@ -16,7 +16,13 @@ module SchedulesHelper
 private
 
   def stable_room_order_session_columns_for_slot(slot, &block)
-    sessions = slot.sessions.sort_by { |s| [-(s.room&.capacity || 0), s.room&.id || ""] }
+    sessions = slot.sessions.sort_by do |s|
+      [
+        -(s.room&.capacity || 0),  # largest rooms first
+        s.room&.id || "",          # equal-sized rooms in stable order
+        -s.attendance_count        # for when rooms are unassigned
+      ]
+    end
     split = (sessions.size+1) / 2
     yield sessions[0...split]
     yield sessions[split..-1]
