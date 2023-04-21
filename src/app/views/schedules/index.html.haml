@@ -12,9 +12,11 @@
         = event.name
         Session Schedule
       .controls
-        = link_to 'Browse Sessions', event_path(event)
-        %a.button#hide-all(href='#') Hide all details
-        %a.button#show-all(href='#') Show all details
+        .group
+          = link_to 'Browse / Edit Sessions', event_path(event)
+        .group
+          %a.button#hide-all(href='#') Hide all details
+          %a.button#show-all(href='#') Show all details
       .clr
       - if current_participant.nil?
         %p
