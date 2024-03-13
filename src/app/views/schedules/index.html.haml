@@ -1,14 +1,22 @@
-- cache [current_participant.nil?] + event_schedule_cache_key(event), expires_in: 10.minutes do
+- cache [current_participant.nil?, schedule_public?] + event_schedule_cache_key(event), expires_in: 10.minutes do
   = render 'header'
+
+  - unless schedule_public?
+    .draft-schedule-warning
+      %h1 Draft
+      Subject to change
+
   .schedule
     .schedule-header
       %h1
         = event.name
         Session Schedule
       .controls
-        = link_to 'Browse Sessions', event_path(event)
-        %a.button#hide-all(href='#') Hide all details
-        %a.button#show-all(href='#') Show all details
+        .group
+          = link_to 'Browse / Edit Sessions', event_path(event)
+        .group
+          %a.button#hide-all(href='#') Hide all details
+          %a.button#show-all(href='#') Show all details
       .clr
       - if current_participant.nil?
         %p

@@ -1,6 +1,6 @@
 class Admin::AdminController < ApplicationController
   before_action :redirect_to_ssl
-  before_action :authenticate  # in ApplicationController
+  before_action :authenticate_admin  # in ApplicationController
 
   private
 

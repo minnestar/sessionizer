@@ -6,20 +6,11 @@
                   :startsAt => slot.starts_at.in_time_zone.to_i,
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = pill_label(slot)
-  .maps
-    %a.room{ target: '_blank',
-             href: "#{asset_path('maps/map.svg')}" }
+  .links
+    %a{ target: '_blank',
+        href: "https://www.google.com/maps/d/u/0/viewer?mid=1fTECFHbLKGdclzrVTJNlPoBJHwqhFaY" }
       Map
 
-    %a.room{ target: '_blank',
-             href: "http://minnestar.org/minnebar-faq/" }
+    %a{ target: '_blank',
+        href: "https://minnestar.org/faqs/minnebar-faq/" }
       FAQ
-
-    %a.twitter{  :target => '_blank',
-                 :href => "https://twitter.com/#minnebar" }
-      :escaped
-        #minnebar
-
-    -# %a.feedback{ :target => '_blank',
-    -#              :href => 'http://minnebar2018.voicehive.com' }
-    -#   Feedback

@@ -8,6 +8,7 @@ describe SchedulesController do
 
     let!(:event) { create(:event, :full_event) }
     let!(:session) { create(:session, title: "Session #{rand}", event: event, timeslot: event.timeslots.first) }
+    let(:user) { create(:participant) }
 
     context "when settings says to show schedules" do
       before { allow(Settings).to receive(:show_schedule?).and_return(true) }
@@ -27,12 +28,20 @@ describe SchedulesController do
       end
     end
 
-    context "when schedules are not yet displayed, but they really want to see it anyway" do
-      it "is successful" do
+    context "schedule preview" do
+      it "is available to participants" do
+        activate_authlogic
+        ParticipantSession.create(user)
+
         get :index, params: {preview: true}
         expect(response).to be_successful
         expect(assigns[:event]).to eq event
         expect(response.body).to match(session.title)
+      end
+
+      it "requires login" do
+        get :index, params: {preview: true}
+        expect(response).to be_redirect
       end
     end
   end
