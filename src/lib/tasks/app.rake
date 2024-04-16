@@ -429,6 +429,10 @@ namespace :app do
         end
 
         sessions.zip(rooms_by_capacity) do |session, room|
+          if room.nil?
+            raise "NOT ENOUGH ROOMS: #{session.timeslot} has #{session.timeslot.sessions.count} sessions," +
+                  " but there are only #{event.rooms.count} rooms"
+          end
           puts "    #{session.id} #{session.title}" +
                " (#{'%1.1f' % session.expected_attendance} est: #{session.attendances.count} raw vote(s), #{'%1.1f' % session.estimated_interest} time-scaled)" +
                " in #{room.name} (#{room.capacity})"
