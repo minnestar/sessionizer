@@ -408,7 +408,7 @@ namespace :app do
     best.dump_presenter_conflicts
 
     puts
-    puts 'Congratulations. You have a schedule!'
+    puts 'Best schedule saved to DB.'
   end
 
   desc 'assign scheduled sessions to rooms'
