@@ -25,7 +25,7 @@ module ApplicationHelper
   end
 
   def close_tags(html)
-    Nokogiri::HTML::DocumentFragment.parse(html).to_html
+    Nokogiri::HTML::DocumentFragment.parse(html.scrub).to_html
   end
 
   def meta_description
