@@ -58,19 +58,19 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      { name: 'Alaska',           capacity: 96 },
-      # { name: 'Bde Maka Ska',    capacity: 100 },
+      # { name: 'Alaska',           capacity: 96 },
+      { name: 'Bde Maka Ska',    capacity: 100 },
       # { name: 'Cabin',           capacity: 9 },
       # { name: 'California',      capacity: 16 },
       { name: 'Challenge',       capacity: 24 }, 
       # { name: 'Cottage',         capacity: 8 },
       { name: 'Discover',        capacity: 23 }, # no video recording
-      # { name: 'Florida',         capacity: 12 }, # TV, no projector
-      # { name: 'Georgia',         capacity: 12 }, # TV, no projector
+      { name: 'Florida',         capacity: 12 }, # TV, no projector
+      { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Harriet',         capacity: 100 },
       # { name: 'Kansas',          capacity: 10 }, # TV, no projector
       { name: 'Learn',           capacity: 24 },
-      # { name: 'Louis Pasteur',   capacity: 18 },
+      { name: 'Louis Pasteur',   capacity: 18 },
       # { name: 'Maryland',        capacity: 10 },
       { name: 'Minnetonka',      capacity: 100 },
       # { name: 'Nebraska',        capacity: 10 },
@@ -83,7 +83,7 @@ namespace :app do
       { name: 'Proverb-Edison',  capacity: 48 },
       # { name: 'South Carolina',  capacity: 6 },
       { name: 'Tackle',          capacity: 23 }, # no video recording
-      # { name: 'Texas',           capacity: 16 }, 
+      { name: 'Texas',           capacity: 16 },
       { name: 'Theater',         capacity: 250 },
       # { name: 'Washington',      capacity: 7 },
       { name: 'Zeke Landres',    capacity: 40 },
