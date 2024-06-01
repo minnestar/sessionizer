@@ -17,59 +17,70 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 * Administrative backend for editing sessions
 * Export of data for various purposes
 
-## Development
+## Application setup
 
-### Running locally
+```bash
+# clone the repo
+git clone git@github.com:minnestar/sessionizer.git
+cd sessionizer
 
-To run locally, install the heroku command line tools from [here](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
+# cd into /src folder
+cd /src
 
-    $ cd src
-    $ heroku local
+# install correct ruby version
+asdf install ruby # OR
+rbenv install # OR
+rvm install
 
-You can then visit <http://localhost:5000>.
+# install bundler
+gem install bundler
 
-### Running with Vagrant and VirtualBox
+# install ruby gems
+bundle install
 
-You'll need to install [VirtualBox][], [Vagrant][], and [Ansible][]
-first. VirtualBox and Vagrant both have Mac OS X installer packages, and
-Ansible can be installed either with Homebrew or with pip, the Python
-package manager.
+# database setup
+rails db:setup
+```
 
-[VirtualBox]: https://www.virtualbox.org/wiki/Downloads
-[Vagrant]: http://www.vagrantup.com/downloads.html
-[Ansible]: http://docs.ansible.com/intro_installation.html
+### One-time setup
+```
+# create timeslots
+bundle exec rails app:create_timeslots
 
-Once you've got those installed, you can bootstrap the project with:
+# create rooms
+bundle exec rails app:create_rooms
+```
 
-    $ cd vagrant && vagrant up
+### Troubleshooting setup
 
-This will create the box, install the gems, create the database (if it
-doesn't already exist), and start the app inside the box. To access it,
-add an entry in your /etc/hosts file like the following (or do the
-equivalent in dnsmasq.conf):
+#### Postgres
+If you run into issues setting up the database:
+```bash
+# create 'postgres' user
+createuser -s -r postgres
 
-    192.168.100.185 sessionizer.vm
+# create 'sessionizer_development' database
+createdb sessionizer_development
 
-You can then visit <http://sessionizer.vm/>.
+# create 'vagrant' user
+createuser -s -r vagrant
+```
 
-To restart the app, you can ssh into the box and run:
+#### Bundle exec
+You're probably going to want to run all the rake tasks with `bundle exec` e.g.
+```bash
+bundle exec rails 
+```
 
-    $ vagrant ssh
-    vagrant$ sudo service unicorn-sessionizer restart
+## Running the application
+To run the application
 
-    -- or --
+```bash
+$ cd /src
+$ rails s
+```
 
-    vagrant$ railsup
-
-To re-run the provisioning scripts, which are idempotent, you can simply do:
-
-    $ vagrant provision
-
-This should bring the box back into its correct configuration if
-anything has gotten messed up.
-
-If you ever need to restart the unicorn processes within the virtual box you
-can alway use the alias `railsup`.
+Then you can access the app at http://127.0.0.1:3000.
 
 ### Seeding data for development
 
@@ -82,14 +93,6 @@ Locally:
 
 ```
  $ cd src
- $ bundle exec rake app:make_believe
-```
-
-From Vagrant:
-
-```
- $ cd vagrant; vagrant ssh
- $ cd /srv/sessionizer
  $ bundle exec rake app:make_believe
 ```
 
@@ -144,6 +147,7 @@ Minnestar is dedicated to providing a harassment-free experience for everyone. A
 * [Justin Coyne](https://twitter.com/j_coyne)
 * Cory Preus
 * [Jamie Thingelstad](http://thingelstad.com/)
+* [Matt Decuir](https://experimatt.com/)
 
 ## License
 

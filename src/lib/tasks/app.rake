@@ -64,7 +64,7 @@ namespace :app do
       # { name: 'California',      capacity: 16 },
       { name: 'Challenge',       capacity: 24 }, 
       # { name: 'Cottage',         capacity: 8 },
-      { name: 'Discover',        capacity: 23 }, # no video recording
+      { name: 'Discovery',        capacity: 23 }, # no video recording
       { name: 'Florida',         capacity: 12 }, # TV, no projector
       { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Harriet',         capacity: 100 },
