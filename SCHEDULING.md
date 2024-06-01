@@ -9,19 +9,14 @@ The process to generate a schedule for Minnebar takes time, and involves many st
 * **1 day out**: Field last minute cancelations + schedule and room requests.
 * **Day of event**: Minnebar
 
-
-# Scheduling how-tos
+# Instructions
 Instructions on how to generate a schedule for Minnebar.
-
-### TL;DR:
 
 1. Pull latest prod data
 2. Set timeslots
 3. Gather schedule constraints
 4. Generate schedule
 5. Upload schedule to prod
-
-----
 
 ## 1. Pull latest prod data
 ```bash
@@ -62,7 +57,7 @@ See `task :configure_sessions` in `app.rake` for documentation on the csv file a
 * If time constraint requests come through _after_ a schedule has been set, you'll want to "freeze" the other sessions (manually via the rails console). Paul has a recipe for this.
 
 
-## 4. Generate the schedule
+## 4. Generate schedule
 The `bin/schedule` script will carry out the entire schedule generation process, given a constraints file as input. It will output a generated schedule to the file name you specify.
 
 The steps are:
@@ -82,7 +77,7 @@ Once generated, you can access a preview at.
 * **Prod**: https://sessions.minnestar.org/schedule?preview=1
 
 **Note**: You must be logged in (using prod credentials) to view the page.
-## 5. Upload the schedule
+## 5. Upload schedule to prod
 Once the schedule looks good, you can upload it to prod:
 ```bash
 heroku run rails app:import_schedule < path/to/exported-schedule-file.json
