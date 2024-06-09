@@ -13,7 +13,7 @@ end
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
-Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
+Capybara.default_max_wait_time = ENV['CI'] ? 90 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'authlogic/test_case'
