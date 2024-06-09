@@ -1,8 +1,15 @@
 Sessionizer::Application.routes.draw do
   root to: 'schedules#index'
 
-  get '/home' => 'pages#home', as: :home_page
+  get '/home' => 'events#show', id: 'current', as: :home_page
 
+  # Session actions available for all events
+  resources :events, :only => [:show] do
+    resources :sessions, :only => [:index]
+    get '/schedule' => 'schedules#index'
+  end
+
+  # Session actions available only for the current event
   resources :sessions, :only => [:index, :show, :new, :create, :update, :edit, :destroy] do
     collection do
       get :words
@@ -12,11 +19,10 @@ Sessionizer::Application.routes.draw do
     resource :attendance, :only => [:create, :destroy]
     resources :presentations, :only => [:index, :create]
   end
-  get '/attendances' => 'attendances#index'
 
+  get '/attendances' => 'attendances#index'
   resources :participants, :except => [:destroy]
   resources :categories, only: :show
-  resources :events, only: :show
 
   match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
   match '/login' => 'user_sessions#create', :as => :login, :via => 'post'
@@ -32,6 +38,7 @@ Sessionizer::Application.routes.draw do
   namespace :admin do
     resource :config, only: [:show, :create]
     resources :sessions
+    resources :markdown_contents, path: 'markdown-contents'
     resources :events do
       resources :timeslots, only: [:index, :new, :create]
       resources :rooms, only: [:new, :create]

@@ -1,10 +1,12 @@
 class SchedulesController < ApplicationController
+
+  before_action :authenticate_participant, if: -> { params[:preview] }
+
   def index
-    unless Settings.show_schedule? || params[:force]
+    unless schedule_visible?
       redirect_to home_page_path
       return
     end
-    @event = Event.current_event
     render layout: 'schedule'
   end
 
@@ -55,20 +57,45 @@ class SchedulesController < ApplicationController
   end
 
   def event_timeslots
-    @event_timeslots ||= load_event.timeslots
+    @event_timeslots ||= begin
+      # Timeslots only get touched if schedule isn't cached.
+      # Do all the expensive preloading here.
+      timeslots = event.timeslots.includes(sessions: [:room, :presenters])
+
+      # Preload vote counts in order to sort sessions by popularity
+      Session.preload_attendance_counts(
+        timeslots.map(&:sessions).flatten)
+
+      timeslots
+    end
   end
   helper_method :event_timeslots
 
-  private
+  def header_timeslots
+    @header_timeslots ||= if event.multiday?
+      @event.first_timeslots_of_day
+    else
+      event_timeslots.where(schedulable: true)
+    end
+  end
+  helper_method :header_timeslots
 
-  def load_event
-    event = Event.includes(timeslots: { sessions: [:room, :presenters] }).find(Event.current_event.id)
+  def event
+    @event ||= event_from_params
+  end
+  helper_method :event
 
-    # Preload vote counts in order to sort sessions by popularity
-    Session.preload_attendance_counts(
-      event.timeslots.map(&:sessions).flatten)
+  # Is the schedule live and available to the general public?
+  def schedule_public?
+    event && (
+      !event.current? ||        # All past schedules are public
+      Settings.show_schedule?)  # Current event schedule has explicit go-live flag
+  end
+  helper_method :schedule_public?
 
-    event
+  # Should we honor this request to show the schedule?
+  def schedule_visible?
+     schedule_public? || params[:preview]
   end
 
 end

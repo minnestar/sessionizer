@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 class Timeslot < ActiveRecord::Base
   belongs_to :event
   has_many :sessions, dependent: :nullify
@@ -8,6 +10,10 @@ class Timeslot < ActiveRecord::Base
   validates :event_id, :presence => true
 
   default_scope { order 'starts_at asc' }
+
+  def self.at(datetime)
+    self.find_by('starts_at <= ? and ends_at >= ?', datetime, datetime)
+  end
 
   def to_s(with_day: false)
     "#{date_range.to_s(with_day: with_day)} #{title}"
@@ -25,11 +31,11 @@ class Timeslot < ActiveRecord::Base
     end
 
     def to_s(with_day: false)
-      "#{start_day + ' ' if with_day}#{start_time} – #{end_time}"
+      "#{start_day + ' • ' if with_day}#{start_time} – #{end_time}"
     end
 
     def start_day
-      start.in_time_zone.strftime('%a')
+      start.in_time_zone.strftime('%a, %b %e')
     end
 
     def start_time

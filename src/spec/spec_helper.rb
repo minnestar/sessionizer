@@ -46,11 +46,11 @@ RSpec.configure do |config|
 
   config.before do
     #don't hold on to any memoized events
-    Event.instance_variable_set(:'@current_event', nil)
+    Event.instance_variable_set(:'@event', nil)
   end
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(:truncation, { except: %w[markdown_contents] })
     Category.find_or_create_defaults
   end
 
@@ -59,7 +59,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation, {:except => %w[categories]}
+    DatabaseCleaner.strategy = :truncation, { except: %w[categories markdown_contents] }
   end
 
   config.before(:each) do

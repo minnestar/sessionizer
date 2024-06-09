@@ -22,10 +22,20 @@ class ApplicationController < ActionController::Base
     current_participant_session.present?
   end
 
-  def verify_session
+  def authenticate_participant
     unless logged_in?
       flash[:notice] = 'You must be logged in to do that. Please log in or create a new account and try again.'
       redirect_to new_login_path
+    end
+  end
+
+  def event_from_params(includes: {})
+    query_base = Event
+    query_base = query_base.includes(**includes) unless includes.empty?
+    if params[:event_id].blank? || params[:event_id] == 'current'
+      query_base.current_event
+    else
+      query_base.find(params[:event_id])
     end
   end
 
@@ -35,8 +45,16 @@ class ApplicationController < ActionController::Base
       event.sessions,
       event.participants,
       event.timeslots,
-      event.rooms
-    ]
+      event.rooms,
+    ].map(&:cache_key)
   end
   helper_method :event_schedule_cache_key
+
+  def authenticate_admin
+    if Rails.env.production?
+      authenticate_or_request_with_http_basic do |user_name, password|
+        user_name == ENV['SESSIONIZER_ADMIN_USER'] && password == ENV['SESSIONIZER_ADMIN_PASSWORD']
+      end
+    end
+  end
 end

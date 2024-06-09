@@ -1,89 +1,155 @@
+# -*- coding: utf-8 -*-
+require 'csv'
+
 namespace :app do
 
   desc 'create default timeslots for the most recent event'
   task create_timeslots: :environment do
-    session_length = 45.minutes
-    event = Event.current_event
-    event.timeslots.destroy_all
-
-    start_times = ["09:00",
-                   "09:55",
-                   "10:50",
-                   "11:45",
-
-                   "13:45",
-                   "14:40",
-                   "15:35" ]
-
-    start_times.each_with_index do |st, idx|
-      starts = Time.zone.parse("#{event.date.to_s} #{st}")
-      event.timeslots.create!(
-        title: "Session #{idx + 1}",
-        starts_at: starts,
-        ends_at: starts + session_length,
-        schedulable: true
-      )
+    if event.timeslots.any?
+      raise "#{event.name} (event.id=#{event.id}) already has timeslots; please delete them before running this task"
     end
 
-    event.timeslots.create!(
-      title: "Lunch",
-      starts_at: Time.zone.parse("#{event.date.to_s} 12:15:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 1:35:00"),
-      schedulable: false
-    )
+    session_config = [
+      { start:  "8:00", end:  "8:30", special: "Registration / Breakfast" },
+      { start:  "8:30", end:  "8:45", special: "Kickoff" },
+      { start:  "8:45", end:  "9:15", special: "Session 0" },
+      { start:  "9:20", end: "16:30", special: "All day" },
+      { start:  "9:25", end: "10:10" },
+      { start: "10:20", end: "11:05" },
+      { start: "11:15", end: "12:00" },
+      { start: "12:00", end: "13:00", special: "Lunch"  },
+      { start: "13:00", end: "13:45"},
+      { start: "13:55", end: "14:40" },
+      { start: "14:50", end: "15:35" },
+      { start: "15:45", end: "16:30" },
+      { start: "16:30", end: "19:00", special: "Happy Hour" }
+    ]
 
-    event.timeslots.create!(
-      title: "Arrive/Breakfast",
-      starts_at: Time.zone.parse("#{event.date.to_s} 8:00:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 8:35:00"),
-      schedulable: false
-    )
+    session_num = 0
+    session_length = nil
+    Timeslot.transaction do
+      session_config.each do |conf|
+        timeslot = event.timeslots.new
+        timeslot.starts_at = Time.zone.parse("#{event.date.to_s} #{conf[:start]}")
+        timeslot.ends_at   = Time.zone.parse("#{event.date.to_s} #{conf[:end]}")
 
-    event.timeslots.create!(
-      title: "Session 0",
-      starts_at: Time.zone.parse("#{event.date.to_s} 8:35:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 8:55:00"),
-      schedulable: false
-    )
+        if special_title = conf[:special]
+          timeslot.title = special_title
+          timeslot.schedulable = false
+        else
+          session_num += 1
+          timeslot.title = "Session #{session_num}"
+          timeslot.schedulable = true
 
-    event.timeslots.create!(
-      title: "Beer Me!",
-      starts_at: Time.zone.parse("#{event.date.to_s} 16:45:00"),
-      ends_at: Time.zone.parse("#{event.date.to_s} 19:00:00"),
-      schedulable: false
-    )
+          this_session_length = timeslot.ends_at - timeslot.starts_at
+          session_length ||= this_session_length
+          if session_length != this_session_length
+            puts "WARNING: #{timeslot.title} is a different length from previous sessions"
+          end
+        end
+
+        timeslot.save!
+      end
+    end
   end
 
   desc 'create default rooms for most recent event. Will nuke old rooms.'
   task :create_rooms => :environment do
-    event = Event.current_event
     event.rooms.destroy_all
 
     rooms = [
-      { name: 'Theater',         capacity: 250 },
-      { name: 'Nokomis',         capacity: 100 },
-      { name: 'Minnetonka',      capacity: 100 },
-      { name: 'Harriet',         capacity: 100 },
-      { name: 'Calhoun',         capacity: 100 },
-      # { name: 'Brand',           capacity: 75 },
-      { name: 'Proverb-Edison',  capacity: 48 },
-      { name: 'Zeke Landres',    capacity: 40 },
-      { name: 'Learn',           capacity: 24 },
-      { name: 'Challenge',       capacity: 24 }, 
-      { name: 'Discovery',       capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Tackle',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      { name: 'Louis Pasteur',   capacity: 18 }, 
-      { name: 'Texas',           capacity: 16 }, 
+      # { name: 'Alaska',           capacity: 96 },
+      { name: 'Bde Maka Ska',    capacity: 100 },
+      # { name: 'Cabin',           capacity: 9 },
       # { name: 'California',      capacity: 16 },
+      { name: 'Challenge',       capacity: 24 }, 
+      # { name: 'Cottage',         capacity: 8 },
+      { name: 'Discovery',        capacity: 23 }, # no video recording
       { name: 'Florida',         capacity: 12 }, # TV, no projector
       { name: 'Georgia',         capacity: 12 }, # TV, no projector
-      { name: 'Kansas',          capacity: 10 }, # TV, no projector
+      { name: 'Harriet',         capacity: 100 },
+      # { name: 'Kansas',          capacity: 10 }, # TV, no projector
+      { name: 'Learn',           capacity: 24 },
+      { name: 'Louis Pasteur',   capacity: 18 },
+      # { name: 'Maryland',        capacity: 10 },
+      { name: 'Minnetonka',      capacity: 100 },
+      # { name: 'Nebraska',        capacity: 10 },
+      # { name: 'Nevada',          capacity: 16 },
+      # { name: 'New York',        capacity: 10 },
+      { name: 'Nokomis',         capacity: 100 },
+      # { name: 'Oklahoma',        capacity: 8 },
+      # { name: 'Oregon',          capacity: 12 },
+      # { name: 'Pennsylvania',    capacity: 10 },
+      { name: 'Proverb-Edison',  capacity: 48 },
+      # { name: 'South Carolina',  capacity: 6 },
+      { name: 'Tackle',          capacity: 23 }, # no video recording
+      { name: 'Texas',           capacity: 16 },
+      { name: 'Theater',         capacity: 250 },
+      # { name: 'Washington',      capacity: 7 },
+      { name: 'Zeke Landres',    capacity: 40 },
+
+      # –––––– Suboptimal rooms, reserved for more dire need ––––––
+      # { name: 'Brand',           capacity: 75 },
+      # { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
+      # { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
     ]
 
-    rooms.each do |room|
-      event.rooms.create!(room)
+    Room.transaction do
+      rooms.each do |room|
+        event.rooms.create!(room)
+      end
+    end
+  end
+
+
+  desc 'set up multi-day timeslots for a remote event'
+  task create_remote_timeslots_and_rooms: :environment do
+    session_length = 25.minutes
+    event = Event.current_event
+    event.timeslots.destroy_all
+    event.rooms.destroy_all
+
+    dates = [
+      '2020-10-6',
+      '2020-10-8',
+      '2020-10-10',
+      '2020-10-13',
+      '2020-10-15',
+      '2020-10-17',
+    ]
+    times = [
+      '9:00',
+      '9:30',
+      '10:00',
+      '10:30',
+      '11:00',
+      '11:30',
+    ]
+    Timeslot.transaction do
+      dates.each.with_index do |date, day_num|
+        times.each.with_index do |time, session_num|
+          start_time = Time.zone.parse("#{date} #{time}")
+          event.timeslots.create!(
+            title: "Day #{day_num + 1} Session #{session_num + 1}",
+            starts_at: start_time,
+            ends_at: start_time + session_length,
+            schedulable: true
+          )
+        end
+      end
+    end
+    event.timeslots.each do |slot|
+      puts "Timeslot ##{slot.id}: #{slot.to_s(with_day: true)}"
+    end
+
+    rooms = [
+        { name: 'Sessions Track', capacity: 2 },
+        { name: 'Hallway Track', capacity: 1 },  # Preferentially schedules sessions in the Sessions Track
+    ]
+    Room.transaction do
+      rooms.each do |room|
+        event.rooms.create!(room)
+      end
     end
   end
 
@@ -120,59 +186,165 @@ namespace :app do
     puts "#{participant.name} (#{participant.id}) is now associated with #{session.title}"
   end
 
-  desc "restrict a presenter's timeslots"
-  task :restrict => :environment do
-    unless ENV['PARTICIPANT'] && ENV['HOUR']
-      STDERR.puts 'Usage examples:
+  desc 'read schedule constraints and session deletions from a CSV file'
+  task :configure_sessions, [:config_file] => :environment do |_, args|
+    if args[:config_file].blank?
+      STDERR.puts 'Usage:
 
-        Prevent participant id 577 from presenting in the afternoon:
-        
-           heroku run PARTICIPANT=345 HOUR=12:30 AFTER=1 rake app:restrict
-        
-        Create soft preference for participant id 678 not to present first thing:
-        
-           heroku run PARTICIPANT=678 HOUR=9:45 BEFORE=1 WEIGHT=0.1 rake app:restrict
-        '
+          rake app:configure_sessions[path/to/constraints.csv]
+
+        The CSV file must open with a header line with the following columns:
+
+          Name               Presenter or session name (must strictly match for deletion)
+          Presenter URL
+          Session URL
+          Constraints        See below
+          Notes              For humans; not parsed
+
+        The “Constraints” column accepts the following syntaxes:
+
+          >10:00am           Session must start at or after the given time
+          <12:00pm           Session must end at or before the given time
+          >1:00pm, <3:00pm   Session must fall entirely within give time range
+          @2:00pm            Session must be in the timeslot that includes the given time
+          # 1 2 3            Session must be in one of these specific timeslot ids
+          manual             Do not let sessionizer schedule this session
+          delete             Soft-delete session by assigning to a nonexistent event
+
+        WARNING: This task removes all existing presenter-timeslot restrictions for the
+                 current event, so your CSV should be a complete list of ALL the restrictions.
+      '
+
+      exit 1
     end
 
-    d = Event.current_event.date
-    hour = ENV["HOUR"].split(':')
-    time = Time.zone.local(d.year, d.month, d.day, hour[0], hour[1])
-    presenter = Participant.find(ENV['PARTICIPANT'])
+    puts
+    puts "Clearing existing restrictions for #{event}..."
+    PresenterTimeslotRestriction.where(timeslot: Event.current_event.timeslot_ids).destroy_all
+    puts
 
-    weight = ENV['WEIGHT'] || 1
+    CSV.foreach(args[:config_file], headers: true) do |row|
+      def resolve_url(url, model_class)
+        presenter = unless url.blank?
+          unless url.strip =~ %r{https://sessions.minnestar.org/#{model_class.model_name.route_key}/(\d+)}
+            raise "Unable to parse #{model_class} URL: #{url}"
+          end
+          model_class.find($1)
+        end
+      end
 
-    matched = if ENV['BEFORE']
-      presenter.restrict_before(time, weight)
-    elsif ENV['AFTER']
-      presenter.restrict_after(time, weight)
-    else
-      raise "Please specify either BEFORE=1 or AFTER=1 in the env"
+      presenter = resolve_url(row["Presenter URL"], Participant)
+      session   = resolve_url(row["Session URL"], Session)
+
+      puts "Presenter:     #{presenter&.name || '–'}"
+      puts "Session:       #{session&.title || '–'}"
+      puts "Intended name: #{row['Name']}"
+      puts "Notes:         #{row['Notes']}"
+
+      if presenter && session
+        unless session.presenters.include?(presenter)
+          raise "The participant is not one of the presenters of the given session"
+        end
+      end
+
+      if session && session.event_id.abs != event.id
+        raise "Session does not belong to the current event: #{session}"
+      end
+
+      constraints = (row["Constraints"] || '').strip.downcase
+      if constraints.blank?
+        puts
+        print "    WARNING: no constraints specified"
+      elsif constraints == 'manual'
+        unless session
+          raise "Manual scheduling requires that you specify a specific Session URL"
+        end
+        puts "    Manually scheduled; sessionizer will not assign time or room"
+        session.manually_scheduled = true
+        session.save!
+      elsif constraints == 'delete'
+        if row["Name"] != session.title
+          raise "Name mismatch"
+        end
+        puts "    DELETING"
+        session.event_id = -session.event_id.abs
+        session.save!
+      else
+        if !presenter
+          presenter = session.presenters.select { |p| p.sessions_presenting.where(event: event).count == 1 }.first
+          if !presenter
+            raise "Cannot choose a single presenter to attach the session-based time constraint to " +
+                  "because all the presenters for this session are presenting other sessions too."
+          end
+          puts "    Attaching time constraints to #{presenter.name}, who is not presenting any other sessions"
+        end
+        constraints.split(',').map(&:strip).each do |constraint|
+          puts "    #{constraint}"
+
+          if /^#(?<ids>(\s*\d+\s*)+)$/ =~ constraint
+            presenter.restrict_to_only(
+              Timeslot.find(
+                ids.split))
+            next
+          end
+
+          unless %r{
+            ^
+            (?<rule>    [<>@]   )
+                        \s*
+            (?<hour>    \d{1,2} )
+                        :
+            (?<minute>  \d{2}   )
+                        \s*
+            (?<ampm>    [ap]m   )
+            $
+          }mx =~ constraint
+            raise "Cannot parse constraint: #{constraint.inspect}"
+          end
+
+          hour = hour.to_i
+          minute = minute.to_i
+          hour = 0 if hour == 12
+          hour += 12 if ampm == "pm"
+          time = Time.zone.local(event.date.year, event.date.month, event.date.day, hour, minute)
+
+          case rule
+          when '<' then presenter.restrict_after(time, 1, event)
+          when '>' then presenter.restrict_before(time, 1, event)
+          when '@' then presenter.restrict_not_at(time, 1, event)
+          end
+        end
+        puts "    #{presenter.name} now restricted to the following timeslots:"
+        available_slots = event.timeslots.where(schedulable: true)
+        available_slots -= presenter.presenter_timeslot_restrictions
+          .where(timeslot: event.timeslot_ids)
+          .map(&:timeslot)
+        available_slots.each do |slot|
+          puts "      #{slot}"
+        end
+      end
+
+      puts
     end
-
-    if matched.empty?
-      raise "Your time constraints matched no timeslots. (Did you forget to use 24-hour format for afternoon times?)"
-    end
-
-    puts "#{presenter.name} now excluded from following timeslots:"
-    puts presenter.presenter_timeslot_restrictions.map(&:timeslot).join("\n")
   end
 
   desc 'show restrictions for current event'
   task :show_restrictions => :environment do
     restrictions_grouped = PresenterTimeslotRestriction
-      .where('timeslot_id in (select id from timeslots where event_id = ?)', Event.current_event.id)
+      .where('timeslot_id in (select id from timeslots where event_id = ?)', event.id)
       .group_by(&:participant)
     restrictions_grouped.each do |presenter, restrictions|
       puts "#{presenter.name}"
-      sessions = presenter.sessions_presenting.where('event_id = ?', Event.current_event.id)
-      puts "  who is presenting #{sessions.map(&:title).join("\n                and ")}"
+      sessions = presenter.sessions_presenting.where('event_id = ?', event.id)
+      puts "  who is presenting:"
+      sessions.map(&:title).each do |title|
+        puts "        #{title}"
+      end
       restrictions.each do |r|
         puts "  #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
              " present at #{r.timeslot}" +
              " (weight=#{r.weight})"
       end
-      puts "  and is scheduled for: #{presenter.sessions_presenting.map { |s| s.timeslot }.join(", ")}"
     end
   end
 
@@ -182,7 +354,7 @@ namespace :app do
       "able to retrieve it. You should back up the database before doing this.\n\nIf you are really sure, type \"SCHEDULE ARMAGEDDON\" now (anything else to cancel)..."
     input = STDIN.gets.strip
     if input == 'SCHEDULE ARMAGEDDON'
-      Event.current_event.sessions.update_all(timeslot_id: nil)
+      event.sessions.update_all(timeslot_id: nil)
       STDOUT.puts "\nThe current schedule has been erased."
     else
       STDOUT.puts "\nNo changes made."
@@ -200,7 +372,6 @@ namespace :app do
   task :generate_schedule => :environment do
     quality = (ENV['quality'] || 1).to_f
 
-    event = Event.current_event
     puts "Scheduling #{event.name}..."
 
     schedule = Scheduling::Schedule.new event
@@ -237,7 +408,7 @@ namespace :app do
     best.dump_presenter_conflicts
 
     puts
-    puts 'Congratulations. You have a schedule!'
+    puts 'Best schedule saved to DB.'
   end
 
   desc 'assign scheduled sessions to rooms'
@@ -258,8 +429,12 @@ namespace :app do
         end
 
         sessions.zip(rooms_by_capacity) do |session, room|
+          if room.nil?
+            raise "NOT ENOUGH ROOMS: #{session.timeslot} has #{session.timeslot.sessions.count} sessions," +
+                  " but there are only #{event.rooms.count} rooms"
+          end
           puts "    #{session.id} #{session.title}" +
-               " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)" +
+               " (#{'%1.1f' % session.expected_attendance} est: #{session.attendances.count} raw vote(s), #{'%1.1f' % session.estimated_interest} time-scaled)" +
                " in #{room.name} (#{room.capacity})"
           session.room = room
           session.save!
@@ -279,12 +454,12 @@ namespace :app do
     Event.transaction do
       export = {
         sessions: Hash[
-          Event.current_event.sessions.map do |session|
+          event.sessions.map do |session|
             [session.id, { slot: session.timeslot_id, room: session.room_id }]
-          end
+          end.sort_by(&:first)  # by session ID, to facilitate diffs
         ]
       }
-      puts export.to_json
+      puts JSON.pretty_generate(export)
     end
   end
 
@@ -380,7 +555,7 @@ namespace :app do
         session.attendance_count,
         session.expected_attendance,
         session.manual_attendance_estimate? ? "❗" : " ", 
-        "#{session.id} #{session.title}",
+        "#{session.id} #{session.title.remove_fancy_chars}",
         session.presenters.map(&:email).join(", ")
       ]
     end
@@ -414,7 +589,7 @@ namespace :app do
       else
         ''
       end
-      puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title, s2.title, status]
+      puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title.remove_fancy_chars, s2.title.remove_fancy_chars, status]
     end
   end
 

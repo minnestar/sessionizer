@@ -8,7 +8,18 @@
     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials. Use JUST your name. For joint sessions, you will be able to add co-presenters." %>
     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
     <%= f.input :password, :label => 'Password' %>
+    <%=
+      f.input :code_of_conduct_agreement,
+        as: :boolean,
+        label: ("I agree to the #{link_to 'Code of Conduct', 'https://minnestar.org/code-of-conduct'} governing this event.").html_safe,
+        input_html: {
+          checked: @participant.signed_code_of_conduct_for_current_event?,
+          disabled: @participant.signed_code_of_conduct_for_current_event?
+        }
+    %>
  <% end %>
 
-  <%= f.actions %>
+  <%= f.actions do %>
+    <%= f.button 'Create My Account', :class => 'button'  %>
+  <% end %>
 <% end %>

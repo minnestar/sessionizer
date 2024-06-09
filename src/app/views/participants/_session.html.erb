@@ -1,1 +1,7 @@
-<li><h3><%= link_to session.title, session %></h3></li>
+<li>
+    <b><%= link_to session.title, session %></b>
+    <% if session.event_id != Event.current_event.id %>
+      <br/>
+      <small><%= link_to session.event.name, event_sessions_path(event_id: session.event_id) %></small>
+    <% end %>
+</li>

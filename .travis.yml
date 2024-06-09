@@ -2,18 +2,23 @@ language: ruby
 cache: bundler
 sudo: false
 rvm:
-  - 2.6.3
+  - 2.6.4
+dist: trusty
 
 notifications:
   email:
     - jcoyne@justincoyne.com
     - casey@softwareforgood.com
 
+services:
+  - postgresql
+
 before_script:
   - cd src/
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.yml.travis config/database.yml
   - bundle install
+  - bundle exec rake db:migrate RAILS_ENV=test
 
 env:
   global:

@@ -10,7 +10,15 @@ class Settings < ActiveRecord::Base
   end
 
   def self.show_schedule= val
-    instance.update(show_schedule: val)
+    instance.update(show_schedule: !!val)
+  end
+
+  def self.allow_new_sessions?
+    instance.allow_new_sessions?
+  end
+
+  def self.allow_new_sessions= val
+    instance.update(allow_new_sessions: !!val)
   end
 
 end

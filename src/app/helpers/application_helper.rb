@@ -8,17 +8,24 @@ module ApplicationHelper
     end
   end
 
-  def markdown(str)
+  def markdown(str, trusted: false)
     return '' unless str
+
     @markdown ||= Redcarpet::Markdown.new(
-        Redcarpet::Render::HTML.new,
-        autolink: true,
-        space_after_headers: true)
-    sanitize_html(close_tags(@markdown.render(str))).html_safe
+      Redcarpet::Render::HTML.new,
+      autolink: true,
+      space_after_headers: true
+    )
+
+    if trusted
+      sanitize(close_tags(@markdown.render(str))).html_safe
+    else
+      sanitize_html(close_tags(@markdown.render(str))).html_safe
+    end
   end
 
   def close_tags(html)
-    Nokogiri::HTML::DocumentFragment.parse(html).to_html
+    Nokogiri::HTML::DocumentFragment.parse(html.scrub).to_html
   end
 
   def meta_description
@@ -32,10 +39,14 @@ module ApplicationHelper
   end
 
   def add_sessions_button
-    link_to image_tag('button-add-session.png', :title => 'Add session', :size => "215x43", :border=>"0"), new_session_path, class: 'add-sessions-button', title: "Add Session"
+    if Settings.allow_new_sessions?
+      link_to 'Add Session', new_session_path, class: 'button', alt: "Add Session"
+    end
   end
 
-  def toggle_attendance_button(session)
-    content_tag(:button, "Attending", class: "toggle-attendance", 'data-session-id': session.id)
+  def toggle_attendance_button(event, session)
+    if event.current?
+      content_tag(:button, "Attending", class: "toggle-attendance", 'data-session-id': session.id)
+    end
   end
 end

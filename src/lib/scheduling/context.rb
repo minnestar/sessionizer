@@ -11,7 +11,6 @@ module Scheduling
 
     def initialize(event)
       @timeslots = event.timeslots.where(schedulable: true)
-      @room_count = event.rooms.where(schedulable: true).count
 
       # A presenter can have a session that we're manually keeping out of the schedule by making it
       # manually_scheduled and assigning either no timeslot (like Indie Arcade) or an unschedulable
@@ -22,6 +21,10 @@ module Scheduling
       @sessions = event.sessions
         .where("not manually_scheduled or timeslot_id in (?)", @timeslots.map(&:id))
         .pluck(:id)
+
+      @room_count = ENV['room_count_override']&.to_i || (@sessions.count / @timeslots.count.to_f).ceil
+      # (This used to be `event.rooms.where(schedulable: true).count`, but then we switched to
+      # assigning times days before assigning rooms.)
 
       @people_by_id = Hash.new { |h,id| h[id] = Person.new(self, id) }
 

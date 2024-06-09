@@ -1,14 +1,23 @@
-- cache [current_participant.nil?] + event_schedule_cache_key(@event), expires_in: 10.minutes do
+- cache [current_participant.nil?, schedule_public?] + event_schedule_cache_key(event), expires_in: 10.minutes do
   = render 'header'
+
+  - unless schedule_public?
+    .draft-schedule-warning
+      %h1 Draft
+      Subject to change
+
   .schedule
     .schedule-header
-      .controls
-        %a#hide-all(href='#') Hide all details
-        %a#show-all(href='#') Show all details
-        .clr
       %h1
-        = @event.name
+        = event.name
         Session Schedule
+      .controls
+        .group
+          = link_to 'Browse / Edit Sessions', event_path(event)
+        .group
+          %a.button#hide-all(href='#') Hide all details
+          %a.button#show-all(href='#') Show all details
+      .clr
       - if current_participant.nil?
         %p
           = link_to 'Log in', new_login_path(after_login: schedule_path)
@@ -54,7 +63,7 @@
 
         $.scrollTo($(slotIdSel), {
           duration: (mobile ? 0 : 500),
-          offset: { left: 0, top: -$('.nav-top').height() },
+          offset: { left: 0, top: -$('.nav-top').outerHeight() + 0.5 },
           onAfter: function() {
             setTimeout(function() {
               // Make nav bar show true position again on next scroll

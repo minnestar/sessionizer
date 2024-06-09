@@ -1,5 +1,8 @@
 <% title('New Session') %>
 
-<p><strong>Note: sessions can be at most 50 minutes long.</strong>
-
-<%= render 'form' %>
+<% if Settings.allow_new_sessions? %>
+    <p><strong>Note: sessions can be at most 50 minutes long.</strong>
+    <%= render 'form' %>
+<% else %>
+    <p>Sorry, session submission is now closed for <%= Event.current_event.name %>.</p>
+<% end %>

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require 'spec_helper'
 
 describe Timeslot do
@@ -21,7 +23,7 @@ describe Timeslot do
 
     context "when with_day is set" do
       subject { timeslot.to_s(with_day: true) }
-      it { is_expected.to eq 'Sun  9:00 –  9:50 Session 1' }
+      it { is_expected.to eq 'Sun, Sep 13 •  9:00 –  9:50 Session 1' }
     end
 
     context "no args" do

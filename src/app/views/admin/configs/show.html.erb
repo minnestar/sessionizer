@@ -5,14 +5,20 @@
     <ol>
       <li class="boolean">
         <%= label_tag do %>
+          <%= check_box_tag :allow_new_sessions, 'true', settings.allow_new_sessions? %>
+          Allow users to create new sessions for current event
+        <% end %>
+      </li>
+      <li class="boolean">
+        <%= label_tag do %>
           <%= check_box_tag :show_schedule, 'true', settings.show_schedule? %>
-          Display sessions on the front page
+          Display schedule to the public
         <% end %>
       </li>
     </ol>
   </fieldset>
 
   <fieldset class="actions">
-    <%= submit_tag "Save" %>
+    <%= submit_tag "Save", :class => 'button' %>
   </fieldset>
 <% end %>

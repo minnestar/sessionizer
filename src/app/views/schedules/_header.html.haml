@@ -1,28 +1,16 @@
 .nav-top
   .timeslots
-    - event_timeslots.where(schedulable: true).each do |slot|
+    - header_timeslots.each do |slot|
       %a.timeslot{:id => "timeslot_#{slot.id}_nav",
                   :href=> "#timeslot_#{slot.id}",
                   :startsAt => slot.starts_at.in_time_zone.to_i,
                   :endsAt   => slot.ends_at  .in_time_zone.to_i }
         = pill_label(slot)
-  .maps
-    %a.room{ target: '_blank',
-             href: "#{asset_path('maps/map_hub.svg')}" }
+  .links
+    %a{ target: '_blank',
+        href: "/files/MAP_COMBINED_11x17.svg" }
       Map
-    %a.room{ target: '_blank',
-             href: "#{asset_path('maps/map_b1.svg')}" }
-      LI Map
 
-    %a.room{ target: '_blank',
-             href: "http://minnestar.org/minnebar-faq/" }
+    %a{ target: '_blank',
+        href: "https://minnestar.org/faqs/minnebar-faq/" }
       FAQ
-
-    %a.twitter{  :target => '_blank',
-                 :href => "https://twitter.com/#minnebar" }
-      :escaped
-        #minnebar
-
-    %a.feedback{ :target => '_blank',
-                 :href => 'http://minnebar2018.voicehive.com' }
-      Feedback

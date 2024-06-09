@@ -2,7 +2,7 @@
 class SessionsController < ApplicationController
 
   load_resource only: [:new, :show, :edit, :create, :update, :destroy]
-  before_action :verify_session, only: [:new, :create, :update, :edit, :destroy]
+  before_action :authenticate_participant, only: [:new, :create, :update, :edit, :destroy]
   before_action :verify_owner, only: [:update, :edit, :destroy]
 
   respond_to :html
@@ -34,11 +34,7 @@ class SessionsController < ApplicationController
   end
 
   def index
-    if params[:event_id].present?
-      @event = Event.find(params[:event_id])
-    else
-      @event = Event.current_event
-    end
+    @event = event_from_params
 
     respond_to do |format|
       format.json do
@@ -57,15 +53,29 @@ class SessionsController < ApplicationController
   end
 
   def create
-    @session.attributes = session_params
+    unless Settings.allow_new_sessions?
+      return render status: 403, plain: 'Session submission is closed'
+    end
+
+    @session.attributes = session_params.except(:code_of_conduct_agreement)
     @session.participant = current_participant
     @session.event = Event.current_event
 
     if @session.save
+      create_code_of_conduct_agreement_if_not_exists!
       flash[:notice] = "Thanks for adding your session."
       redirect_to @session
     else
       render :action => 'new'
+    end
+  end
+
+  def create_code_of_conduct_agreement_if_not_exists!
+    if session_params[:code_of_conduct_agreement] == '1' && @session.participant.signed_code_of_conduct_for_current_event? == false
+      CodeOfConductAgreement.create!({
+        participant_id: @session.participant.id,
+        event_id: Event.current_event.id,
+      })
     end
   end
 
@@ -97,7 +107,17 @@ class SessionsController < ApplicationController
   private
 
   def session_params
-    params.require(controller_name.singularize).permit(:title, :description, :level_id, :name, :email, :category_ids => [])
+    params
+      .require(controller_name.singularize)
+      .permit(
+        :title,
+        :description,
+        :level_id,
+        :name,
+        :email,
+        :code_of_conduct_agreement,
+        :category_ids => []
+      )
   end
 
   def verify_owner
@@ -107,7 +127,7 @@ class SessionsController < ApplicationController
 private
 
   def sessions_for_event(event)
-    @event.sessions
+    event.sessions
       .includes(:presenters, :categories, :participant, :room, :timeslot, :level)
       .order('created_at desc')
       .distinct

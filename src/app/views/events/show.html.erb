@@ -1,0 +1,34 @@
+<% title("#{@event&.name || t('conference')} Session Registration") %>
+
+<div class="row">
+  <div class="column grid_6" style="margin-left:0px">
+    <% if !@event %>
+
+      <h2>No event is being held right now</h2>
+
+    <% else %>
+
+      <% unless @event.current? %>
+        <div id="flash_notice">
+          <p><b>This is a past event.</b></p>
+          <p><%= link_to "See sessions for the current #{t('conference')}", home_page_path %></p>
+        </div>
+      <% end %>
+
+      <% if !@event.current? || Settings.show_schedule? %>
+        <h2><%= link_to "Schedule", event_schedule_path(@event) %></h2>
+        <p>(Newly created sessions may not appear on the schedule yet.)</p>
+      <% end %>
+
+      <% if @event %>
+        <%= render 'sessions' %>
+      <% end %>
+
+    <% end %>
+  </div>
+
+  <%= render partial: 'events/aside' %>
+
+</div>
+
+

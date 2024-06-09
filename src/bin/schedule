@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+    echo "usage: $0 <input constraints.csv> <ouput schedule.json>"
+    exit 1
+fi
+
+constraints_file="$1"
+schedule_file="$2"
+
+red_bold="\\033[1;31m"
+blue="\\033[0;34m"
+green_bold="\\033[1;32m"
+normal="\\033[0m"
+
+function section {
+    echo -e "${blue}----------------------------------------------------------------------${normal}"
+    echo
+    echo -e "${green_bold}$1${normal}"
+    echo
+}
+
+section "Pulling latest data from production..."
+bin/pull-database-from-production
+
+section "Scheduler input quality analysis"
+rails db:migrate && rails app:analyze_scheduler_input_quality
+
+section "Reading schedule constraints from $constraints_file ..."
+rake app:configure_sessions[$constraints_file]
+
+section "Running annealer at a variety of different cooling times..."
+for q in 0.01 0.05 0.1 0.2 0.3 0.5 0.7 0.9 1.0 1.5; do
+    section "--- Cooling time: $q ---"
+    quality=$q rails app:generate_schedule || exit 1
+done
+
+section "Exporting generated schedule to $schedule_file"
+rails app:export_schedule >$schedule_file || exit
+
+section "Congratulations. You have a schedule!"
+echo "Check the schedule locally. If it looks good, you can upload it to prod with:"
+echo
+echo "   heroku run rails app:import_schedule < $schedule_file"
+echo -e "   ${red_bold}⬆︎⬆︎⬆︎ DANGER: overwrites current live schedule ⬆︎⬆︎⬆︎${normal}"
+echo

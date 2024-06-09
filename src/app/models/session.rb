@@ -20,10 +20,11 @@ class Session < ActiveRecord::Base
   scope :with_attendence_count, -> { select('*').joins("LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id") }
 
   scope :for_current_event, -> { where(event_id: Event.current_event.id) }
+  scope :for_past_events, -> { where.not(event_id: Event.current_event.id).where("event_id > ?", 0).includes(:event).order('events.date desc') }
 
   scope :recent, -> { order('created_at desc') }
-  
-  scope :random_order, -> { order('random()') }
+
+  scope :random_order, -> { order(Arel.sql('random()')) }
 
   validates_presence_of :description
   validates_presence_of :event_id
@@ -33,7 +34,7 @@ class Session < ActiveRecord::Base
   #validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
 
 
-  attr_accessor :name, :email
+  attr_accessor :name, :email, :code_of_conduct_agreement
 
   after_create :create_presenter
 
@@ -131,7 +132,7 @@ class Session < ActiveRecord::Base
     sessions.each do |session|
       sessions_by_id[session.id] = session
     end
-    
+
     # Surely there’s a Rails helper for this?
     # But I can’t find it — only some abandoned gems.
     Attendance
@@ -152,7 +153,7 @@ class Session < ActiveRecord::Base
   end
 
   def expected_attendance
-    manual_attendance_estimate || attendance_count
+    manual_attendance_estimate || (estimated_interest + attendance_count) / 2
   end
 
   # Estimates actual event-day interest for this session relative to other sessions,
@@ -180,7 +181,7 @@ class Session < ActiveRecord::Base
       # make estimated_interest tend toward the mean in cases when there are few real votes.
 
       ballast_votes = 10.0
-      session_votes / (possible_votes + ballast_votes * session_count) * total_votes      
+      session_votes / (possible_votes + ballast_votes * session_count) * total_votes
     end
   end
 

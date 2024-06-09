@@ -28,8 +28,9 @@
 
     .timeslots
       float: left
-    .maps
+    .links
       float: right
+      margin-right: 0.6em
 
     .timeslots .timeslot
       &.selected
@@ -42,21 +43,22 @@
         
   
   .schedule-header
-    padding: 4em 2em
-    padding-top: 6em
+    padding: 2em 2em
+    padding-top: 5em
     background: $heading-background
     color: white
     a
       color: white
       font-weight: 600
     h1
-      margin: 0
+      margin: 0.6ex 0
       padding: 0
       color: white
       font:
         family: 'Helvetica Neue', 'Verdana', sans-serif
         weight: bold
         size: 2em
+      float: left
     p
       margin: 1em 0 0 0
     
@@ -69,16 +71,26 @@
     
     .controls
       float: right
+      .group
+        display: inline-block
+        margin: 0.5em 0
       a
         display: inline-block
         margin-right: 1em
         padding: 1ex 1em
-        border-radius: 2em
-        border: 0.5px solid rgba(0, 0, 0, 0.5)
-        background: #e8e8e8
-        color: #003
-        white-space: nowrap
         text-decoration: none
+        text-transform: uppercase
+        &:hover
+          text-decoration: underline
+        &.button
+          text-transform: none
+          border-radius: 2em
+          border: 0.5px solid rgba(0, 0, 0, 0.5)
+          background: #e8e8e8
+          color: #003
+          white-space: nowrap
+          &:hover
+            text-decoration: none
         font:
           family: 'Lucida Grande', 'Verdana', sans-serif
           weight: bold
@@ -113,6 +125,11 @@
           margin-left: 1em
           font-weight: normal
           color: rgba(255, 255, 255, 0.75)
+      h3
+        font:
+          family: 'Helvetica Neue', 'Verdana', sans-serif
+          size: 1.4em !important
+        padding: 0.8em 1em
     
       .sessions
         clear: both
@@ -192,6 +209,23 @@
                 .name
                   font-weight: bold
                   margin-top: 0.6em
+
+  .draft-schedule-warning
+    position: fixed
+    pointer-events: none
+    text-align: center
+    top: 25%
+    width: 100vw
+    transform: rotate(-15deg)
+    font-size: 5vw
+    text-transform: uppercase
+    color: #7004
+    h1
+      font-size: 400%
+      line-height: 1.0
+      margin: 0
+      padding: 0
+      color: #C003
 
   .clr
     clear: both

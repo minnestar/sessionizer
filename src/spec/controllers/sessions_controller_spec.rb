@@ -8,9 +8,11 @@ describe SessionsController do
 
   let(:user) { create(:participant) }
   let(:event) { create(:event) }
+  let(:old_event) { create(:event, name: 'First MinneBar', date: '2006-5-6') }
 
   context "with an existing session" do
     let!(:session) { create(:session, event: event) }
+    let!(:old_session) { create(:session, event: old_event) }
 
     describe "update" do
       it "is not updatable by someone who doesn't own it" do
@@ -59,6 +61,12 @@ describe SessionsController do
         get :index
         expect(response).to be_successful
         expect(assigns[:sessions]).to eq [session]
+      end
+
+      it "should handle a past event" do
+        get :index, params: { event_id: old_event.id }
+        expect(response).to be_successful
+        expect(assigns[:sessions]).to eq [old_session]
       end
 
       context "with JSON format" do

@@ -4,6 +4,8 @@
     <%= csrf_meta_tags %>
     <title><%= yield(:title) || t('conference') %></title>
     <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag "https://use.typekit.net/vof3vrp.js" %>
+    <%= stylesheet_link_tag "https://fonts.googleapis.com/css?family=Roboto:500|Titillium+Web:400,600" %>
     <%= favicon_link_tag 'favicon.ico' %>
     <%= yield(:head) %>
 
@@ -26,19 +28,22 @@
           <li class="star">
             <a href="/" >
               <span class="description">sessionizer home</span><br />
-                minne<span class="star">✱</span>
+              <%= image_tag 'logos/minnebar-horizontal.svg', alt: 'Sessionizer Home' %>
             </a>
           </li>
-          <li class="demo">
-            <a href="http://minnestar.org/minnedemo/">
-              <span class="description">geek show &amp; tell</span><br />minne<span class="demo">demo</span>
+          <li class="donate">
+            <a class="button" href="http://minnestar.org/donate">
+              Donate
             </a>
           </li>
-
           <li class="bar">
-            <a href="http://minnestar.org/minnebar/">
-              <span class="description">(un)conference</span><br />
-              minne<span class="bar">bar</span>
+            <a href="https://minnestar.org/sponsors/become-a-sponsor/">
+              Sponsor
+            </a>
+          </li>
+          <li class="bar">
+            <a href="https://minnestar.org/community/volunteer/">
+              Volunteer
             </a>
           </li>
         </ul>

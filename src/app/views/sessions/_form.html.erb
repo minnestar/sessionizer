@@ -11,13 +11,23 @@
 
     <%= f.input :categories, :as => :check_boxes %>
     <%= f.input :level, :as => :select, :label => 'Topic level' %>
+    <%=
+      f.input :code_of_conduct_agreement,
+        as: :boolean,
+        required: true,
+        label: ("I agree to the #{link_to 'Code of Conduct', 'https://minnestar.org/code-of-conduct'} governing this event.").html_safe,
+        input_html: { checked: current_participant.signed_code_of_conduct_for_current_event? }
+    %>
   <% end %>
 
-  <%= f.actions %>
+  <%= f.actions do %>
+    <%= f.button 'Update Session', :class => 'button'  %>
+  <% end %>
 
+  <!-- JENNA: This should be removed if it doesn't work -->
   <% if @session.persisted? %>
     <div class="right">
-      <%= button_to 'Delete Session', session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Delete Session', session_path(@session), method: :delete, data: { confirm: 'Are you sure?' } %>
     </div>
   <% end %>
 <% end %>
