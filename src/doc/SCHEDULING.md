@@ -2,6 +2,8 @@
 The process to generate a schedule for Minnebar takes time, and involves many steps and people.
 
 ### Rough timeline
+* **4-6 weeks out**: Create an event in [Sessionizer Admin](https://sessions.minnestar.org/admin/events/)
+* **4-6 weeks out**: Have attendees create sessions & express interest in sessions.
 * **1 week out**: Start gathering presenter time constraints
 * **4 days out**: Generate draft schedule ([this process](#instructions))
 * **3 days out**: Finalize schedule
@@ -132,3 +134,17 @@ rake app:update                             # Update configs and some other init
 ```
 
 For the most current list, run `rake -T`.
+
+## Old Automatic Scheduling notes from README (synthesize & remove these later)
+
+Sessionizer can automatically generate a schedule for your event based on preferences expressed by the audience and attempting not to double-book presenters.
+
+To run the scheduler:
+
+1. Have attendees express interest in sessions. The scheduler attempts to maximize the percentage of sessions attendees can attend.
+2. Create rooms and timeslots for your event. The number of rooms * number of timeslots must be greater than the number of sessions, or the scheduler will fail.
+3. Run the scheduler: `rake app:generate_schedule`. This takes a long time, so it is probably best to test it out at a low quality setting: `quality=0.001 rake app:generate_schedule`
+
+Once the scheduler has run, you can see what it produced by visiting `/schedule`. You'll also see output on the console and it will indicate what percentage of attendees can attend the sessions they are interested in and the amount of presenter overlap (hopefully zero).
+
+You can tweak the schedule by creating PresenterTimeslotRestrictions (if a person can only present during certain timeslots) or by manually swapping scheduled rooms after the schedule has been created (see `Session.swap_rooms`).
