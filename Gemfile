@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.7.7'
+ruby '2.7.8'
 
 gem 'rails', '~> 5.2'
 
@@ -40,6 +40,10 @@ gem 'authlogic', '~> 4.2'
 gem 'cancancan'
 
 gem 'nokogiri'
+
+# FFI 1.17+ isn't compatible with Ruby 2.x on Linux, which breaks GitHub Actions.
+# Remove this line when upgrading to Ruby 3.
+gem 'ffi', '~> 1.16.3'
 
 group :development, :test do
   gem 'ffaker'
