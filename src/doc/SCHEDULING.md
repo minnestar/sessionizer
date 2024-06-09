@@ -3,7 +3,7 @@ The process to generate a schedule for Minnebar takes time, and involves many st
 
 ### Rough timeline
 * **1 week out**: Start gathering presenter time constraints
-* **4 days out**: Generate draft schedule (This process)
+* **4 days out**: Generate draft schedule ([this process](#instructions))
 * **3 days out**: Finalize schedule
 * **2 days out**: Assign rooms
 * **1 day out**: Field last minute cancelations + schedule and room requests.
@@ -59,22 +59,21 @@ You'll need to gather presenter/session scheduling constraints and save them to 
 ## 4. Generate schedule
 The `bin/schedule` script will carry out the entire schedule generation process.
 
-It takes two parameters:
-
-1. Schedule constraints
-2. File name to save the generated schedule output
-
-```bash
-bin/schedule path/to/schedule-constraints.csv path/to/generated-schedule-output.json
-```
-
-It will carry out these steps:
-
+* It takes two parameters
+  1. Schedule constraints
+  2. File name to save the generated schedule output
+* And will carry out these steps
   1. Pull prod data
   2. Analyze schedule quality
   3. Read scheduling constraints
   4. Generate & refine schedule
   5. Export the schedule
+
+To run the script:
+
+```bash
+bin/schedule path/to/schedule-constraints.csv path/to/generated-schedule-output.json
+```
 
 Once generated, you can access a preview at.
 * **Local**: http://127.0.0.1:3000/schedule?preview=1
@@ -83,7 +82,8 @@ Once generated, you can access a preview at.
 **Note**: You must be logged in (using prod credentials) to view the page.
 
 ## 5. Upload schedule to prod
-Once the schedule looks good, you can upload it to prod:
+Once the schedule looks good, you can upload it to prod with `app:import_schedule`, like so:
+
 ```bash
 heroku run rails app:import_schedule < path/to/exported-schedule-file.json
 ```
