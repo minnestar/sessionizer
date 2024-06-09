@@ -9,16 +9,14 @@ class PresentationsController < ApplicationController
   end
 
   def create
-    # super lame: look up the person by name. Twitter's typeahead library doesn't currently have a way to report an item's been selected.
-
-    participant = Participant.where(:name => params[:name]).first
+    participant = Participant.find(params[:id])
 
     if participant.nil?
-      flash[:error] = "Sorry, no presenter named '#{params[:name]}' was found. Please try again."
+      flash[:error] = "Sorry, no presenter named #{params[:name]} was found. Please try again."
       redirect_to session_presentations_path(@session)
       return
     elsif participant.signed_code_of_conduct_for_current_event? == false
-      flash[:error] = "Sorry, '#{params[:name]}' hasn't signed the Code of Conduct for this event."
+      flash[:error] = "Sorry, #{params[:name]} hasn't signed the current Code of Conduct."
       redirect_to session_presentations_path(@session)
       return
     end

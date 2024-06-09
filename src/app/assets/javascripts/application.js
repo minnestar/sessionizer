@@ -13,7 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.scrollTo.min
-//= require typeahead.min
 //= require fancybox
 
 var Sessionizer = {};

@@ -8,23 +8,46 @@
 <% end %>
 </ul>
 
-<h2>Add presenters</h2>
-
-<p><strong>Note:</strong> In order to add a presenter to your session, they must be registered in the system and have agreed to the Code of Conduct.</p>
+<p>
+  Presenters must be registered and have agreed to the current Code of Conduct.
+</p>
 
 <%= semantic_form_for([@session, @presentation]) do |f| %>
-<%= text_field_tag 'name', '', :placeholder => 'Type a name', :id => 'typeahead' %> <%= submit_tag 'Add', :id => 'add-presenter' %>
+  <%= text_field_tag 'name', '', :id => 'autoComplete', :style => 'padding-left: 10px;', :autocomplete => "off" %>
+  <%= hidden_field_tag 'id', '', :id => 'autoCompleteValue' %>
+  <%= submit_tag 'Add Presenter', :id => 'add-presenter', :class => 'button' %>
 <% end %>
 
 <% content_for :javascript do %>
 $(function() {
-  $('#typeahead').typeahead(
-    {name: 'presenters',
-     prefetch: '/participants.json'}
-   );
+  fetch('/participants.json').then(source => {
+    const autoCompleteJS = new autoComplete({
+      placeHolder: 'Search for name',
+      data: {
+        src: source.json(),
+        cache: true,
+        keys: ['value']
+      },
+      events: {
+        input: {
+          selection: (event) => {
+            const selection = event.detail.selection.value;
+            autoCompleteJS.input.value = selection.value;
+
+            const ele = document.getElementById("autoCompleteValue");
+            ele.value = selection.id;
+          }
+        }
+      },
+      resultItem: {
+        tag: "li",
+        class: "autoComplete_result",
+        highlight: "autoComplete_highlight",
+        selected: "autoComplete_selected"
+    },
+    });
+  });
 });
-
-
 <% end %>
 
 <p style="margin-top: 120px">
