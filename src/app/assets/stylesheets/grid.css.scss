@@ -2,16 +2,16 @@
 /* = The 1Kb Grid = */     /* 10 columns, 80 pixels each, with 10 pixel gutter */
 /* ================ */
 
-.grid_1 { width:80px; }
-.grid_2 { width:170px; }
-.grid_3 { width:260px; }
-.grid_4 { width:350px; }
-.grid_5 { width:440px; }
-.grid_6 { width:530px; }
-.grid_7 { width:620px; }
-.grid_8 { width:710px; }
-.grid_9 { width:800px; }
-.grid_10 { width:890px; }
+.grid_1 { width: 5.7em; }
+.grid_2 { width: 12.1em; }
+.grid_3 { width: 18.5em; }
+.grid_4 { width: 25.0em; }
+.grid_5 { width: 31.4em; }
+.grid_6 { width: 37.8em; }
+.grid_7 { width: 44.2em; }
+.grid_8 { width: 50.7em; }
+.grid_9 { width: 57.1em; }
+.grid_10 { width: 63.5em; }
 
 .column {
 	margin: 0 5px;
@@ -20,7 +20,7 @@
 	display: inline;
 }
 .row {
-	width: 900px;
+	width: 64.2em;
 	margin: 0 auto;
 	overflow: hidden;
 }
@@ -29,17 +29,17 @@
 	width: auto;
 	display: inline-block;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 65em) {
 	.center-column {
 		box-sizing: border-box;
 		max-width: 100%;
 		padding: 1em;
 	}
-	.row {    
-		max-width: 100%;    
+	.row {
+		max-width: 100%;
 	}
-	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10 {    
-		max-width: 100%;      
+	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10 {
+		width: 100%;
 		clear: both;
 	}
 	h1 {
