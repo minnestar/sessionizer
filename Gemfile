@@ -41,6 +41,10 @@ gem 'cancancan'
 
 gem 'nokogiri'
 
+# FFI 1.17+ isn't compatible with Ruby 2.x on Linux, which breaks GitHub Actions.
+# Remove this line when upgrading to Ruby 3.
+gem 'ffi', '~> 1.16.3'
+
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
