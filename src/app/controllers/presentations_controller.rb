@@ -17,10 +17,7 @@ class PresentationsController < ApplicationController
       end
 
       if participant.nil?
-        message = participant_params[:name] ?
-          "Sorry, no presenter matching '#{participant_params[:name]}' was found. Please try again." :
-          "Sorry, no presenter was found. Please try again."
-        flash[:error] = message
+        flash[:error] = "Sorry, no presenter #{participant_params[:name] ? "matching '#{participant_params[:name]}' " : "" }was found. Please try again."
         redirect_to session_presentations_path(@session)
         return
       elsif participant.signed_code_of_conduct_for_current_event? == false
