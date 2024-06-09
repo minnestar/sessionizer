@@ -1,8 +1,8 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :presenter_timeslot_restriction do
     association :participant
     association :timeslot
-    weight 1
+    weight { 1 }
   end
 end

@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Admin::PresentersController do
 
-  let(:presenter) { FactoryGirl.create(:participant, name: 'John McCarthy', email: 'parens@example.org') }
-  let(:event) { FactoryGirl.create(:event) }
-  let!(:session) { FactoryGirl.create(:session, participant: presenter, event: event) }
+  let(:presenter) { FactoryBot.create(:participant, name: 'John McCarthy', email: 'parens@example.org') }
+  let(:event) { FactoryBot.create(:event) }
+  let!(:session) { FactoryBot.create(:session, participant: presenter, event: event) }
 
   describe "#index" do
     it "should be successful" do
@@ -43,9 +43,9 @@ describe Admin::PresentersController do
   end
 
   describe "#export_all" do
-    let(:older_event) { FactoryGirl.create(:event, date: 1.year.ago) }
-    let(:second_presenter) { FactoryGirl.create(:participant, name: 'Kristen Nygaard', email: 'objectify@example.org') }
-    let!(:second_session) { FactoryGirl.create(:session, participant: second_presenter, event: older_event) }
+    let(:older_event) { FactoryBot.create(:event, date: 1.year.ago) }
+    let(:second_presenter) { FactoryBot.create(:participant, name: 'Kristen Nygaard', email: 'objectify@example.org') }
+    let!(:second_session) { FactoryBot.create(:session, participant: second_presenter, event: older_event) }
 
     it "should be successful" do
       get :export_all

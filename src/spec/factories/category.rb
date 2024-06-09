@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :category do
-    name {generate :category_name}
+    name { generate :category_name }
   end
 
 end

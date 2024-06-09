@@ -38,7 +38,7 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include Authlogic::TestCase, type: :controller
   config.include AuthenticationSupport, type: :feature
 
