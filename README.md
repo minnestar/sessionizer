@@ -96,6 +96,13 @@ Locally:
  $ bundle exec rake app:make_believe
 ```
 
+## Testing the application
+
+The full test suite can be run with:
+```
+rails spec
+```
+
 ## Deploying to Heroku
 
 1. Create an application. Sessionizer runs on the default `heroku-18` stack.
