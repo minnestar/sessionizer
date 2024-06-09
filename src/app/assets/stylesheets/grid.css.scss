@@ -14,7 +14,6 @@
 .grid_10 { width: 63.5em; }
 
 .column {
-	margin: 0 5px;
 	overflow: hidden;
 	float: left;
 	display: inline;
@@ -25,7 +24,6 @@
 	overflow: hidden;
 }
 .row .row {
-	margin: 0 -5px;
 	width: auto;
 	display: inline-block;
 }
