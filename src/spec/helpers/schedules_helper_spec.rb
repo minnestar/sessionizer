@@ -17,7 +17,7 @@ describe SchedulesHelper do
       session
     end
 
-    xit "should arange the sessions into two groups" do
+    it "should arange the sessions into two groups" do
       yielded = []
       helper.session_columns_for_slot(timeslot) { |group| yielded << group }
       expect(yielded).to eq [[session3, session1], [session2, session4]]
