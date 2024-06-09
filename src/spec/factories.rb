@@ -15,7 +15,7 @@ SLOTS = ["09:40", "10:40", "11:40", "13:50", "14:50", "15:50", "16:50"]
 SESSION_LENGTH = 45.minutes
 
 
-FactoryGirl.define do
+FactoryBot.define do
 
   sequence :category_name do |n|
     CATEGORIES[n % CATEGORIES.length]

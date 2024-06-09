@@ -10,8 +10,8 @@ describe Timeslot do
 
   context "#destroy" do
     it "destroys associated PresenterTimeslotRestrictions" do
-      timeslot = FactoryGirl.create(:timeslot)
-      FactoryGirl.create(:presenter_timeslot_restriction, timeslot: timeslot)
+      timeslot = FactoryBot.create(:timeslot)
+      FactoryBot.create(:presenter_timeslot_restriction, timeslot: timeslot)
 
       expect { timeslot.destroy }.to change { PresenterTimeslotRestriction.count }.by(-1)
     end

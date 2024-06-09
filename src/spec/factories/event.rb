@@ -1,14 +1,15 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :event do
-
-    name "Minnebar"
-    date 30.days.since
+    sequence :name do |n|
+      "Minnebar #{n}"
+    end
+    date { 30.days.since }
 
     trait :full_event do
       transient do
-        rooms_count 9
-        timeslots_count 7
+        rooms_count { 9 }
+        timeslots_count { 7 }
       end
 
       after(:create) do |event, evaluator|

@@ -1,8 +1,10 @@
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :session do
-    title 'Stuff about things'
-    description 'whatever'
+    sequence :title do |n|
+      " Session #{n}"
+    end
+    description { 'whatever' }
     participant
     association :event
     association :room
