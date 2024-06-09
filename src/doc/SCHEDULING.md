@@ -26,7 +26,9 @@ src/bin/pull-database-from-production
 ## 2. Set timeslots
 Update and/or generate time slots.
 
-Spot check them under `task :create_timeslots` in `app.rake` before running:
+### Before running
+Spot check them under `task :create_timeslots` in `app.rake` and make any adjustments needed.
+
 ```bash
 # local
 bundle exec rails app:create_timeslots
@@ -35,32 +37,38 @@ bundle exec rails app:create_timeslots
 heroku run rails app:create_timeslots
 ```
 
-After running, spot check them again. Even though there are no sessions on the schedule yet, you can view the timeslots at:
+### After running
 
-* **Local**: http://127.0.0.1:3000/schedule?preview=1
-* **Prod**: https://sessions.minnestar.org/schedule?preview=1
-
-**Note**: You must be logged in (using prod credentials) to view the page.
-
-
-**Note**: Manually editing timeslots via the admin panel is possible at:
+Spot check them again.
+* You can view the timeslots (even though there are no sessions on the schedule yet) at:
+  * **Local**: http://127.0.0.1:3000/schedule?preview=1
+  * **Prod**: https://sessions.minnestar.org/schedule?preview=1
+* **Note**: You must be logged in (using prod credentials) to view the page.
+* **Note**: It's _possible_ (but not necessarily recommended) to manually edit timeslots via the admin panel at this URL:
 https://sessions.minnestar.org/admin/events/{EVENT_ID}/timeslots
 
 ## 3. Gather schedule constraints
-You'll need to gether presenter/session scheduling constraints and save them to a csv file for this step.
-
-See `task :configure_sessions` in `app.rake` for documentation on the csv file and format.
+You'll need to gather presenter/session scheduling constraints and save them to a csv file for this step.
+* See `task :configure_sessions` in `app.rake` for documentation on the csv file and format.
 
 **Important notes**:
+* **This needs to happen _before_ the schedule gets generated.**
 * Ideally this process has started at least a few days in advance.
-* Importing constraints needs to happen _before_ the schedule gets generated.
 * If time constraint requests come through _after_ a schedule has been set, you'll want to "freeze" the other sessions (manually via the rails console). Paul has a recipe for this.
 
-
 ## 4. Generate schedule
-The `bin/schedule` script will carry out the entire schedule generation process, given a constraints file as input. It will output a generated schedule to the file name you specify.
+The `bin/schedule` script will carry out the entire schedule generation process.
 
-The steps are:
+It takes two parameters:
+
+1. Schedule constraints
+2. File name to save the generated schedule output
+
+```bash
+bin/schedule path/to/schedule-constraints.csv path/to/generated-schedule-output.json
+```
+
+It will carry out these steps:
 
   1. Pull prod data
   2. Analyze schedule quality
@@ -68,15 +76,12 @@ The steps are:
   4. Generate & refine schedule
   5. Export the schedule
 
-To run the script:
-```bash
-bin/schedule path/to/schedule-constraints.csv path/to/save-schedule-export.json
-```
 Once generated, you can access a preview at.
 * **Local**: http://127.0.0.1:3000/schedule?preview=1
 * **Prod**: https://sessions.minnestar.org/schedule?preview=1
 
 **Note**: You must be logged in (using prod credentials) to view the page.
+
 ## 5. Upload schedule to prod
 Once the schedule looks good, you can upload it to prod:
 ```bash
@@ -84,15 +89,15 @@ heroku run rails app:import_schedule < path/to/exported-schedule-file.json
 ```
 
 ## 6. Assigning rooms (happens later)
-This typically doesn't happen until the day before the event.
+**This typically doesn't happen until the day before the event.**
 
 * Available rooms are statically defined under `task :create_rooms` in `app.rake`.
-* Reassigning rooms is much easier than reassigning time slots.
+* **Note**: Reassigning rooms is much easier than reassigning time slots.
 
 # Other notes
 
-## How to read the generate schedule output
-Every time you run the rake task, the output will change. But it starts from the best one from the previous run when it starts.
+## How to read the schedule generation output
+The rake task ouput will change every time it gets run (whether manually or via the script). But it always starts from the "best" version from the previous run.
 ```
 bundle exec rails app:generate_schedule
 ```
@@ -105,7 +110,7 @@ In the very long output, lines that look like this are meaningful:
   | presenter score = 100.000% (if < 100 then presenters have conflicts)
 
 ## Additional scripts & tasks
-`app.rake` contains a long list of rake tasks and documentation you may find helpful:
+`app.rake` contains a long list of rake tasks and documentation that may be helpful:
 
 ```bash
 rake app:analyze_scheduler_input_quality    # print a summary of data that will affect the quality of...
