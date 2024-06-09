@@ -57,27 +57,10 @@
     </div>
 
     <hr />
-
-    <% if @session.event == Event.current_event %>
-    <h2 style="margin-top:2em;">Similar Sessions</h2>
-
-    <% if !@similar_sessions.empty? %>
-
-    <p>Does this session sound interesting? You may also like these:</p>
-
-    <ul class="sessionsList">
-      <%= render @similar_sessions %>
-    </ul>
-    <% else %>
-
-    <p>Help us find similar sessions by signing up for them!</p>
-
-    <% end %>
-    <% end %>
   </div>
 
   <% if @session.event.current? %>
-    <div class="column grid_4">
+    <div class="column grid_4" style="float: right">
 
       <div id="interested-in-attending" class="interested-in-attending">
         <% if !@session.attending?(current_participant) %>
@@ -101,4 +84,24 @@
 
     </div>
   <% end %>
+
+  <% if @session.event == Event.current_event %>
+    <div class="column grid_6" style="margin-left:0px; float: left">
+      <h2 style="margin-top:2em;">Similar Sessions</h2>
+
+      <% if !@similar_sessions.empty? %>
+
+        <p>Does this session sound interesting? You may also like these:</p>
+
+        <ul class="sessionsList">
+          <%= render @similar_sessions %>
+        </ul>
+        <% else %>
+
+        <p>Help us find similar sessions by signing up for them!</p>
+
+      <% end %>
+    </div>
+  <% end %>
+
 </div>
