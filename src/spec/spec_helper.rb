@@ -13,8 +13,6 @@ end
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
-require 'capybara/poltergeist'
-Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'

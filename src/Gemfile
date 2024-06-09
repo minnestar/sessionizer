@@ -55,9 +55,10 @@ group :test do
   gem 'shoulda-matchers'
   gem "factory_girl_rails", "~> 4.0"
   gem 'database_cleaner'
-  gem 'poltergeist'
+  gem "selenium-webdriver", "~> 4.9"
   gem 'puma'
 end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
 gem 'rails_12factor', group: :production
+
