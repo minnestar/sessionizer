@@ -1,0 +1,48 @@
+name: CI
+
+on: [push, pull_request ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./src
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: sessionizer_test
+          POSTGRES_USER: vagrant
+          POSTGRES_PASSWORD: vagrant
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Linux libraries
+        run: sudo apt-get install -y libpq-dev
+      
+      - name: Set up Ruby and run bundle install
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.7
+          bundler-cache: true
+          working-directory: ./src
+      
+      - name: Show Ruby version
+        run: ruby -v
+      
+      - name: Prepare database and run tests
+        env:
+          CI: github
+          RAILS_ENV: test
+          POSTGRES_DB: sessionizer_test
+          POSTGRES_USER: vagrant
+          POSTGRES_PASSWORD: vagrant
+        run: |
+          bundle exec rake db:create db:migrate db:test:prepare
+          bundle exec rails spec

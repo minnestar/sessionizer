@@ -2,10 +2,6 @@
 ENV["RAILS_ENV"] ||= 'test'
 
 require 'simplecov'
-if ENV['CI']
-  require 'coveralls'
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-end
 SimpleCov.start :rails do
   add_filter "/spec/"
 end
@@ -13,7 +9,7 @@ end
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
-Capybara.default_max_wait_time = ENV['TRAVIS'] ? 30 : 15
+Capybara.default_max_wait_time = ENV['CI'] ? 90 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'authlogic/test_case'

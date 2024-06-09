@@ -48,7 +48,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'capybara'
   gem 'pry'
-  gem 'coveralls', require: false
+  gem "simplecov", "~> 0.22.0"
 end
 
 group :test do
@@ -61,4 +61,3 @@ end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
 gem 'rails_12factor', group: :production
-
