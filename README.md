@@ -57,9 +57,6 @@ createuser -s -r postgres
 
 # create 'sessionizer_development' database
 createdb sessionizer_development
-
-# create 'vagrant' user
-createuser -s -r vagrant
 ```
 
 #### Bundle exec

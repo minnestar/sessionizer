@@ -1,10 +1,6 @@
 #!/bin/sh
 
-# If no PG user vagrant exists:
+# This script assumes the existence of a PG user named `postgres`
 
-# create user vagrant;
-# alter user vagrant createdb;
-
-psql postgres vagrant -c 'drop database sessionizer_development;'
-PGUSER=vagrant heroku pg:pull DATABASE sessionizer_development --app sessionizer2016
-psql sessionizer_development vagrant -c 'grant all on all tables in schema public to vagrant;'
+psql postgres postgres -c 'drop database sessionizer_development;'
+PGUSER=postgres heroku pg:pull DATABASE sessionizer_development --app sessionizer2016

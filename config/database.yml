@@ -7,8 +7,8 @@ default: &default
   # Database does not work in GitHub Workflows if host parameter is not specified
   host: localhost
   pool: 5
-  username: vagrant
-  password: 
+  username: postgres
+  password:
 
 development:
   <<: *default
