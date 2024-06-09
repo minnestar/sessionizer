@@ -2,10 +2,6 @@
 ENV["RAILS_ENV"] ||= 'test'
 
 require 'simplecov'
-if ENV['CI']
-  require 'coveralls'
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-end
 SimpleCov.start :rails do
   add_filter "/spec/"
 end
