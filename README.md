@@ -120,19 +120,9 @@ or from a specific branch with a --force
   $ git push heroku `git subtree split --prefix src THE_BRANCH_NAME`:master --force
 ```
 
-## Automatic Scheduling
+## Generating a schedule
 
-Sessionizer can automatically generate a schedule for your event based on preferences expressed by the audience and attempting not to double-book presenters.
-
-To run the scheduler:
-
-1. Have attendees express interest in sessions. The scheduler attempts to maximize the percentage of sessions attendees can attend.
-2. Create rooms and timeslots for your event. The number of rooms * number of timeslots must be greater than the number of sessions, or the scheduler will fail.
-3. Run the scheduler: `rake app:generate_schedule`. This takes a long time, so it is probably best to test it out at a low quality setting: `quality=0.001 rake app:generate_schedule`
-
-Once the scheduler has run, you can see what it produced by visiting `/schedule`. You'll also see output on the console and it will indicate what percentage of attendees can attend the sessions they are interested in and the amount of presenter overlap (hopefully zero).
-
-You can tweak the schedule by creating PresenterTimeslotRestrictions (if a person can only present during certain timeslots) or by manually swapping scheduled rooms after the schedule has been created (see `Session.swap_rooms`).
+See [SCHEDULING.MD](src/doc/SCHEDULING.md) for details and instructions.
 
 ## Code of Conduct
 
