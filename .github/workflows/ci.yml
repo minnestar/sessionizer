@@ -6,10 +6,6 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./src
-
     services:
       postgres:
         image: postgres:latest
@@ -31,7 +27,6 @@ jobs:
         with:
           ruby-version: 2.7.7
           bundler-cache: true
-          working-directory: ./src
       
       - name: Show Ruby version
         run: ruby -v
