@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# This script assumes the existence of a PG user named `postgres`
+
+psql postgres postgres -c 'drop database sessionizer_development;'
+PGUSER=postgres heroku pg:pull DATABASE sessionizer_development --app sessionizer2016

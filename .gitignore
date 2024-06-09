@@ -8,20 +8,17 @@
 /.bundle
 
 # Ignore the default SQLite database.
-/src/db/*.sqlite3
+/db/*.sqlite3
 
 # Ignore all logfiles and tempfiles.
-/src/log/*
-/src/tmp/*
-/src/tmp/cache*
-!/src/log/.keep
-!/src/tmp/.keep
-!/src/tmp/cache/.keep
+/log/*
+/tmp/*
+/tmp/cache*
+!/log/.keep
+!/tmp/.keep
+!/tmp/cache/.keep
 
 .DS_Store
-/src/config/database.yml
+/config/database.yml
 
 coverage/
-
-.vagrant
-vagrant/ansible/*.retry

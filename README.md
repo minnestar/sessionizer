@@ -23,9 +23,6 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 git clone git@github.com:minnestar/sessionizer.git
 cd sessionizer
 
-# cd into /src folder
-cd /src
-
 # install correct ruby version
 asdf install ruby # OR
 rbenv install # OR
@@ -60,9 +57,6 @@ createuser -s -r postgres
 
 # create 'sessionizer_development' database
 createdb sessionizer_development
-
-# create 'vagrant' user
-createuser -s -r vagrant
 ```
 
 #### Bundle exec
@@ -75,7 +69,6 @@ bundle exec rails
 To run the application
 
 ```bash
-$ cd /src
 $ rails s
 ```
 
@@ -91,7 +84,6 @@ scheduling algorithm.
 Locally:
 
 ```
- $ cd src
  $ bundle exec rake app:make_believe
 ```
 
@@ -112,18 +104,10 @@ rails spec
 6. Set a MANDRILL_MINNESTAR_USERNAME, MANDRILL_MINNESTAR_PASSWORD - These can be omitted if this app is for testing.
 7. Create the first event by navigating to `/admin/events` or using the
    console
-8. Since the app is in a git subtree (src/ directory), you need to push
-   the app to heroku like this
-
-from master
+8. To deploy the app to heroku:
 
 ```
-  $ git subtree push --prefix src heroku master
-```
-
-or from a specific branch with a --force
-```
-  $ git push heroku `git subtree split --prefix src THE_BRANCH_NAME`:master --force
+  $ git push heroku master
 ```
 
 ## Generating a schedule
@@ -147,4 +131,4 @@ Minnestar is dedicated to providing a harassment-free experience for everyone. A
 
 ## License
 
-This project is open source under the MIT license. See [LICENSE](src/LICENSE.txt) for details.
+This project is open source under the MIT license. See [LICENSE](LICENSE.txt) for details.

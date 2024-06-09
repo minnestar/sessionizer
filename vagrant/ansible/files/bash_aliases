@@ -1,2 +1,0 @@
-alias bx='bundle exec'
-alias railsup='cd /srv/sessionizer && bundle exec unicorn -c config/unicorn.development.rb'
