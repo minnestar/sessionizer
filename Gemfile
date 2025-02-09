@@ -53,6 +53,7 @@ group :development, :test do
   gem 'capybara'
   gem 'pry'
   gem "simplecov", "~> 0.22.0"
+  gem "letter_opener", "~> 1.10"
 end
 
 group :test do
@@ -79,4 +80,3 @@ gem 'concurrent-ruby', '1.3.4'
 gem "drb", "~> 2.2"
 #
 # -----------------------------------------------------------------------------
-
