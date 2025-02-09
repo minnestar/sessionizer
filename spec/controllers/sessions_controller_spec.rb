@@ -73,7 +73,7 @@ describe SessionsController do
         it "is successful and have all the things" do
           get :index, format: :json
           expect(response).to be_successful
-          expect(response.content_type).to eq('application/json')
+          expect(response.content_type).to eq('application/json; charset=utf-8')
           expect(response.body).to eq SessionsJsonBuilder.new.to_json([session])
         end
       end

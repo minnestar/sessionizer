@@ -1,19 +1,18 @@
-default: &default
+development:
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  host: localhost
+  pool: 5
+  username: postgres
+  password:
+  database: sessionizer_development
 
+test:
+  adapter: postgresql
+  encoding: unicode
   # Database does not work in GitHub Workflows if host parameter is not specified
   host: localhost
   pool: 5
   username: postgres
   password:
-
-development:
-  <<: *default
-  database: sessionizer_development
-
-test:
-  <<: *default
   database: sessionizer_test

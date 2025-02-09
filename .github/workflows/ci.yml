@@ -25,7 +25,7 @@ jobs:
       - name: Set up Ruby and run bundle install
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.8
+          ruby-version: 3.4.1
           bundler-cache: true
       
       - name: Show Ruby version

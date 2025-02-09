@@ -14,8 +14,8 @@ describe EventsController do
     context 'in JSON format' do
       it 'is successful' do
         get :show, params: {id: event, format: :json}
-        expect(response).to be_success
-        expect(response.content_type).to eq('application/json')
+        expect(response).to be_successful
+        expect(response.content_type).to eq('application/json; charset=utf-8')
       end
     end
   end
