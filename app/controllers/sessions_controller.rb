@@ -100,7 +100,7 @@ class SessionsController < ApplicationController
   end
 
   def popularity
-    @sessions = Event.current_event.sessions.with_attendence_count.all.order("COALESCE(attendence_count, 0) desc")
+    @sessions = Event.current_event.sessions.with_attendence_count.all.order(Arel.sql("COALESCE(attendence_count, 0) desc"))
     render :layout => 'export'
   end
 

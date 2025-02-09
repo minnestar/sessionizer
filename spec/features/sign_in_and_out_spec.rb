@@ -42,7 +42,7 @@ feature "Authentication and account creation things" do
     name = FFaker::Name.name
     fill_in 'Your name*', with: name
     fill_in 'Your email', with: FFaker::Internet.safe_email
-    fill_in 'Password*',  with: "anything, it doesnt matter"
+    fill_in 'Password',  with: "anything, it doesnt matter"
     click_button "Create My Account"
 
     expect(page).to have_content "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend"

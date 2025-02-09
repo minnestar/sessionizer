@@ -48,7 +48,7 @@ gem 'ffi', '~> 1.16.3'
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
-  gem "rspec-rails", "~> 3.1"
+  gem "rspec-rails", "~> 6"
   gem 'rails-controller-testing'
   gem 'capybara'
   gem 'pry'
@@ -61,6 +61,8 @@ group :test do
   gem 'database_cleaner'
   gem "selenium-webdriver", "~> 4.9"
   gem 'puma'
+  gem "csv", "~> 3.3"
+  gem "benchmark", "~> 0.4.0"
 end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
@@ -74,5 +76,7 @@ gem 'rails_12factor', group: :production
 gem "mutex_m", "~> 0.3.0"
 gem "bigdecimal", "~> 3.1"
 gem 'concurrent-ruby', '1.3.4'
+gem "drb", "~> 2.2"
 #
 # -----------------------------------------------------------------------------
+
