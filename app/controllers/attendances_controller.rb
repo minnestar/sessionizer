@@ -25,13 +25,13 @@ class AttendancesController < ApplicationController
 
         # Appears when user already logged in
         format.json do
-          render :partial => 'sessions/participant', :formats => ['html'], :locals => { :participant => current_participant }
+          render :partial => 'sessions/participant', :formats => :html, :locals => { :participant => current_participant }
         end
       end
     else
       respond_to do |format|
         format.json do
-          render :partial => 'sessions/new_participant', :formats => ['html'], :status => :unprocessable_entity
+          render :partial => 'sessions/new_participant', :formats => :html, :status => :unprocessable_entity
         end
       end
     end

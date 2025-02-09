@@ -21,3 +21,5 @@ Level.create_or_update(:id => 1, :name => 'Beginner')
 Level.create_or_update(:id => 2, :name => 'Intermediate')
 Level.create_or_update(:id => 3, :name => 'Advanced')
 Level.create_or_update(:id => 4, :name => 'All levels')
+
+Category.find_or_create_defaults
