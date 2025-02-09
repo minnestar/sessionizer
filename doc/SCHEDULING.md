@@ -2,8 +2,8 @@
 The process to generate a schedule for Minnebar takes time, and involves many steps and people.
 
 ### Rough timeline
-* **6-8 weeks out**: Create an event in [Sessionizer Admin](https://sessions.minnestar.org/admin/events/)
-* **4-6 weeks out**: Have attendees start creating & expressing interest in sessions
+* **8-10 weeks out**: Create event in [Sessionizer Admin](https://sessions.minnestar.org/admin/events/)
+* **2 months out**: Announce session registratioin being live; Have attendees start creating sessions
 * **1 week out**: Start gathering presenter time constraints
 * **4 days out**: Generate draft schedule ([this process](#instructions))
 * **3 days out**: Finalize schedule
