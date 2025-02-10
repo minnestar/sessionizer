@@ -39,11 +39,11 @@ class Timeslot < ActiveRecord::Base
     end
 
     def start_time
-      start.in_time_zone.to_s(:usahhmm)
+      start.in_time_zone.to_formatted_s(:usahhmm)
     end
 
     def end_time
-      stop.in_time_zone.to_s(:usahhmm)
+      stop.in_time_zone.to_formatted_s(:usahhmm)
     end
   end
 end

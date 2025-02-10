@@ -26,7 +26,7 @@ class Admin::PresentersController < Admin::AdminController
 
   # export a list of all presenters from every event
   def export_all
-    participant_ids = Session.all.map(&:presenter_ids)
+    participant_ids = Session.all.flat_map(&:presenter_ids)
     render body: Participant.find(participant_ids).map { |presenter| "\"#{presenter.name}\" <#{presenter.email}>" }.join(",\n"), content_type: Mime[:text]
   end
 

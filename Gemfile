@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '3.4.1'
 
-gem 'rails', '~> 6'
+gem 'rails', '~> 7'
 
 gem 'pg'
 gem 'unicorn'
@@ -23,11 +23,11 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2'
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
+gem 'spring', group: :development
 
-gem 'haml', '~> 5'
+gem 'haml', '~> 6'
 gem 'formtastic'
-gem 'responders', '~> 3.1'  # TODO: Where is this used? Can we ditch it? -PPC
+gem 'responders', '~> 3.1'
 
 gem 'fancybox2-rails'
 
@@ -41,14 +41,10 @@ gem 'cancancan'
 
 gem 'nokogiri'
 
-# FFI 1.17+ isn't compatible with Ruby 2.x on Linux, which breaks GitHub Actions.
-# Remove this line when upgrading to Ruby 3.
-gem 'ffi', '~> 1.16.3'
-
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
-  gem "rspec-rails", "~> 6"
+  gem "rspec-rails", "~> 7.1"
   gem 'rails-controller-testing'
   gem 'capybara'
   gem 'pry'
@@ -63,20 +59,8 @@ group :test do
   gem "selenium-webdriver", "~> 4.9"
   gem 'puma'
   gem "csv", "~> 3.3"
-  gem "benchmark", "~> 0.4.0"
+  gem "benchmark", "~> 0.4"
 end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
 gem 'rails_12factor', group: :production
-
-
-# -----------------------------------------------------------------------------
-# Compatibility shims: Necessary to make old gems work with new Rubies.
-# These may be removable as we upgrade gems above.
-# 
-gem "mutex_m", "~> 0.3.0"
-gem "bigdecimal", "~> 3.1"
-gem 'concurrent-ruby', '1.3.4'
-gem "drb", "~> 2.2"
-#
-# -----------------------------------------------------------------------------
