@@ -68,15 +68,3 @@ end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
 gem 'rails_12factor', group: :production
-
-
-# -----------------------------------------------------------------------------
-# Compatibility shims: Necessary to make old gems work with new Rubies.
-# These may be removable as we upgrade gems above.
-# 
-gem "mutex_m", "~> 0.3.0"
-gem "bigdecimal", "~> 3.1"
-gem 'concurrent-ruby', '1.3.4'
-gem "drb", "~> 2.2"
-#
-# -----------------------------------------------------------------------------
