@@ -23,11 +23,11 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2'
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
+gem 'spring', group: :development
 
-gem 'haml', '~> 5'
+gem 'haml', '~> 6'
 gem 'formtastic'
-gem 'responders', '~> 3.1'  # TODO: Where is this used? Can we ditch it? -PPC
+gem 'responders', '~> 3.1'
 
 gem 'fancybox2-rails'
 
@@ -41,14 +41,10 @@ gem 'cancancan'
 
 gem 'nokogiri'
 
-# FFI 1.17+ isn't compatible with Ruby 2.x on Linux, which breaks GitHub Actions.
-# Remove this line when upgrading to Ruby 3.
-gem 'ffi', '~> 1.16.3'
-
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false
-  gem "rspec-rails", "~> 6"
+  gem "rspec-rails", "~> 7.1"
   gem 'rails-controller-testing'
   gem 'capybara'
   gem 'pry'
@@ -63,7 +59,7 @@ group :test do
   gem "selenium-webdriver", "~> 4.9"
   gem 'puma'
   gem "csv", "~> 3.3"
-  gem "benchmark", "~> 0.4.0"
+  gem "benchmark", "~> 0.4"
 end
 
 #https://devcenter.heroku.com/articles/rails-4-asset-pipeline
