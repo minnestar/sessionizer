@@ -59,7 +59,6 @@ class ParticipantsController < ApplicationController
   end
 
   def confirm_email
-    # TODO: load participant by perishable token
     @participant = Participant.find_using_perishable_token(params[:token])
     if @participant.confirm_email!
       flash[:notice] = "Email confirmed. Thank you!"
