@@ -1,6 +1,6 @@
 class ParticipantsController < ApplicationController
   respond_to :html
-  load_resource
+  load_resource except: :confirm_email
   before_action :verify_owner, :only => [:edit, :update]
 
   def index
@@ -24,6 +24,7 @@ class ParticipantsController < ApplicationController
   end
 
   def update
+    # TODO: Check if email address was changed. If so, clear out email_confirmed_at
     @participant.update(participant_params.except(:code_of_conduct_agreement))
     create_code_of_conduct_agreement_if_not_exists!
     respond_with(@participant)
@@ -33,10 +34,11 @@ class ParticipantsController < ApplicationController
     @participant.attributes = participant_params.except(:code_of_conduct_agreement)
     if @participant.save
       create_code_of_conduct_agreement_if_not_exists!
-      flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
+      @participant.deliver_email_confirmation_instructions!
+      flash[:notice] = "Thanks for registering an account. Please check your email to confirm your account."
       redirect_to root_path
     else
-      flash[:error] = "There was a problem creating that account."
+      flash[:error] = "There was a problem creating your account."
       render :new
     end
   end
@@ -47,6 +49,24 @@ class ParticipantsController < ApplicationController
         participant_id: @participant.id,
         event_id: Event.current_event.id,
       })
+    end
+  end
+
+  def send_confirmation_email
+    @participant.deliver_email_confirmation_instructions!
+    flash[:notice] = "Confirmation instructions sent! Please check your email."
+    redirect_to @participant
+  end
+
+  def confirm_email
+    # TODO: load participant by perishable token
+    @participant = Participant.find_using_perishable_token(params[:token])
+    if @participant.confirm_email!
+      flash[:notice] = "Email confirmed. Thank you!"
+      redirect_to root_path
+    else
+      flash[:error] = "Something went wrong. Please try again."
+      redirect_to root_path
     end
   end
 

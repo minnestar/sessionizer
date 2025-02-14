@@ -82,6 +82,20 @@ class Participant < ActiveRecord::Base
   def self.find_by_case_insensitive_email(email)
     where(['lower(email) = ?', email.to_s.downcase]).first
   end
+
+  def email_confirmed?
+    !!self.email_confirmed_at
+  end
+
+  def deliver_email_confirmation_instructions!
+    reset_perishable_token!
+    Notifier.participant_email_confirmation(self).deliver_now!
+  end
+
+  def confirm_email!
+    self.email_confirmed_at = Time.now
+    save!
+  end
 end
 
 

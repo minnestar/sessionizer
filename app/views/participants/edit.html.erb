@@ -3,9 +3,17 @@
 <%= semantic_form_for(@participant) do |f| %>
   <%= f.semantic_errors %>
 
+  <% email_hint = "Please use a real email address. We need this to contact you about your presentation." %>
+
   <%= f.inputs do %>
     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials." %>
-    <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
+    <%= f.input :email,
+      :label => 'Your email',
+      # TODO: Figure out how to get "Confirm your email" link to be displayed inline next to the email input
+      :hint => @participant.email_confirmed? ?
+        email_hint :
+        "#{link_to "Confirm your email", send_confirmation_email_participant_path(@participant), method: :post}<br />#{email_hint}".html_safe
+      %>
     <%= f.input :github_profile_username, :label => 'Your GitHub username' %>
     <%= f.input :twitter_handle, :label => 'Your Twitter handle' %>
     <%= f.input :bio, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <strong>**bold**</strong>, <em>*italic*</em>, [link](http://example.com)'.html_safe %>
