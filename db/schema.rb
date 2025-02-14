@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_29_151346) do
+ActiveRecord::Schema.define(version: 2025_02_09_180413) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "attendances", id: :serial, force: :cascade do |t|
@@ -78,6 +79,7 @@ ActiveRecord::Schema.define(version: 2020_09_29_151346) do
     t.string "github_og_image"
     t.string "github_og_url"
     t.string "twitter_handle"
+    t.datetime "email_confirmed_at"
     t.index ["email"], name: "index_participants_on_email", unique: true
     t.index ["perishable_token"], name: "index_participants_on_perishable_token"
   end

@@ -1,0 +1,5 @@
+<h2>Confirm your email</h2>
+
+<p>Please confirm your email by clicking the link below:</p>
+
+<p><%= link_to "Confirm my email", confirm_email_participant_url(@participant, token: @participant.perishable_token) %></p>

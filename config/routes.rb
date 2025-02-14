@@ -21,7 +21,12 @@ Sessionizer::Application.routes.draw do
   end
 
   get '/attendances' => 'attendances#index'
-  resources :participants, :except => [:destroy]
+  resources :participants, :except => [:destroy] do
+    member do
+      post :send_confirmation_email
+      get :confirm_email
+    end
+  end
   resources :categories, only: :show
 
   match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
