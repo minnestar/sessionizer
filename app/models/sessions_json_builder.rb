@@ -6,6 +6,8 @@ class SessionsJsonBuilder
       participant_id: s.participant.id,
       presenter_name: s.participant.name,
       presenter_twitter_handle: s.participant.twitter_handle,
+      presenter_mastodon_url: s.participant.mastodon_url,
+      presenter_bluesky_handle: s.participant.bluesky_handle,
       presenter_github_username: s.participant.github_profile_username,
       presenter_github_og_image: s.participant.github_og_image,
       presenter_bio: s.participant.bio,

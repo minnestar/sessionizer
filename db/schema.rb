@@ -78,6 +78,8 @@ ActiveRecord::Schema.define(version: 2020_09_29_151346) do
     t.string "github_og_image"
     t.string "github_og_url"
     t.string "twitter_handle"
+    t.string "mastodon_url"
+    t.string "bluesky_handle"
     t.index ["email"], name: "index_participants_on_email", unique: true
     t.index ["perishable_token"], name: "index_participants_on_perishable_token"
   end
