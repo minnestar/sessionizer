@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: sessionizer
+      POSTGRES_PASSWORD: asdf1234
+      POSTGRES_DB: sessionizer_development
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgres://db:5432/sessionizer_development
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "
+        bundle install &&
+        rails db:setup &&
+        bundle exec rake app:make_believe &&
+        rails server -b 0.0.0.0"
+
+volumes:
+  postgres_data:
