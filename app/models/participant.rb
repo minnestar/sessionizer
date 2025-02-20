@@ -11,6 +11,10 @@ class Participant < ActiveRecord::Base
 
   # used for formtastic form to allow sending a field related to a separate model
   attr_accessor :code_of_conduct_agreement
+  
+  # fake form field that acts as a honeypot for preventing spam. 
+  attr_accessor :contact_details
+  validates_absence_of :contact_details
 
   acts_as_authentic do |config|
     config.crypto_provider = Authlogic::CryptoProviders::BCrypt
