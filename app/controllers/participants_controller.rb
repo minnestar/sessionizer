@@ -57,7 +57,7 @@ class ParticipantsController < ApplicationController
       :name, :email, :password,
       :bio, :github_profile_username,
       :twitter_handle, :code_of_conduct_agreement,
-      :address
+      :contact_details
     )
   end
 

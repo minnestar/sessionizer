@@ -32,6 +32,19 @@ describe ParticipantsController do
       expect(response).to redirect_to root_path
       expect(flash[:notice]).to eq "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
     end
+
+    it "should not be successful if a bot provides contact_details field" do
+      expect{
+        post :create, params: { participant: { name: 'spam bot', 
+                                               email: 'spambot@example.org', 
+                                               password: 'spam-bot',
+                                               contact_details: 'this is a honeypot field that i fell for because im a spam bot'
+                              }
+        }
+      }.not_to change(Participant, :count)
+      expect(response).to render_template(:new)
+      expect(flash[:error]).to eq "There was a problem creating that account."
+    end
   end
 
   describe "#show" do
