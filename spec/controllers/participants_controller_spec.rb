@@ -30,7 +30,7 @@ describe ParticipantsController do
                              }
       }
       expect(response).to redirect_to root_path
-      expect(flash[:notice]).to eq "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
+      expect(flash[:notice]).to eq "Thanks for registering an account. Please check your email to confirm your account."
     end
   end
 

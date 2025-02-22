@@ -2,8 +2,8 @@ require "spec_helper"
 
 feature "Manage a user profile" do
 
-  context "As an authenticated user" do
-    let(:joe) { create(:joe) }
+  context "As an authenticated user without a confirmed email" do
+    let(:joe) { create(:joe, email_confirmed_at: Time.now) }
     background do
       create(:event)
       sign_in_user(joe)
@@ -23,6 +23,5 @@ feature "Manage a user profile" do
       expect(page).to have_content bio
     end
   end
-
 end
 
