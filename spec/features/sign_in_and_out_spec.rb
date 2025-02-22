@@ -44,7 +44,7 @@ feature "Authentication and account creation things" do
       check 'Remember me'
       click_button "Log in"
 
-      expect(page).to have_content "Your email has not been confirmed. Please Confirm your email"
+      expect(page).to have_content "Your email has not been confirmed. Please Confirm your email."
 
       click_link "Log out"
 

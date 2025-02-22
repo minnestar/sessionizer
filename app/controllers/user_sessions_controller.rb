@@ -1,6 +1,5 @@
 class UserSessionsController < ApplicationController
-  # needed to use a link_to for the "Confirm your email" flash message
-  include ActionView::Helpers::UrlHelper
+  include ParticipantsHelper
 
   def new
     if params[:after_login]
@@ -16,7 +15,7 @@ class UserSessionsController < ApplicationController
       if participant.email_confirmed?
         flash[:notice] = "You're logged in. Welcome back."
       else
-        flash[:notice] = "Your email has not been confirmed. Please #{link_to 'Confirm your email', send_confirmation_email_participant_path(participant), method: :post}".html_safe
+        flash[:alert] = email_confirmation_alert(participant)
       end
       redirect_to session[:after_login] || root_path
       session.delete(:after_login)

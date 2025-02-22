@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 class SessionsController < ApplicationController
-
   load_resource only: [:new, :show, :edit, :create, :update, :destroy]
   before_action :authenticate_participant, only: [:new, :create, :update, :edit, :destroy]
   before_action :verify_owner, only: [:update, :edit, :destroy]

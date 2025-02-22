@@ -57,7 +57,7 @@
       <div class="page-heading">
         <div class="clear"></div>
         <div id="flash_message_placeholder"></div>
-        <%- [:error, :notice, :success].each do |name| -%>
+        <%- [:error, :notice, :success, :alert].each do |name| -%>
           <%= content_tag :div, flash[name], :id => "flash_#{name}" if flash[name] %>
         <%- end -%>
 

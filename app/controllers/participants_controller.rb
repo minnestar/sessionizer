@@ -1,4 +1,6 @@
 class ParticipantsController < ApplicationController
+  include ParticipantsHelper
+
   respond_to :html
   load_resource except: :confirm_email
   before_action :verify_owner, :only => [:edit, :update]
@@ -16,10 +18,16 @@ class ParticipantsController < ApplicationController
   end
 
   def show
+    unless @participant.email_confirmed?
+      flash[:alert] = email_confirmation_alert(@participant)
+    end
     respond_with(@participant)
   end
 
   def edit
+    unless @participant.email_confirmed?
+      flash[:alert] = email_confirmation_alert(@participant)
+    end
     respond_with(@participant)
   end
 
