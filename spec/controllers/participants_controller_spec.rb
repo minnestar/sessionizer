@@ -83,7 +83,7 @@ describe ParticipantsController do
     describe "#update" do
       it "should be successful" do
         put :update, params: {id: joe, participant: { name: 'schmoe, joe' }}
-        expect(response).to redirect_to joe
+        expect(response).to redirect_to participant_path(joe)
         expect(joe.reload.name).to eq 'schmoe, joe'
       end
 
@@ -96,6 +96,14 @@ describe ParticipantsController do
           expect(response).to be_redirect
           expect(joe.reload.twitter_handle).to eq 'schmoe'
           expect(joe.github_profile_username).to eq 'jschmoe'
+        end
+      end
+
+      describe "when email address is changed" do
+        it "should unconfirm the user's email" do
+          put :update, params: {id: joe, participant: { email: 'new@example.org',}}
+          expect(response).to be_redirect
+          expect(joe.reload.email_confirmed_at).to be_nil
         end
       end
     end

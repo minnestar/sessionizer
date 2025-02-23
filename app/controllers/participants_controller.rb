@@ -32,10 +32,21 @@ class ParticipantsController < ApplicationController
   end
 
   def update
-    # TODO: Check if email address was changed. If so, clear out email_confirmed_at
-    @participant.update(participant_params.except(:code_of_conduct_agreement))
-    create_code_of_conduct_agreement_if_not_exists!
-    respond_with(@participant)
+    new_params = participant_params.except(:code_of_conduct_agreement)
+
+    # reset email_confirmed_at if the email address was changed
+    if (new_params[:email] != @participant.email)
+      @participant.email_confirmed_at = nil
+    end
+
+    if @participant.update(new_params)
+      create_code_of_conduct_agreement_if_not_exists!
+      flash[:notice] = "Profile updated successfully."
+      redirect_to participant_path(@participant)
+    else
+      flash[:error] = "There was a problem updating your profile."
+      render :edit
+    end
   end
 
   def create
@@ -88,6 +99,6 @@ class ParticipantsController < ApplicationController
   end
 
   def verify_owner
-    redirect_to @participant if @participant != current_participant
+    redirect_to participant_path(@participant) if @participant != current_participant
   end
 end
