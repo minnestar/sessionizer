@@ -74,7 +74,7 @@ class ParticipantsController < ApplicationController
   def send_confirmation_email
     @participant.deliver_email_confirmation_instructions!
     flash[:notice] = "Confirmation instructions sent! Please check your email."
-    redirect_to @participant
+    redirect_to participant_path(@participant)
   end
 
   def confirm_email
