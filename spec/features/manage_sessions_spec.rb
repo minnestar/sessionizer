@@ -44,7 +44,7 @@ feature "Manage Sessions" do
 
     click_link "Add Session", match: :first
 
-    expect(page).to have_content("Email confirmation Required")
+    expect(page).to have_content(/email confirmation required/i)
     expect(page).to have_link("Send Confirmation Instructions")
     expect(page).not_to have_button("Update Session")
   end
