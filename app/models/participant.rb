@@ -17,6 +17,8 @@ class Participant < ActiveRecord::Base
     config.require_password_confirmation = false
   end
 
+  scope :confirmed, -> { where.not(email_confirmed_at: nil) }
+
   def restrict_after(datetime, weight=1, event=Event.current_event)
     event.timeslots.each do |timeslot|
       if timeslot.ends_at > datetime

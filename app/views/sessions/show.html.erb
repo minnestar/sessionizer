@@ -73,13 +73,13 @@
         <% end %>
       </div>
 
-      <% if @session.participants.any? %>
+      <% if @session.participants.confirmed.any? %>
         <h3>Interested Participants</h3>
       <% else %>
         <h3 id="no-participants">No participants yet</h3>
       <% end %>
       <ul class="sessionsList" id="participants">
-        <%= render :partial => 'participant', :collection => @session.participants %>
+        <%= render :partial => 'participant', :collection => @session.participants.confirmed %>
       </ul>
 
     </div>
