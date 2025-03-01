@@ -10,7 +10,10 @@ module AuthenticationSupport
     fill_in 'Password', with: user.password
     click_button "Log in"
 
-    expect(page).to have_content "You're logged in. Welcome back."
+    expected_message = user.email_confirmed? ?
+      "You're logged in. Welcome back." :
+      "Your email has not been confirmed. Please Confirm your email."
+    expect(page).to have_content expected_message
 
   end
 

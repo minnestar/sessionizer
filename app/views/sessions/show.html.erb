@@ -60,7 +60,7 @@
   </div>
 
   <% if @session.event.current? %>
-    <div class="column grid_4" style="float: right">
+    <div class="column grid_4" style="float: right; padding-left: 5px;">
 
       <div id="interested-in-attending" class="interested-in-attending">
         <% if !@session.attending?(current_participant) %>
