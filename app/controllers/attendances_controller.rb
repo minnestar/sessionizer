@@ -19,7 +19,7 @@ class AttendancesController < ApplicationController
       respond_to do |format|
         # Appears after the user logs in by clicking on “Yes! I might attend” while logged out
         format.html do
-          flash[:notice] = "Thanks for your interest in this session."
+          flash[:notice] = "Thanks for your interest in this session. Please check your email to confirm your account."
           redirect_to @session
         end
 

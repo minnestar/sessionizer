@@ -1,0 +1,15 @@
+<br />
+<p>
+  To mitigate spam, you must confirm your email before you'll be able to create a session. 
+  Please click the link below to confirm your email address. Thanks!
+</p>
+<br />
+
+<%= link_to "Send Confirmation Instructions",
+send_confirmation_email_participant_path(current_participant), method: :post,
+class: "button" %>
+
+<br /><br />
+<p>
+  Please contact us at <a href="mailto:support@minnestar.org">support@minnestar.org</a> if you have any questions.
+</p>
