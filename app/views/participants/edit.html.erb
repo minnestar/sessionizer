@@ -6,8 +6,10 @@
   <%= f.inputs do %>
     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials." %>
     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
-    <%= f.input :github_profile_username, :label => 'Your GitHub username' %>
-    <%= f.input :twitter_handle, :label => 'Your Twitter handle' %>
+    <%= f.input :github_profile_username, :label => 'Your GitHub username (optional)' %>
+    <%= f.input :twitter_handle, :label => 'Your Twitter (X) handle (optional)' %>
+    <%= f.input :mastodon_url, :label => 'Your Mastodon URL (optional)' %>
+    <%= f.input :bluesky_handle, :label => 'Your Bluesky handle (optional)' %>
     <%= f.input :bio, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <strong>**bold**</strong>, <em>*italic*</em>, [link](http://example.com)'.html_safe %>
     <%=
       f.input :code_of_conduct_agreement,
