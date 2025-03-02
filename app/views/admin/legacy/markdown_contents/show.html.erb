@@ -1,0 +1,13 @@
+<h2>Name</h1>
+<p><%= @markdown_content.name %></p>
+
+<h2>Slug</h2>
+<p><%= @markdown_content.slug %></p>
+
+<h2>Rendered Markdown</h2>
+<div>
+  <%= markdown @markdown_content.markdown, trusted: true =%>
+</div>
+
+<%= link_to 'Edit', [:edit, :admin, :legacy, @markdown_content] %>
+

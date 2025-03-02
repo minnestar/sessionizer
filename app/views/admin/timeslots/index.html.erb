@@ -1,9 +1,0 @@
-<h1>Timeslots for <%= @event.name %></h1>
-
-<ol>
-<% @timeslots.each do |timeslot| %>
-  <li><%= link_to timeslot.to_s(with_day: true), [:edit, :admin, timeslot] %></li>
-<% end %>
-</ol>
-
-<%= link_to 'Create new Timeslot', new_admin_event_timeslot_path(@event) %>

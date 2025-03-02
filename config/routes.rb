@@ -34,21 +34,25 @@ Sessionizer::Application.routes.draw do
   get '/schedule' => 'schedules#index', as: :schedule
   get '/schedule.ics' => 'schedules#ical', as: :schedule_ics
 
-  resource :admin, controller: 'admin', only: [:show]
+  get '/admin', to: redirect('/admin/legacy') # this used to be: `resource :admin, controller: 'admin', only: [:show]`
   namespace :admin do
-    resource :config, only: [:show, :create]
-    resources :sessions
-    resources :markdown_contents, path: 'markdown-contents'
-    resources :events do
-      resources :timeslots, only: [:index, :new, :create]
-      resources :rooms, only: [:new, :create]
-    end
-    resources :timeslots, only: [:edit, :update]
-    resources :rooms, only: [:edit, :update]
-    resources :presenters, only: [:index, :edit, :update] do
-      collection do
-        get 'export'
-        get 'export_all'
+    get '/', to: redirect('/admin/legacy') # temporary until we implement active admin
+    get '/legacy', to: 'legacy/admin#show', as: :legacy
+    namespace :legacy do
+      resource :config, only: [:show, :create]
+      resources :sessions
+      resources :markdown_contents, path: 'markdown-contents'
+      resources :events do
+        resources :timeslots, only: [:index, :new, :create]
+        resources :rooms, only: [:new, :create]
+      end
+      resources :timeslots, only: [:edit, :update]
+      resources :rooms, only: [:edit, :update]
+      resources :presenters, only: [:index, :edit, :update] do
+        collection do
+          get 'export'
+          get 'export_all'
+        end
       end
     end
   end
