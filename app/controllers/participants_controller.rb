@@ -1,6 +1,8 @@
 class ParticipantsController < ApplicationController
+  include ParticipantsHelper
+
   respond_to :html
-  load_resource
+  load_resource except: :confirm_email
   before_action :verify_owner, :only => [:edit, :update]
 
   def index
@@ -16,27 +18,46 @@ class ParticipantsController < ApplicationController
   end
 
   def show
+    unless @participant.email_confirmed?
+      flash[:alert] = email_confirmation_alert(@participant)
+    end
     respond_with(@participant)
   end
 
   def edit
+    unless @participant.email_confirmed?
+      flash[:alert] = email_confirmation_alert(@participant)
+    end
     respond_with(@participant)
   end
 
   def update
-    @participant.update(participant_params.except(:code_of_conduct_agreement))
-    create_code_of_conduct_agreement_if_not_exists!
-    respond_with(@participant)
+    new_params = participant_params.except(:code_of_conduct_agreement)
+
+    # reset email_confirmed_at if the email address was changed
+    if (new_params[:email] != @participant.email)
+      @participant.email_confirmed_at = nil
+    end
+
+    if @participant.update(new_params)
+      create_code_of_conduct_agreement_if_not_exists!
+      flash[:notice] = "Profile updated successfully."
+      redirect_to participant_path(@participant)
+    else
+      flash[:error] = "There was a problem updating your profile."
+      render :edit
+    end
   end
 
   def create
     @participant.attributes = participant_params.except(:code_of_conduct_agreement)
     if @participant.save
       create_code_of_conduct_agreement_if_not_exists!
-      flash[:notice] = "Thanks for registering an account. You may now create sessions and mark sessions you'd like to attend."
+      @participant.deliver_email_confirmation_instructions!
+      flash[:notice] = "Thanks for registering an account. Please check your email to confirm your account."
       redirect_to root_path
     else
-      flash[:error] = "There was a problem creating that account."
+      flash[:error] = "There was a problem creating your account."
       render :new
     end
   end
@@ -47,6 +68,23 @@ class ParticipantsController < ApplicationController
         participant_id: @participant.id,
         event_id: Event.current_event.id,
       })
+    end
+  end
+
+  def send_confirmation_email
+    @participant.deliver_email_confirmation_instructions!
+    flash[:notice] = "Confirmation instructions sent! Please check your email."
+    redirect_to participant_path(@participant)
+  end
+
+  def confirm_email
+    @participant = Participant.find_using_perishable_token(params[:token])
+    if @participant.confirm_email!
+      flash[:notice] = "Email confirmed. Thank you!"
+      redirect_to root_path
+    else
+      flash[:error] = "Something went wrong. Please try again."
+      redirect_to root_path
     end
   end
 
@@ -61,6 +99,6 @@ class ParticipantsController < ApplicationController
   end
 
   def verify_owner
-    redirect_to @participant if @participant != current_participant
+    redirect_to participant_path(@participant) if @participant != current_participant
   end
 end

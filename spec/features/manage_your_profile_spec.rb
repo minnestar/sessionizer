@@ -3,7 +3,7 @@ require "spec_helper"
 feature "Manage a user profile" do
 
   context "As an authenticated user" do
-    let(:joe) { create(:joe) }
+    let(:joe) { create(:joe, email_confirmed_at: Time.now) }
     background do
       create(:event)
       sign_in_user(joe)

@@ -22,7 +22,7 @@ Instructions on how to generate a schedule for Minnebar.
 
 ## 1. Pull latest prod data
 ```bash
-src/bin/pull-database-from-production
+bin/pull-database-from-production
 ```
 
 ## 2. Set timeslots

@@ -60,7 +60,7 @@
   </div>
 
   <% if @session.event.current? %>
-    <div class="column grid_4" style="float: right">
+    <div class="column grid_4" style="float: right; padding-left: 5px;">
 
       <div id="interested-in-attending" class="interested-in-attending">
         <% if !@session.attending?(current_participant) %>
@@ -73,13 +73,13 @@
         <% end %>
       </div>
 
-      <% if @session.participants.any? %>
+      <% if @session.participants.confirmed.any? %>
         <h3>Interested Participants</h3>
       <% else %>
         <h3 id="no-participants">No participants yet</h3>
       <% end %>
       <ul class="sessionsList" id="participants">
-        <%= render :partial => 'participant', :collection => @session.participants %>
+        <%= render :partial => 'participant', :collection => @session.participants.confirmed %>
       </ul>
 
     </div>

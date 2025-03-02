@@ -112,7 +112,7 @@ rails spec
 
 ## Generating a schedule
 
-See [SCHEDULING.MD](src/doc/SCHEDULING.md) for details and instructions.
+See [SCHEDULING.MD](doc/SCHEDULING.md) for details and instructions.
 
 ## Code of Conduct
 

@@ -19,7 +19,7 @@ describe AttendancesController do
               post :create, params: {session_id: session}
             }.to change { session.attendances.count }.by(1)
             expect(response).to redirect_to session
-            expect(flash[:notice]).to eq "Thanks for your interest in this session."
+            expect(flash[:notice]).to eq "Thanks for your interest in this session. Please check your email to confirm your account."
           end
         end
 
@@ -68,7 +68,7 @@ describe AttendancesController do
                                     }
             }.to change { session.attendances.count }.by(1)
             expect(response).to redirect_to session
-            expect(flash[:notice]).to eq "Thanks for your interest in this session."
+            expect(flash[:notice]).to eq "Thanks for your interest in this session. Please check your email to confirm your account."
           end
         end
       end

@@ -38,7 +38,7 @@ class Admin::Legacy::PresentersController < Admin::Legacy::AdminController
 
 
   def load_presenters
-    @presenters ||= Participant.find(Event.current_event.sessions.map(&:presenter_ids))
+    @presenters ||= Participant.find(Event.current_event.sessions.map(&:presenter_ids).flatten.uniq)
   end
 
 end
