@@ -9,7 +9,7 @@
     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
     <%= f.input :password, :label => 'Password' %>
     <div class="contact-details">
-      <%= f.input :contact_details, input_html: { autocomplete: "off", aria_hidden: "true", tabindex: -1 } %>
+      <%= f.input :contact_details, input_html: { autocomplete: "off", "aria-hidden": "true", tabindex: -1 } %>
     </div>
     <%=
       f.input :code_of_conduct_agreement,
