@@ -1,0 +1,15 @@
+<%= semantic_form_for([:admin, :legacy, @markdown_content]) do |f| %>
+  <div>
+    <%= f.semantic_errors %>
+  </div>
+  <div>
+    <%= f.inputs do %>
+      <%= f.input :name %>
+      <%= f.input :slug %>
+      <%= f.input :markdown, as: :text, input_html: { class: 'full-width' } %>
+    <% end %>
+  </div>
+  <div>
+    <%= f.actions %>
+  </div>
+<% end %>
