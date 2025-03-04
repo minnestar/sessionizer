@@ -38,7 +38,7 @@ gem 'redcarpet', '~> 3.1'
 gem 'bcrypt-ruby', '~> 3.1'
 gem 'authlogic', '~> 6'
 gem 'cancancan'
-
+gem 'csv', '~> 3.3'
 gem 'nokogiri'
 
 group :development, :test do
@@ -58,7 +58,6 @@ group :test do
   gem 'database_cleaner'
   gem "selenium-webdriver", "~> 4.9"
   gem 'puma'
-  gem "csv", "~> 3.3"
   gem "benchmark", "~> 0.4"
 end
 
