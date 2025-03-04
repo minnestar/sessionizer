@@ -21,6 +21,7 @@ $minnestar-blue: #0994ca;
   &__left {
     flex-shrink: 0;
   }
+
   &__home {
     flex-shrink: 0;
 
@@ -80,6 +81,10 @@ $minnestar-blue: #0994ca;
       &:hover {
         color: $minnestar-red;
       }
+    }
+
+    &--donate {
+      width: fit-content;
     }
   }
 }
