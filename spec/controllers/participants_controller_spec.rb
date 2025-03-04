@@ -43,7 +43,7 @@ describe ParticipantsController do
         }
       }.not_to change(Participant, :count)
       expect(response).to render_template(:new)
-      expect(flash[:error]).to eq "There was a problem creating that account."
+      expect(flash[:error]).to eq "There was a problem creating your account."
     end
   end
 

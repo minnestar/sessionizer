@@ -97,11 +97,6 @@ class Participant < ActiveRecord::Base
     reset_perishable_token!
     Notifier.participant_email_confirmation(self).deliver_now!
   end
-
-  def confirm_email!
-    self.email_confirmed_at = Time.now
-    save!
-  end
 end
 
 
