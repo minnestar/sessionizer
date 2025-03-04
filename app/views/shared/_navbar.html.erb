@@ -1,4 +1,6 @@
-<div class="full-column">
+<%= javascript_include_tag "navbar" %>
+
+<div class="navbar__wrapper full-column">
   <nav class="navbar center-column">
     <div class="navbar__left navbar__item">
       <a href="/" class="navbar__home">
@@ -6,7 +8,10 @@
         <%= image_tag 'logos/minnebar-horizontal.svg', alt: 'Sessionizer Home' %>
       </a>
     </div>
-    <ul class="navbar__menu">
+    <button class="navbar__toggle" id="navbarToggle">
+      ☰
+    </button>
+    <ul class="navbar__menu" id="navbarMenu">
       <li class="navbar__item">
         <a href="https://minnestar.org/sponsors/become-a-sponsor/">
           Sponsor
