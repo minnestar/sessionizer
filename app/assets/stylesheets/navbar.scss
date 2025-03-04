@@ -12,11 +12,8 @@ $minnestar-blue: #0994ca;
   }
 
   font-family: "Roboto", sans-serif;
-  // margin: 0 1px;
-  // padding: 0;
   padding-top: 7px;
   padding-bottom: 10px;
-  // font-size: 86%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,6 +50,10 @@ $minnestar-blue: #0994ca;
       background-color: $body-bg;
       top: 60px;
       right: 10px;
+      width: 200px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
     }
   }
 
@@ -70,11 +71,9 @@ $minnestar-blue: #0994ca;
       &:visited {
         display: block;
         line-height: 1em;
-        // width: 9.5em;
         color: $minnestar-blue;
         font-weight: 400;
         text-decoration: none;
-        // border-top: 3px solid #fff;
         text-transform: uppercase;
         letter-spacing: 1.6px;
       }
@@ -99,81 +98,3 @@ $minnestar-blue: #0994ca;
     }
   }
 }
-
-// original - delete when no longer need reference
-// ul#menu {
-//   display: flex;
-//   flex-flow: row wrap;
-//   align-items: center;
-//   justify-content: space-between;
-
-//   .links {
-//     display: flex;
-//     flex-flow: row wrap;
-//     align-items: baseline;
-//   }
-//   // margin: 0 1px;
-//   // padding: 0;
-//   // font-size: 86%;
-//   li {
-//     // font-size: 1.3em;
-//     // float: left;
-//     // margin-right: 0.05em;
-//     // padding: 0;
-//     // display: block;
-//     // list-style: none;
-//     a {
-//       &:link,
-//       &:visited {
-//         // display: block;
-//         padding: 7px 0 10px;
-//         // line-height: 1em;
-//         width: 9.5em;
-//         // color: $minnestar-blue;
-//         // font-weight: 400;
-//         // text-decoration: none;
-//         border-top: 3px solid #fff;
-//         // text-transform: uppercase;
-//         // letter-spacing: 1.6px;
-//       }
-//       &:hover {
-//         // color: $minnestar-red;
-//       }
-//     }
-//     a {
-//       // span.description {
-//       //   font-size: 0.75em;
-//       //   color: #d1d9dc;
-//       //   text-transform: lowercase;
-//       // }
-//       // &.selected {
-//       //   border-top: 3px solid #6a797d;
-//       // }
-//     }
-//   }
-
-//   // li.bar,
-//   // li.demo,
-//   // li.donate {
-//   // float: right;
-//   // a {
-//   //   padding: 30px 0 10px;
-//   // }
-//   // }
-
-//   // li.donate {
-//   //   a.button {
-//   //     padding: 7px 10px 6px;
-//   //     margin: 24px 0 0;
-//   //     width: auto;
-//   //     border: 2px solid #f05555;
-//   //     &:hover {
-//   //       color: #ffffff;
-//   //     }
-//   //   }
-//   // }
-
-//   // .last {
-//   //   margin-right: 0;
-//   // }
-// }
