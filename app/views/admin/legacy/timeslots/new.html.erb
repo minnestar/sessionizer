@@ -1,0 +1,8 @@
+<%= semantic_form_for([:admin, :legacy, @event, @timeslot]) do |f| %>
+<%= f.semantic_errors %>
+
+<%= f.inputs %>
+<%= f.actions do %>
+  <%= f.button 'Create Timeslot', :class => 'button'  %>
+<% end %>
+<% end %>

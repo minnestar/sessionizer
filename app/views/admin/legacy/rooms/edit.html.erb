@@ -1,0 +1,8 @@
+<%= semantic_form_for([:admin, :legacy, @room]) do |f| %>
+  <%= f.semantic_errors %>
+
+  <%= f.inputs %>
+  <%= f.actions do %>
+    <%= f.button 'Update Room', :class => 'button'  %>
+  <% end %>
+<% end %>
