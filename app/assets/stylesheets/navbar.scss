@@ -1,0 +1,105 @@
+/*** Minne* Header ******************************************************************/
+// brand colors
+$minnebar-purple: #6066ae;
+$minnestar-red: #f05555;
+$minnestar-purple: #44478a;
+$minnestar-blue: #0994ca;
+@import "variables";
+
+.navbar {
+  &__wrapper {
+    border-bottom: 1px solid #d1d9dc;
+  }
+
+  font-family: "Roboto", sans-serif;
+  padding-top: 7px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__left {
+    flex-shrink: 0;
+  }
+
+  &__home {
+    flex-shrink: 0;
+
+    &--description {
+      font-size: 0.75em;
+      color: #d1d9dc;
+      text-transform: lowercase;
+    }
+  }
+
+  &__toggle {
+    display: block;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  &__menu {
+    display: none;
+
+    &--open {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: absolute;
+      background-color: $body-bg;
+      top: 60px;
+      right: 10px;
+      width: 200px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+  }
+
+  &__item {
+    font-size: 1.3em;
+    float: left;
+    margin-right: 0.05em;
+    padding: 0;
+    display: block;
+    list-style: none;
+
+    a {
+      padding: 7px 0 10px;
+      &:link,
+      &:visited {
+        display: block;
+        line-height: 1em;
+        color: $minnestar-blue;
+        font-weight: 400;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1.6px;
+      }
+      &:hover {
+        color: $minnestar-red;
+      }
+    }
+
+    &--donate {
+      width: fit-content;
+    }
+  }
+}
+
+@media screen and (min-width: 36rem) {
+  .navbar {
+    &__toggle {
+      display: none;
+    }
+
+    &__menu {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+      gap: 2.5rem;
+    }
+  }
+}

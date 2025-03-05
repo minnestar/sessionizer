@@ -19,3 +19,10 @@
  *= require tables
  *= require_tree .
  */
+
+.center-column {
+  width: 65em;
+  margin: 0 auto;
+  text-align: left;
+  clear: both;
+}
