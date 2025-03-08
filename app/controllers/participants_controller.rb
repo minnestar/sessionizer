@@ -79,7 +79,7 @@ class ParticipantsController < ApplicationController
 
   def confirm_email
     @participant = Participant.find_using_perishable_token(params[:token])
-    if @participant.confirm_email!
+    if @participant.update!(email_confirmed_at: Time.now)
       flash[:notice] = "Email confirmed. Thank you!"
       redirect_to root_path
     else
@@ -94,7 +94,8 @@ class ParticipantsController < ApplicationController
     params.require(controller_name.singularize).permit(
       :name, :email, :password,
       :bio, :github_profile_username,
-      :twitter_handle, :code_of_conduct_agreement
+      :twitter_handle, :code_of_conduct_agreement,
+      :contact_details
     )
   end
 

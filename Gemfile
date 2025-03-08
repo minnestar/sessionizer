@@ -9,9 +9,7 @@ gem 'unicorn'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'terser', '~> 1.2'
 # gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
@@ -38,7 +36,7 @@ gem 'redcarpet', '~> 3.1'
 gem 'bcrypt-ruby', '~> 3.1'
 gem 'authlogic', '~> 6'
 gem 'cancancan'
-
+gem 'csv', '~> 3.3'
 gem 'nokogiri'
 
 group :development, :test do
@@ -58,7 +56,6 @@ group :test do
   gem 'database_cleaner'
   gem "selenium-webdriver", "~> 4.9"
   gem 'puma'
-  gem "csv", "~> 3.3"
   gem "benchmark", "~> 0.4"
 end
 

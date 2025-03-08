@@ -11,6 +11,10 @@ class Participant < ActiveRecord::Base
 
   # used for formtastic form to allow sending a field related to a separate model
   attr_accessor :code_of_conduct_agreement
+  
+  # fake form field that acts as a honeypot for preventing spam. 
+  attr_accessor :contact_details
+  validates_absence_of :contact_details
 
   acts_as_authentic do |config|
     config.crypto_provider = Authlogic::CryptoProviders::BCrypt
@@ -92,11 +96,6 @@ class Participant < ActiveRecord::Base
   def deliver_email_confirmation_instructions!
     reset_perishable_token!
     Notifier.participant_email_confirmation(self).deliver_now!
-  end
-
-  def confirm_email!
-    self.email_confirmed_at = Time.now
-    save!
   end
 end
 
