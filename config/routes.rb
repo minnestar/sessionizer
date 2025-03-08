@@ -1,4 +1,6 @@
 Sessionizer::Application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   root to: 'schedules#index'
 
   get '/home' => 'events#show', id: 'current', as: :home_page
