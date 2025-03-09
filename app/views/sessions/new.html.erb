@@ -1,7 +1,7 @@
 <% if Settings.allow_new_sessions? %>
   <% if current_participant.email_confirmed? %>
     <% title('New Session') %>
-    <p><strong>Note: sessions can be at most 45 minutes long.</strong></p>
+    <p><strong>Note: sessions can be at most 40 minutes long.</strong></p>
     <%= render 'form' %>
   <% else %>
     <% title('Email Confirmation Required') %>
