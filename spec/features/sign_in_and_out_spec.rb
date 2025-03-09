@@ -92,20 +92,15 @@ feature "Authentication and account creation things" do
       click_link "Log in"
       click_link 'Register here'
 
-      name = FFaker::Name.name
-      fill_in 'Your name*', with: name
       click_button "Create My Account"
 
       expect(page).to have_content "There was a problem creating your account."
+      within("#participant_name_input") { expect(page).to have_content "can't be blank" }
+      within("#participant_email_input") { expect(page).to have_content "can't be blank" }
+      within("#participant_password_input") { expect(page).to have_content "can't be blank" }
 
-      within("#participant_email_input") do
-        expect(page).to have_content "can't be blank"
-      end
-
-      within("#participant_password_input") do
-        expect(page).to have_content "can't be blank"
-      end
-
+      name = FFaker::Name.name
+      fill_in 'Your name*', with: name
       fill_in 'Your email', with: FFaker::Internet.safe_email
       fill_in 'Password', with: "anything, it doesnt matter"
       click_button "Create My Account"
