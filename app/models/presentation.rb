@@ -8,4 +8,11 @@ class Presentation < ActiveRecord::Base
   validates_presence_of :session_id
   validates_presence_of :participant_id
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["participant_id", "session_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["participant", "session"]
+  end
 end
