@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe Participant do
+  describe "validation" do
+    subject { create(:luke) }
+
+    it { should validate_presence_of :name }
+
+    it "should flag example.com in bio text" do
+      subject.bio = "blah blah https//example.com/foo blah"
+      subject.save
+      assert !subject.valid?
+      assert !subject.errors[:bio].empty?
+    end
+  end
+
   describe "timeslot restrictions" do
     let(:event) { create(:event) }
     let!(:time1) { create(:timeslot_1, event: event) }

@@ -8,6 +8,7 @@ class Participant < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
+  validate :bio_does_not_include_example_links
 
   # used for formtastic form to allow sending a field related to a separate model
   attr_accessor :code_of_conduct_agreement
@@ -93,6 +94,12 @@ class Participant < ActiveRecord::Base
     reset_perishable_token!
     Notifier.participant_email_confirmation(self).deliver_now!
   end
+
+private
+
+  def bio_does_not_include_example_links
+    if bio&.include?("example.com")
+      errors.add(:bio, "please remove sample links to “example.com”")
+    end
+  end
 end
-
-
