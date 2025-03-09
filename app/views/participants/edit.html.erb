@@ -6,9 +6,23 @@
   <%= f.inputs do %>
     <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials." %>
     <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
-    <%= f.input :github_profile_username, :label => 'Your GitHub username' %>
-    <%= f.input :twitter_handle, :label => 'Your Twitter handle' %>
-    <%= f.input :bio, :hint => 'You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here. Examples: <strong>**bold**</strong>, <em>*italic*</em>, [link](http://example.com)'.html_safe %>
+    <%= f.input :bio %>
+    <p class="inline-hints">
+      You can use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax here.
+      Examples: <code>**bold**</code> &nbsp; <code>_italic_</code> &nbsp; <code>[link](http://example.com)</code>
+    </p>
+
+    <p class="inline-hints">
+      Add links to your personal sites and socials using the following format at the end of your bio:
+    </p>
+    <pre>
+**Links:**
+
+- [Personal site](https://myawesomesite.example.com)
+- [AwesomeNet](https://example.com/myusername)
+- [FriendTown](https://example.com/myusername)
+    </pre>
+
     <%=
       f.input :code_of_conduct_agreement,
         as: :boolean,

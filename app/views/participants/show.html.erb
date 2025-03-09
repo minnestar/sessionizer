@@ -6,22 +6,6 @@
   <% end %>
 <% end %>
 
-<div class="row">
-  <% if @participant.github_profile_username.present? %>
-    <div class="grid_2 column">
-      <h4>GitHub:</h4>
-      <div><%= link_to @participant.github_profile_username, @participant.github_profile_url, target: "blank" %></div>
-    </div>
-  <% end %>
-
-  <% if @participant.twitter_handle.present? %>
-    <div class="grid_3 column">
-      <h4>Twitter:</h4>
-      <div>@<%= @participant.twitter_handle %></div>
-    </div>
-  <% end %>
-</div>
-
 <div class="row bio">
   <h4>Bio</h4>
 

@@ -1,12 +1,16 @@
 require 'spec_helper'
 
 describe Participant do
+  describe "validation" do
+    subject { create(:luke) }
 
-  describe "github profile url" do
-    let(:luke)  { create(:luke) }
+    it { should validate_presence_of :name }
 
-    it "can be constructed with a github username" do
-      expect(luke.github_profile_url).to eq "https://github.com/look"
+    it "should flag example.com in bio text" do
+      subject.bio = "blah blah https//example.com/foo blah"
+      subject.save
+      assert !subject.valid?
+      assert !subject.errors[:bio].empty?
     end
   end
 
