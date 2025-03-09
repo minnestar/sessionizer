@@ -1,5 +1,5 @@
 class Notifier < ActionMailer::Base
-  default from: "support@minnestar.org",
+  default from: "Minnestar Support <support@minnestar.org>",
           content_type: "text/html"
 
   def password_reset_instructions(participant)
@@ -10,6 +10,6 @@ class Notifier < ActionMailer::Base
 
   def participant_email_confirmation(participant)
     @participant = participant
-    mail(to: participant.email, subject: "Please confirm your email")
+    mail(to: participant.email, subject: "Confirm your email for Minnebar")
   end
 end

@@ -17,7 +17,7 @@ module Sessionizer
     # We want to always show times in Minnebar’s time zone, regardless of where
     # the use is located.
 
-    config.time_zone = 'US/Central'
+    config.time_zone = 'America/Chicago'
 
     config.active_support.cache_format_version = 7.0
   end
