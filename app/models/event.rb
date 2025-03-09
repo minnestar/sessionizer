@@ -4,6 +4,7 @@ class Event < ActiveRecord::Base
   has_many :rooms, dependent: :destroy
 
   has_many :presenter_timeslot_restrictions, :through => :timeslots
+  has_many :code_of_conduct_agreements, dependent: :destroy
 
   # Careful! Large joins here; use with caution:
   has_many :attendances, through: :sessions
