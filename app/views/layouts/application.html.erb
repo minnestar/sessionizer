@@ -10,6 +10,7 @@
     <%= yield(:head) %>
     <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js" integrity="sha256-4I3RT0XAGHdtIpMb28AtxL0vdMZBftsRgY6xRhzqnAM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.02.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="<%= yield(:title) || t('conference') %>" />
     <meta name="twitter:title" content="<%= yield(:title) || t('conference') %>">
     <meta name="twitter:card" content="summary_large_image">
@@ -23,35 +24,7 @@
 
   <body>
 
-    <div class="full-column">
-      <div class="center-column">
-        <ul id="menu">
-          <li class="star">
-            <a href="/" >
-              <span class="description">sessionizer home</span><br />
-              <%= image_tag 'logos/minnebar-horizontal.svg', alt: 'Sessionizer Home' %>
-            </a>
-          </li>
-          <li class="donate">
-            <a class="button" href="http://minnestar.org/donate">
-              Donate
-            </a>
-          </li>
-          <li class="bar">
-            <a href="https://minnestar.org/sponsors/become-a-sponsor/">
-              Sponsor
-            </a>
-          </li>
-          <li class="bar">
-            <a href="https://minnestar.org/community/volunteer/">
-              Volunteer
-            </a>
-          </li>
-        </ul>
-        <div class="clearboth"></div>
-
-      </div><!-- / center-column -->
-    </div><!-- / full-column -->
+    <%= render :partial => 'shared/navbar' %>
 
     <div class="center-column">
       <div class="page-heading">
