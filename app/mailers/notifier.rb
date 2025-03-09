@@ -5,7 +5,7 @@ class Notifier < ActionMailer::Base
   def password_reset_instructions(participant)
     @participant = participant
     @sent_on = Time.now
-    mail(to: @participant.email, subject: "Password Reset Instructions")
+    mail(to: @participant.email, subject: "Password Reset Instructions for Minnebar")
   end
 
   def participant_email_confirmation(participant)

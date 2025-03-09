@@ -1,0 +1,32 @@
+<%= javascript_include_tag "navbar" %>
+
+<div class="navbar__wrapper full-column">
+  <nav class="navbar center-column">
+    <div class="navbar__left navbar__item">
+      <a href="/" class="navbar__home">
+        <span class="navbar__home--description">Sessionizer Home</span><br />
+        <%= image_tag 'logos/minnebar-horizontal.svg', alt: 'Sessionizer Home' %>
+      </a>
+    </div>
+    <button class="navbar__toggle" id="navbarToggle">
+      ☰
+    </button>
+    <ul class="navbar__menu" id="navbarMenu">
+      <li class="navbar__item">
+        <a href="https://minnestar.org/sponsors/become-a-sponsor/">
+          Sponsor
+        </a>
+      </li>
+      <li class="navbar__item">
+        <a href="https://minnestar.org/community/volunteer/">
+          Volunteer
+        </a>
+      </li>
+      <li class="navbar__item navbar__item--donate">
+        <a class="button" href="http://minnestar.org/donate">
+          Donate
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
