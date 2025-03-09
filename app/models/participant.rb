@@ -5,9 +5,12 @@ class Participant < ActiveRecord::Base
   has_many :presentations
   has_many :sessions_presenting, :through => :presentations, :source => :session
   has_many :presenter_timeslot_restrictions, dependent: :destroy
+  has_many :code_of_conduct_agreements, dependent: :destroy
 
   validates_presence_of :name
-  validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
+  validates_presence_of :email
+  validates_uniqueness_of :email, :case_sensitive => false
+  validates_presence_of :password
 
   # used for formtastic form to allow sending a field related to a separate model
   attr_accessor :code_of_conduct_agreement

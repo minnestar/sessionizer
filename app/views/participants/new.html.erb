@@ -5,15 +5,22 @@
 <%= semantic_form_for(@participant) do |f| %>
   <%= f.semantic_errors %>
   <%= f.inputs do %>
-    <%= f.input :name, :label => 'Your name', :hint => "Please use your real name. This will be used in our printed materials. Use JUST your name. For joint sessions, you will be able to add co-presenters." %>
-    <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
-    <%= f.input :password, :label => 'Password' %>
+    <%= f.input :name,
+        label: 'Your name',
+        hint: "Please use your real name. This will be used in our printed materials. Use JUST your name. For joint sessions, you will be able to add co-presenters."
+    %>
+    <%= f.input :email,
+        label: 'Your email',
+        hint: "Please use a real email address. We need this to contact you about your presentation."
+    %>
+    <%= f.input :password, label: 'Password' %>
     <div class="contact-details">
       <%= f.input :contact_details, input_html: { autocomplete: "off", "aria-hidden": "true", tabindex: -1 } %>
     </div>
     <%=
       f.input :code_of_conduct_agreement,
         as: :boolean,
+        required: true, # this only adds an asterisk to the label, it doesn't make the field required
         label: ("I agree to the #{link_to 'Code of Conduct', 'https://minnestar.org/code-of-conduct'} governing this event.").html_safe,
         input_html: {
           checked: @participant.signed_code_of_conduct_for_current_event?,
