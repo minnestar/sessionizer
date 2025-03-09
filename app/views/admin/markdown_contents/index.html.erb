@@ -1,7 +1,0 @@
-<p><%= link_to 'Create new markdown content', new_admin_markdown_content_path %></p>
-
-<% @markdown_contents.map do |mc| %>
-  <p>Slug <%= mc.slug %></p>
-  <%= link_to 'View', [:admin, mc] %>
-  <%= link_to 'Edit', [:edit, :admin, mc] %>
-<% end %>
