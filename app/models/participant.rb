@@ -23,6 +23,14 @@ class Participant < ActiveRecord::Base
 
   scope :confirmed, -> { where.not(email_confirmed_at: nil) }
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["name", "email", "bio"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
   def restrict_after(datetime, weight=1, event=Event.current_event)
     event.timeslots.each do |timeslot|
       if timeslot.ends_at > datetime
