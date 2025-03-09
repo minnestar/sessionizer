@@ -12,14 +12,10 @@ feature "Manage a user profile" do
 
     scenario "I can update my profile attributes" do
       click_link "Welcome Joe Schmoe"
-      fill_in 'Your GitHub username', with: "JoeSchmoeGithubUsername"
-      fill_in 'Your Twitter handle', with: "JoeSchmoeTwitterHandle"
       bio = FFaker::HipsterIpsum.paragraph(3)
       fill_in 'Bio',  with: bio
       click_button "Update Profile"
 
-      expect(page).to have_content "JoeSchmoeGithubUsername"
-      expect(page).to have_content "JoeSchmoeTwitterHandle"
       expect(page).to have_content bio
     end
   end

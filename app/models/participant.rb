@@ -81,10 +81,6 @@ class Participant < ActiveRecord::Base
     sessions_attending.include?(session)
   end
 
-  def github_profile_url
-    "https://github.com/#{self.github_profile_username}"
-  end
-
   def self.find_by_case_insensitive_email(email)
     where(['lower(email) = ?', email.to_s.downcase]).first
   end

@@ -1,15 +1,6 @@
 require 'spec_helper'
 
 describe Participant do
-
-  describe "github profile url" do
-    let(:luke)  { create(:luke) }
-
-    it "can be constructed with a github username" do
-      expect(luke.github_profile_url).to eq "https://github.com/look"
-    end
-  end
-
   describe "timeslot restrictions" do
     let(:event) { create(:event) }
     let!(:time1) { create(:timeslot_1, event: event) }
