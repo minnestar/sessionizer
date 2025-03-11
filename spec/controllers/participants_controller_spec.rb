@@ -53,6 +53,44 @@ describe ParticipantsController do
       expect(response).to be_successful
       expect(assigns(:participant)).to be_kind_of Participant
     end
+
+    context "when logged in" do
+      context "when logged in user has not confirmed email" do
+        let(:unconfirmed_email_participant) { create(:participant, email_confirmed_at: nil )}
+
+        before do
+          activate_authlogic
+          ParticipantSession.create(unconfirmed_email_participant)
+        end
+
+        it "should display confirm email flash message" do
+          get :show, params: {id: participant}
+          expect(flash[:alert]).to be_present
+        end
+      end
+    end
+
+    context "when logged in user has confirmed email" do
+      let(:unconfirmed_email_participant) { create(:participant, email_confirmed_at: Time.now )}
+        
+      before do
+        activate_authlogic
+        ParticipantSession.create(unconfirmed_email_participant)
+      end
+
+      it "should not display confirm email flash message" do
+        get :show, params: {id: participant}
+        expect(flash[:alert]).not_to be_present
+      end
+    end
+
+
+    context "when not logged in" do
+      it "should not show confirm email flash message" do
+        get :show, params: {id: participant}
+        expect(flash[:alert]).not_to be_present
+      end
+    end
   end
 
   context "when the logged in user operates on someone elses record" do
