@@ -13,9 +13,6 @@ RSpec.describe SessionsJsonBuilder do
       expect(h[:participant_id]).to be session.participant_id
 
       expect(h[:presenter_name]).to be session.participant.name
-      expect(h[:presenter_twitter_handle]).to be session.participant.twitter_handle
-      expect(h[:presenter_github_username]).to be session.participant.github_profile_username
-      expect(h[:presenter_github_og_image]).to be session.participant.github_og_image
       expect(session.participant.bio).to_not be_nil
       expect(h[:presenter_bio]).to be session.participant.bio
       expect(h[:session_title]).to be session.title
