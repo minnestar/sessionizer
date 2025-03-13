@@ -45,7 +45,7 @@ Sessionizer::Application.routes.draw do
     get '/legacy', to: 'legacy/admin#show', as: :legacy
     namespace :legacy do
       resource :config, only: [:show, :create]
-      resources :sessions
+      resources :sessions, except: [:new, :create]
       resources :markdown_contents, path: 'markdown-contents'
       resources :events do
         resources :timeslots, only: [:index, :new, :create]

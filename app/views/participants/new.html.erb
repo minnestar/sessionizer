@@ -14,6 +14,7 @@
     <%=
       f.input :code_of_conduct_agreement,
         as: :boolean,
+        required: true, # this only adds an asterisk to the label, it doesn't make the field required
         label: ("I agree to the #{link_to 'Code of Conduct', 'https://minnestar.org/code-of-conduct'} governing this event.").html_safe,
         input_html: {
           checked: @participant.signed_code_of_conduct_for_current_event?,
