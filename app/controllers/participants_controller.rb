@@ -93,8 +93,8 @@ class ParticipantsController < ApplicationController
   def participant_params
     params.require(controller_name.singularize).permit(
       :name, :email, :password,
-      :bio, :github_profile_username,
-      :twitter_handle, :code_of_conduct_agreement,
+      :bio,
+      :code_of_conduct_agreement,
       :contact_details
     )
   end
