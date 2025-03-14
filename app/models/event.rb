@@ -15,6 +15,14 @@ class Event < ActiveRecord::Base
     self.order(:date).last
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["date", "name"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["attendances", "participants", "presenter_timeslot_restrictions", "rooms", "sessions", "timeslots"]
+  end
+
   def current?
     if @current.nil?
       @current = self == Event.current_event
