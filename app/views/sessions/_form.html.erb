@@ -16,7 +16,10 @@
         as: :boolean,
         required: true,
         label: ("I agree to the #{link_to 'Code of Conduct', 'https://minnestar.org/code-of-conduct'} governing this event.").html_safe,
-        input_html: { checked: current_participant.signed_code_of_conduct_for_current_event? }
+        input_html: {
+          checked: current_participant.signed_code_of_conduct_for_current_event?,
+          disabled: current_participant.signed_code_of_conduct_for_current_event?
+        }
     %>
   <% end %>
 

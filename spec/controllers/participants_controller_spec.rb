@@ -102,13 +102,11 @@ describe ParticipantsController do
 
       describe "more attributes are not required" do
         it "should be successful" do
-          put :update, params: {id: joe, participant: {
-                                twitter_handle: 'schmoe',
-                                github_profile_username: 'jschmoe'}
-                               }
+          put :update, params: {
+            id: joe, participant: { bio: 'schmoe' }
+          }
           expect(response).to be_redirect
-          expect(joe.reload.twitter_handle).to eq 'schmoe'
-          expect(joe.github_profile_username).to eq 'jschmoe'
+          expect(joe.reload.bio).to eq 'schmoe'
         end
       end
 

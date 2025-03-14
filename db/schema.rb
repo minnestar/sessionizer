@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_08_212634) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -81,17 +81,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_08_212634) do
 
   create_table "participants", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
-    t.string "email", limit: 255
+    t.string "email", limit: 255, null: false
     t.text "bio"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "crypted_password", limit: 255
+    t.string "crypted_password", limit: 255, null: false
     t.string "persistence_token", limit: 255
     t.string "perishable_token", limit: 255, default: "", null: false
-    t.string "github_profile_username"
-    t.string "github_og_image"
-    t.string "github_og_url"
-    t.string "twitter_handle"
     t.datetime "email_confirmed_at", precision: nil
     t.index ["email"], name: "index_participants_on_email", unique: true
     t.index ["perishable_token"], name: "index_participants_on_perishable_token"

@@ -5,9 +5,13 @@ class Participant < ActiveRecord::Base
   has_many :presentations
   has_many :sessions_presenting, :through => :presentations, :source => :session
   has_many :presenter_timeslot_restrictions, dependent: :destroy
+  has_many :code_of_conduct_agreements, dependent: :destroy
 
-  validates_presence_of :name
-  validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => true
+  validates :name, presence: true
+  validates :email, presence: true
+  validates_uniqueness_of :email, :case_sensitive => false
+  validates :password, presence: true, on: :create
+  validate :bio_does_not_include_example_links
 
   # used for formtastic form to allow sending a field related to a separate model
   attr_accessor :code_of_conduct_agreement
@@ -89,10 +93,6 @@ class Participant < ActiveRecord::Base
     sessions_attending.include?(session)
   end
 
-  def github_profile_url
-    "https://github.com/#{self.github_profile_username}"
-  end
-
   def self.find_by_case_insensitive_email(email)
     where(['lower(email) = ?', email.to_s.downcase]).first
   end
@@ -105,6 +105,12 @@ class Participant < ActiveRecord::Base
     reset_perishable_token!
     Notifier.participant_email_confirmation(self).deliver_now!
   end
+
+private
+
+  def bio_does_not_include_example_links
+    if bio&.include?("example.com")
+      errors.add(:bio, "please remove sample links to “example.com”")
+    end
+  end
 end
-
-
