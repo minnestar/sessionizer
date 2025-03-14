@@ -39,6 +39,10 @@ gem 'cancancan'
 gem 'csv', '~> 3.3'
 gem 'nokogiri'
 
+# active admin
+gem 'devise'
+gem 'activeadmin'
+
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-progressbar', require: false

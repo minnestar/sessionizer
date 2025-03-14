@@ -12,4 +12,12 @@ class PresenterTimeslotRestriction < ActiveRecord::Base
   validates_numericality_of :weight, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 1
 
   # attr_accessible :timeslot, :weight
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["participant_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["participant", "timeslot"]
+  end
 end
