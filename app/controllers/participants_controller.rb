@@ -18,8 +18,8 @@ class ParticipantsController < ApplicationController
   end
 
   def show
-    unless @participant.email_confirmed?
-      flash[:alert] = email_confirmation_alert(@participant)
+    if logged_in? && !current_participant.email_confirmed?
+      flash[:alert] = email_confirmation_alert(current_participant)
     end
     respond_with(@participant)
   end
