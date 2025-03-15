@@ -12,6 +12,7 @@ feature "Manage a user profile" do
 
     scenario "I can update my profile attributes" do
       click_link "Welcome Joe Schmoe"
+      click_link "edit your profile"
       bio = FFaker::HipsterIpsum.paragraph(3)
       fill_in 'Bio',  with: bio
       click_button "Update Profile"
