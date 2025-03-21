@@ -2,6 +2,8 @@ ActiveAdmin.register Event do
   menu priority: 1
   permit_params :name, :date
 
+  includes :sessions, :rooms, :timeslots
+
   config.filters = false
 
   index do
@@ -11,6 +13,12 @@ ActiveAdmin.register Event do
     end
     column("# of Sessions") do |event|
       link_to event.sessions.count, admin_sessions_path(q: { event_id_eq: event.id })
+    end
+    column("# of Rooms") do |event|
+      event.rooms.count
+    end
+    column("# of Timeslots") do |event|
+      event.timeslots.count
     end
     column :date
   end
