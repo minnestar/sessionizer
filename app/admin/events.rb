@@ -1,4 +1,5 @@
 ActiveAdmin.register Event do
+  menu priority: 1
   permit_params :name, :date
 
   config.filters = false

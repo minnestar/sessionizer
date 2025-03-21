@@ -1,4 +1,5 @@
 ActiveAdmin.register Session do
+  menu priority: 2
 
   permit_params(
     :participant_id,
@@ -12,6 +13,8 @@ ActiveAdmin.register Session do
     :manually_scheduled,
     :manual_attendance_estimate
   )
+
+  includes :attendances
 
   filter :presenter
   filter :title
@@ -30,6 +33,9 @@ ActiveAdmin.register Session do
     column("Event") do |session|
       link_to session.event.name, admin_event_path(session.event)
     end
+    column("Votes") do |session|
+      session.attendances.count
+    end
     column :timeslot
     column :room
   end
@@ -45,6 +51,9 @@ ActiveAdmin.register Session do
       row :description
       row :level
       row :categories
+      row("Votes") do |session|
+        session.attendances.count
+      end
       row :timeslot
       row :room
       row :manually_scheduled
