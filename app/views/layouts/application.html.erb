@@ -47,7 +47,7 @@
 
         <% if logged_in? %>
           <p class="participant-links">
-            <%= link_to "Welcome #{current_participant.name}", [:edit, current_participant]  %>
+            <%= link_to "Welcome #{current_participant.name}", current_participant %>
             <span>&nbsp;|&nbsp;</span>
             <%= link_to 'Log out', logout_path, :method => 'delete' %>
           </p>
