@@ -35,7 +35,7 @@ ActiveAdmin.register Event do
           link_to session.title, admin_session_path(session)
         end
         column :presenters do |session|
-          session.presenters.map { |presenter| link_to presenter.name, admin_participants_path(presenter) }.join(", ").html_safe
+          session.presenters.map { |presenter| link_to presenter.name, admin_participant_path(presenter) }.join(", ").html_safe
         end
         column :timeslot do |session|
           session.timeslot&.to_s

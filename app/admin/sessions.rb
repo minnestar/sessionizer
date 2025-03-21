@@ -24,7 +24,7 @@ ActiveAdmin.register Session do
     end
     column("Presenters") do |session|
       session.presenters.map do |presenter|
-        link_to presenter.name, admin_participants_path(presenter)
+        link_to presenter.name, admin_participant_path(presenter)
       end.join(", ").html_safe
     end
     column("Event") do |session|

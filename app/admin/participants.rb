@@ -24,6 +24,9 @@ ActiveAdmin.register Participant do
       row :github_og_image
       row :github_og_url
       row :twitter_handle
+      row("Confirmed") do |p|
+        status_tag p.email_confirmed? ? "Yes" : "No", class: p.email_confirmed? ? :ok : :error
+      end
       row :email_confirmed_at
       row :created_at
     end
