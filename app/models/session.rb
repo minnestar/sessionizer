@@ -39,11 +39,11 @@ class Session < ActiveRecord::Base
   after_create :create_presenter
 
   def self.ransackable_attributes(auth_object = nil)
-    ["title", "description", "event_id", "participant_id"]
+    ["title", "event_id", "participant_id"]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["presenters", "participant"]
+    []
   end
 
   def self.swap_timeslot_and_rooms(session_1, session_2)
