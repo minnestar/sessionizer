@@ -5,12 +5,14 @@ ActiveAdmin.register AdminUser do
   config.filters = false
 
   index do
-    id_column
-    column :email
+    column :id
+    column :email do |admin_user|
+      link_to admin_user.email, admin_admin_user_path(admin_user)
+    end
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
-    actions
+    column :updated_at
   end
 
   form do |f|
