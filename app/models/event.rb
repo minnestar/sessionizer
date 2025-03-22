@@ -17,11 +17,11 @@ class Event < ActiveRecord::Base
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["date", "name"]
+    []
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["attendances", "participants", "presenter_timeslot_restrictions", "rooms", "sessions", "timeslots"]
+    []
   end
 
   def current?

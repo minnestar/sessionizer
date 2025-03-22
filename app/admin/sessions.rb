@@ -14,16 +14,27 @@ ActiveAdmin.register Session do
     :manual_attendance_estimate
   )
 
-  includes :attendances
+  includes [
+    :attendances,
+    :presenters,
+    :event,
+    :participant,
+    :level,
+    :categories,
+    :timeslot,
+    :room
+  ]
 
-  filter :presenter
-  filter :title
   filter :event
+  filter :title
+  filter :participant_id, as: :select,
+         label: 'Creator',
+         collection: proc { Participant.with_sessions.distinct.order(:name).pluck(:name, :id) }
 
   index do
     column :id
     column :title do |session|
-      link_to session.title, admin_session_path(session)
+      link_to session.title, admin_session_path(session) + (session.canceled? ? " (CANCELED)" : "")
     end
     column("Presenters") do |session|
       session.presenters.map do |presenter|
@@ -31,10 +42,10 @@ ActiveAdmin.register Session do
       end.join(", ").html_safe
     end
     column("Event") do |session|
-      link_to session.event.name, admin_event_path(session.event)
+      (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
     end
     column("Votes") do |session|
-      session.attendances.count
+      session.attendances.size
     end
     column :timeslot
     column :room
@@ -43,7 +54,7 @@ ActiveAdmin.register Session do
   show  title: :title do
     attributes_table do
       row :event do |session|
-        link_to session.event.name, admin_event_path(session.event)
+        (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
       end 
       row :title
       row :participant
@@ -52,11 +63,12 @@ ActiveAdmin.register Session do
       row :level
       row :categories
       row("Votes") do |session|
-        session.attendances.count
+        session.attendances.size
       end
       row :timeslot
       row :room
       row :manually_scheduled
+      row :canceled?
       row :created_at
       row :updated_at
     end

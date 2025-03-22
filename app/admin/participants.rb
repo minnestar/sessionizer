@@ -7,6 +7,11 @@ ActiveAdmin.register Participant do
 
   filter :name
   filter :email
+  filter :bio
+  filter :email_confirmed_at_not_null, as: :boolean,
+         label: 'Email confirmed',
+         filters: [:eq],
+         input_html: { name: 'q[email_confirmed_at_not_null]' }
 
   index do
     column :id
@@ -14,11 +19,13 @@ ActiveAdmin.register Participant do
       link_to participant.name, admin_participant_path(participant)
     end
     column :email
-    column :bio
+    column :bio do |participant|
+      truncate(participant.bio, length: 100)
+    end
     column(:confirmed, &:email_confirmed?)
-    column(:presentations) { |p| p.presentations.size }
-    column(:attendances) { |p| p.attendances.size }
-    column(:created_at) { |p| p.created_at.strftime("%Y-%m-%d") }
+    column(:sessions) { |p| p.presentations.size }
+    column(:votes) { |p| p.attendances.size }
+    column(:created_at) { |p| p.created_at.strftime("%-m/%-d/%y") }
     actions
   end
 
@@ -26,7 +33,9 @@ ActiveAdmin.register Participant do
     attributes_table do
       row :name
       row :email
-      row :bio
+      row :bio do |participant|
+        markdown participant.bio
+      end
       row(:presentation_count) { |p| p.presentations.size }
       row(:attendance_count) { |p| p.attendances.size }
       row("Confirmed") do |p|
@@ -36,10 +45,14 @@ ActiveAdmin.register Participant do
       row :created_at
     end
     panel "Presentations" do
-      table_for participant.presentations do
-        column(:title) { |p| link_to p.session.title, admin_session_path(p.session) }
-        column(:event) { |p| link_to p.session.event.name, admin_event_path(p.session.event) }
-        column(:date) { |p| p.session.event.date }
+      table_for participant.presentations.order(created_at: :desc) do
+        column(:title) do |p|
+          (link_to(p.session.title, admin_session_path(p.session)) +
+           (p.session.canceled? ? " (CANCELED)" : "")).html_safe
+        end
+        column(:event) do |p|
+          (link_to(p.session.event.name, admin_event_path(p.session.event)) + " (#{p.session.event.date.year})").html_safe if p.session.event
+        end
       end
     end
   end

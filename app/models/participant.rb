@@ -26,9 +26,11 @@ class Participant < ActiveRecord::Base
   end
 
   scope :confirmed, -> { where.not(email_confirmed_at: nil) }
+  scope :with_sessions, -> { joins(:sessions) }
+  scope :with_presentations, -> { joins(:presentations) }
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "email", "bio"]
+    ["name", "email", "bio", "email_confirmed_at"]
   end
 
   def self.ransackable_associations(auth_object = nil)
