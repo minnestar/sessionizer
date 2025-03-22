@@ -2,14 +2,13 @@
 ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
 
-  current_event = Event.includes(:sessions, :rooms, :timeslots).current_event
-  settings = Settings.first
-
   content title: proc { I18n.t("active_admin.dashboard") } do
+    settings = Settings.first
+
     columns do
       column do
         panel "Current Event" do
-          attributes_table_for current_event do
+          attributes_table_for Event.includes(:sessions, :rooms, :timeslots).current_event do
             row :name
             row :date
             row "Show Schedule" do
@@ -33,7 +32,7 @@ ActiveAdmin.register_page "Dashboard" do
     end
 
     panel "Current Event Sessions" do
-      table_for current_event.sessions.includes(:presenters, :attendances, :timeslot, :room).order(:timeslot_id) do
+      table_for Event.includes(:sessions).current_event.sessions.includes(:presenters, :attendances, :timeslot, :room).order(:timeslot_id) do
         column :title do |session|
           link_to session.title, admin_session_path(session)
         end
