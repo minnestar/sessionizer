@@ -25,7 +25,7 @@ ActiveAdmin.register Session do
     :room
   ]
 
-  filter :event
+  filter :event, as: :select, collection: proc { Event.order(created_at: :desc).map { |e| [e.name + " (" + e.date.year.to_s + ")", e.id] } }
   filter :title
   filter :participant_id, as: :select,
          label: 'Creator',
