@@ -20,12 +20,12 @@ ActiveAdmin.register Participant do
     end
     column :email
     column :bio do |participant|
-      truncate(participant.bio, length: 100)
+      truncate(participant.bio, length: 80)
     end
     column(:confirmed, &:email_confirmed?)
     column(:sessions) { |p| p.presentations.size }
     column(:votes) { |p| p.attendances.size }
-    column(:created_at) { |p| p.created_at.strftime("%-m/%-d/%y") }
+    column(:created, sortable: :created_at) { |p| p.created_at.strftime("%-m/%-d/%y") }
     actions
   end
 
@@ -38,12 +38,13 @@ ActiveAdmin.register Participant do
       end
       row(:presentation_count) { |p| p.presentations.size }
       row(:attendance_count) { |p| p.attendances.size }
-      row("Confirmed") do |p|
+      row("Email confirmed") do |p|
         status_tag p.email_confirmed? ? "Yes" : "No", class: p.email_confirmed? ? :ok : :error
       end
       row :email_confirmed_at
       row :created_at
     end
+
     panel "Presentations" do
       table_for participant.presentations.order(created_at: :desc) do
         column(:title) do |p|
@@ -53,6 +54,20 @@ ActiveAdmin.register Participant do
         column(:event) do |p|
           (link_to(p.session.event.name, admin_event_path(p.session.event)) + " (#{p.session.event.date.year})").html_safe if p.session.event
         end
+      end
+    end
+
+    panel "Interested Sessions (attendances)" do
+      table_for participant.attendances.includes(session: :event).order('events.date desc, sessions.title') do
+        column(:title) do |attendance|
+          (link_to(attendance.session.title, admin_session_path(attendance.session)) +
+           (attendance.session.canceled? ? " (CANCELED)" : "")).html_safe
+        end
+        column(:event) do |attendance|
+          (link_to(attendance.session.event.name, admin_event_path(attendance.session.event)) +
+           " (#{attendance.session.event.date.year})").html_safe if attendance.session.event
+        end
+        column(:created_at) { |a| a.created_at.strftime("%-m/%-d/%y") }
       end
     end
   end

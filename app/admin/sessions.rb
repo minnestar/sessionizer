@@ -72,6 +72,20 @@ ActiveAdmin.register Session do
       row :created_at
       row :updated_at
     end
+
+    panel "Interested Participants" do
+      table_for session.attendances.includes(:participant).order('created_at desc') do
+        column :name do |attendance|
+          link_to attendance.participant.name, admin_participant_path(attendance.participant)
+        end
+        column :email_confirmed do |attendance|
+          attendance.participant.email_confirmed?
+        end
+        column :created do |attendance|
+          attendance.created_at.strftime("%-m/%-d/%y")
+        end
+      end
+    end
   end
 
   form do |f|
