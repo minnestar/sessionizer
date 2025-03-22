@@ -34,7 +34,8 @@ ActiveAdmin.register Session do
   index do
     column :id
     column :title do |session|
-      link_to session.title, admin_session_path(session) + (session.canceled? ? " (CANCELED)" : "")
+      (link_to(session.title, admin_session_path(session)) +
+       (session.canceled? ? " (CANCELED)" : "")).html_safe
     end
     column("Presenters") do |session|
       session.presenters.map do |presenter|
