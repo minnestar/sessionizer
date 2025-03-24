@@ -107,7 +107,7 @@ rails spec
 8. To deploy the app to heroku:
 
 ```
-  $ git push heroku master
+  $ git push heroku main
 ```
 
 ## Generating a schedule

@@ -23,3 +23,5 @@ Level.create_or_update(:id => 3, :name => 'Advanced')
 Level.create_or_update(:id => 4, :name => 'All levels')
 
 Category.find_or_create_defaults
+
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

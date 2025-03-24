@@ -38,6 +38,14 @@ class Session < ActiveRecord::Base
 
   after_create :create_presenter
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["title", "event_id", "participant_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
   def self.swap_timeslot_and_rooms(session_1, session_2)
     Session.transaction do
       session_1.room, session_2.room = session_2.room, session_1.room
@@ -187,6 +195,11 @@ class Session < ActiveRecord::Base
 
   def to_h
     SessionsJsonBuilder.new.to_hash(self)
+  end
+
+  # temporary method to check if a session is canceled
+  def canceled?
+    event_id.negative?
   end
 
   private
