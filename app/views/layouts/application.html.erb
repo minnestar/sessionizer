@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <%= csrf_meta_tags %>
     <title><%= yield(:title) || t('conference') %></title>
@@ -14,7 +14,9 @@
     <meta property="og:title" content="<%= yield(:title) || t('conference') %>" />
     <meta name="twitter:title" content="<%= yield(:title) || t('conference') %>">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="<%= image_url 'twitter-card.png' %>">
+    <meta name="twitter:image" content="<%= image_url 'promotional_assets/MINNEBAR19-3MAY2025.png' %>">
+    <meta property="og:image" content="<%= image_url 'promotional_assets/MINNEBAR19-3MAY2025.png' %>">
+    <meta property="og:image:alt" content="Minnebar 19 | May 3, 2025 | Best Buy HQ">
     <% if meta_description %>
     <meta property="og:description" content="<%= meta_description %>" />
     <meta name="twitter:description" content="<%= meta_description %>">
