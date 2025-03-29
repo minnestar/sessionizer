@@ -1,0 +1,17 @@
+@import "variables";
+
+footer {
+  background-color: $white;
+  margin-top: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid $grey;
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  align-self: flex-end;
+
+  p {
+    text-align: center;
+  }
+}
