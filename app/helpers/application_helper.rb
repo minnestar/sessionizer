@@ -28,8 +28,13 @@ module ApplicationHelper
     Nokogiri::HTML::DocumentFragment.parse(html.scrub).to_html
   end
 
+  # TODO: Add venue field to Event model and use it here instead of hardcoding "Best Buy HQ"
+  def default_meta_description
+    "#{Event.current_event.name} | #{Event.current_event.date.strftime("%B %e, %Y")} | Best Buy HQ"
+  end
+
   def meta_description
-    content_for?(:meta_description) ? content_for(:meta_description) : 'Minnebar'
+    content_for?(:meta_description) ? content_for(:meta_description) : default_meta_description
   end
 
   def sanitize_html(html)
