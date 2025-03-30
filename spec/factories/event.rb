@@ -15,9 +15,6 @@ FactoryBot.define do
       after(:create) do |event, evaluator|
         create_list(:room, evaluator.rooms_count, event: event)
         create_list(:timeslot, evaluator.timeslots_count, event: event)
-
-        # Reset counter caches after creating associations
-        Event.reset_counters(event.id, :rooms, :timeslots)
       end
     end
   end
