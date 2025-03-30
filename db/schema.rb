@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_30_143647) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_30_164250) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -136,6 +136,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_30_143647) do
     t.integer "level_id"
     t.boolean "manually_scheduled", default: false, null: false
     t.integer "manual_attendance_estimate"
+    t.integer "attendances_count", default: 0
     t.index ["level_id"], name: "index_sessions_on_level_id"
   end
 

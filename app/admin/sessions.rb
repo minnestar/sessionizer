@@ -42,14 +42,17 @@ ActiveAdmin.register Session do
         link_to presenter.name, admin_participant_path(presenter)
       end.join(", ").html_safe
     end
-    column("Event") do |session|
+    column("Event", sortable: :event) do |session|
       (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
     end
-    column("Votes") do |session|
-      session.attendances.size
+    column("Votes", :attendances_count, sortable: :attendances_count) do |session|
+      session.attendances_count
     end
-    column :timeslot
-    column :room
+    column :timeslot, sortable: :timeslot
+    column :room, sortable: :room
+    column("Created", sortable: :created_at) do |session|
+      session.created_at.strftime("%-m/%-d/%y")
+    end
   end
 
   show  title: :title do
@@ -64,7 +67,7 @@ ActiveAdmin.register Session do
       row :level
       row :categories
       row("Votes") do |session|
-        session.attendances.size
+        session.attendances_count
       end
       row :timeslot
       row :room
