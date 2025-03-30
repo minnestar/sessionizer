@@ -6,7 +6,7 @@ class AddCounterCachesToEvents < ActiveRecord::Migration[7.1]
 
     reversible do |dir|
       dir.up do
-        say_with_time "Updating counter caches..." do
+        say_with_time "Updating Event counter caches..." do
           Event.find_each { |event| Event.reset_counters(event.id, :sessions, :rooms, :timeslots) }
         end
       end
