@@ -1,6 +1,6 @@
 class Attendance < ActiveRecord::Base
   belongs_to :session, counter_cache: true
-  belongs_to :participant
+  belongs_to :participant, counter_cache: true
 
   attr_accessor :name, :email, :password
 

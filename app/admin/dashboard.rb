@@ -11,20 +11,20 @@ ActiveAdmin.register_page "Dashboard" do
           attributes_table_for Event.includes(:sessions, :rooms, :timeslots).current_event do
             row :name
             row :date
-            row "Show Schedule" do
-              settings.show_schedule
-            end
             row "Allow New Sessions" do
               settings.allow_new_sessions
             end
+            row "Show Schedule" do
+              settings.show_schedule
+            end
             row "# of Sessions" do |event|
-              event.sessions.size
+              event.sessions_count
             end
             row "# of Rooms" do |event|
-              event.rooms.size
+              event.rooms_count
             end
             row "# of Timeslots" do |event|
-              event.timeslots.size
+              event.timeslots_count
             end
           end
         end
