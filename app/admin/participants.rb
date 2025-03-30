@@ -46,7 +46,7 @@ ActiveAdmin.register Participant do
     end
 
     panel "Presentations (#{participant.presentations_count})" do
-      table_for participant.presentations.order(created_at: :desc) do
+      table_for participant.presentations.includes(session: :event).order(created_at: :desc) do
         column(:title) do |p|
           (link_to(p.session.title, admin_session_path(p.session)) +
            (p.session.canceled? ? " (CANCELED)" : "")).html_safe
