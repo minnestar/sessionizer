@@ -1,6 +1,16 @@
 ActiveAdmin.register Session do
   menu priority: 2
 
+  scope :active, default: true do |sessions|
+    sessions.where('sessions.event_id >= 0')
+  end
+
+  scope :canceled do |sessions|
+    sessions.where('sessions.event_id < 0')
+  end
+
+  scope :all
+
   permit_params(
     :participant_id,
     :title,
@@ -42,7 +52,7 @@ ActiveAdmin.register Session do
         link_to presenter.name, admin_participant_path(presenter)
       end.join(", ").html_safe
     end
-    column("Event", sortable: 'events.name') do |session|
+    column("Event", sortable: 'events.date') do |session|
       (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
     end
     column("Votes", :attendances_count, sortable: :attendances_count) do |session|
