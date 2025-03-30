@@ -6,7 +6,7 @@ class Session < ActiveRecord::Base
 
   has_many :presentations, :dependent => :destroy
   has_many :presenters, :through => :presentations, :source => :participant
-  belongs_to :event
+  belongs_to :event, counter_cache: true
   belongs_to :timeslot
   belongs_to :room
   belongs_to :level

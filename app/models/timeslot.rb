@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class Timeslot < ActiveRecord::Base
-  belongs_to :event
+  belongs_to :event, counter_cache: true
   has_many :sessions, dependent: :nullify
   has_many :presenter_timeslot_restrictions, dependent: :destroy
 

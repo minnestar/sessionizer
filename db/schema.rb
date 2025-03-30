@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_30_143647) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -64,6 +64,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
     t.date "date", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.integer "sessions_count", default: 0
+    t.integer "rooms_count", default: 0
+    t.integer "timeslots_count", default: 0
   end
 
   create_table "levels", id: :serial, force: :cascade do |t|
