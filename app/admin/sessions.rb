@@ -77,7 +77,7 @@ ActiveAdmin.register Session do
       row :updated_at
     end
 
-    panel "Interested Participants" do
+    panel "Interested Participants (#{session.attendances_count})" do
       table_for session.attendances.includes(:participant).order('created_at desc') do
         column :name do |attendance|
           link_to attendance.participant.name, admin_participant_path(attendance.participant)

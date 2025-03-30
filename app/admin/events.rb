@@ -50,14 +50,14 @@ ActiveAdmin.register Event do
       row "# of Rooms" do |event|
         event.rooms_count
       end
-      row "# of Sessions" do |event|
-        event.sessions_count
+      row("# of Sessions") do |event|
+        link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
       end
       row :created_at
       row :updated_at
     end
 
-    panel "Sessions" do
+    panel "Sessions (#{event.sessions_count})" do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
         'title' => 'sessions.title',
