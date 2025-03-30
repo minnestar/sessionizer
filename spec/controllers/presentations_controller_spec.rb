@@ -41,14 +41,20 @@ describe PresentationsController do
 
     context "when the user is found by name" do
       it "should be successful when the user has signed the code of conduct" do
+        # 2025-03-30: added reloads below in an attempt to prevent this test from flaking
+        participant.reload
+
         CodeOfConductAgreement.create!({
           participant_id: participant.id,
           event_id: Event.current_event.id,
         })
 
+        # reload to ensure session is fresh
+        session.reload
+
         expect {
           post :create, params: { session_id: session, name: participant.name }
-        }.to change { session.presentations.count }.by(1)
+        }.to change { session.reload.presentations.count }.by(1)
         expect(response).to redirect_to session_presentations_path(session)
         expect(flash[:notice]).to eq "Presenter added."
       end
