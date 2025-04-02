@@ -1,5 +1,5 @@
 class Room < ActiveRecord::Base
-  belongs_to :event
+  belongs_to :event, counter_cache: true
   has_many :sessions, :dependent => :nullify
 
   # TODO: Deprecate the default scope.

@@ -3,7 +3,7 @@
 
 class Presentation < ActiveRecord::Base
   belongs_to :session
-  belongs_to :participant
+  belongs_to :participant, counter_cache: true
 
   validates_presence_of :session_id
   validates_presence_of :participant_id

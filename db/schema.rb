@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_30_172156) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -64,6 +64,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
     t.date "date", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.integer "sessions_count", default: 0
+    t.integer "rooms_count", default: 0
+    t.integer "timeslots_count", default: 0
   end
 
   create_table "levels", id: :serial, force: :cascade do |t|
@@ -89,6 +92,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
     t.string "persistence_token", limit: 255
     t.string "perishable_token", limit: 255, default: "", null: false
     t.datetime "email_confirmed_at", precision: nil
+    t.integer "presentations_count", default: 0
+    t.integer "attendances_count", default: 0
     t.index ["email"], name: "index_participants_on_email", unique: true
     t.index ["perishable_token"], name: "index_participants_on_perishable_token"
   end
@@ -133,6 +138,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_020004) do
     t.integer "level_id"
     t.boolean "manually_scheduled", default: false, null: false
     t.integer "manual_attendance_estimate"
+    t.integer "attendances_count", default: 0
     t.index ["level_id"], name: "index_sessions_on_level_id"
   end
 

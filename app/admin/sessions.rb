@@ -1,6 +1,16 @@
 ActiveAdmin.register Session do
   menu priority: 2
 
+  scope :active, default: true do |sessions|
+    sessions.where('sessions.event_id >= 0')
+  end
+
+  scope :canceled do |sessions|
+    sessions.where('sessions.event_id < 0')
+  end
+
+  scope :all
+
   permit_params(
     :participant_id,
     :title,
@@ -42,14 +52,15 @@ ActiveAdmin.register Session do
         link_to presenter.name, admin_participant_path(presenter)
       end.join(", ").html_safe
     end
-    column("Event") do |session|
+    column("Event", sortable: 'events.date') do |session|
       (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
     end
-    column("Votes") do |session|
-      session.attendances.size
+    column("Votes", sortable: :attendances_count, &:attendances_count)
+    column :timeslot, sortable: :timeslot
+    column :room, sortable: :room
+    column("Created", sortable: :created_at) do |session|
+      session.created_at.strftime("%-m/%-d/%y")
     end
-    column :timeslot
-    column :room
   end
 
   show  title: :title do
@@ -64,7 +75,7 @@ ActiveAdmin.register Session do
       row :level
       row :categories
       row("Votes") do |session|
-        session.attendances.size
+        session.attendances_count
       end
       row :timeslot
       row :room
@@ -74,7 +85,7 @@ ActiveAdmin.register Session do
       row :updated_at
     end
 
-    panel "Interested Participants" do
+    panel "Interested Participants (#{session.attendances_count})" do
       table_for session.attendances.includes(:participant).order('created_at desc') do
         column :name do |attendance|
           link_to attendance.participant.name, admin_participant_path(attendance.participant)

@@ -23,8 +23,8 @@ ActiveAdmin.register Participant do
       truncate(participant.bio, length: 80)
     end
     column(:confirmed, &:email_confirmed?)
-    column(:sessions) { |p| p.presentations.size }
-    column(:votes) { |p| p.attendances.size }
+    column("Sessions", sortable: :presentations_count, &:presentations_count)
+    column("Votes", sortable: :attendances_count, &:attendances_count)
     column(:created, sortable: :created_at) { |p| p.created_at.strftime("%-m/%-d/%y") }
     actions
   end
@@ -36,8 +36,8 @@ ActiveAdmin.register Participant do
       row :bio do |participant|
         markdown participant.bio
       end
-      row(:presentation_count) { |p| p.presentations.size }
-      row(:attendance_count) { |p| p.attendances.size }
+      row("Presentations", &:presentations_count)
+      row("Attendances", &:attendances_count)
       row("Email confirmed") do |p|
         status_tag p.email_confirmed? ? "Yes" : "No", class: p.email_confirmed? ? :ok : :error
       end
@@ -45,8 +45,8 @@ ActiveAdmin.register Participant do
       row :created_at
     end
 
-    panel "Presentations" do
-      table_for participant.presentations.order(created_at: :desc) do
+    panel "Presentations (#{participant.presentations_count})" do
+      table_for participant.presentations.includes(session: :event).order(created_at: :desc) do
         column(:title) do |p|
           (link_to(p.session.title, admin_session_path(p.session)) +
            (p.session.canceled? ? " (CANCELED)" : "")).html_safe
@@ -57,7 +57,7 @@ ActiveAdmin.register Participant do
       end
     end
 
-    panel "Interested Sessions (attendances)" do
+    panel "Interested Sessions (#{participant.attendances_count})" do
       table_for participant.attendances.includes(session: :event).order('events.date desc, sessions.title') do
         column(:title) do |attendance|
           (link_to(attendance.session.title, admin_session_path(attendance.session)) +
