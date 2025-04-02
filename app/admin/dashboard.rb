@@ -67,9 +67,7 @@ ActiveAdmin.register_page "Dashboard" do
         column :presenters, sortable: false do |session|
           session.presenters.map { |presenter| link_to presenter.name, admin_participant_path(presenter) }.join(", ").html_safe
         end
-        column("Votes", :attendances_count, sortable: :attendances_count) do |session|
-          session.attendances_count
-        end
+        column("Votes", sortable: :attendances_count, &:attendances_count)
         column :timeslot, sortable: :timeslot_id do |session|
           session.timeslot&.to_s
         end
