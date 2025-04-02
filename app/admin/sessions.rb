@@ -55,9 +55,7 @@ ActiveAdmin.register Session do
     column("Event", sortable: 'events.date') do |session|
       (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
     end
-    column("Votes", :attendances_count, sortable: :attendances_count) do |session|
-      session.attendances_count
-    end
+    column("Votes", sortable: :attendances_count, &:attendances_count)
     column :timeslot, sortable: :timeslot
     column :room, sortable: :room
     column("Created", sortable: :created_at) do |session|
