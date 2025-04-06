@@ -46,15 +46,29 @@ ActiveAdmin.register Event do
     attributes_table do
       row :name
       row :date
-      row :timeslots
+      row "# of Sessions" do |event|
+        link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+      end
       row "# of Rooms" do |event|
         event.rooms_count
       end
-      row("# of Sessions") do |event|
-        link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+      row "# of Timeslots" do |event|
+        event.timeslots_count
       end
+      row :timeslots
       row :created_at
       row :updated_at
+      if event.current?
+        row "Allow New Sessions" do
+          Settings.first.allow_new_sessions
+        end
+        row "Show Schedule" do
+          Settings.first.show_schedule
+        end
+        row "Edit Settings" do
+          link_to "Edit Settings", edit_admin_setting_path(1)
+        end
+      end
     end
 
     panel "Sessions (#{event.sessions_count})" do

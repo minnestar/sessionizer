@@ -11,20 +11,23 @@ ActiveAdmin.register_page "Dashboard" do
           attributes_table_for Event.includes(:sessions, :rooms, :timeslots).current_event do
             row :name
             row :date
-            row "Allow New Sessions" do
-              settings.allow_new_sessions
-            end
-            row "Show Schedule" do
-              settings.show_schedule
-            end
             row "# of Sessions" do |event|
-              event.sessions_count
+              link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
             end
             row "# of Rooms" do |event|
               event.rooms_count
             end
             row "# of Timeslots" do |event|
               event.timeslots_count
+            end
+            row "Allow New Sessions" do
+              settings.allow_new_sessions
+            end
+            row "Show Schedule" do
+              settings.show_schedule
+            end
+            row "Edit Settings" do
+              link_to "Edit Settings", edit_admin_setting_path(1)
             end
           end
         end
