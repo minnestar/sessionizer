@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Settings do
-  menu false
+  menu priority: 10, parent: "Admin", label: "Event Settings"
   config.filters = false
   actions :index, :edit, :update, :show
 
