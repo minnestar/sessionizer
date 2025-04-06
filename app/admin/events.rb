@@ -35,7 +35,7 @@ ActiveAdmin.register Event do
       link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
     end
     column("# of Rooms") do |event|
-      event.rooms_count
+      link_to event.rooms_count, admin_event_rooms_path(event)
     end
     column("# of Timeslots") do |event|
       link_to event.timeslots_count, admin_event_timeslots_path(event)
@@ -50,7 +50,7 @@ ActiveAdmin.register Event do
         link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
       end
       row "# of Rooms" do |event|
-        event.rooms_count
+        link_to event.rooms_count, admin_event_rooms_path(event)
       end
       row "# of Timeslots" do |event|
         link_to event.timeslots_count, admin_event_timeslots_path(event)

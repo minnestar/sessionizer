@@ -1,5 +1,4 @@
 ActiveAdmin.register Timeslot do
-  menu parent: "Events", label: "Timeslots"
   config.filters = false
 
   belongs_to :event
@@ -17,8 +16,6 @@ ActiveAdmin.register Timeslot do
     end
     column :title
     column(:display, &:to_s)
-    # column :starts_at
-    # column :ends_at
     column :schedulable
     actions
   end
@@ -32,6 +29,16 @@ ActiveAdmin.register Timeslot do
       row :ends_at
       row(:display, &:to_s)
       row :schedulable
+    end
+
+    panel "Sessions" do
+      table_for timeslot.sessions.order('sessions.attendances_count DESC') do
+        column :title do |session|
+          link_to session.title, admin_session_path(session)
+        end
+        column :presenters
+        column :room
+      end
     end
   end
 

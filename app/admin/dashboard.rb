@@ -15,7 +15,7 @@ ActiveAdmin.register_page "Dashboard" do
               link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
             end
             row "# of Rooms" do |event|
-              event.rooms_count
+              link_to event.rooms_count, admin_event_rooms_path(event)
             end
             row "# of Timeslots" do |event|
               link_to event.timeslots_count, admin_event_timeslots_path(event)
@@ -72,10 +72,10 @@ ActiveAdmin.register_page "Dashboard" do
         end
         column("Votes", sortable: :attendances_count, &:attendances_count)
         column :timeslot, sortable: :timeslot_id do |session|
-          session.timeslot&.to_s
+          link_to session.timeslot&.to_s, admin_event_timeslot_path(session.event, session.timeslot) if session.timeslot
         end
         column :room, sortable: :room do |session|
-          session.room&.name
+          link_to session.room&.name, admin_event_room_path(session.event, session.room) if session.room
         end
         column("Created", sortable: :created_at) do |session|
           session.created_at.strftime("%-m/%-d/%y")
