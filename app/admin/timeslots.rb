@@ -11,10 +11,9 @@ ActiveAdmin.register Timeslot do
   index do
     column :id
     column :event
-    column("Date") do |timeslot|
-      timeslot.starts_at.in_time_zone.strftime("%B %e, %Y")
+    column :title do |timeslot|
+      link_to timeslot.title, admin_event_timeslot_path(timeslot.event, timeslot)
     end
-    column :title
     column(:display, &:to_s)
     column :schedulable
     actions
@@ -32,13 +31,19 @@ ActiveAdmin.register Timeslot do
     end
 
     panel "Sessions" do
-      table_for timeslot.sessions.order('sessions.attendances_count DESC') do
-        column :title do |session|
-          link_to session.title, admin_session_path(session)
+      if timeslot.sessions.any?
+        table_for timeslot.sessions.order('sessions.attendances_count DESC') do
+          column :title do |session|
+            link_to session.title, admin_session_path(session)
+          end
+          column :presenters
+          column :room
+          column("Votes", &:attendances_count)
         end
-        column :presenters
-        column :room
-        column("Votes", &:attendances_count)
+      else
+        div do
+          "No sessions scheduled during this timeslot."
+        end
       end
     end
   end

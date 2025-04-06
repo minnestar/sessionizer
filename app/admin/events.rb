@@ -111,10 +111,10 @@ ActiveAdmin.register Event do
         end
         column("Votes", sortable: :attendances_count, &:attendances_count)
         column :timeslot, sortable: :timeslot_id do |session|
-          session.timeslot&.to_s
+          link_to session.timeslot&.to_s, admin_event_timeslot_path(session.event, session.timeslot) if session.timeslot
         end
         column :room, sortable: :room do |session|
-          session.room&.name
+          link_to session.room&.name, admin_event_room_path(session.event, session.room) if session.room
         end
         column("Created", sortable: :created_at) do |session|
           session.created_at.strftime("%-m/%-d/%y")

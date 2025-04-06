@@ -41,15 +41,21 @@ ActiveAdmin.register Room do
     end
 
     panel "Sessions" do
-      table_for room.sessions.order('sessions.timeslot_id') do
-        column("Timeslot") do |session|
-          link_to session.timeslot.to_s, admin_event_timeslot_path(session.event, session.timeslot)
+      if room.sessions.any?
+        table_for room.sessions.order('sessions.timeslot_id') do
+          column("Timeslot") do |session|
+            link_to session.timeslot.to_s, admin_event_timeslot_path(session.event, session.timeslot)
         end
         column :title do |session|
           link_to session.title, admin_session_path(session)
         end
         column :presenters
-        column("Votes", &:attendances_count)
+          column("Votes", &:attendances_count)
+        end
+      else
+        div do
+          "No sessions scheduled in this room."
+        end
       end
     end
   end
