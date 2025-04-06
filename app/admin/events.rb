@@ -38,7 +38,7 @@ ActiveAdmin.register Event do
       event.rooms_count
     end
     column("# of Timeslots") do |event|
-      event.timeslots_count
+      link_to event.timeslots_count, admin_event_timeslots_path(event)
     end
   end
 
@@ -53,9 +53,13 @@ ActiveAdmin.register Event do
         event.rooms_count
       end
       row "# of Timeslots" do |event|
-        event.timeslots_count
+        link_to event.timeslots_count, admin_event_timeslots_path(event)
       end
-      row :timeslots
+      row "Timeslots" do |event|
+        event.timeslots.map do |timeslot|
+          link_to timeslot.to_s, admin_event_timeslot_path(event, timeslot)
+        end.join('<br>').html_safe
+      end
       row :created_at
       row :updated_at
       if event.current?
@@ -65,7 +69,7 @@ ActiveAdmin.register Event do
         row "Show Schedule" do
           Settings.first.show_schedule
         end
-        row "Edit Settings" do
+        row "Settings" do
           link_to "Edit Settings", edit_admin_setting_path(1)
         end
       end

@@ -18,7 +18,7 @@ ActiveAdmin.register_page "Dashboard" do
               event.rooms_count
             end
             row "# of Timeslots" do |event|
-              event.timeslots_count
+              link_to event.timeslots_count, admin_event_timeslots_path(event)
             end
             row "Allow New Sessions" do
               settings.allow_new_sessions
@@ -26,7 +26,7 @@ ActiveAdmin.register_page "Dashboard" do
             row "Show Schedule" do
               settings.show_schedule
             end
-            row "Edit Settings" do
+            row "Settings" do
               link_to "Edit Settings", edit_admin_setting_path(1)
             end
           end
