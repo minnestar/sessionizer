@@ -38,6 +38,7 @@ ActiveAdmin.register Timeslot do
         end
         column :presenters
         column :room
+        column("Votes", &:attendances_count)
       end
     end
   end

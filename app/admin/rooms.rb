@@ -49,6 +49,7 @@ ActiveAdmin.register Room do
           link_to session.title, admin_session_path(session)
         end
         column :presenters
+        column("Votes", &:attendances_count)
       end
     end
   end
