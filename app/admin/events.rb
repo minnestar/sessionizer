@@ -2,7 +2,7 @@ ActiveAdmin.register Event do
   menu priority: 1
   permit_params :name, :date
 
-  # Only eager load associations on the show page
+  # eager load associations on the show page
   controller do
     def scoped_collection
       collection = super
@@ -35,10 +35,10 @@ ActiveAdmin.register Event do
       link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
     end
     column("# of Rooms") do |event|
-      event.rooms_count
+      link_to event.rooms_count, admin_event_rooms_path(event)
     end
     column("# of Timeslots") do |event|
-      event.timeslots_count
+      link_to event.timeslots_count, admin_event_timeslots_path(event)
     end
   end
 
@@ -46,15 +46,33 @@ ActiveAdmin.register Event do
     attributes_table do
       row :name
       row :date
-      row :timeslots
-      row "# of Rooms" do |event|
-        event.rooms_count
-      end
-      row("# of Sessions") do |event|
+      row "# of Sessions" do |event|
         link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+      end
+      row "# of Rooms" do |event|
+        link_to event.rooms_count, admin_event_rooms_path(event)
+      end
+      row "# of Timeslots" do |event|
+        link_to event.timeslots_count, admin_event_timeslots_path(event)
+      end
+      row "Timeslots" do |event|
+        event.timeslots.map do |timeslot|
+          link_to timeslot.to_s, admin_event_timeslot_path(event, timeslot)
+        end.join('<br>').html_safe
       end
       row :created_at
       row :updated_at
+      if event.current?
+        row "Allow New Sessions" do
+          Settings.first.allow_new_sessions
+        end
+        row "Show Schedule" do
+          Settings.first.show_schedule
+        end
+        row "Settings" do
+          link_to "Edit Settings", edit_admin_setting_path(1)
+        end
+      end
     end
 
     panel "Sessions (#{event.sessions_count})" do
@@ -93,10 +111,10 @@ ActiveAdmin.register Event do
         end
         column("Votes", sortable: :attendances_count, &:attendances_count)
         column :timeslot, sortable: :timeslot_id do |session|
-          session.timeslot&.to_s
+          link_to session.timeslot&.to_s, admin_event_timeslot_path(session.event, session.timeslot) if session.timeslot
         end
         column :room, sortable: :room do |session|
-          session.room&.name
+          link_to session.room&.name, admin_event_room_path(session.event, session.room) if session.room
         end
         column("Created", sortable: :created_at) do |session|
           session.created_at.strftime("%-m/%-d/%y")
