@@ -5,6 +5,7 @@ ActiveAdmin.register Settings do
   config.filters = false
   actions :index, :edit, :update, :show
 
+  # assume there is only one settings object
   controller do
     def find_resource
       Settings.first

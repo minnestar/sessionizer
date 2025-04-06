@@ -6,9 +6,10 @@ ActiveAdmin.register Room do
   permit_params :event_id, :name, :capacity, :schedulable
   config.sort_order = 'capacity_desc'
 
+  # don't allow delete
   actions :all, except: [:destroy]
 
-  # eager load associations on show page
+  # eager load associations on the show page
   controller do
     def scoped_collection
       collection = super

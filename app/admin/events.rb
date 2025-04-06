@@ -2,7 +2,7 @@ ActiveAdmin.register Event do
   menu priority: 1
   permit_params :name, :date
 
-  # Only eager load associations on the show page
+  # eager load associations on the show page
   controller do
     def scoped_collection
       collection = super

@@ -6,6 +6,7 @@ ActiveAdmin.register Timeslot do
   permit_params :event_id, :starts_at, :ends_at, :schedulable, :title
   config.sort_order = 'starts_at_asc'
 
+  # don't allow delete
   actions :all, except: [:destroy]
 
   index do
