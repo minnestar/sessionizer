@@ -11,18 +11,18 @@ namespace :app do
 
     session_config = [
       { start:  "8:00", end:  "8:30", special: "Registration / Breakfast" },
-      { start:  "8:30", end:  "8:45", special: "Kickoff" },
-      { start:  "8:45", end:  "9:15", special: "Session 0" },
-      { start:  "9:20", end: "16:30", special: "All day" },
-      { start:  "9:25", end: "10:10" },
-      { start: "10:20", end: "11:05" },
-      { start: "11:15", end: "12:00" },
-      { start: "12:00", end: "13:00", special: "Lunch"  },
-      { start: "13:00", end: "13:45"},
-      { start: "13:55", end: "14:40" },
-      { start: "14:50", end: "15:35" },
-      { start: "15:45", end: "16:30" },
-      { start: "16:30", end: "19:00", special: "Happy Hour" }
+      { start:  "8:30", end:  "8:50", special: "Kickoff" },
+      { start:  "8:50", end:  "9:20", special: "Session 0" },
+      { start:  "9:30", end: "16:30", special: "All day" },
+      { start:  "9:35", end: "10:15" },
+      { start: "10:30", end: "11:10" },
+      { start: "11:25", end: "12:05" },
+      { start: "12:05", end: "13:05", special: "Lunch" },
+      { start: "13:05", end: "13:45" },
+      { start: "14:00", end: "14:40" },
+      { start: "14:55", end: "15:35" },
+      { start: "15:50", end: "16:30" },
+      { start: "16:30", end: "18:30", special: "Social Hour" }
     ]
 
     session_num = 0
@@ -58,7 +58,7 @@ namespace :app do
     event.rooms.destroy_all
 
     rooms = [
-      # { name: 'Alaska',           capacity: 96 },
+      # { name: 'Alaska',           capacity: 96 }, # Used for daycare in 2025
       { name: 'Bde Maka Ska',    capacity: 100 },
       # { name: 'Cabin',           capacity: 9 },
       # { name: 'California',      capacity: 16 },
@@ -66,6 +66,7 @@ namespace :app do
       # { name: 'Cottage',         capacity: 8 },
       { name: 'Discovery',        capacity: 23 }, # no video recording
       { name: 'Florida',         capacity: 12 }, # TV, no projector
+      { name: 'Gandhi',          capacity: 23 }, # Previously used for daycare; no video recording
       { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Harriet',         capacity: 100 },
       # { name: 'Kansas',          capacity: 10 }, # TV, no projector
@@ -82,6 +83,7 @@ namespace :app do
       # { name: 'Pennsylvania',    capacity: 10 },
       { name: 'Proverb-Edison',  capacity: 48 },
       # { name: 'South Carolina',  capacity: 6 },
+      { name: 'Stephen Leacock', capacity: 23 }, # Previously used for daycare; no video recording
       { name: 'Tackle',          capacity: 23 }, # no video recording
       { name: 'Texas',           capacity: 16 },
       { name: 'Theater',         capacity: 250 },
@@ -90,8 +92,6 @@ namespace :app do
 
       # –––––– Suboptimal rooms, reserved for more dire need ––––––
       # { name: 'Brand',           capacity: 75 },
-      # { name: 'Stephen Leacock', capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
-      # { name: 'Gandhi',          capacity: 23 }, # Lower so smaller sessions get put in there: no video recording
     ]
 
     Room.transaction do
