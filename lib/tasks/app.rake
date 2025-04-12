@@ -5,52 +5,7 @@ namespace :app do
 
   desc 'create default timeslots for the most recent event'
   task create_timeslots: :environment do
-    if event.timeslots.any?
-      raise "#{event.name} (event.id=#{event.id}) already has timeslots; please delete them before running this task"
-    end
-
-    session_config = [
-      { start:  "8:00", end:  "8:30", special: "Registration / Breakfast" },
-      { start:  "8:30", end:  "8:50", special: "Kickoff" },
-      { start:  "8:50", end:  "9:20", special: "Session 0" },
-      { start:  "9:30", end: "16:30", special: "All day" },
-      { start:  "9:35", end: "10:15" },
-      { start: "10:30", end: "11:10" },
-      { start: "11:25", end: "12:05" },
-      { start: "12:05", end: "13:05", special: "Lunch" },
-      { start: "13:05", end: "13:45" },
-      { start: "14:00", end: "14:40" },
-      { start: "14:55", end: "15:35" },
-      { start: "15:50", end: "16:30" },
-      { start: "16:30", end: "18:30", special: "Social Hour" }
-    ]
-
-    session_num = 0
-    session_length = nil
-    Timeslot.transaction do
-      session_config.each do |conf|
-        timeslot = event.timeslots.new
-        timeslot.starts_at = Time.zone.parse("#{event.date.to_s} #{conf[:start]}")
-        timeslot.ends_at   = Time.zone.parse("#{event.date.to_s} #{conf[:end]}")
-
-        if special_title = conf[:special]
-          timeslot.title = special_title
-          timeslot.schedulable = false
-        else
-          session_num += 1
-          timeslot.title = "Session #{session_num}"
-          timeslot.schedulable = true
-
-          this_session_length = timeslot.ends_at - timeslot.starts_at
-          session_length ||= this_session_length
-          if session_length != this_session_length
-            puts "WARNING: #{timeslot.title} is a different length from previous sessions"
-          end
-        end
-
-        timeslot.save!
-      end
-    end
+    event.create_default_timeslots
   end
 
   desc 'create default rooms for most recent event. Will nuke old rooms.'
