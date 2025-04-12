@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_30_172156) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_12_161056) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -146,6 +146,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_30_172156) do
     t.boolean "show_schedule"
     t.integer "current_event_id"
     t.boolean "allow_new_sessions", default: true, null: false
+    t.jsonb "timeslot_config"
     t.index ["current_event_id"], name: "index_settings_on_current_event_id"
   end
 

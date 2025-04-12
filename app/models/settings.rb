@@ -21,6 +21,10 @@ class Settings < ActiveRecord::Base
   end
 
   def self.default_timeslot_config
+    instance.timeslot_config.presence || static_default_timeslot_config
+  end
+
+  def self.static_default_timeslot_config
     [
       { start: "8:00", end: "8:30", special: "Registration / Breakfast" },
       { start: "8:30", end: "8:50", special: "Kickoff" },
@@ -36,6 +40,34 @@ class Settings < ActiveRecord::Base
       { start: "15:50", end: "16:30" },
       { start: "16:30", end: "18:30", special: "Social Hour" }
     ]
+  end
+
+  def timeslot_config=(value)
+    # Handle both string input (from textarea) and array input
+    config = if value.is_a?(String)
+      begin
+        # Split the string by newlines and parse each line as JSON
+        value.split(/[\r\n]+/).map do |line|
+          # Remove trailing comma if present
+          line = line.strip.gsub(/,\s*$/, '')
+          JSON.parse(line)
+        end
+      rescue JSON::ParserError
+        self.class.static_default_timeslot_config
+      end
+    else
+      value
+    end
+
+    # Ensure the value is an array of hashes with the correct structure
+    validated_config = Array(config).map do |slot|
+      {
+        "start" => slot["start"].to_s,
+        "end" => slot["end"].to_s,
+        "special" => slot["special"].presence
+      }.compact
+    end
+    super(validated_config)
   end
 
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Settings do
-  menu priority: 10, parent: "Admin", label: "Event Settings"
+  menu priority: 10, parent: "Events", label: "Event Settings"
   config.filters = false
   actions :index, :edit, :update, :show
 
@@ -12,7 +12,7 @@ ActiveAdmin.register Settings do
     end
   end
 
-  permit_params :allow_new_sessions, :show_schedule
+  permit_params :allow_new_sessions, :show_schedule, :timeslot_config
 
   index do
     column :id
@@ -25,6 +25,13 @@ ActiveAdmin.register Settings do
     attributes_table do
       row :allow_new_sessions
       row :show_schedule
+      row("Timeslot Config (JSON)") do |settings|
+        pre settings.timeslot_config.map { |slot|
+          ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
+          ordered_slot["special"] = slot["special"] if slot["special"].present?
+          JSON.generate(ordered_slot).gsub(/,/, ', ')
+        }.join(",\n")
+      end
     end
   end
 
@@ -32,6 +39,19 @@ ActiveAdmin.register Settings do
     f.inputs do
       f.input :allow_new_sessions
       f.input :show_schedule
+      f.input :timeslot_config,
+        as: :text,
+        label: "Timeslot Config (JSON)",
+        input_html: {
+          value: f.object.timeslot_config.map { |slot|
+            ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
+            ordered_slot["special"] = slot["special"] if slot["special"].present?
+            JSON.generate(ordered_slot).gsub(/,/, ', ')
+          }.join(",\n"),
+          rows: 20,
+          style: 'font-family: monospace;'
+        },
+        hint: "Format: {\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Registration / Breakfast\"}, {\"start\":\"8:30\", \"end\":\"8:50\", \"special\":\"Kickoff\"}"
     end
     f.actions
   end
