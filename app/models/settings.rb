@@ -21,7 +21,8 @@ class Settings < ActiveRecord::Base
   end
 
   def self.default_timeslot_config
-    instance.timeslot_config.presence || static_default_timeslot_config
+    config = instance.timeslot_config.presence || static_default_timeslot_config
+    config.map(&:stringify_keys)
   end
 
   def self.static_default_timeslot_config
