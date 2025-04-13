@@ -35,10 +35,14 @@ ActiveAdmin.register Event do
   end
 
   member_action :generate_timeslots, method: :post do
-    if resource.create_default_timeslots
-      redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
-    else
-      redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate timeslots.'
+    begin
+      if resource.create_default_timeslots
+        redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
+      else
+        redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate timeslots.'
+      end
+    rescue => e
+      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots #{e.message}"
     end
   end
 
