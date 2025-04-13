@@ -10,16 +10,14 @@ ActiveAdmin.register Settings do
     def find_resource
       Settings.first
     end
+
+    # make the index page redirect to the show page for the first settings record
+    def index
+      redirect_to admin_setting_path(Settings.first)
+    end
   end
 
   permit_params :allow_new_sessions, :show_schedule, :timeslot_config
-
-  index do
-    column :id
-    column :allow_new_sessions
-    column :show_schedule
-    actions
-  end
 
   show title: "Current Event Settings" do
     attributes_table title: "Settings"do
@@ -28,7 +26,7 @@ ActiveAdmin.register Settings do
       end
       row :allow_new_sessions
       row :show_schedule
-      row("Timeslot Config (JSON)") do |settings|
+      row("Timeslot Config") do |settings|
         pre settings.timeslot_config.map { |slot|
           ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
           ordered_slot["special"] = slot["special"] if slot["special"].present?

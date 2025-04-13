@@ -6,8 +6,18 @@ ActiveAdmin.register Timeslot do
   permit_params :event_id, :starts_at, :ends_at, :schedulable, :title
   config.sort_order = 'starts_at_asc'
 
-  # don't allow delete
-  actions :all, except: [:destroy]
+  # don't allow delete or new
+  actions :all, except: [:destroy, :new]
+
+  action_item :generate_timeslots, only: [:index] do
+    event = Event.find(params[:event_id])
+    if event.timeslots_count.zero?
+      link_to 'Generate timeslots',
+        generate_timeslots_admin_event_path(event),
+        method: :post,
+        data: { confirm: "This will generate #{Settings.default_timeslot_config.size} timeslots based on the config in Event Settings. Are you sure you want to proceed?" }
+    end
+  end
 
   index do
     column :id
@@ -17,7 +27,6 @@ ActiveAdmin.register Timeslot do
     end
     column(:display, &:to_s)
     column :schedulable
-    actions
   end
 
   show do

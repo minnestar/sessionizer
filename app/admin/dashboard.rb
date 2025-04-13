@@ -9,7 +9,9 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel "Current Event" do
           attributes_table_for Event.includes(:sessions, :rooms, :timeslots).current_event do
-            row :name
+            row :name do |event|
+              link_to event.name, admin_event_path(event)
+            end
             row :date
             row "# of Sessions" do |event|
               link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
@@ -23,13 +25,16 @@ ActiveAdmin.register_page "Dashboard" do
           end
         end
 
-        panel ("Current Event Settings (#{link_to 'Edit', edit_admin_setting_path(1)})").html_safe do
+        panel ("Current Event Settings (#{link_to 'edit', edit_admin_setting_path(1)})").html_safe do
           attributes_table_for Settings.first do
             row "Allow New Sessions" do
               settings.allow_new_sessions
             end
             row "Show Schedule" do
               settings.show_schedule
+            end
+            row "Timeslot Config" do
+              "#{settings.timeslot_config.size} timeslots"
             end
           end
         end

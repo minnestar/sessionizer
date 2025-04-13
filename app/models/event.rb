@@ -52,10 +52,13 @@ class Event < ActiveRecord::Base
     Timeslot.transaction do
       Settings.default_timeslot_config.each do |conf|
         timeslot = timeslots.new
-        timeslot.starts_at = Time.zone.parse("#{date.to_s} #{conf[:start]}")
-        timeslot.ends_at = Time.zone.parse("#{date.to_s} #{conf[:end]}")
+        # Parse the time in the current time zone, then combine with the event date
+        start_time = Time.zone.parse(conf["start"])
+        end_time = Time.zone.parse(conf["end"])
+        timeslot.starts_at = date.in_time_zone.change(hour: start_time.hour, min: start_time.min)
+        timeslot.ends_at = date.in_time_zone.change(hour: end_time.hour, min: end_time.min)
 
-        if special_title = conf[:special]
+        if special_title = conf["special"]
           timeslot.title = special_title
           timeslot.schedulable = false
         else
