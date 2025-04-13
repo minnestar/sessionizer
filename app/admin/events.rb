@@ -62,20 +62,23 @@ ActiveAdmin.register Event do
       end
       row :created_at
       row :updated_at
-      if event.current?
-        row "Allow New Sessions" do
-          Settings.first.allow_new_sessions
-        end
-        row "Show Schedule" do
-          Settings.first.show_schedule
-        end
-        row "Settings" do
-          link_to "Edit Settings", edit_admin_setting_path(1)
+    end
+
+    if event.current?
+      settings = Settings.first
+      panel ("Event Settings (#{link_to 'Edit', edit_admin_setting_path(1)})").html_safe do
+        attributes_table_for settings do
+          row "Allow New Sessions" do
+            settings.allow_new_sessions
+          end
+          row "Show Schedule" do
+            settings.show_schedule
+          end
         end
       end
     end
 
-    panel "Sessions (#{event.sessions_count})" do
+    panel "Event Sessions (#{event.sessions_count})" do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
         'title' => 'sessions.title',
