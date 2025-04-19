@@ -207,6 +207,7 @@ ul.sessionsList {
     margin: 0.6em 0;
     padding-left: 2.2em;
     display: inline-block;  // prevent column break
+    width: 100%;
     a {
       &:link, &:visited {
         font: 700 1.2em / 1.2em;
