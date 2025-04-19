@@ -30,7 +30,7 @@ ActiveAdmin.register Event do
       link_to 'Generate timeslots',
         generate_timeslots_admin_event_path(resource),
         method: :post,
-        data: { confirm: "This will generate #{Settings.default_timeslot_config.size} timeslots based on the config in Event Settings. Are you sure you want to proceed?" }
+        data: { confirm: "This will generate #{Settings.default_timeslot_config.size} timeslots based on the Event Settings config. Are you sure you want to proceed?" }
     end
   end
 
@@ -81,7 +81,7 @@ ActiveAdmin.register Event do
           link_to "Generate timeslots",
             generate_timeslots_admin_event_path(event),
             method: :post,
-            data: { confirm: "This will generate #{Settings.default_timeslot_config.size} timeslots based on the config in Event Settings. Are you sure you want to proceed?" }
+            data: { confirm: "This will generate #{Settings.default_timeslot_config.size} timeslots based on the Event Settings config. Are you sure you want to proceed?" }
         else
           event.timeslots.map do |timeslot|
             link_to timeslot.to_s, admin_event_timeslot_path(event, timeslot)
