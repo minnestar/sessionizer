@@ -25,6 +25,27 @@ ActiveAdmin.register Event do
   # don't allow delete
   actions :all, except: [:destroy]
 
+  action_item :generate_timeslots, only: :show do
+    if resource.timeslots_count.zero?
+      link_to 'Generate timeslots',
+        generate_timeslots_admin_event_path(resource),
+        method: :post,
+        data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
+    end
+  end
+
+  member_action :generate_timeslots, method: :post do
+    begin
+      if resource.create_default_timeslots
+        redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
+      else
+        redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate timeslots.'
+      end
+    rescue => e
+      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots #{e.message}"
+    end
+  end
+
   index do
     column :id
     column :name do |event|
@@ -56,26 +77,39 @@ ActiveAdmin.register Event do
         link_to event.timeslots_count, admin_event_timeslots_path(event)
       end
       row "Timeslots" do |event|
-        event.timeslots.map do |timeslot|
-          link_to timeslot.to_s, admin_event_timeslot_path(event, timeslot)
-        end.join('<br>').html_safe
+        if event.timeslots_count.zero?
+          link_to "Generate timeslots",
+            generate_timeslots_admin_event_path(event),
+            method: :post,
+            data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
+        else
+          event.timeslots.map do |timeslot|
+            link_to timeslot.to_s, admin_event_timeslot_path(event, timeslot)
+          end.join('<br>').html_safe
+        end
       end
       row :created_at
       row :updated_at
-      if event.current?
-        row "Allow New Sessions" do
-          Settings.first.allow_new_sessions
-        end
-        row "Show Schedule" do
-          Settings.first.show_schedule
-        end
-        row "Settings" do
-          link_to "Edit Settings", edit_admin_setting_path(1)
+    end
+
+    if event.current?
+      settings = Settings.first
+      panel ("Event Settings (#{link_to 'edit', edit_admin_setting_path(1)})").html_safe do
+        attributes_table_for settings do
+          row "Allow New Sessions" do
+            settings.allow_new_sessions
+          end
+          row "Show Schedule" do
+            settings.show_schedule
+          end
+          row "Default Timeslots" do
+            "#{settings.default_timeslots.size} slots"
+          end
         end
       end
     end
 
-    panel "Sessions (#{event.sessions_count})" do
+    panel "Event Sessions (#{event.sessions_count})" do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
         'title' => 'sessions.title',
