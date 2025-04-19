@@ -20,12 +20,12 @@ class Settings < ActiveRecord::Base
     instance.update(allow_new_sessions: !!val)
   end
 
-  def self.default_timeslot_config
-    config = instance.timeslot_config.presence || static_default_timeslot_config
-    config.map(&:stringify_keys)
+  def self.default_timeslots
+    timeslots = instance.default_timeslots.presence || static_default_timeslots
+    timeslots.map(&:stringify_keys)
   end
 
-  def self.static_default_timeslot_config
+  def self.static_default_timeslots
     [
       { start: "8:00", end: "8:30", special: "Registration / Breakfast" },
       { start: "8:30", end: "8:50", special: "Kickoff" },
@@ -43,7 +43,7 @@ class Settings < ActiveRecord::Base
     ]
   end
 
-  def timeslot_config=(value)
+  def default_timeslots=(value)
     # Handle both string input (from textarea) and array input
     config = if value.is_a?(String)
       begin
@@ -54,7 +54,7 @@ class Settings < ActiveRecord::Base
           JSON.parse(line)
         end
       rescue JSON::ParserError
-        self.class.static_default_timeslot_config
+        self.class.static_default_timeslots
       end
     else
       value

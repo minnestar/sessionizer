@@ -33,8 +33,8 @@ ActiveAdmin.register_page "Dashboard" do
             row "Show Schedule" do
               settings.show_schedule
             end
-            row "Timeslot Config" do
-              "#{settings.timeslot_config.size} timeslots"
+            row "Default Timeslots" do
+              "#{settings.default_timeslots.size} slots"
             end
           end
         end

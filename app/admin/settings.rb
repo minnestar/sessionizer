@@ -17,17 +17,17 @@ ActiveAdmin.register Settings do
     end
   end
 
-  permit_params :allow_new_sessions, :show_schedule, :timeslot_config
+  permit_params :allow_new_sessions, :show_schedule, :default_timeslots
 
   show title: "Current Event Settings" do
     attributes_table title: "Settings"do
       row("Current Event") do
-        Event.current_event.name
+        link_to Event.current_event.name, admin_event_path(Event.current_event)
       end
       row :allow_new_sessions
       row :show_schedule
-      row("Timeslot Config") do |settings|
-        pre settings.timeslot_config.map { |slot|
+      row("Default Timeslots") do |settings|
+        pre settings.default_timeslots.map { |slot|
           ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
           ordered_slot["special"] = slot["special"] if slot["special"].present?
           JSON.generate(ordered_slot).gsub(/,/, ', ')
@@ -46,18 +46,18 @@ ActiveAdmin.register Settings do
         label: "Current Event"
       f.input :allow_new_sessions
       f.input :show_schedule
-      f.input :timeslot_config,
+      f.input :default_timeslots,
         as: :text,
-        label: "Timeslot Config (JSON)",
+        label: "Default Timeslots (JSON)",
         input_html: {
-          value: f.object.timeslot_config.map { |slot|
+          value: f.object.default_timeslots.map { |slot|
             ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
             ordered_slot["special"] = slot["special"] if slot["special"].present?
             JSON.generate(ordered_slot).gsub(/,/, ', ')
           }.join(",\n"),
           rows: 20
         },
-        hint: "Format: {\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Registration / Breakfast\"}, {\"start\":\"8:30\", \"end\":\"8:50\", \"special\":\"Kickoff\"}"
+        hint: "Format: {\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Registration / Breakfast\"}, {\"start\":\"8:30\", \"end\":\"8:50\", \"special\":\"Kickoff\"}, etc..."
     end
     f.actions
   end

@@ -146,7 +146,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_12_161056) do
     t.boolean "show_schedule"
     t.integer "current_event_id"
     t.boolean "allow_new_sessions", default: true, null: false
-    t.jsonb "timeslot_config"
+    t.jsonb "default_timeslots"
     t.index ["current_event_id"], name: "index_settings_on_current_event_id"
   end
 

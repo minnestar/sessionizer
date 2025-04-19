@@ -23,7 +23,7 @@ describe Event do
       it "creates all timeslots from the default configuration" do
         expect {
           event.create_default_timeslots
-        }.to change { event.timeslots.count }.from(0).to(Settings.default_timeslot_config.size)
+        }.to change { event.timeslots.count }.from(0).to(Settings.default_timeslots.size)
       end
 
       it "creates special timeslots with correct attributes" do
@@ -73,7 +73,7 @@ describe Event do
 
     context "when timeslot lengths are inconsistent" do
       before do
-        allow(Settings).to receive(:default_timeslot_config).and_return([
+        allow(Settings).to receive(:default_timeslots).and_return([
           { "start" => "9:00", "end" => "9:45" },
           { "start" => "10:00", "end" => "10:30" } # Different length
         ])

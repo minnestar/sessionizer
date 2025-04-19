@@ -50,7 +50,7 @@ class Event < ActiveRecord::Base
     session_length = nil
 
     Timeslot.transaction do
-      Settings.default_timeslot_config.each do |conf|
+      Settings.default_timeslots.each do |conf|
         timeslot = timeslots.new
         # Parse the time in the current time zone, then combine with the event date
         start_time = Time.zone.parse(conf["start"])
