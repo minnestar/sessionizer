@@ -1,4 +1,4 @@
-class SetInitialSettingsTimeslotConfig < ActiveRecord::Migration[7.1]
+class SetInitialSettingsDefaultTimeslots < ActiveRecord::Migration[7.1]
   def up
     settings = Settings.find_or_create_by(id: 1)
     initial_config = JSON.parse(Settings.static_default_timeslots.to_json)
