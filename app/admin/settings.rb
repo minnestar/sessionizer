@@ -50,7 +50,7 @@ ActiveAdmin.register Settings do
         as: :text,
         label: "Default Timeslots (JSON)",
         input_html: {
-          value: f.object.default_timeslots.map { |slot|
+          value: f.object.default_timeslots_raw_value || f.object.default_timeslots.map { |slot|
             ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
             ordered_slot["special"] = slot["special"] if slot["special"].present?
             JSON.generate(ordered_slot).gsub(/,/, ', ')

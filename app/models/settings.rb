@@ -1,4 +1,5 @@
 class Settings < ActiveRecord::Base
+  validate :validate_default_timeslots
 
   def self.instance
     self.find_or_create_by id: 1
@@ -44,6 +45,9 @@ class Settings < ActiveRecord::Base
   end
 
   def default_timeslots=(value)
+    # Store the raw value for error display
+    @default_timeslots_raw_value = value
+
     # Handle both string input (from textarea) and array input
     config = if value.is_a?(String)
       begin
@@ -51,9 +55,11 @@ class Settings < ActiveRecord::Base
         value.split(/[\r\n]+/).map do |line|
           # Remove trailing comma if present
           line = line.strip.gsub(/,\s*$/, '')
+          next if line.blank?
           JSON.parse(line)
-        end
-      rescue JSON::ParserError
+        end.compact
+      rescue JSON::ParserError => e
+        @default_timeslots_validation_error = "Invalid JSON format: #{e.message}"
         self.class.static_default_timeslots
       end
     else
@@ -71,4 +77,63 @@ class Settings < ActiveRecord::Base
     super(validated_config)
   end
 
+  def default_timeslots_raw_value
+    @default_timeslots_raw_value
+  end
+
+  def default_timeslots_validation_error
+    @default_timeslots_validation_error
+  end
+
+  private
+
+  def validate_default_timeslots
+    return unless default_timeslots_changed?
+
+    # Check for any validation errors from the setter
+    if default_timeslots_validation_error.present?
+      errors.add(:default_timeslots, default_timeslots_validation_error)
+      return
+    end
+
+    # Ensure it's an array
+    unless default_timeslots.is_a?(Array)
+      errors.add(:default_timeslots, "must be an array of JSON objects")
+      return
+    end
+
+    # Validate each timeslot
+    default_timeslots.each_with_index do |slot, index|
+      # Check that it's a hash/object
+      unless slot.is_a?(Hash)
+        errors.add(:default_timeslots, "line #{index + 1} must be a valid JSON object")
+        next
+      end
+
+      # Check required fields
+      unless slot["start"].present? && slot["end"].present?
+        errors.add(:default_timeslots, "line #{index + 1} is missing required start or end time")
+        next
+      end
+
+      # Validate time format
+      begin
+        Time.parse(slot["start"])
+        Time.parse(slot["end"])
+      rescue ArgumentError
+        errors.add(:default_timeslots, "line #{index + 1} has invalid time format")
+      end
+
+      # Validate time order
+      begin
+        start_time = Time.parse(slot["start"])
+        end_time = Time.parse(slot["end"])
+        if end_time <= start_time
+          errors.add(:default_timeslots, "line #{index + 1} has end time before or equal to start time")
+        end
+      rescue ArgumentError
+        # Skip this check if time parsing failed (already caught above)
+      end
+    end
+  end
 end
