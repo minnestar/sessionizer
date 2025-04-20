@@ -30,6 +30,7 @@
 @media screen and (max-width: 65em) {
 	.center-column {
 		box-sizing: border-box;
+		max-width: 100%;
 		padding: 1em;
 	}
 	.row {
