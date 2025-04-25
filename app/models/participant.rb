@@ -37,28 +37,40 @@ class Participant < ActiveRecord::Base
   end
 
   def restrict_after(datetime, weight=1, event=Event.current_event)
-    event.timeslots.each do |timeslot|
-      if timeslot.ends_at > datetime
-        self.presenter_timeslot_restrictions.create!(
-          timeslot: timeslot,
-          weight:   weight)
-      end
+    create_restrictions do |timeslot|
+      timeslot.ends_at > datetime
     end
   end
 
   def restrict_before(datetime, weight=1, event=Event.current_event)
-    event.timeslots.each do |timeslot|
-      if timeslot.starts_at < datetime
-        self.presenter_timeslot_restrictions.create!(
-          timeslot: timeslot,
-          weight:   weight)
-      end
+    create_restrictions do |timeslot|
+      timeslot.starts_at < datetime
     end
   end
 
   def restrict_not_at(datetime, weight=1, event=Event.current_event)
+    create_restrictions do |timeslot|
+      timeslot.ends_at < datetime || timeslot.starts_at > datetime
+    end
+  end
+
+  def restrict_all_except(allowed_slots, weight=1, event=Event.current_event)
+    create_restrictions do |timeslot|
+      !allowed_slots.include?(timeslot)
+    end
+  end
+
+  def restrict_only(disallowed_slots, weight=1, event=Event.current_event)
+    create_restrictions do |timeslot|
+      disallowed_slots.include?(timeslot)
+    end
+  end
+
+private
+
+  def create_restrictions(weight=1, &is_restricted)
     event.timeslots.each do |timeslot|
-      if timeslot.ends_at < datetime || timeslot.starts_at > datetime
+      if timeslot.schedulable && yield(timeslot)
         self.presenter_timeslot_restrictions.create!(
           timeslot: timeslot,
           weight:   weight)
@@ -66,15 +78,7 @@ class Participant < ActiveRecord::Base
     end
   end
 
-  def restrict_to_only(allowed_slots, weight=1, event=Event.current_event)
-    event.timeslots.each do |timeslot|
-      unless allowed_slots.include?(timeslot)
-        self.presenter_timeslot_restrictions.create!(
-          timeslot: timeslot,
-          weight:   weight)
-      end
-    end
-  end
+public
 
   def deliver_password_reset_instructions!
     reset_perishable_token!
