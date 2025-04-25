@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ "$#" -ne 2 ]; then
     echo "usage: $0 <input constraints.csv> <ouput schedule.json>"
     exit 1
