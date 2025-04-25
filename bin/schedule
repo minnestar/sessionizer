@@ -25,6 +25,11 @@ function section {
 section "Pulling latest data from production..."
 bin/pull-database-from-production
 
+if [ -e "$schedule_file" ]; then
+    section "Re-importing previous best schedule..."
+    rails app:import_schedule <"$schedule_file"
+fi
+
 section "Scheduler input quality analysis"
 rails db:migrate && rails app:analyze_scheduler_input_quality
 
@@ -38,7 +43,7 @@ for q in 0.01 0.05 0.1 0.2 0.3 0.5 0.7 0.9 1.0 1.5; do
 done
 
 section "Exporting generated schedule to $schedule_file"
-rails app:export_schedule >$schedule_file || exit
+rails app:export_schedule >"$schedule_file" || exit
 
 section "Congratulations. You have a schedule!"
 echo "Check the schedule locally. If it looks good, you can upload it to prod with:"
@@ -46,3 +51,7 @@ echo
 echo "   heroku run rails app:import_schedule < $schedule_file"
 echo -e "   ${red_bold}⬆︎⬆︎⬆︎ DANGER: overwrites current live schedule ⬆︎⬆︎⬆︎${normal}"
 echo
+echo "If you want to try for an even better schedule, you can run this script again."
+echo "It will restart from the previous best schedule in $schedule.json."
+echo "This is a good idea if you were still seeing “New best solution” even at the"
+echo "highest cooling times, late in the process."
