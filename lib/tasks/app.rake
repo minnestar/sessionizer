@@ -146,7 +146,7 @@ namespace :app do
     if args[:config_file].blank?
       STDERR.puts 'Usage:
 
-          rake app:configure_sessions[path/to/constraints.csv]
+          rails "app:configure_sessions[path/to/constraints.csv]"
 
         The CSV file must open with a header line with the following columns:
 
