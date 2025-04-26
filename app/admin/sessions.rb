@@ -62,7 +62,11 @@ ActiveAdmin.register Session do
   end
 
   action_item :uncancel, only: :show do
-    link_to('Uncancel Session', uncancel_admin_session_path(resource), method: :post) if resource.canceled?
+    link_to(
+      'Uncancel Session',
+      uncancel_admin_session_path(resource),
+      method: :post
+    ) if resource.canceled? && resource.event_id == Event.current_event.id
   end
 
   index do
@@ -82,7 +86,7 @@ ActiveAdmin.register Session do
     column("Votes", sortable: :attendances_count, &:attendances_count)
     column :timeslot, sortable: :timeslot
     column :room, sortable: :room
-    column("Canceled", &:canceled?)
+    column("Canceled", sortable: :canceled_at, &:canceled?)
     column("Created", sortable: :created_at) do |session|
       session.created_at.strftime("%-m/%-d/%y")
     end

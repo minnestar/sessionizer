@@ -95,7 +95,7 @@ ActiveAdmin.register_page "Dashboard" do
         column :room, sortable: :room do |session|
           link_to session.room&.name, admin_event_room_path(session.event, session.room) if session.room
         end
-        column("Canceled", sortable: :canceled?, &:canceled?)
+        column("Canceled", sortable: :canceled_at, &:canceled?)
         column("Created", sortable: :created_at) do |session|
           session.created_at.strftime("%-m/%-d/%y")
         end
