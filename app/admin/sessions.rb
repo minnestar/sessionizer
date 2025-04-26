@@ -96,7 +96,9 @@ ActiveAdmin.register Session do
       row :title
       row :participant
       row :presenters
-      row :description
+      row :description do |session|
+        markdown session.description
+      end
       row :level
       row :categories
       row("Votes") do |session|
@@ -105,8 +107,8 @@ ActiveAdmin.register Session do
       row :timeslot
       row :room
       row :manually_scheduled
-      row :canceled?
       row :canceled_at
+      row :canceled?
       row :created_at
       row :updated_at
     end
