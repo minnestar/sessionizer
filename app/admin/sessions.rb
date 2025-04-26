@@ -7,8 +7,8 @@ ActiveAdmin.register Session do
     end
   end
 
-  scope :all
-  scope :active, default: true
+  scope :all, default: true
+  scope :active
   scope :canceled
 
   permit_params(

@@ -41,7 +41,7 @@ ActiveAdmin.register_page "Dashboard" do
       end
     end
 
-    panel "Current Event Sessions" do
+    panel "Current Event Sessions (#{Event.current_event.sessions.with_canceled.count})" do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
         'title' => 'sessions.title',
@@ -66,16 +66,27 @@ ActiveAdmin.register_page "Dashboard" do
       sessions = Event.includes(:sessions)
                      .current_event
                      .sessions
+                     .with_canceled
                      .includes(:presenters, :attendances, :timeslot, :room)
                      .joins('LEFT JOIN rooms ON rooms.id = sessions.room_id')
                      .order(order_clause)
 
       table_for sessions, sortable: true do
         column :title, sortable: :title do |session|
-          link_to truncate(session.title, length: 80), admin_session_path(session)
+          (link_to(truncate(session.title, length: 80), admin_session_path(session)) +
+          (session.canceled? ? " (CANCELED)" : "")).html_safe
         end
         column :presenters, sortable: false do |session|
-          session.presenters.map { |presenter| link_to presenter.name, admin_participant_path(presenter) }.join(", ").html_safe
+          presenters = session.presenters
+          if presenters.size > 3
+            presenters = presenters.first(2)
+            presenter_links = presenters.map do |presenter|
+              link_to presenter.name, admin_participant_path(presenter)
+            end
+            [presenter_links, " and #{session.presenters.size - 2} others"].join(", ").html_safe
+          else
+            presenters.map { |presenter| link_to presenter.name, admin_participant_path(presenter) }.join(", ").html_safe
+          end
         end
         column("Votes", sortable: :attendances_count, &:attendances_count)
         column :timeslot, sortable: :timeslot_id do |session|
@@ -84,6 +95,7 @@ ActiveAdmin.register_page "Dashboard" do
         column :room, sortable: :room do |session|
           link_to session.room&.name, admin_event_room_path(session.event, session.room) if session.room
         end
+        column("Canceled", sortable: :canceled?, &:canceled?)
         column("Created", sortable: :created_at) do |session|
           session.created_at.strftime("%-m/%-d/%y")
         end
