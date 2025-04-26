@@ -40,15 +40,17 @@ ActiveAdmin.register Timeslot do
       row :schedulable
     end
 
-    panel "Sessions" do
-      if timeslot.sessions.any?
-        table_for timeslot.sessions.order('sessions.attendances_count DESC') do
+    panel "Sessions (#{timeslot.sessions.with_canceled.count})" do
+      if timeslot.sessions.with_canceled.any?
+        table_for timeslot.sessions.with_canceled.order('sessions.attendances_count DESC') do
           column :title do |session|
-            link_to session.title, admin_session_path(session)
+            (link_to(session.title, admin_session_path(session)) +
+            (session.canceled? ? " (CANCELED)" : "")).html_safe
           end
           column :presenters
           column :room
           column("Votes", &:attendances_count)
+          column("Canceled", &:canceled?)
         end
       else
         div do
