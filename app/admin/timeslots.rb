@@ -29,10 +29,10 @@ ActiveAdmin.register Timeslot do
     end
     column(:display, &:to_s)
     column :schedulable
-    column("Sessions") do |timeslot|
+    column("Sessions", sortable: :sessions_count) do |timeslot|
       link_to(
         timeslot.sessions.size,
-        admin_sessions_path(q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
+        admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
       )
     end
   end
@@ -49,7 +49,7 @@ ActiveAdmin.register Timeslot do
 
     end
 
-    panel "Sessions" do
+    panel "Sessions (#{timeslot.sessions.size})" do
       if timeslot.sessions.any?
         table_for timeslot.sessions.order('sessions.attendances_count DESC') do
           column :title do |session|

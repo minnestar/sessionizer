@@ -81,7 +81,7 @@ ActiveAdmin.register_page "Dashboard" do
         column :timeslot, sortable: :timeslot_id do |session|
           link_to session.timeslot&.to_s, admin_event_timeslot_path(session.event, session.timeslot) if session.timeslot
         end
-        column :room, sortable: :room do |session|
+        column :room, sortable: :room_id do |session|
           link_to session.room&.name, admin_event_room_path(session.event, session.room) if session.room
         end
         column("Created", sortable: :created_at) do |session|

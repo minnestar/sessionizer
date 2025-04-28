@@ -41,7 +41,7 @@ ActiveAdmin.register Room do
       row :schedulable
     end
 
-    panel "Sessions" do
+    panel "Sessions (#{room.sessions.size})" do
       if room.sessions.any?
         table_for room.sessions.order('sessions.timeslot_id') do
           column("Timeslot") do |session|
