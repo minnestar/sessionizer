@@ -76,18 +76,6 @@ ActiveAdmin.register Event do
       row "# of Timeslots" do |event|
         link_to event.timeslots_count, admin_event_timeslots_path(event)
       end
-      row "Timeslots" do |event|
-        if event.timeslots_count.zero?
-          link_to "Generate timeslots",
-            generate_timeslots_admin_event_path(event),
-            method: :post,
-            data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
-        else
-          event.timeslots.map do |timeslot|
-            link_to timeslot.to_s, admin_event_timeslot_path(event, timeslot)
-          end.join('<br>').html_safe
-        end
-      end
       row :created_at
       row :updated_at
     end
@@ -105,6 +93,22 @@ ActiveAdmin.register Event do
           row "Default Timeslots" do
             "#{settings.default_timeslots.size} slots"
           end
+        end
+      end
+    end
+
+    panel "Event Timeslots (#{event.timeslots_count})" do
+      table_for event.timeslots do
+        column :title do |timeslot|
+          link_to timeslot.title, admin_event_timeslot_path(event, timeslot)
+        end
+        column(:display, &:to_s)
+        column :schedulable
+        column("Sessions", sortable: :sessions_count) do |timeslot|
+          link_to(
+            timeslot.sessions.size,
+            admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
+          )
         end
       end
     end

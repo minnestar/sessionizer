@@ -46,7 +46,6 @@ ActiveAdmin.register Timeslot do
       row :ends_at
       row(:display, &:to_s)
       row :schedulable
-
     end
 
     panel "Sessions (#{timeslot.sessions.size})" do
