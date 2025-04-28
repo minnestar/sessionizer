@@ -39,7 +39,7 @@ class Session < ActiveRecord::Base
   after_create :create_presenter
 
   def self.ransackable_attributes(auth_object = nil)
-    ["title", "event_id", "participant_id"]
+    ["title", "event_id", "participant_id", "timeslot_id"]
   end
 
   def self.ransackable_associations(auth_object = nil)

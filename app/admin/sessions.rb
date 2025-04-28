@@ -21,16 +21,15 @@ ActiveAdmin.register Session do
     :summary,
     :level_id,
     :manually_scheduled,
-    :manual_attendance_estimate
+    :manual_attendance_estimate,
+    presenter_ids: [],
+    category_ids: []
   )
 
   includes [
     :attendances,
     :presenters,
     :event,
-    :participant,
-    :level,
-    :categories,
     :timeslot,
     :room
   ]
@@ -40,6 +39,12 @@ ActiveAdmin.register Session do
   filter :participant_id, as: :select,
          label: 'Creator',
          collection: proc { Participant.with_sessions.distinct.order(:name).pluck(:name, :id) }
+  filter :timeslot, as: :select, collection: proc {
+    Timeslot.includes(:event)
+           .where.not(title: nil)
+           .order('events.id DESC, timeslots.id DESC')
+           .map { |t| ["#{t.event.name}: #{t.title}", t.id] }
+  }
 
   index do
     column :id
@@ -105,10 +110,13 @@ ActiveAdmin.register Session do
       f.input :title
       f.input :description
       f.input :participant
-      f.input :presenters
+      f.input :presenters,
+              as: :select,
+              collection: Participant.joins(:presentations).distinct.order(:name).map { |p| ["#{p.name} (#{p.email})", p.id] },
+              input_html: { size: 10, multiple: true, style: 'height: auto;' }
       f.input :level
       f.input :categories
-      f.input :timeslot
+      f.input :timeslot, collection: Timeslot.where(event_id: f.object.event_id)
       f.input :room
       f.input :manually_scheduled
     end
