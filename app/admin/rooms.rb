@@ -29,6 +29,12 @@ ActiveAdmin.register Room do
     end
     column :capacity
     column :schedulable
+    column("Sessions") do |room|
+      link_to(
+        "#{room.sessions.size}",
+        admin_sessions_path(order: "timeslot_id_asc", q: { event_id_eq: room.event_id, room_id_eq: room.id })
+      )
+      end
     actions
   end
 

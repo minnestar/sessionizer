@@ -40,10 +40,19 @@ ActiveAdmin.register Session do
          label: 'Creator',
          collection: proc { Participant.with_sessions.distinct.order(:name).pluck(:name, :id) }
   filter :timeslot, as: :select, collection: proc {
-    Timeslot.includes(:event)
-           .where.not(title: nil)
-           .order('events.id DESC, timeslots.id DESC')
-           .map { |t| ["#{t.event.name}: #{t.title}", t.id] }
+    Timeslot.unscoped
+            .includes(:event)
+            .where.not(title: nil)
+            .order('events.id DESC, timeslots.id ASC')
+            .map { |t| ["#{t.event.name}: #{t.title}", t.id] }
+  }
+
+  filter :room, as: :select, collection: proc {
+    Room.unscoped
+        .includes(:event)
+        .where.not(name: nil)
+        .order('events.id DESC, rooms.capacity DESC')
+        .map { |r| ["#{r.event.name}: #{r.name}", r.id] }
   }
 
   index do
