@@ -54,13 +54,13 @@ ActiveAdmin.register_page "Dashboard" do
       # Get sort column and direction from params, with validation
       raw_sort = params[:order]&.gsub(/_desc|_asc/, '')  # Remove direction suffix
 
-      # If sort param exists, use it; otherwise use default sort (timeslot, then votes)
+      # If sort param exists, use it; otherwise use default sort (timeslot, room capacity,then votes)
       order_clause = if params[:order].present?
         sort_column = sortable_columns[raw_sort] || 'sessions.timeslot_id'
         sort_direction = params[:order]&.end_with?('desc') ? 'desc' : 'asc'
         Arel.sql("#{sort_column} #{sort_direction}")
       else
-        Arel.sql('sessions.timeslot_id, sessions.attendances_count DESC')
+        Arel.sql('sessions.timeslot_id, rooms.capacity DESC, sessions.attendances_count DESC')
       end
 
       sessions = Event.includes(:sessions)

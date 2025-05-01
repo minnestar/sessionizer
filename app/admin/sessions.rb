@@ -126,7 +126,7 @@ ActiveAdmin.register Session do
       f.input :level
       f.input :categories
       f.input :timeslot, collection: Timeslot.where(event_id: f.object.event_id)
-      f.input :room
+      f.input :room, collection: Room.where(event_id: f.object.event_id)
       f.input :manually_scheduled
     end
     f.actions
