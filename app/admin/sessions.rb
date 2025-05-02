@@ -1,15 +1,15 @@
 ActiveAdmin.register Session do
   menu priority: 2
 
-  scope :active, default: true do |sessions|
-    sessions.where('sessions.event_id >= 0')
+  controller do
+    def scoped_collection
+      Session.unscoped
+    end
   end
 
-  scope :canceled do |sessions|
-    sessions.where('sessions.event_id < 0')
-  end
-
-  scope :all
+  scope :all, default: true
+  scope :active
+  scope :canceled
 
   permit_params(
     :participant_id,
@@ -22,6 +22,7 @@ ActiveAdmin.register Session do
     :level_id,
     :manually_scheduled,
     :manual_attendance_estimate,
+    :canceled_at,
     presenter_ids: [],
     category_ids: []
   )
@@ -55,6 +56,33 @@ ActiveAdmin.register Session do
         .map { |r| ["#{r.event.name}: #{r.name}", r.id] }
   }
 
+  member_action :cancel, method: :post do
+    resource.update!(canceled_at: Time.current)
+    redirect_to admin_session_path(resource), notice: "Session has been canceled"
+  end
+
+  member_action :uncancel, method: :post do
+    resource.update!(canceled_at: nil)
+    redirect_to admin_session_path(resource), notice: "Session has been uncanceled"
+  end
+
+  action_item :cancel, only: :show do
+    link_to(
+      'Cancel Session',
+      cancel_admin_session_path(resource),
+      method: :post,
+      data: { confirm: "Are you sure you want to cancel this session?" }
+    ) if !resource.canceled? && resource.event_id == Event.current_event.id
+  end
+
+  action_item :uncancel, only: :show do
+    link_to(
+      'Uncancel Session',
+      uncancel_admin_session_path(resource),
+      method: :post
+    ) if resource.canceled? && resource.event_id == Event.current_event.id
+  end
+
   index do
     column :id
     column :title do |session|
@@ -72,6 +100,7 @@ ActiveAdmin.register Session do
     column("Votes", sortable: :attendances_count, &:attendances_count)
     column :timeslot, sortable: :timeslot_id
     column :room, sortable: :room_id
+    column("Canceled", sortable: :canceled_at, &:canceled?)
     column("Created", sortable: :created_at) do |session|
       session.created_at.strftime("%-m/%-d/%y")
     end
@@ -85,7 +114,9 @@ ActiveAdmin.register Session do
       row :title
       row :participant
       row :presenters
-      row :description
+      row :description do |session|
+        markdown session.description
+      end
       row :level
       row :categories
       row("Votes") do |session|
@@ -94,6 +125,7 @@ ActiveAdmin.register Session do
       row :timeslot
       row :room
       row :manually_scheduled
+      row :canceled_at
       row :canceled?
       row :created_at
       row :updated_at

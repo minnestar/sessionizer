@@ -5,7 +5,15 @@ class AddCounterCachesToSessions < ActiveRecord::Migration[7.1]
     reversible do |dir|
       dir.up do
         say_with_time "Updating Session counter caches..." do
-          Session.find_each { |session| Session.reset_counters(session.id, :attendances) }
+          # Use SQL directly to avoid model scopes
+          execute <<-SQL
+            UPDATE sessions
+            SET attendances_count = (
+              SELECT COUNT(*)
+              FROM attendances
+              WHERE attendances.session_id = sessions.id
+            )
+          SQL
         end
       end
     end

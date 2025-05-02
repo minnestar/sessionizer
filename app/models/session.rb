@@ -1,5 +1,4 @@
 class Session < ActiveRecord::Base
-
   has_many :categorizations, :dependent => :destroy
   has_many :categories, :through => :categorizations
   belongs_to :participant  # TODO: rename to 'owner'
@@ -17,13 +16,18 @@ class Session < ActiveRecord::Base
   delegate :starts_at, to: :timeslot, allow_nil: true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
+  scope :active, -> { where(canceled_at: nil) }
+  scope :with_canceled, -> { unscope(where: :canceled_at) }
+  scope :canceled, -> { where.not(canceled_at: nil) }
+
+  # filter out canceled sessions by default
+  default_scope { active }
+
   scope :with_attendence_count, -> { select('*').joins("LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id") }
 
   scope :for_current_event, -> { where(event_id: Event.current_event.id) }
   scope :for_past_events, -> { where.not(event_id: Event.current_event.id).where("event_id > ?", 0).includes(:event).order('events.date desc') }
-
   scope :recent, -> { order('created_at desc') }
-
   scope :random_order, -> { order(Arel.sql('random()')) }
 
   validates_presence_of :description
@@ -197,9 +201,8 @@ class Session < ActiveRecord::Base
     SessionsJsonBuilder.new.to_hash(self)
   end
 
-  # temporary method to check if a session is canceled
   def canceled?
-    event_id.negative?
+    canceled_at.present? || event_id.negative?
   end
 
   private
