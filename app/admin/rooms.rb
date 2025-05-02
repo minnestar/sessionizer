@@ -29,6 +29,12 @@ ActiveAdmin.register Room do
     end
     column :capacity
     column :schedulable
+    column("Sessions") do |room|
+      link_to(
+        "#{room.sessions.size}",
+        admin_sessions_path(order: "timeslot_id_asc", q: { event_id_eq: room.event_id, room_id_eq: room.id })
+      )
+      end
     actions
   end
 
@@ -41,7 +47,7 @@ ActiveAdmin.register Room do
       row :schedulable
     end
 
-    panel "Sessions (#{room.sessions.with_canceled.count})" do
+    panel "Sessions (#{room.sessions.with_canceled.size})" do
       if room.sessions.with_canceled.any?
         table_for room.sessions.with_canceled.order('sessions.timeslot_id') do
           column("Timeslot") do |session|

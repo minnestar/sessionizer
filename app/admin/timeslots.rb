@@ -6,6 +6,8 @@ ActiveAdmin.register Timeslot do
   permit_params :event_id, :starts_at, :ends_at, :schedulable, :title
   config.sort_order = 'starts_at_asc'
 
+  includes :sessions
+
   # don't allow delete or new
   actions :all, except: [:destroy, :new]
 
@@ -27,6 +29,12 @@ ActiveAdmin.register Timeslot do
     end
     column(:display, &:to_s)
     column :schedulable
+    column("Sessions", sortable: :sessions_count) do |timeslot|
+      link_to(
+        timeslot.sessions.size,
+        admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
+      )
+    end
   end
 
   show do
@@ -40,7 +48,7 @@ ActiveAdmin.register Timeslot do
       row :schedulable
     end
 
-    panel "Sessions (#{timeslot.sessions.with_canceled.count})" do
+    panel "Sessions (#{timeslot.sessions.with_canceled.size})" do
       if timeslot.sessions.with_canceled.any?
         table_for timeslot.sessions.with_canceled.order('sessions.attendances_count DESC') do
           column :title do |session|

@@ -1,3 +1,4 @@
+- title("#{event.name} – Session Schedule")
 - cache [current_participant.nil?, schedule_public?] + event_schedule_cache_key(event), expires_in: 10.minutes do
   = render 'header'
 

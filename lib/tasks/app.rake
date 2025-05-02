@@ -15,34 +15,34 @@ namespace :app do
     rooms = [
       # { name: 'Alaska',           capacity: 96 }, # Used for daycare in 2025
       { name: 'Bde Maka Ska',    capacity: 100 },
-      # { name: 'Cabin',           capacity: 9 },
-      # { name: 'California',      capacity: 16 },
+      # { name: 'Cabin',           capacity: 9 }, # out of the way in the B wing, not really setup for presentations
+      # { name: 'California',      capacity: 16 }, # behind security turnstiles
       { name: 'Challenge',       capacity: 24 }, 
-      # { name: 'Cottage',         capacity: 8 },
+      { name: 'Cottage',         capacity: 8 }, # out of the way in the B wing
       { name: 'Discovery',        capacity: 23 }, # no video recording
       { name: 'Florida',         capacity: 12 }, # TV, no projector
       { name: 'Gandhi',          capacity: 23 }, # Previously used for daycare; no video recording
       { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Harriet',         capacity: 100 },
-      # { name: 'Kansas',          capacity: 10 }, # TV, no projector
+      { name: 'Kansas',          capacity: 10 }, # TV, no projector
       { name: 'Learn',           capacity: 24 },
       { name: 'Louis Pasteur',   capacity: 18 },
-      # { name: 'Maryland',        capacity: 10 },
+      { name: 'Maryland',        capacity: 10 },
       { name: 'Minnetonka',      capacity: 100 },
-      # { name: 'Nebraska',        capacity: 10 },
-      # { name: 'Nevada',          capacity: 16 },
-      # { name: 'New York',        capacity: 10 },
+      { name: 'Nebraska',        capacity: 10 },
+      { name: 'Nevada',          capacity: 16 }, # out of the way, but available
+      # { name: 'New York',        capacity: 10 }, # Used for staff in 2025
       { name: 'Nokomis',         capacity: 100 },
-      # { name: 'Oklahoma',        capacity: 8 },
-      # { name: 'Oregon',          capacity: 12 },
-      # { name: 'Pennsylvania',    capacity: 10 },
+      { name: 'Oklahoma',        capacity: 8 },
+      # { name: 'Oregon',          capacity: 12 }, # behind security turnstiles
+      { name: 'Pennsylvania',    capacity: 10 },
       { name: 'Proverb-Edison',  capacity: 48 },
-      # { name: 'South Carolina',  capacity: 6 },
+      { name: 'South Carolina',  capacity: 6 }, # small, but available
       { name: 'Stephen Leacock', capacity: 23 }, # Previously used for daycare; no video recording
       { name: 'Tackle',          capacity: 23 }, # no video recording
       { name: 'Texas',           capacity: 16 },
       { name: 'Theater',         capacity: 250 },
-      # { name: 'Washington',      capacity: 7 },
+      # { name: 'Washington',      capacity: 7 }, # out of the way, but available
       { name: 'Zeke Landres',    capacity: 40 },
 
       # –––––– Suboptimal rooms, reserved for more dire need ––––––
