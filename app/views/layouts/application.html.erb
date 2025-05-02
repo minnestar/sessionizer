@@ -10,18 +10,7 @@
     <%= yield(:head) %>
     <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js" integrity="sha256-4I3RT0XAGHdtIpMb28AtxL0vdMZBftsRgY6xRhzqnAM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.02.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="<%= yield(:title) || t('conference') %>" />
-    <meta name="twitter:title" content="<%= yield(:title) || t('conference') %>">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="<%= image_url 'twitter-card.png' %>">
-    <meta property="og:image" content="<%= image_url 'twitter-card.png' %>">
-    <meta property="og:image:alt" content="<%= default_meta_description %>">
-    <% if meta_description %>
-    <meta property="og:description" content="<%= meta_description %>" />
-    <meta name="twitter:description" content="<%= meta_description %>">
-    <meta name="description" content="<%= meta_description %>">
-    <% end %>
+    <%= render 'shared/meta_tags' %>
   </head>
 
   <body>
