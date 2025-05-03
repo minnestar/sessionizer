@@ -24,10 +24,13 @@ namespace :app do
       { name: 'Gandhi',          capacity: 23 }, # Previously used for daycare; no video recording
       { name: 'Georgia',         capacity: 12 }, # TV, no projector
       { name: 'Harriet',         capacity: 100 },
+      # { name: 'Illinois',        capacity: 7 }, # small
       { name: 'Kansas',          capacity: 10 }, # TV, no projector
       { name: 'Learn',           capacity: 24 },
       { name: 'Louis Pasteur',   capacity: 18 },
+      { name: 'Maine',           capacity: 10 },
       { name: 'Maryland',        capacity: 10 },
+      # { name: 'Minnesota',       capacity: 7 }, # small
       { name: 'Minnetonka',      capacity: 100 },
       { name: 'Nebraska',        capacity: 10 },
       { name: 'Nevada',          capacity: 16 }, # out of the way, but available
@@ -37,12 +40,13 @@ namespace :app do
       # { name: 'Oregon',          capacity: 12 }, # behind security turnstiles
       { name: 'Pennsylvania',    capacity: 10 },
       { name: 'Proverb-Edison',  capacity: 48 },
-      { name: 'South Carolina',  capacity: 6 }, # small, but available
+      # { name: 'South Carolina',  capacity: 6 }, # converted to meditation room in 2025
       { name: 'Stephen Leacock', capacity: 23 }, # Previously used for daycare; no video recording
       { name: 'Tackle',          capacity: 23 }, # no video recording
       { name: 'Texas',           capacity: 16 },
       { name: 'Theater',         capacity: 250 },
-      # { name: 'Washington',      capacity: 7 }, # out of the way, but available
+      # { name: 'Washington',      capacity: 7 }, # small, out of the way
+      # { name: 'Wisconsin',       capacity: 7 }, # small
       { name: 'Zeke Landres',    capacity: 40 },
 
       # –––––– Suboptimal rooms, reserved for more dire need ––––––
