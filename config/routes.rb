@@ -31,9 +31,9 @@ Sessionizer::Application.routes.draw do
   end
   resources :categories, only: :show
 
-  match '/login' => 'user_sessions#new', :as => :new_login, :via => 'get'
-  match '/login' => 'user_sessions#create', :as => :login, :via => 'post'
-  match '/logout' => 'user_sessions#destroy', :as => :logout, :via => 'delete'
+  get '/login', to: 'user_sessions#new', as: :new_login
+  post '/login', to: 'user_sessions#create', as: :login
+  delete '/logout', to: 'user_sessions#destroy', as: :logout
 
   resources :password_resets, :only => [ :new, :create, :edit, :update ]
 

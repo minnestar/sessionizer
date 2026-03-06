@@ -2,6 +2,10 @@
 #
 # This file contains migration options to ease your Rails 5.0 upgrade.
 #
+# TODO: These settings override modern Rails defaults with Rails 4/5 behavior.
+# Review and flip each to the modern default, then delete this file.
+# See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html
+#
 # Once upgraded flip defaults one by one to migrate to the new default.
 #
 # Read the Rails 5.0 release notes for more info on each option.

@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '3.4.1'
 
-gem 'rails', '~> 7'
+gem 'rails', '~> 7.2'
 
 gem 'pg'
 gem 'unicorn'
@@ -34,7 +34,7 @@ gem 'annealer'
 gem 'icalendar', '~> 2.4'
 gem 'redcarpet', '~> 3.1'
 gem 'bcrypt-ruby', '~> 3.1'
-gem 'authlogic', '~> 6'
+gem 'authlogic', '~> 6.5'
 gem 'cancancan'
 gem 'csv', '~> 3.3'
 gem 'nokogiri'

@@ -19,6 +19,6 @@ module Sessionizer
 
     config.time_zone = 'America/Chicago'
 
-    config.active_support.cache_format_version = 7.0
+    config.active_support.cache_format_version = 7.1
   end
 end
