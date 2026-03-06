@@ -32,7 +32,8 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
 
   # Store uploaded files on the local file system in a temporary directory.
-  config.active_storage.service = :test
+  # Commented out: this app doesn't use Active Storage, and no :test service is defined in config/storage.yml.
+  # config.active_storage.service = :test
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.

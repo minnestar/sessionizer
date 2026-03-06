@@ -32,7 +32,8 @@ Rails.application.configure do
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Commented out: this app doesn't use Active Storage.
+  # config.active_storage.service = :local
 
   HOST = 'sessionizer.vm'
 
