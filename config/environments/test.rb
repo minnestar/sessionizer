@@ -8,6 +8,8 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.secret_key_base = "eb9F1caBeFaB2cdc4C1f5e06db0eAC0df1cDA1E27681B002F3ce4D0CbC5aaC5E3E8b378b7De9c8d09D60F56528CEba8C339a89eB5f26E958bbBD34Ba9ce3cA7c"
+
   # While tests run files are not watched, reloading is not necessary.
   config.enable_reloading = false
 

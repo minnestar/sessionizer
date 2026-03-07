@@ -83,8 +83,8 @@ Rails.application.configure do
   HOST = 'sessions.minnestar.org'
   config.action_mailer.default_url_options = { host: HOST }
   ActionMailer::Base.smtp_settings = {
-    :user_name => Rails.application.secrets.mandrill_username,
-    :password => Rails.application.secrets.mandrill_password,
+    :user_name => ENV['MANDRILL_MINNESTAR_USERNAME'],
+    :password => ENV['MANDRILL_MINNESTAR_PASSWORD'],
     :address => 'smtp.mandrillapp.com',
     :port => 587,
     :authentication => 'login',
