@@ -1,8 +1,10 @@
 ActiveAdmin.register AdminUser do
-  menu priority: 10, parent: "Admin"
-  permit_params :email, :password, :password_confirmation
+  menu priority: 10
 
   config.filters = false
+  config.batch_actions = false
+
+  permit_params :email, :password, :password_confirmation
 
   index do
     column :id

@@ -1,6 +1,8 @@
 ActiveAdmin.register Session do
   menu priority: 2
 
+  config.batch_actions = false
+
   controller do
     def scoped_collection
       Session.unscoped

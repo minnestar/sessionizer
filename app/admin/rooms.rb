@@ -1,10 +1,10 @@
 ActiveAdmin.register Room do
   config.filters = false
+  config.sort_order = 'capacity_desc'
 
   belongs_to :event
 
   permit_params :event_id, :name, :capacity, :schedulable
-  config.sort_order = 'capacity_desc'
 
   # don't allow delete
   actions :all, except: [:destroy]

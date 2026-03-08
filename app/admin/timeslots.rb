@@ -1,10 +1,11 @@
 ActiveAdmin.register Timeslot do
   config.filters = false
+  config.batch_actions = false
+  config.sort_order = 'starts_at_asc'
 
   belongs_to :event
 
   permit_params :event_id, :starts_at, :ends_at, :schedulable, :title
-  config.sort_order = 'starts_at_asc'
 
   includes :sessions
 

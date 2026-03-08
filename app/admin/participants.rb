@@ -1,6 +1,8 @@
 ActiveAdmin.register Participant do
   menu priority: 3
 
+  config.batch_actions = false
+
   permit_params :name, :email, :bio, :email_confirmed_at
 
   includes :attendances, { presentations: { session: :event } }
@@ -14,19 +16,14 @@ ActiveAdmin.register Participant do
          input_html: { name: 'q[email_confirmed_at_not_null]' }
 
   index do
-    column :id
     column :name do |participant|
       link_to participant.name, admin_participant_path(participant)
     end
     column :email
-    column :bio do |participant|
-      participant.bio&.truncate(80)
-    end
     column(:confirmed, &:email_confirmed?)
     column("Sessions", sortable: :presentations_count, &:presentations_count)
     column("Votes", sortable: :attendances_count, &:attendances_count)
     column(:created, sortable: :created_at) { |p| p.created_at.strftime("%-m/%-d/%y") }
-    actions
   end
 
   show do

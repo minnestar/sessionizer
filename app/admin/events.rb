@@ -1,5 +1,9 @@
 ActiveAdmin.register Event do
   menu priority: 1
+
+  config.filters = false
+  config.batch_actions = false
+
   permit_params :name, :date
 
   # eager load associations on the show page
@@ -20,20 +24,8 @@ ActiveAdmin.register Event do
     end
   end
 
-  config.filters = false
-
   # don't allow delete
   actions :all, except: [:destroy]
-
-  action_item :generate_timeslots, only: :show do
-    if resource.timeslots_count.zero?
-      button_to 'Generate timeslots',
-        generate_timeslots_admin_event_path(resource),
-        method: :post,
-        class: 'action-item-button',
-        data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
-    end
-  end
 
   member_action :generate_timeslots, method: :post do
     begin
@@ -44,6 +36,16 @@ ActiveAdmin.register Event do
       end
     rescue => e
       redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots #{e.message}"
+    end
+  end
+
+  action_item :generate_timeslots, only: :show do
+    if resource.timeslots_count.zero?
+      button_to 'Generate timeslots',
+        generate_timeslots_admin_event_path(resource),
+        method: :post,
+        class: 'action-item-button',
+        data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
     end
   end
 

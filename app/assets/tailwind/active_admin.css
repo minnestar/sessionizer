@@ -1,3 +1,9 @@
 @import "tailwindcss";
 
 @config "../../../tailwind-active_admin.config.js";
+
+/* Restore basic list styles stripped by Tailwind's Preflight */
+td ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
