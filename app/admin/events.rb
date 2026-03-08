@@ -8,6 +8,12 @@ ActiveAdmin.register Event do
 
   # eager load associations on the show page
   controller do
+    before_action only: [:edit, :update] do
+      if resource.date && resource.date < Date.current
+        redirect_to admin_event_path(resource), alert: "Past events cannot be edited."
+      end
+    end
+
     def scoped_collection
       collection = super
       if action_name == "show"
@@ -24,8 +30,17 @@ ActiveAdmin.register Event do
     end
   end
 
-  # don't allow delete
+  # don't allow delete or edit past events
   actions :all, except: [:destroy]
+
+  # remove default edit button, replaced with conditional one below
+  config.action_items.delete_if { |item| item.name == :edit }
+
+  action_item :edit_event, only: :show do
+    if resource.date.nil? || resource.date >= Date.current
+      link_to "Edit Event", edit_admin_event_path(resource), class: 'action-item-button'
+    end
+  end
 
   member_action :generate_timeslots, method: :post do
     begin
@@ -50,7 +65,6 @@ ActiveAdmin.register Event do
   end
 
   index do
-    column :id
     column :name do |event|
       link_to event.name, admin_event_path(event)
     end
