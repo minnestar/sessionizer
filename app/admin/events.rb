@@ -27,9 +27,10 @@ ActiveAdmin.register Event do
 
   action_item :generate_timeslots, only: :show do
     if resource.timeslots_count.zero?
-      link_to 'Generate timeslots',
+      button_to 'Generate timeslots',
         generate_timeslots_admin_event_path(resource),
         method: :post,
+        class: 'action-item-button',
         data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
     end
   end
@@ -143,7 +144,7 @@ ActiveAdmin.register Event do
 
       table_for sessions, sortable: true do
         column :title, sortable: :title do |session|
-          (link_to(truncate(session.title, length: 80), admin_session_path(session)) +
+          (link_to(session.title.truncate(80), admin_session_path(session)) +
           (session.canceled? ? " (CANCELED)" : "")).html_safe
         end
         column :presenters, sortable: false do |session|

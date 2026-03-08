@@ -2,10 +2,10 @@
 # If you can come up with better terminology for this, I'm all for it! -PPC
 
 class Presentation < ActiveRecord::Base
-  belongs_to :session
+  belongs_to :session, inverse_of: :presentations
   belongs_to :participant, counter_cache: true
 
-  validates_presence_of :session_id
+  validates_presence_of :session
   validates_presence_of :participant_id
 
 end

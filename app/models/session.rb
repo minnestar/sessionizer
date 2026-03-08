@@ -3,8 +3,8 @@ class Session < ActiveRecord::Base
   has_many :categories, :through => :categorizations
   belongs_to :participant  # TODO: rename to 'owner'
 
-  has_many :presentations, :dependent => :destroy
-  has_many :presenters, :through => :presentations, :source => :participant
+  has_many :presentations, dependent: :destroy, inverse_of: :session
+  has_many :presenters, through: :presentations, source: :participant
   belongs_to :event, counter_cache: true
   belongs_to :timeslot
   belongs_to :room

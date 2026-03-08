@@ -1,7 +1,7 @@
 ActiveAdmin.register Participant do
   menu priority: 3
 
-  permit_params :name, :email, :bio, :github_profile_username, :github_og_image, :github_og_url, :twitter_handle, :email_confirmed_at
+  permit_params :name, :email, :bio, :email_confirmed_at
 
   includes :attendances, { presentations: { session: :event } }
 
@@ -20,7 +20,7 @@ ActiveAdmin.register Participant do
     end
     column :email
     column :bio do |participant|
-      truncate(participant.bio, length: 80)
+      participant.bio&.truncate(80)
     end
     column(:confirmed, &:email_confirmed?)
     column("Sessions", sortable: :presentations_count, &:presentations_count)
@@ -77,10 +77,6 @@ ActiveAdmin.register Participant do
       f.input :name
       f.input :email
       f.input :bio
-      f.input :github_profile_username
-      f.input :github_og_image
-      f.input :github_og_url
-      f.input :twitter_handle
     end
     f.actions
   end
