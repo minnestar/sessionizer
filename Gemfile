@@ -41,7 +41,11 @@ gem 'nokogiri'
 
 # active admin
 gem 'devise'
-gem 'activeadmin'
+gem 'activeadmin', '4.0.0.beta21'
+
+# Asset pipeline for ActiveAdmin v4
+gem 'cssbundling-rails'
+gem 'importmap-rails'
 
 group :development, :test do
   gem 'ffaker'

@@ -67,20 +67,22 @@ ActiveAdmin.register Session do
   end
 
   action_item :cancel, only: :show do
-    link_to(
-      'Cancel Session',
-      cancel_admin_session_path(resource),
-      method: :post,
-      data: { confirm: "Are you sure you want to cancel this session?" }
-    ) if !resource.canceled? && resource.event_id == Event.current_event.id
+    if !resource.canceled? && resource.event_id == Event.current_event.id
+      button_to 'Cancel Session',
+        cancel_admin_session_path(resource),
+        method: :post,
+        class: 'action-item-button',
+        data: { confirm: "Are you sure you want to cancel this session?" }
+    end
   end
 
   action_item :uncancel, only: :show do
-    link_to(
-      'Uncancel Session',
-      uncancel_admin_session_path(resource),
-      method: :post
-    ) if resource.canceled? && resource.event_id == Event.current_event.id
+    if resource.canceled? && resource.event_id == Event.current_event.id
+      button_to 'Uncancel Session',
+        uncancel_admin_session_path(resource),
+        method: :post,
+        class: 'action-item-button'
+    end
   end
 
   index do
@@ -148,6 +150,12 @@ ActiveAdmin.register Session do
 
   form do |f|
     f.inputs do
+      event = f.object.event || Event.current_event
+      f.input :event, as: :select,
+              collection: [[event.name, event.id]],
+              selected: event.id,
+              input_html: { disabled: true }
+      f.hidden_field :event_id, value: event.id
       f.input :title
       f.input :description
       f.input :participant
@@ -157,8 +165,9 @@ ActiveAdmin.register Session do
               input_html: { size: 10, multiple: true, style: 'height: auto;' }
       f.input :level
       f.input :categories
-      f.input :timeslot, collection: Timeslot.where(event_id: f.object.event_id)
-      f.input :room, collection: Room.where(event_id: f.object.event_id)
+      event_id = f.object.event_id || Event.current_event.id
+      f.input :timeslot, collection: Timeslot.where(event_id: event_id)
+      f.input :room, collection: Room.where(event_id: event_id)
       f.input :manually_scheduled
     end
     f.actions

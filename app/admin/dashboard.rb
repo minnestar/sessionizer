@@ -5,8 +5,8 @@ ActiveAdmin.register_page "Dashboard" do
   content title: proc { I18n.t("active_admin.dashboard") } do
     settings = Settings.first
 
-    columns do
-      column do
+    div class: "grid grid-cols-1 gap-4 mb-4" do
+      div do
         panel "Current Event" do
           attributes_table_for Event.includes(:sessions, :rooms, :timeslots).current_event do
             row :name do |event|
@@ -73,7 +73,7 @@ ActiveAdmin.register_page "Dashboard" do
 
       table_for sessions, sortable: true do
         column :title, sortable: :title do |session|
-          (link_to(truncate(session.title, length: 80), admin_session_path(session)) +
+          (link_to(session.title.truncate(80), admin_session_path(session)) +
           (session.canceled? ? " (CANCELED)" : "")).html_safe
         end
         column :presenters, sortable: false do |session|

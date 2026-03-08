@@ -34,12 +34,23 @@ gem install bundler
 # install ruby gems
 bundle install
 
+# install node (needed for admin panel)
+asdf install nodejs # OR
+nodenv install # OR
+nvm install
+
+# install npm packages
+npm install
+
 # database setup
 rails db:setup
 ```
 
 ### One-time setup
-```
+```bash
+# build admin panel CSS
+npm run build:css
+
 # create timeslots
 bundle exec rails app:create_timeslots
 
@@ -73,6 +84,14 @@ $ rails s
 ```
 
 Then you can access the app at http://127.0.0.1:3000.
+
+### Rebuilding admin CSS
+
+The admin panel uses ActiveAdmin v4 with Tailwind CSS. The built CSS is committed to the repo, so you only need to rebuild after changing Tailwind classes in admin views:
+
+```bash
+npm run build:css
+```
 
 ### Seeding data for development
 

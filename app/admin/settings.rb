@@ -20,7 +20,7 @@ ActiveAdmin.register Settings do
   permit_params :allow_new_sessions, :show_schedule, :default_timeslots
 
   show title: "Current Event Settings" do
-    attributes_table title: "Settings"do
+    attributes_table_for resource do
       row("Current Event") do
         link_to Event.current_event.name, admin_event_path(Event.current_event)
       end

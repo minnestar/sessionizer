@@ -14,9 +14,10 @@ ActiveAdmin.register Timeslot do
   action_item :generate_timeslots, only: [:index] do
     event = Event.find(params[:event_id])
     if event.timeslots_count.zero?
-      link_to 'Generate timeslots',
+      button_to 'Generate timeslots',
         generate_timeslots_admin_event_path(event),
         method: :post,
+        class: 'action-item-button',
         data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
     end
   end

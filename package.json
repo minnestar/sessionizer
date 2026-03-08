@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "private": "true",
+  "type": "module",
+  "dependencies": {
+    "@activeadmin/activeadmin": "4.0.0-beta21",
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./app/assets/tailwind/active_admin.css -o ./app/assets/builds/active_admin.css --minify"
+  }
+}
