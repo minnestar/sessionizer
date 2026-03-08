@@ -99,12 +99,11 @@ ActiveAdmin.register Session do
       end.join(", ").html_safe
     end
     column("Event", sortable: 'events.date') do |session|
-      (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
+      link_to session.event.name, admin_event_path(session.event) if session.event
     end
     column("Votes", sortable: :attendances_count, &:attendances_count)
     column :timeslot, sortable: :timeslot_id
     column :room, sortable: :room_id
-    column("Canceled", sortable: :canceled_at, &:canceled?)
     column("Created", sortable: :created_at) do |session|
       session.created_at.strftime("%-m/%-d/%y")
     end

@@ -22,9 +22,8 @@ ActiveAdmin.register Room do
   end
 
   index do
-    column :id
     column :event
-    column :name do |room|
+    column("Room name") do |room|
       link_to room.name, admin_event_room_path(room.event, room)
     end
     column :capacity

@@ -24,12 +24,11 @@ ActiveAdmin.register Timeslot do
   end
 
   index do
-    column :id
     column :event
-    column :title do |timeslot|
+    column("Timeslot") do |timeslot|
       link_to timeslot.title, admin_event_timeslot_path(timeslot.event, timeslot)
     end
-    column(:display, &:to_s)
+    column("Display name", &:to_s)
     column :schedulable
     column("Sessions", sortable: :sessions_count) do |timeslot|
       link_to(
