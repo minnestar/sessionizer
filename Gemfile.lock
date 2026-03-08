@@ -47,15 +47,14 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    activeadmin (3.3.0)
-      arbre (~> 1.2, >= 1.2.1)
+    activeadmin (4.0.0.beta21)
+      arbre (~> 2.0)
       csv
-      formtastic (>= 3.1)
-      formtastic_i18n (>= 0.4)
-      inherited_resources (~> 1.7)
-      jquery-rails (>= 4.2)
+      formtastic (>= 5.0)
+      formtastic_i18n (>= 0.7)
+      inherited_resources (~> 2.0)
       kaminari (>= 1.2.1)
-      railties (>= 6.1)
+      railties (>= 7.2)
       ransack (>= 4.0)
     activejob (7.2.3)
       activesupport (= 7.2.3)
@@ -87,9 +86,8 @@ GEM
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     annealer (0.3)
-    arbre (1.7.0)
-      activesupport (>= 3.0.0)
-      ruby2_keywords (>= 0.0.2)
+    arbre (2.2.1)
+      activesupport (>= 7.0)
     authlogic (6.6.0)
       activemodel (>= 7.2, < 8.2)
       activerecord (>= 7.2, < 8.2)
@@ -119,6 +117,8 @@ GEM
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
     crass (1.0.6)
+    cssbundling-rails (1.4.3)
+      railties (>= 6.0.0)
     csv (3.3.2)
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
@@ -176,10 +176,14 @@ GEM
       ice_cube (~> 0.16)
       ostruct
     ice_cube (0.17.0)
-    inherited_resources (1.14.0)
-      actionpack (>= 6.0)
+    importmap-rails (2.2.3)
+      actionpack (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      railties (>= 6.0.0)
+    inherited_resources (2.1.0)
+      actionpack (>= 7.0)
       has_scope (>= 0.6)
-      railties (>= 6.0)
+      railties (>= 7.0)
       responders (>= 2)
     io-console (0.8.2)
     irb (1.17.0)
@@ -363,7 +367,6 @@ GEM
       rspec-support (~> 3.13)
     rspec-support (3.13.2)
     ruby-progressbar (1.13.0)
-    ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -440,13 +443,14 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  activeadmin
+  activeadmin (= 4.0.0.beta21)
   annealer
   authlogic (~> 6)
   bcrypt-ruby (~> 3.1)
   benchmark (~> 0.4)
   cancancan
   capybara
+  cssbundling-rails
   csv (~> 3.3)
   database_cleaner
   devise
@@ -456,6 +460,7 @@ DEPENDENCIES
   formtastic
   haml (~> 6)
   icalendar (~> 2.4)
+  importmap-rails
   jbuilder (~> 2)
   jquery-rails
   letter_opener (~> 1.10)

@@ -343,10 +343,4 @@ ActiveAdmin.setup do |config|
   #
   # config.order_clause = MyOrderClause
 
-  # == Webpacker
-  #
-  # By default, Active Admin uses Sprocket's asset pipeline.
-  # You can switch to using Webpacker here.
-  #
-  # config.use_webpacker = true
 end
