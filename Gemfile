@@ -56,6 +56,8 @@ group :development, :test do
   gem 'pry'
   gem "simplecov", "~> 0.22.0"
   gem "letter_opener", "~> 1.10"
+  gem "standard", require: false
+  gem "standard-rails", require: false
 end
 
 group :test do

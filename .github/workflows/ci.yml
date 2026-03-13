@@ -31,6 +31,9 @@ jobs:
       - name: Show Ruby version
         run: ruby -v
       
+      - name: Lint
+        run: bundle exec standardrb
+
       - name: Prepare database and run tests
         env:
           CI: github
