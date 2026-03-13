@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   def current_participant
-    @current_participant ||= (current_participant_session && current_participant_session.participant)
+    @current_participant ||= current_participant_session && current_participant_session.participant
   end
   alias_method :current_user, :current_participant
 
@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_participant
     unless logged_in?
-      flash[:notice] = 'You must be logged in to do that. Please log in or create a new account and try again.'
+      flash[:notice] = "You must be logged in to do that. Please log in or create a new account and try again."
       redirect_to new_login_path
     end
   end
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
   def event_from_params(includes: {})
     query_base = Event
     query_base = query_base.includes(**includes) unless includes.empty?
-    if params[:event_id].blank? || params[:event_id] == 'current'
+    if params[:event_id].blank? || params[:event_id] == "current"
       query_base.current_event
     else
       query_base.find(params[:event_id])
@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
       event.sessions,
       event.participants,
       event.timeslots,
-      event.rooms,
+      event.rooms
     ].map(&:cache_key)
   end
   helper_method :event_schedule_cache_key
@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   def authenticate_admin
     if Rails.env.production?
       authenticate_or_request_with_http_basic do |user_name, password|
-        user_name == ENV['SESSIONIZER_ADMIN_USER'] && password == ENV['SESSIONIZER_ADMIN_PASSWORD']
+        user_name == ENV["SESSIONIZER_ADMIN_USER"] && password == ENV["SESSIONIZER_ADMIN_PASSWORD"]
       end
     end
   end

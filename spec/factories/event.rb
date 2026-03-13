@@ -1,5 +1,4 @@
 FactoryBot.define do
-
   factory :event do
     sequence :name do |n|
       "Minnebar #{n}"
@@ -18,5 +17,4 @@ FactoryBot.define do
       end
     end
   end
-
 end

@@ -22,16 +22,16 @@ class Admin::Legacy::SessionsController < Admin::Legacy::AdminController
   def destroy
     @session.destroy!
     flash[:notice] = "Session has been deleted"
-    redirect_to '/admin/legacy/sessions'
+    redirect_to "/admin/legacy/sessions"
   end
 
   private
 
   def session_params
-    params.require(controller_name.singularize).permit(:title, :description, :summary, :level_id, :room_id, :timeslot_id, :category_ids => [])
+    params.require(controller_name.singularize).permit(:title, :description, :summary, :level_id, :room_id, :timeslot_id, category_ids: [])
   end
 
   def load_sessions
-    @sessions ||= Event.current_event.sessions.includes(:timeslot).order('timeslots.starts_at asc')
+    @sessions ||= Event.current_event.sessions.includes(:timeslot).order("timeslots.starts_at asc")
   end
 end

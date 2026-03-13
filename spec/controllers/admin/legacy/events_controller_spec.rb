@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Admin::Legacy::EventsController do
   describe "#index" do
@@ -21,7 +21,7 @@ describe Admin::Legacy::EventsController do
   describe "#create" do
     it "is successful" do
       expect {
-        post :create, params: {event: { name: "My new event", date: '2014-09-12' }}
+        post :create, params: {event: {name: "My new event", date: "2014-09-12"}}
       }.to change { Event.count }.by(1)
       expect(response).to redirect_to admin_legacy_events_path
     end
@@ -39,9 +39,9 @@ describe Admin::Legacy::EventsController do
   describe "#update" do
     let(:event) { create(:event) }
     it "is successful" do
-      patch :update, params: {id: event, event: { name: 'Changed name' }}
+      patch :update, params: {id: event, event: {name: "Changed name"}}
       expect(response).to redirect_to admin_legacy_events_path
-      expect(assigns[:event].name).to eq 'Changed name'
+      expect(assigns[:event].name).to eq "Changed name"
     end
   end
 end

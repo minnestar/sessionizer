@@ -8,4 +8,4 @@ module ParticipantsHelper
   def email_confirmation_alert(participant)
     "Your email has not been confirmed. Please #{email_confirmation_link(participant)}.".html_safe
   end
-end 
+end

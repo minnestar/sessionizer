@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe SchedulesController do
   describe "#index" do
@@ -50,14 +50,14 @@ describe SchedulesController do
     let(:timeslot) { create(:timeslot) }
     let!(:session) do
       create(:session,
-             event: timeslot.event,
-             timeslot: timeslot,
-             participant: create(:luke))
+        event: timeslot.event,
+        timeslot: timeslot,
+        participant: create(:luke))
     end
     it "is successful" do
       get :ical
       expect(response).to be_successful
-      expect(response.headers['Content-Type']).to eq 'text/calendar; charset=utf-8'
+      expect(response.headers["Content-Type"]).to eq "text/calendar; charset=utf-8"
       expect(response.body).to match(/ORGANIZER;CN=Luke Francl:/)
     end
   end

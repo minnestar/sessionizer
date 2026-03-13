@@ -13,9 +13,14 @@ class Admin::Legacy::MarkdownContentsController < Admin::Legacy::AdminController
     redirect_to admin_legacy_markdown_content_path(@markdown_content)
   end
 
-  def index; end
-  def show; end
-  def edit; end
+  def index
+  end
+
+  def show
+  end
+
+  def edit
+  end
 
   def markdown_content_params
     params.require(:markdown_content).permit(:name, :slug, :markdown)

@@ -1,5 +1,4 @@
 module Scheduling
-
   # Lightweight model for a person, who has a (possibly empty) set of sessions
   # they'd like to attend, and another at which they're presenting.
   #
@@ -8,7 +7,7 @@ module Scheduling
 
     def initialize(ctx, id)
       @id = id
-      @attending  = SessionSet.new(ctx)
+      @attending = SessionSet.new(ctx)
       @presenting = SessionSet.new(ctx,
         superset: @attending,            # Presenters don't necessarily upvote their own sessions, but they do attend!
         penalty_callback: ->(slot_id) do    # Presenters may have other scheduling constraints beside double booking

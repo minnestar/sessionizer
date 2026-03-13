@@ -25,13 +25,13 @@ class AttendancesController < ApplicationController
 
         # Appears when user already logged in
         format.json do
-          render :partial => 'sessions/participant', :formats => :html, :locals => { :participant => current_participant }
+          render partial: "sessions/participant", formats: :html, locals: {participant: current_participant}
         end
       end
     else
       respond_to do |format|
         format.json do
-          render :partial => 'sessions/new_participant', :formats => :html, :status => :unprocessable_entity
+          render partial: "sessions/new_participant", formats: :html, status: :unprocessable_entity
         end
       end
     end
@@ -50,11 +50,11 @@ class AttendancesController < ApplicationController
 
     name, email, password = params[:attendance][:name], params[:attendance][:email], params[:attendance][:password]
 
-    participant_session = ParticipantSession.new(:email => email, :password => password)
+    participant_session = ParticipantSession.new(email: email, password: password)
     if participant_session.save
       @current_participant_session = participant_session
     else
-      participant = Participant.new(:name => name, :email => email, :password => password)
+      participant = Participant.new(name: name, email: email, password: password)
       if participant.save
         @current_participant_session = ParticipantSession.create(participant, true)
       else

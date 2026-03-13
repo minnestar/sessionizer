@@ -11,9 +11,9 @@ feature "Manage Sessions" do
     click_link "Add Session", match: :first
     click_link "Register here"
 
-    fill_in 'participant_name', with: 'Jack Johnson'
-    fill_in 'Your email', with: 'jack@example.com'
-    fill_in 'Password', with: 's00persekret12345'
+    fill_in "participant_name", with: "Jack Johnson"
+    fill_in "Your email", with: "jack@example.com"
+    fill_in "Password", with: "s00persekret12345"
     click_button "Create My Account"
 
     # Open the email confirmation link
@@ -24,11 +24,11 @@ feature "Manage Sessions" do
     visit root_path
     click_link "Add Session", match: :first
 
-    fill_in('Title', with: 'Rails 4 FTW')
-    fill_in('Description', with: 'Rails Desc')
+    fill_in("Title", with: "Rails 4 FTW")
+    fill_in("Description", with: "Rails Desc")
 
-    click_button 'Update Session'
-    expect(page).to have_content 'Thanks for adding your session.'
+    click_button "Update Session"
+    expect(page).to have_content "Thanks for adding your session."
   end
 
   scenario "As a new user, I cannot add a session until my email has been confirmed" do
@@ -37,9 +37,9 @@ feature "Manage Sessions" do
     click_link "Add Session", match: :first
     click_link "Register here"
 
-    fill_in 'participant_name', with: 'Jack Johnson'
-    fill_in 'Your email', with: 'jack@example.com'
-    fill_in 'Password', with: 's00persekret12345'
+    fill_in "participant_name", with: "Jack Johnson"
+    fill_in "Your email", with: "jack@example.com"
+    fill_in "Password", with: "s00persekret12345"
     click_button "Create My Account"
 
     click_link "Add Session", match: :first

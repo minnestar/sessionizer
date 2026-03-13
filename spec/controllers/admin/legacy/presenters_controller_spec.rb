@@ -1,8 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Admin::Legacy::PresentersController do
-
-  let(:presenter) { FactoryBot.create(:participant, name: 'John McCarthy', email: 'parens@example.org') }
+  let(:presenter) { FactoryBot.create(:participant, name: "John McCarthy", email: "parens@example.org") }
   let(:event) { FactoryBot.create(:event) }
   let!(:session) { FactoryBot.create(:session, participant: presenter, event: event) }
 
@@ -25,13 +24,12 @@ describe Admin::Legacy::PresentersController do
   describe "#update" do
     it "should be successful" do
       put :update, params: {id: presenter, participant: {
-                                  name: 'The father of LISP', email: 'g@example.org', bio: "Functionally just another dude"
-                                }
-                            }
+        name: "The father of LISP", email: "g@example.org", bio: "Functionally just another dude"
+      }}
       expect(response).to redirect_to admin_legacy_presenters_path
       expect(flash[:success]).to eq "Presenter updated."
       expect(assigns[:presenter]).to eq presenter
-      expect(assigns[:presenter].name).to eq 'The father of LISP'
+      expect(assigns[:presenter].name).to eq "The father of LISP"
     end
   end
 
@@ -44,7 +42,7 @@ describe Admin::Legacy::PresentersController do
 
   describe "#export_all" do
     let(:older_event) { FactoryBot.create(:event, date: 1.year.ago) }
-    let(:second_presenter) { FactoryBot.create(:participant, name: 'Kristen Nygaard', email: 'objectify@example.org') }
+    let(:second_presenter) { FactoryBot.create(:participant, name: "Kristen Nygaard", email: "objectify@example.org") }
     let!(:second_session) { FactoryBot.create(:session, participant: second_presenter, event: older_event) }
 
     it "should be successful" do

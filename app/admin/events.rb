@@ -21,7 +21,7 @@ ActiveAdmin.register Event do
           sessions: [
             :timeslot,
             :room,
-            { presentations: :participant }
+            {presentations: :participant}
           ]
         )
       else
@@ -38,29 +38,27 @@ ActiveAdmin.register Event do
 
   action_item :edit_event, only: :show do
     if resource.date.nil? || resource.date >= Date.current
-      link_to "Edit Event", edit_admin_event_path(resource), class: 'action-item-button'
+      link_to "Edit Event", edit_admin_event_path(resource), class: "action-item-button"
     end
   end
 
   member_action :generate_timeslots, method: :post do
-    begin
-      if resource.create_default_timeslots
-        redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
-      else
-        redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate timeslots.'
-      end
-    rescue => e
-      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots #{e.message}"
+    if resource.create_default_timeslots
+      redirect_to request.referer || admin_event_path(resource), notice: "Timeslots successfully generated!"
+    else
+      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots."
     end
+  rescue => e
+    redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots #{e.message}"
   end
 
   action_item :generate_timeslots, only: :show do
     if resource.timeslots_count.zero?
-      button_to 'Generate timeslots',
+      button_to "Generate timeslots",
         generate_timeslots_admin_event_path(resource),
         method: :post,
-        class: 'action-item-button',
-        data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
+        class: "action-item-button",
+        data: {confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?"}
     end
   end
 
@@ -70,7 +68,7 @@ ActiveAdmin.register Event do
     end
     column :date
     column("# of Sessions") do |event|
-      link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+      link_to event.sessions_count, admin_sessions_path(q: {event_id_eq: event.id})
     end
     column("# of Rooms") do |event|
       link_to event.rooms_count, admin_event_rooms_path(event)
@@ -85,7 +83,7 @@ ActiveAdmin.register Event do
       row :name
       row :date
       row "# of Sessions" do |event|
-        link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+        link_to event.sessions_count, admin_sessions_path(q: {event_id_eq: event.id})
       end
       row "# of Rooms" do |event|
         link_to event.rooms_count, admin_event_rooms_path(event)
@@ -99,7 +97,7 @@ ActiveAdmin.register Event do
 
     if event.current?
       settings = Settings.first
-      panel ("Event Settings (#{link_to 'edit', edit_admin_setting_path(1)})").html_safe do
+      panel "Event Settings (#{link_to "edit", edit_admin_setting_path(1)})".html_safe do
         attributes_table_for settings do
           row "Allow New Sessions" do
             settings.allow_new_sessions
@@ -124,7 +122,7 @@ ActiveAdmin.register Event do
         column("Sessions", sortable: :sessions_count) do |timeslot|
           link_to(
             timeslot.sessions.size,
-            admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
+            admin_sessions_path(order: "attendances_count_desc", q: {event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id})
           )
         end
       end
@@ -133,30 +131,30 @@ ActiveAdmin.register Event do
     panel "Event Sessions (#{event.sessions_count})" do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
-        'title' => 'sessions.title',
-        'attendances_count' => 'sessions.attendances_count',
-        'timeslot_id' => 'sessions.timeslot_id',
-        'room' => 'rooms.name',
-        'created_at' => 'sessions.created_at'
+        "title" => "sessions.title",
+        "attendances_count" => "sessions.attendances_count",
+        "timeslot_id" => "sessions.timeslot_id",
+        "room" => "rooms.name",
+        "created_at" => "sessions.created_at"
       }
 
       # Get sort column and direction from params, with validation
-      raw_sort = params[:order]&.gsub(/_desc|_asc/, '')  # Remove direction suffix
+      raw_sort = params[:order]&.gsub(/_desc|_asc/, "")  # Remove direction suffix
 
       # If sort param exists, use it; otherwise use default sort (timeslot, room capacity,then votes)
       order_clause = if params[:order].present?
-        sort_column = sortable_columns[raw_sort] || 'sessions.timeslot_id'
-        sort_direction = params[:order]&.end_with?('desc') ? 'desc' : 'asc'
+        sort_column = sortable_columns[raw_sort] || "sessions.timeslot_id"
+        sort_direction = params[:order]&.end_with?("desc") ? "desc" : "asc"
         Arel.sql("#{sort_column} #{sort_direction}")
       else
-        Arel.sql('sessions.timeslot_id, rooms.capacity DESC, sessions.attendances_count DESC')
+        Arel.sql("sessions.timeslot_id, rooms.capacity DESC, sessions.attendances_count DESC")
       end
 
       sessions = event.sessions
-                     .with_canceled
-                     .includes(:presenters, :attendances, :timeslot, :room)
-                     .joins('LEFT JOIN rooms ON rooms.id = sessions.room_id')
-                     .order(order_clause)
+        .with_canceled
+        .includes(:presenters, :attendances, :timeslot, :room)
+        .joins("LEFT JOIN rooms ON rooms.id = sessions.room_id")
+        .order(order_clause)
 
       table_for sessions, sortable: true do
         column :title, sortable: :title do |session|
@@ -189,5 +187,4 @@ ActiveAdmin.register Event do
       end
     end
   end
-  
 end

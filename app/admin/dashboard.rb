@@ -13,7 +13,7 @@ ActiveAdmin.register_page "Dashboard" do
             end
             row :date
             row "# of Sessions" do |event|
-              link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+              link_to event.sessions_count, admin_sessions_path(q: {event_id_eq: event.id})
             end
             row "# of Rooms" do |event|
               link_to event.rooms_count, admin_event_rooms_path(event)
@@ -24,7 +24,7 @@ ActiveAdmin.register_page "Dashboard" do
           end
         end
 
-        panel ("Current Event Settings (#{link_to 'edit', edit_admin_setting_path(1)})").html_safe do
+        panel "Current Event Settings (#{link_to "edit", edit_admin_setting_path(1)})".html_safe do
           attributes_table_for Settings.first do
             row "Allow New Sessions" do
               settings.allow_new_sessions
@@ -43,32 +43,32 @@ ActiveAdmin.register_page "Dashboard" do
     panel "Current Event Sessions (#{Event.current_event.sessions.with_canceled.count})" do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
-        'title' => 'sessions.title',
-        'attendances_count' => 'sessions.attendances_count',
-        'timeslot_id' => 'sessions.timeslot_id',
-        'room' => 'rooms.name',
-        'created_at' => 'sessions.created_at'
+        "title" => "sessions.title",
+        "attendances_count" => "sessions.attendances_count",
+        "timeslot_id" => "sessions.timeslot_id",
+        "room" => "rooms.name",
+        "created_at" => "sessions.created_at"
       }
 
       # Get sort column and direction from params, with validation
-      raw_sort = params[:order]&.gsub(/_desc|_asc/, '')  # Remove direction suffix
+      raw_sort = params[:order]&.gsub(/_desc|_asc/, "")  # Remove direction suffix
 
       # If sort param exists, use it; otherwise use default sort (timeslot, room capacity,then votes)
       order_clause = if params[:order].present?
-        sort_column = sortable_columns[raw_sort] || 'sessions.timeslot_id'
-        sort_direction = params[:order]&.end_with?('desc') ? 'desc' : 'asc'
+        sort_column = sortable_columns[raw_sort] || "sessions.timeslot_id"
+        sort_direction = params[:order]&.end_with?("desc") ? "desc" : "asc"
         Arel.sql("#{sort_column} #{sort_direction}")
       else
-        Arel.sql('sessions.timeslot_id, rooms.capacity DESC, sessions.attendances_count DESC')
+        Arel.sql("sessions.timeslot_id, rooms.capacity DESC, sessions.attendances_count DESC")
       end
 
       sessions = Event.includes(:sessions)
-                     .current_event
-                     .sessions
-                     .with_canceled
-                     .includes(:presenters, :attendances, :timeslot, :room)
-                     .joins('LEFT JOIN rooms ON rooms.id = sessions.room_id')
-                     .order(order_clause)
+        .current_event
+        .sessions
+        .with_canceled
+        .includes(:presenters, :attendances, :timeslot, :room)
+        .joins("LEFT JOIN rooms ON rooms.id = sessions.room_id")
+        .order(order_clause)
 
       table_for sessions, sortable: true do
         column :title, sortable: :title do |session|

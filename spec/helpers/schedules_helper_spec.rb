@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe SchedulesHelper do
   describe "#session_columns_for_slot" do
@@ -28,6 +28,6 @@ describe SchedulesHelper do
     let(:slot) { build(:timeslot_1) }
     subject { helper.pill_label(slot) }
 
-    it { is_expected.to eq ' 9:00' }
+    it { is_expected.to eq " 9:00" }
   end
 end

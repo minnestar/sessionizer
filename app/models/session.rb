@@ -1,6 +1,6 @@
 class Session < ActiveRecord::Base
-  has_many :categorizations, :dependent => :destroy
-  has_many :categories, :through => :categorizations
+  has_many :categorizations, dependent: :destroy
+  has_many :categories, through: :categorizations
   belongs_to :participant  # TODO: rename to 'owner'
 
   has_many :presentations, dependent: :destroy, inverse_of: :session
@@ -9,8 +9,8 @@ class Session < ActiveRecord::Base
   belongs_to :timeslot
   belongs_to :room
   belongs_to :level
-  has_many :attendances, :dependent => :destroy
-  has_many :participants, :through => :attendances
+  has_many :attendances, dependent: :destroy
+  has_many :participants, through: :attendances
 
   delegate :name, to: :room, prefix: true, allow_nil: true
   delegate :starts_at, to: :timeslot, allow_nil: true
@@ -23,20 +23,19 @@ class Session < ActiveRecord::Base
   # filter out canceled sessions by default
   default_scope { active }
 
-  scope :with_attendence_count, -> { select('*').joins("LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id") }
+  scope :with_attendence_count, -> { select("*").joins("LEFT OUTER JOIN (SELECT session_id, count(id) AS attendence_count FROM attendances GROUP BY session_id) AS attendence_aggregation ON attendence_aggregation.session_id = sessions.id") }
 
   scope :for_current_event, -> { where(event_id: Event.current_event.id) }
-  scope :for_past_events, -> { where.not(event_id: Event.current_event.id).where("event_id > ?", 0).includes(:event).order('events.date desc') }
-  scope :recent, -> { order('created_at desc') }
-  scope :random_order, -> { order(Arel.sql('random()')) }
+  scope :for_past_events, -> { where.not(event_id: Event.current_event.id).where("event_id > ?", 0).includes(:event).order("events.date desc") }
+  scope :recent, -> { order("created_at desc") }
+  scope :random_order, -> { order(Arel.sql("random()")) }
 
-  validates_presence_of :description
-  validates_presence_of :event_id
-  validates_presence_of :participant_id
-  validates_presence_of :title
-  validates_length_of :summary, :maximum => 100, :allow_blank => true
-  #validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
-
+  validates :description, presence: true
+  validates :event_id, presence: true
+  validates :participant_id, presence: true
+  validates :title, presence: true
+  validates :summary, length: {maximum: 100, allow_blank: true}
+  # validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
 
   attr_accessor :name, :email, :code_of_conduct_agreement
 
@@ -88,9 +87,8 @@ class Session < ActiveRecord::Base
     result
   end
 
-
-  def self.session_similarity()
-    Rails.cache.fetch('session_similarity', :expires_in => 30.minutes) do
+  def self.session_similarity
+    Rails.cache.fetch("session_similarity", expires_in: 30.minutes) do
       preferences = Session.attendee_preferences
       ::Recommender.calculate_similar_items(preferences, 5)
     end
@@ -101,12 +99,12 @@ class Session < ActiveRecord::Base
   end
 
   def other_presenters
-    presenters.reject{ |p| p == self.participant }
+    presenters.reject { |p| p == participant }
   end
+
   def other_presenter_names
     other_presenters.map(&:name)
   end
-
 
   def attending?(user)
     return false if user.nil?
@@ -115,8 +113,8 @@ class Session < ActiveRecord::Base
   end
 
   def recommended_sessions
-    similarity = Session.session_similarity()
-    recommended = similarity[self.id]
+    similarity = Session.session_similarity
+    recommended = similarity[id]
 
     if recommended
       # find will not order by recommendation strength; use conditions instead of find to ignore missing sessions in the cache
@@ -149,8 +147,8 @@ class Session < ActiveRecord::Base
     # But I can’t find it — only some abandoned gems.
     Attendance
       .select("session_id, count(*) as attendance_count")
-      .where('session_id in (?)', sessions_by_id.keys)
-      .group('session_id')
+      .where("session_id in (?)", sessions_by_id.keys)
+      .group("session_id")
       .each do |row|
         sessions_by_id[row.session_id].attendance_count = row.attendance_count
       end
@@ -179,10 +177,10 @@ class Session < ActiveRecord::Base
   #
   def estimated_interest
     @estimated_interest ||= begin
-      session_votes  = attendance_count.to_f
-      possible_votes = event.attendances.where('attendances.created_at >= ?', created_at).count.to_f
-      session_count  = event.sessions.count.to_f
-      total_votes    = event.attendances.count.to_f
+      session_votes = attendance_count.to_f
+      possible_votes = event.attendances.where("attendances.created_at >= ?", created_at).count.to_f
+      session_count = event.sessions.count.to_f
+      total_votes = event.attendances.count.to_f
 
       # For sessions created at the last minute, we don't have enough information to make
       # a good estimate; both session_votes and possible_votes are too low. If we just divide
@@ -211,5 +209,4 @@ class Session < ActiveRecord::Base
   def create_presenter
     presentations.create(participant: participant)
   end
-
 end

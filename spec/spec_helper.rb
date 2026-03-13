@@ -1,27 +1,25 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV["RAILS_ENV"] ||= "test"
 
-require 'simplecov'
+require "simplecov"
 SimpleCov.start :rails do
   add_filter "/spec/"
 end
 
 require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
+require "rspec/rails"
 
-Capybara.default_max_wait_time = ENV['CI'] ? 90 : 15
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'authlogic/test_case'
-
+Capybara.default_max_wait_time = ENV["CI"] ? 90 : 15
+require "capybara/rspec"
+require "capybara/rails"
+require "authlogic/test_case"
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
-
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
@@ -39,12 +37,12 @@ RSpec.configure do |config|
   config.include AuthenticationSupport, type: :feature
 
   config.before do
-    #don't hold on to any memoized events
-    Event.instance_variable_set(:'@event', nil)
+    # don't hold on to any memoized events
+    Event.instance_variable_set(:@event, nil)
   end
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation, { except: %w[markdown_contents] })
+    DatabaseCleaner.clean_with(:truncation, {except: %w[markdown_contents]})
     Category.find_or_create_defaults
   end
 
@@ -52,8 +50,8 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation, { except: %w[categories markdown_contents] }
+  config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation, {except: %w[categories markdown_contents]}
   end
 
   config.before(:each) do
@@ -73,4 +71,3 @@ Shoulda::Matchers.configure do |config|
     with.library :action_controller
   end
 end
-

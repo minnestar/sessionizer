@@ -1,6 +1,5 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-
   def edit(obj, &blk)
     return unless logged_in?
     if obj == current_participant || obj.try(:participant_id) == current_participant.id
@@ -13,7 +12,7 @@ module ApplicationHelper
   end
 
   def markdown(str, trusted: false)
-    return '' unless str
+    return "" unless str
 
     @markdown ||= Redcarpet::Markdown.new(
       Redcarpet::Render::HTML.new,
@@ -47,19 +46,19 @@ module ApplicationHelper
 
   def sanitize_html(html)
     sanitize html,
-      tags: %w(a img b i em strong p br ul ol li),
-      attributes: %w(href src height width alt)
+      tags: %w[a img b i em strong p br ul ol li],
+      attributes: %w[href src height width alt]
   end
 
   def add_sessions_button
     if Settings.allow_new_sessions?
-      link_to 'Add Session', new_session_path, class: 'button', alt: "Add Session"
+      link_to "Add Session", new_session_path, class: "button", alt: "Add Session"
     end
   end
 
   def toggle_attendance_button(event, session)
     if event.current?
-      content_tag(:button, "Attending", class: "toggle-attendance", 'data-session-id': session.id)
+      content_tag(:button, "Attending", class: "toggle-attendance", "data-session-id": session.id)
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 feature "Displaying the schedule" do
   let(:event) { create(:event, :full_event) }
@@ -8,7 +8,7 @@ feature "Displaying the schedule" do
   end
 
   scenario "should draw the schedule page" do
-    visit '/schedule'
+    visit "/schedule"
     expect(page).to have_content "Stuff about things"
   end
 end

@@ -4,11 +4,11 @@ class CreateParticipants < ActiveRecord::Migration[4.2]
       t.string :name
       t.string :email
       t.text :bio
-      
+
       t.timestamps
     end
 
-    add_index :participants, :email, :unique => true
+    add_index :participants, :email, unique: true
   end
 
   def self.down

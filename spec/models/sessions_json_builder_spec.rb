@@ -4,11 +4,11 @@ RSpec.describe SessionsJsonBuilder do
   let(:event) { create(:event) }
   let(:session) { create(:session, event: event, participant: create(:luke)) }
 
-  describe '#to_hash' do
+  describe "#to_hash" do
     let(:builder) { SessionsJsonBuilder.new }
     subject(:h) { builder.to_hash(session) }
 
-    it 'has all the attributes' do
+    it "has all the attributes" do
       expect(h[:id]).to be session.id
       expect(h[:participant_id]).to be session.participant_id
 

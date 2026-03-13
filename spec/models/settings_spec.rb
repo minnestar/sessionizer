@@ -20,8 +20,8 @@ describe Settings do
     context "with valid input" do
       it "accepts array of timeslot hashes" do
         valid_timeslots = [
-          { "start" => "8:00", "end" => "8:30", "special" => "Breakfast" },
-          { "start" => "8:30", "end" => "9:00" }
+          {"start" => "8:00", "end" => "8:30", "special" => "Breakfast"},
+          {"start" => "8:30", "end" => "9:00"}
         ]
         settings.default_timeslots = valid_timeslots
         expect(settings).to be_valid
@@ -29,7 +29,7 @@ describe Settings do
 
       it "accepts JSON string with multiple timeslots" do
         valid_input = "{\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Breakfast\"},\r\n" +
-                     "{\"start\":\"8:30\", \"end\":\"9:00\"}"
+          "{\"start\":\"8:30\", \"end\":\"9:00\"}"
         settings.default_timeslots = valid_input
         expect(settings).to be_valid
       end
@@ -54,19 +54,19 @@ describe Settings do
       end
 
       it "rejects timeslots with missing required fields" do
-        settings.default_timeslots = [{ "start" => "8:00" }]
+        settings.default_timeslots = [{"start" => "8:00"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_timeslots]).to include("line 1 is missing required start or end time")
       end
 
       it "rejects invalid time formats" do
-        settings.default_timeslots = [{ "start" => "invalid", "end" => "8:30" }]
+        settings.default_timeslots = [{"start" => "invalid", "end" => "8:30"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_timeslots]).to include("line 1 has invalid time format")
       end
 
       it "rejects invalid time order" do
-        settings.default_timeslots = [{ "start" => "9:00", "end" => "8:30" }]
+        settings.default_timeslots = [{"start" => "9:00", "end" => "8:30"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_timeslots]).to include("line 1 has end time before or equal to start time")
       end

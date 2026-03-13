@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Admin::Legacy::TimeslotsController do
-  let(:event) { create(:event, date: Date.parse('2015-10-15')) }
+  let(:event) { create(:event, date: Date.parse("2015-10-15")) }
 
   describe "#index" do
     let!(:timeslot) { create(:timeslot, event: event) }
@@ -20,7 +20,7 @@ describe Admin::Legacy::TimeslotsController do
       expect(response).to be_successful
       expect(assigns[:event]).to eq event
       expect(assigns[:timeslot]).to be_kind_of Timeslot
-      expect(assigns[:timeslot].starts_at).to eq Date.parse('2015-10-15').in_time_zone
+      expect(assigns[:timeslot].starts_at).to eq Date.parse("2015-10-15").in_time_zone
     end
   end
 
@@ -38,8 +38,8 @@ describe Admin::Legacy::TimeslotsController do
     let(:timeslot) { create(:timeslot, event: event) }
 
     it "is successful" do
-      put :update, params: {id: timeslot, timeslot: { event_id: event, starts_at: '2015-05-03 12:00:00', ends_at: '2015-05-03 12:50:00', schedulable: '1', title: "a changed title" }}
-      expect(assigns[:timeslot].title).to eq 'a changed title'
+      put :update, params: {id: timeslot, timeslot: {event_id: event, starts_at: "2015-05-03 12:00:00", ends_at: "2015-05-03 12:50:00", schedulable: "1", title: "a changed title"}}
+      expect(assigns[:timeslot].title).to eq "a changed title"
       expect(response).to redirect_to admin_legacy_event_timeslots_path(event)
     end
   end
@@ -47,7 +47,7 @@ describe Admin::Legacy::TimeslotsController do
   describe "#create" do
     it "is successful" do
       expect {
-        post :create, params: {event_id: event, timeslot: { event_id: event, starts_at: '2015-05-03 12:00:00', ends_at: '2015-05-03 12:50:00', schedulable: '1', title: "A timeslot has entered the event!" }}
+        post :create, params: {event_id: event, timeslot: {event_id: event, starts_at: "2015-05-03 12:00:00", ends_at: "2015-05-03 12:50:00", schedulable: "1", title: "A timeslot has entered the event!"}}
       }.to change { event.timeslots.count }.by(1)
       expect(response).to redirect_to admin_legacy_event_timeslots_path
     end

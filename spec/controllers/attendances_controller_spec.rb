@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe AttendancesController do
   describe "#create" do
@@ -62,10 +62,10 @@ describe AttendancesController do
           it "should record the interest" do
             expect {
               post :create, params: {session_id: session, attendance: {
-                                                  name: 'Charles Babbage',
-                                                  email: 'chuck_engine_light@example.org',
-                                                  password: 'analytical' }
-                                    }
+                name: "Charles Babbage",
+                email: "chuck_engine_light@example.org",
+                password: "analytical"
+              }}
             }.to change { session.attendances.count }.by(1)
             expect(response).to redirect_to session
             expect(flash[:notice]).to eq "Thanks for your interest in this session. Please check your email to confirm your account."

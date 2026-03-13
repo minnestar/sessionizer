@@ -1,6 +1,6 @@
 class PasswordResetsController < ApplicationController
   # Method from: http://github.com/binarylogic/authlogic_example/blob/master/app/controllers/application_controller.rb
-  before_action :load_participant_using_perishable_token, :only => [ :edit, :update ]
+  before_action :load_participant_using_perishable_token, only: [:edit, :update]
 
   def new
   end
@@ -13,7 +13,7 @@ class PasswordResetsController < ApplicationController
       redirect_to root_path
     else
       flash.now[:error] = "No participant was found with email address #{params[:email]}"
-      render :action => :new
+      render action: :new
     end
   end
 
@@ -31,10 +31,9 @@ class PasswordResetsController < ApplicationController
       flash[:success] = "Your password was successfully updated"
       redirect_to @participant
     else
-      render :action => :edit
+      render action: :edit
     end
   end
-
 
   private
 

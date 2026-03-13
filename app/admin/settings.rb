@@ -28,9 +28,9 @@ ActiveAdmin.register Settings do
       row :show_schedule
       row("Default Timeslots") do |settings|
         pre settings.default_timeslots.map { |slot|
-          ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
+          ordered_slot = {"start" => slot["start"], "end" => slot["end"]}
           ordered_slot["special"] = slot["special"] if slot["special"].present?
-          JSON.generate(ordered_slot).gsub(/,/, ', ')
+          JSON.generate(ordered_slot).gsub(",", ", ")
         }.join(",\n")
       end
     end
@@ -42,7 +42,7 @@ ActiveAdmin.register Settings do
         as: :select,
         collection: [[Event.current_event.name, Event.current_event.id]],
         selected: Event.current_event.id,
-        input_html: { disabled: true },
+        input_html: {disabled: true},
         label: "Current Event"
       f.input :allow_new_sessions
       f.input :show_schedule
@@ -51,9 +51,9 @@ ActiveAdmin.register Settings do
         label: "Default Timeslots (JSON)",
         input_html: {
           value: f.object.default_timeslots_raw_value || f.object.default_timeslots.map { |slot|
-            ordered_slot = { "start" => slot["start"], "end" => slot["end"] }
+            ordered_slot = {"start" => slot["start"], "end" => slot["end"]}
             ordered_slot["special"] = slot["special"] if slot["special"].present?
-            JSON.generate(ordered_slot).gsub(/,/, ', ')
+            JSON.generate(ordered_slot).gsub(",", ", ")
           }.join(",\n"),
           rows: 20
         },
