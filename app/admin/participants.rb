@@ -31,7 +31,7 @@ ActiveAdmin.register Participant do
       row :name
       row :email
       row :bio do |participant|
-        markdown participant.bio
+        admin_markdown(participant.bio)
       end
       row("Presentations", &:presentations_count)
       row("Attendances", &:attendances_count)

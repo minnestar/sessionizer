@@ -8,6 +8,10 @@ module ApplicationHelper
     end
   end
 
+  def admin_markdown(str, trusted: false)
+    content_tag(:div, markdown(str, trusted: trusted), class: "markdown-content")
+  end
+
   def markdown(str, trusted: false)
     return '' unless str
 
