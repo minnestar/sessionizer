@@ -1,2 +1,7 @@
 plugins:
   - standard-rails
+
+ignore:
+  - "db/migrate/**/*"
+  - "config/environments/**/*"
+  - "config/unicorn.rb"
