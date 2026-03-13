@@ -20,7 +20,7 @@ Rails.application.configure do
   config.eager_load = ENV["CI"].present?
 
   # Configure public file server for tests with Cache-Control for performance.
-  config.public_file_server.headers = { "Cache-Control" => "public, max-age=#{1.hour.to_i}" }
+  config.public_file_server.headers = {"Cache-Control" => "public, max-age=#{1.hour.to_i}"}
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local = true
@@ -48,12 +48,12 @@ Rails.application.configure do
 
   # Unlike controllers, the mailer instance doesn't have any context about the
   # incoming request so you'll need to provide the :host parameter yourself.
-  HOST = 'sessionizer.vm'
+  HOST = "sessionizer.vm"
 
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.default_url_options = {host: "localhost", port: 3000}
   config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = { from: "no-reply@#{HOST}" }
+  config.action_mailer.default_options = {from: "no-reply@#{HOST}"}
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr

@@ -1,6 +1,6 @@
 ActiveAdmin.register Room do
   config.filters = false
-  config.sort_order = 'capacity_desc'
+  config.sort_order = "capacity_desc"
 
   belongs_to :event
 
@@ -14,7 +14,7 @@ ActiveAdmin.register Room do
     def scoped_collection
       collection = super
       if action_name == "show"
-        collection.includes(sessions: [:timeslot, { presentations: :participant }])
+        collection.includes(sessions: [:timeslot, {presentations: :participant}])
       else
         collection
       end
@@ -31,9 +31,9 @@ ActiveAdmin.register Room do
     column("Sessions") do |room|
       link_to(
         "#{room.sessions.size}",
-        admin_sessions_path(order: "timeslot_id_asc", q: { event_id_eq: room.event_id, room_id_eq: room.id })
+        admin_sessions_path(order: "timeslot_id_asc", q: {event_id_eq: room.event_id, room_id_eq: room.id})
       )
-      end
+    end
     actions
   end
 
@@ -48,17 +48,17 @@ ActiveAdmin.register Room do
 
     panel "Sessions (#{room.sessions.with_canceled.size})" do
       if room.sessions.with_canceled.any?
-        table_for room.sessions.with_canceled.order('sessions.timeslot_id') do
+        table_for room.sessions.with_canceled.order("sessions.timeslot_id") do
           column("Timeslot") do |session|
             link_to session.timeslot.to_s, admin_event_timeslot_path(session.event, session.timeslot)
-        end
-        column :title do |session|
-          (link_to(session.title, admin_session_path(session)) +
-          (session.canceled? ? " (CANCELED)" : "")).html_safe
           end
-        column :presenters
-        column("Votes", &:attendances_count)
-        column("Canceled", &:canceled?)
+          column :title do |session|
+            (link_to(session.title, admin_session_path(session)) +
+            (session.canceled? ? " (CANCELED)" : "")).html_safe
+          end
+          column :presenters
+          column("Votes", &:attendances_count)
+          column("Canceled", &:canceled?)
         end
       else
         div do

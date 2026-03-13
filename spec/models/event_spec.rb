@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Event do
-  subject { Event.new(name: 'Foobar', date: Date.today) }
+  subject { Event.new(name: "Foobar", date: Date.today) }
 
   it { should validate_presence_of :name }
   it { should validate_presence_of :date }
@@ -74,8 +74,8 @@ describe Event do
     context "when timeslot lengths are inconsistent" do
       before do
         allow(Settings).to receive(:default_timeslots).and_return([
-          { "start" => "9:00", "end" => "9:45" },
-          { "start" => "10:00", "end" => "10:30" } # Different length
+          {"start" => "9:00", "end" => "9:45"},
+          {"start" => "10:00", "end" => "10:30"} # Different length
         ])
       end
 

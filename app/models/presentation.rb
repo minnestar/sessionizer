@@ -5,7 +5,6 @@ class Presentation < ActiveRecord::Base
   belongs_to :session, inverse_of: :presentations
   belongs_to :participant, counter_cache: true
 
-  validates_presence_of :session
-  validates_presence_of :participant_id
-
+  validates :session, presence: true
+  validates :participant_id, presence: true
 end

@@ -4,7 +4,7 @@ class Attendance < ActiveRecord::Base
 
   attr_accessor :name, :email, :password
 
-  validates_presence_of :session_id
-  validates_presence_of :participant_id
-  validates_uniqueness_of :participant_id, :scope => :session_id
+  validates :session_id, presence: true
+  validates :participant_id, presence: true
+  validates :participant_id, uniqueness: {scope: :session_id}
 end

@@ -3,17 +3,17 @@ class Event < ActiveRecord::Base
   has_many :timeslots, dependent: :destroy
   has_many :rooms, dependent: :destroy
 
-  has_many :presenter_timeslot_restrictions, :through => :timeslots
+  has_many :presenter_timeslot_restrictions, through: :timeslots
   has_many :code_of_conduct_agreements, dependent: :destroy
 
   # Careful! Large joins here; use with caution:
   has_many :attendances, through: :sessions
   has_many :participants, through: :attendances
 
-  validates_presence_of :name, :date
+  validates :name, :date, presence: true
 
   def self.current_event
-    self.order(:date).last
+    order(:date).last
   end
 
   def current?
@@ -33,12 +33,10 @@ class Event < ActiveRecord::Base
 
   # The list of timeslots that are at the first of each day of the event
   def first_timeslots_of_day
-    @first_timeslots_of_day ||= begin
-      timeslots
-        .group_by { |slot| slot.starts_at.midnight }
-        .map { |date, slots| slots.sort_by(&:starts_at).first }
-        .sort_by(&:starts_at)
-    end
+    @first_timeslots_of_day ||= timeslots
+      .group_by { |slot| slot.starts_at.midnight }
+      .map { |date, slots| slots.sort_by(&:starts_at).first }
+      .sort_by(&:starts_at)
   end
 
   def create_default_timeslots

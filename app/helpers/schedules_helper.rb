@@ -1,5 +1,4 @@
 module SchedulesHelper
-
   def pill_label(slot)
     if slot.event.multiday?
       slot.date_range.start_day
@@ -13,7 +12,7 @@ module SchedulesHelper
     # balanced_session_columns_for_slot(slot, &block)
   end
 
-private
+  private
 
   def stable_room_order_session_columns_for_slot(slot, &block)
     sessions = slot.sessions.sort_by do |s|
@@ -23,7 +22,7 @@ private
         -s.attendance_count        # for when rooms are unassigned
       ]
     end
-    split = (sessions.size+1) / 2
+    split = (sessions.size + 1) / 2
     yield sessions[0...split]
     yield sessions[split..-1]
   end
@@ -32,7 +31,6 @@ private
   # (Without this, the fully expanded details grow very lopsided.)
   #
   def balanced_session_columns_for_slot(slot, &block)
-
     unassigned = slot.sessions.sort_by { |s| -estimated_height(s) }
 
     columns = [[], []]
@@ -50,7 +48,7 @@ private
         first = false
       else
         # Greedy algo: choose next session to try to keep heights as close as possible
-        desired_height = heights[1-i] - heights[i]
+        desired_height = heights[1 - i] - heights[i]
         session = nil
         best_diff = 1 / 0.0
         unassigned.each do |candidate|  # O(n^2), so watch this one if we start assigning lots of sessions per slot!
@@ -66,7 +64,7 @@ private
 
       columns[i] << session
       heights[i] += estimated_height(session)
-      i = 1-i
+      i = 1 - i
     end
 
     # Now yield each column with session sorted by room size.
@@ -87,10 +85,9 @@ private
       h += (session.title.length / 42 + 1) * 25
       h += (session.presenters.size / 5 + 1) * 20
       h += session.description.length / 4 + 17
-      session.presenters.each { |presenter| h += (presenter.bio || '').length / 5 + 30}
+      session.presenters.each { |presenter| h += (presenter.bio || "").length / 5 + 30 }
       session.instance_variable_set(:@estimated_height, h)
     end
     session.instance_variable_get(:@estimated_height)
   end
-
 end

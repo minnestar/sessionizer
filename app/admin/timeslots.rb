@@ -1,7 +1,7 @@
 ActiveAdmin.register Timeslot do
   config.filters = false
   config.batch_actions = false
-  config.sort_order = 'starts_at_asc'
+  config.sort_order = "starts_at_asc"
 
   belongs_to :event
 
@@ -15,11 +15,11 @@ ActiveAdmin.register Timeslot do
   action_item :generate_timeslots, only: [:index] do
     event = Event.find(params[:event_id])
     if event.timeslots_count.zero?
-      button_to 'Generate timeslots',
+      button_to "Generate timeslots",
         generate_timeslots_admin_event_path(event),
         method: :post,
-        class: 'action-item-button',
-        data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
+        class: "action-item-button",
+        data: {confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?"}
     end
   end
 
@@ -33,7 +33,7 @@ ActiveAdmin.register Timeslot do
     column("Sessions", sortable: :sessions_count) do |timeslot|
       link_to(
         timeslot.sessions.size,
-        admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
+        admin_sessions_path(order: "attendances_count_desc", q: {event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id})
       )
     end
   end
@@ -51,7 +51,7 @@ ActiveAdmin.register Timeslot do
 
     panel "Sessions (#{timeslot.sessions.with_canceled.size})" do
       if timeslot.sessions.with_canceled.any?
-        table_for timeslot.sessions.with_canceled.order('sessions.attendances_count DESC') do
+        table_for timeslot.sessions.with_canceled.order("sessions.attendances_count DESC") do
           column :title do |session|
             (link_to(session.title, admin_session_path(session)) +
             (session.canceled? ? " (CANCELED)" : "")).html_safe
@@ -71,7 +71,7 @@ ActiveAdmin.register Timeslot do
 
   form do |f|
     f.inputs do
-      f.input :event, as: :select, input_html: { disabled: true }
+      f.input :event, as: :select, input_html: {disabled: true}
       f.input :title
       f.input :starts_at
       f.input :ends_at

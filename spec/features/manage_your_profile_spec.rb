@@ -1,7 +1,6 @@
 require "spec_helper"
 
 feature "Manage a user profile" do
-
   context "As an authenticated user" do
     let(:joe) { create(:joe, email_confirmed_at: Time.now) }
     background do
@@ -14,12 +13,10 @@ feature "Manage a user profile" do
       click_link "Welcome Joe Schmoe"
       click_link "edit your profile"
       bio = FFaker::HipsterIpsum.paragraph(3)
-      fill_in 'Bio',  with: bio
+      fill_in "Bio", with: bio
       click_button "Update Profile"
 
       expect(page).to have_content bio
     end
   end
-
 end
-

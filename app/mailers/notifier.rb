@@ -1,6 +1,6 @@
 class Notifier < ActionMailer::Base
   default from: "Minnestar Support <support@minnestar.org>",
-          content_type: "text/html"
+    content_type: "text/html"
 
   def password_reset_instructions(participant)
     @participant = participant

@@ -10,8 +10,8 @@ feature "Authentication and account creation things" do
 
       click_link "Log in"
 
-      fill_in 'Email', with: 'bob@example.com'
-      fill_in 'Password', with: 'bobzurunkle!!!'
+      fill_in "Email", with: "bob@example.com"
+      fill_in "Password", with: "bobzurunkle!!!"
       click_button "Log in"
 
       expect(page).to have_content "Sorry, couldn't find that participant. Try again, or sign up to register a new account."
@@ -22,9 +22,9 @@ feature "Authentication and account creation things" do
 
       click_link "Log in"
 
-      fill_in 'Email', with: confirmed_email_user.email
-      fill_in 'Password', with: confirmed_email_user.password
-      check 'Remember me'
+      fill_in "Email", with: confirmed_email_user.email
+      fill_in "Password", with: confirmed_email_user.password
+      check "Remember me"
       click_button "Log in"
 
       expect(page).to have_content "You're logged in. Welcome back."
@@ -39,9 +39,9 @@ feature "Authentication and account creation things" do
 
       click_link "Log in"
 
-      fill_in 'Email', with: unconfirmed_email_user.email
-      fill_in 'Password', with: unconfirmed_email_user.password
-      check 'Remember me'
+      fill_in "Email", with: unconfirmed_email_user.email
+      fill_in "Password", with: unconfirmed_email_user.password
+      check "Remember me"
       click_button "Log in"
 
       expect(page).to have_content "Your email has not been confirmed. Please Confirm your email."
@@ -57,12 +57,12 @@ feature "Authentication and account creation things" do
       visit root_path
 
       click_link "Log in"
-      click_link 'Register here'
+      click_link "Register here"
 
       name = FFaker::Name.name
-      fill_in 'Your name*', with: name
-      fill_in 'Your email', with: FFaker::Internet.safe_email
-      fill_in 'Password',  with: "anything, it doesnt matter"
+      fill_in "Your name*", with: name
+      fill_in "Your email", with: FFaker::Internet.safe_email
+      fill_in "Password", with: "anything, it doesnt matter"
       click_button "Create My Account"
 
       expect(page).to have_content "Thanks for registering an account. Please check your email to confirm your account."
@@ -73,11 +73,11 @@ feature "Authentication and account creation things" do
       visit root_path
 
       click_link "Log in"
-      click_link 'Register here'
+      click_link "Register here"
 
-      fill_in 'Your name*', with: confirmed_email_user.name
-      fill_in 'Your email', with: confirmed_email_user.email
-      fill_in 'Password', with: "anything, it doesnt matter"
+      fill_in "Your name*", with: confirmed_email_user.name
+      fill_in "Your email", with: confirmed_email_user.email
+      fill_in "Password", with: "anything, it doesnt matter"
       click_button "Create My Account"
 
       expect(page).to have_content "There was a problem creating your account."
@@ -90,7 +90,7 @@ feature "Authentication and account creation things" do
       visit root_path
 
       click_link "Log in"
-      click_link 'Register here'
+      click_link "Register here"
 
       click_button "Create My Account"
 
@@ -100,9 +100,9 @@ feature "Authentication and account creation things" do
       within("#participant_password_input") { expect(page).to have_content "can't be blank" }
 
       name = FFaker::Name.name
-      fill_in 'Your name*', with: name
-      fill_in 'Your email', with: FFaker::Internet.safe_email
-      fill_in 'Password', with: "anything, it doesnt matter"
+      fill_in "Your name*", with: name
+      fill_in "Your email", with: FFaker::Internet.safe_email
+      fill_in "Password", with: "anything, it doesnt matter"
       click_button "Create My Account"
 
       expect(page).to have_content "Thanks for registering an account. Please check your email to confirm your account."

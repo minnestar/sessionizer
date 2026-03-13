@@ -6,8 +6,7 @@ class Admin::Legacy::AdminController < ApplicationController
 
   def redirect_to_ssl
     if Rails.env.production? && !request.ssl?
-      redirect_to(protocol: 'https://')
+      redirect_to(protocol: "https://")
     end
   end
-
 end

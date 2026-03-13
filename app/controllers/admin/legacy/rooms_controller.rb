@@ -31,5 +31,4 @@ class Admin::Legacy::RoomsController < Admin::Legacy::AdminController
   def room_params
     params.require(controller_name.singularize).permit(:name, :capacity)
   end
-
 end

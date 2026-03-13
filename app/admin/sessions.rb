@@ -40,22 +40,22 @@ ActiveAdmin.register Session do
   filter :event, as: :select, collection: proc { Event.order(created_at: :desc).map { |e| [e.name + " (" + e.date.year.to_s + ")", e.id] } }
   filter :title
   filter :participant_id, as: :select,
-         label: 'Creator',
-         collection: proc { Participant.with_sessions.distinct.order(:name).pluck(:name, :id) }
+    label: "Creator",
+    collection: proc { Participant.with_sessions.distinct.order(:name).pluck(:name, :id) }
   filter :timeslot, as: :select, collection: proc {
     Timeslot.unscoped
-            .includes(:event)
-            .where.not(title: nil)
-            .order('events.id DESC, timeslots.id ASC')
-            .map { |t| ["#{t.event.name}: #{t.title}", t.id] }
+      .includes(:event)
+      .where.not(title: nil)
+      .order("events.id DESC, timeslots.id ASC")
+      .map { |t| ["#{t.event.name}: #{t.title}", t.id] }
   }
 
   filter :room, as: :select, collection: proc {
     Room.unscoped
-        .includes(:event)
-        .where.not(name: nil)
-        .order('events.id DESC, rooms.capacity DESC')
-        .map { |r| ["#{r.event.name}: #{r.name}", r.id] }
+      .includes(:event)
+      .where.not(name: nil)
+      .order("events.id DESC, rooms.capacity DESC")
+      .map { |r| ["#{r.event.name}: #{r.name}", r.id] }
   }
 
   member_action :cancel, method: :post do
@@ -70,20 +70,20 @@ ActiveAdmin.register Session do
 
   action_item :cancel, only: :show do
     if !resource.canceled? && resource.event_id == Event.current_event.id
-      button_to 'Cancel Session',
+      button_to "Cancel Session",
         cancel_admin_session_path(resource),
         method: :post,
-        class: 'action-item-button',
-        data: { confirm: "Are you sure you want to cancel this session?" }
+        class: "action-item-button",
+        data: {confirm: "Are you sure you want to cancel this session?"}
     end
   end
 
   action_item :uncancel, only: :show do
     if resource.canceled? && resource.event_id == Event.current_event.id
-      button_to 'Uncancel Session',
+      button_to "Uncancel Session",
         uncancel_admin_session_path(resource),
         method: :post,
-        class: 'action-item-button'
+        class: "action-item-button"
     end
   end
 
@@ -98,7 +98,7 @@ ActiveAdmin.register Session do
         link_to presenter.name, admin_participant_path(presenter)
       end.join(", ").html_safe
     end
-    column("Event", sortable: 'events.date') do |session|
+    column("Event", sortable: "events.date") do |session|
       link_to session.event.name, admin_event_path(session.event) if session.event
     end
     column("Votes", sortable: :attendances_count, &:attendances_count)
@@ -109,11 +109,11 @@ ActiveAdmin.register Session do
     end
   end
 
-  show  title: :title do
+  show title: :title do
     attributes_table do
       row :event do |session|
         (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe if session.event
-      end 
+      end
       row :title
       row :participant
       row :presenters
@@ -135,7 +135,7 @@ ActiveAdmin.register Session do
     end
 
     panel "Interested Participants (#{session.attendances_count})" do
-      table_for session.attendances.includes(:participant).order('created_at desc') do
+      table_for session.attendances.includes(:participant).order("created_at desc") do
         column :name do |attendance|
           link_to attendance.participant.name, admin_participant_path(attendance.participant)
         end
@@ -153,17 +153,17 @@ ActiveAdmin.register Session do
     f.inputs do
       event = f.object.event || Event.current_event
       f.input :event, as: :select,
-              collection: [[event.name, event.id]],
-              selected: event.id,
-              input_html: { disabled: true }
+        collection: [[event.name, event.id]],
+        selected: event.id,
+        input_html: {disabled: true}
       f.hidden_field :event_id, value: event.id
       f.input :title
       f.input :description
       f.input :participant
       f.input :presenters,
-              as: :select,
-              collection: Participant.joins(:presentations).distinct.order(:name).map { |p| ["#{p.name} (#{p.email})", p.id] },
-              input_html: { size: 10, multiple: true, style: 'height: auto;' }
+        as: :select,
+        collection: Participant.joins(:presentations).distinct.order(:name).map { |p| ["#{p.name} (#{p.email})", p.id] },
+        input_html: {size: 10, multiple: true, style: "height: auto;"}
       f.input :level
       f.input :categories
       event_id = f.object.event_id || Event.current_event.id

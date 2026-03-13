@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-require 'spec_helper'
+require "spec_helper"
 
 describe Timeslot do
   it { should validate_presence_of :event_id }
@@ -18,17 +16,17 @@ describe Timeslot do
   end
 
   context "to_s" do
-    let(:event) { build(:event, date: Date.parse('2015-09-13')) }
+    let(:event) { build(:event, date: Date.parse("2015-09-13")) }
     let(:timeslot) { build(:timeslot_1, event: event) }
 
     context "when with_day is set" do
       subject { timeslot.to_s(with_day: true) }
-      it { is_expected.to eq 'Sun, Sep 13 •  9:00 –  9:50 Session 1' }
+      it { is_expected.to eq "Sun, Sep 13 •  9:00 –  9:50 Session 1" }
     end
 
     context "no args" do
       subject { timeslot.to_s }
-      it { is_expected.to eq ' 9:00 –  9:50 Session 1' }
+      it { is_expected.to eq " 9:00 –  9:50 Session 1" }
     end
   end
 end

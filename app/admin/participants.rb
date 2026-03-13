@@ -5,15 +5,15 @@ ActiveAdmin.register Participant do
 
   permit_params :name, :email, :bio, :email_confirmed_at
 
-  includes :attendances, { presentations: { session: :event } }
+  includes :attendances, {presentations: {session: :event}}
 
   filter :name
   filter :email
   filter :bio
   filter :email_confirmed_at_not_null, as: :boolean,
-         label: 'Email confirmed',
-         filters: [:eq],
-         input_html: { name: 'q[email_confirmed_at_not_null]' }
+    label: "Email confirmed",
+    filters: [:eq],
+    input_html: {name: "q[email_confirmed_at_not_null]"}
 
   index do
     column :name do |participant|
@@ -55,14 +55,16 @@ ActiveAdmin.register Participant do
     end
 
     panel "Interested Sessions (#{participant.attendances_count})" do
-      table_for participant.attendances.includes(session: :event).order('events.date desc, sessions.title') do
+      table_for participant.attendances.includes(session: :event).order("events.date desc, sessions.title") do
         column(:title) do |attendance|
           (link_to(attendance.session.title, admin_session_path(attendance.session)) +
            (attendance.session.canceled? ? " (CANCELED)" : "")).html_safe
         end
         column(:event) do |attendance|
-          (link_to(attendance.session.event.name, admin_event_path(attendance.session.event)) +
-           " (#{attendance.session.event.date.year})").html_safe if attendance.session.event
+          if attendance.session.event
+            (link_to(attendance.session.event.name, admin_event_path(attendance.session.event)) +
+             " (#{attendance.session.event.date.year})").html_safe
+          end
         end
         column(:created_at) { |a| a.created_at.strftime("%-m/%-d/%y") }
       end

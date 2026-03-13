@@ -3,7 +3,7 @@ FactoryBot.define do
     sequence :title do |n|
       "Session #{n}"
     end
-    description { 'whatever' }
+    description { "whatever" }
     participant
     association :event
 
