@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_12_161057) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_15_144219) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -67,6 +67,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_12_161057) do
     t.integer "sessions_count", default: 0
     t.integer "rooms_count", default: 0
     t.integer "timeslots_count", default: 0
+    t.string "venue", default: "Best Buy HQ"
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
   end
 
   create_table "levels", id: :serial, force: :cascade do |t|
@@ -160,5 +163,4 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_12_161057) do
     t.boolean "schedulable", default: true
     t.string "title"
   end
-
 end

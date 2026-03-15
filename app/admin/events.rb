@@ -4,7 +4,7 @@ ActiveAdmin.register Event do
   config.filters = false
   config.batch_actions = false
 
-  permit_params :name, :date
+  permit_params :name, :date, :venue, :start_time, :end_time
 
   # eager load associations on the show page
   controller do
@@ -64,6 +64,17 @@ ActiveAdmin.register Event do
     end
   end
 
+  form do |f|
+    f.inputs do
+      f.input :name
+      f.input :date
+      f.input :venue
+      f.input :start_time
+      f.input :end_time
+    end
+    f.actions
+  end
+
   index do
     column :name do |event|
       link_to event.name, admin_event_path(event)
@@ -84,6 +95,18 @@ ActiveAdmin.register Event do
     attributes_table do
       row :name
       row :date
+      row :venue
+      row :start_time
+      row :end_time
+      row "Meta Description" do |event|
+        helpers.default_meta_description(event)
+      end
+      row("Event URL") do |event|
+        link_to event_url(event), event_url(event), target: "_blank"
+      end
+      row("Schedule URL") do |event|
+        link_to event_schedule_url(event), event_schedule_url(event), target: "_blank"
+      end
       row "# of Sessions" do |event|
         link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
       end

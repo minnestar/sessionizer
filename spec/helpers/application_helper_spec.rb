@@ -15,6 +15,80 @@ describe ApplicationHelper do
     end
   end
 
+  describe "#default_meta_description" do
+    context "when current event has venue and times (same day, future)" do
+      let!(:event) do
+        create(:event,
+          name: "Minnebar 21",
+          date: Date.new(2027, 5, 1),
+          venue: "Best Buy HQ",
+          start_time: Time.zone.local(2027, 5, 1, 8, 0),
+          end_time: Time.zone.local(2027, 5, 1, 18, 30))
+      end
+
+      it "returns prose description with future tense, time range, and venue" do
+        result = helper.default_meta_description
+        expect(result).to include("Minnebar 21 is a participant-led unconference free and open to all.")
+        expect(result).to include("It'll be held")
+        expect(result).to include("8:00am")
+        expect(result).to include("6:30pm")
+        expect(result).to include("Best Buy HQ")
+        expect(result).to end_with(".")
+      end
+    end
+
+    context "when current event spans multiple days" do
+      let!(:event) do
+        create(:event,
+          name: "Minnebar 15",
+          date: Date.new(2020, 10, 6),
+          start_time: Time.zone.local(2020, 10, 6, 9, 0),
+          end_time: Time.zone.local(2020, 10, 17, 11, 55))
+      end
+
+      it "returns multi-day format with past tense" do
+        result = helper.default_meta_description
+        expect(result).to include("It was held")
+        expect(result).to include("October 6th")
+        expect(result).to include("October 17th")
+        expect(result).to end_with(".")
+      end
+    end
+
+    context "when event is in the past" do
+      let!(:event) do
+        create(:event,
+          name: "Minnebar 18",
+          date: Date.new(2024, 4, 20),
+          start_time: Time.zone.local(2024, 4, 20, 8, 0),
+          end_time: Time.zone.local(2024, 4, 20, 19, 0))
+      end
+
+      it "uses past tense" do
+        result = helper.default_meta_description
+        expect(result).to include("It was held")
+        expect(result).not_to include("It'll be held")
+      end
+    end
+
+    context "when current event has no times" do
+      let!(:event) { create(:event, name: "Minnebar 20", start_time: nil, end_time: nil) }
+
+      it "falls back to date-only format" do
+        result = helper.default_meta_description
+        expect(result).to include("Minnebar 20")
+        expect(result).not_to include("am")
+        expect(result).to end_with(".")
+      end
+    end
+
+    context "when no current event exists" do
+      it "returns the default fallback" do
+        expect(helper.default_meta_description).to eq("Minnebar")
+      end
+    end
+  end
+
   describe "#markdown" do
     it 'converts markdown to html' do
       expect(helper.markdown("foo\n\n* bar\n* baz")).

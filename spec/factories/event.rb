@@ -5,6 +5,9 @@ FactoryBot.define do
       "Minnebar #{n}"
     end
     date { 30.days.since }
+    venue { "Best Buy HQ" }
+    start_time { date.in_time_zone.change(hour: 8, min: 0) }
+    end_time { date.in_time_zone.change(hour: 18, min: 30) }
 
     trait :full_event do
       transient do

@@ -8,6 +8,7 @@
     <%= favicon_link_tag 'favicon.ico' %>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <% content_for :meta_description, default_meta_description(event) %>
     <%= render 'shared/meta_tags' %>
 
     <%= yield(:head) %>

@@ -1,4 +1,5 @@
 <% title("#{@event&.name || t('conference')} Session Registration") %>
+<% content_for :meta_description, default_meta_description(@event) if @event %>
 
 <div class="row">
   <div class="column grid_6" style="margin-left:0px">
