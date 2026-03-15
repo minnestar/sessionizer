@@ -80,6 +80,8 @@ ActiveAdmin.register Event do
       link_to event.name, admin_event_path(event)
     end
     column :date
+    column(:time) { |event| event.display_time }
+    column :venue
     column("# of Sessions") do |event|
       link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
     end
@@ -95,11 +97,10 @@ ActiveAdmin.register Event do
     attributes_table do
       row :name
       row :date
+      row(:time) { |event| event.display_time }
       row :venue
-      row :start_time
-      row :end_time
       row "Meta Description" do |event|
-        helpers.default_meta_description(event)
+        helpers.generate_meta_description(event)
       end
       row("Event URL") do |event|
         link_to event_url(event), event_url(event), target: "_blank"

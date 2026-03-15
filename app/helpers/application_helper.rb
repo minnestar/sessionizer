@@ -32,8 +32,8 @@ module ApplicationHelper
     Nokogiri::HTML::DocumentFragment.parse(html.scrub).to_html
   end
 
-  def default_meta_description(event = Event.current_event)
-    return "Minnebar" unless event
+  def generate_meta_description(event = Event.current_event)
+    return "Minnebar is a participant-led unconference free and open to all." unless event
 
     desc = "#{event.name} is a participant-led unconference free and open to all."
     held = event.date && event.date < Date.current ? "It was held" : "It'll be held"
@@ -43,8 +43,7 @@ module ApplicationHelper
       e = event.end_time.in_time_zone
       if s.to_date == e.to_date
         date_str = "#{s.strftime('%A, %B')} #{s.day.ordinalize}, #{s.strftime('%Y')}"
-        time_str = "#{s.strftime('%l:%M%P').strip} - #{e.strftime('%l:%M%P').strip}"
-        desc += " #{held} on #{date_str} from #{time_str}"
+        desc += " #{held} on #{date_str} from #{event.display_time}"
       else
         start_str = "#{s.strftime('%A, %B')} #{s.day.ordinalize}"
         end_str = "#{e.strftime('%A, %B')} #{e.day.ordinalize}, #{e.strftime('%Y')}"
@@ -60,7 +59,7 @@ module ApplicationHelper
   end
 
   def meta_description
-    content_for?(:meta_description) ? content_for(:meta_description) : default_meta_description
+    content_for?(:meta_description) ? content_for(:meta_description) : generate_meta_description
   end
 
   def sanitize_html(html)
