@@ -68,9 +68,9 @@ ActiveAdmin.register Event do
     f.inputs do
       f.input :name
       f.input :date
-      f.input :venue
       f.input :start_time
       f.input :end_time
+      f.input :venue
     end
     f.actions
   end
