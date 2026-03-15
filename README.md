@@ -113,6 +113,11 @@ The full test suite can be run with:
 rails spec
 ```
 
+By default, browser tests run headless. To open the browser for debugging use `HEADED=1`:
+```
+HEADED=1 rails spec
+```
+
 ## Deploying to Heroku
 
 1. Create an application. Sessionizer runs on the default `heroku-18` stack.
