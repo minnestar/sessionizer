@@ -32,17 +32,34 @@ module ApplicationHelper
     Nokogiri::HTML::DocumentFragment.parse(html.scrub).to_html
   end
 
-  def default_meta_description
-    if Event.current_event
-      # TODO: Add venue field to Event model and use it here instead of hardcoding "Best Buy HQ"
-      "#{Event.current_event.name} | #{Event.current_event.date.strftime("%B %e, %Y")} | Best Buy HQ"
-    else
-      "Minnebar"
+  def generate_meta_description(event = Event.current_event)
+    return "Minnebar is a participant-led unconference free and open to all." unless event
+
+    desc = "#{event.name} is a participant-led unconference free and open to all."
+    held = event.date && event.date < Date.current ? "It was held" : "It'll be held"
+
+    if event.start_time && event.end_time
+      s = event.start_time.in_time_zone
+      e = event.end_time.in_time_zone
+      if s.to_date == e.to_date
+        date_str = "#{s.strftime('%A, %B')} #{s.day.ordinalize}, #{s.strftime('%Y')}"
+        desc += " #{held} on #{date_str} from #{event.display_time}"
+      else
+        start_str = "#{s.strftime('%A, %B')} #{s.day.ordinalize}"
+        end_str = "#{e.strftime('%A, %B')} #{e.day.ordinalize}, #{e.strftime('%Y')}"
+        desc += " #{held} #{start_str} - #{end_str}"
+      end
+    elsif event.date
+      desc += " #{held} on #{event.date.strftime('%A, %B')} #{event.date.day.ordinalize}, #{event.date.strftime('%Y')}"
     end
+
+    desc += " at #{event.venue}" if event.venue.present?
+    desc += "." unless desc.end_with?(".")
+    desc
   end
 
   def meta_description
-    content_for?(:meta_description) ? content_for(:meta_description) : default_meta_description
+    content_for?(:meta_description) ? content_for(:meta_description) : generate_meta_description
   end
 
   def sanitize_html(html)

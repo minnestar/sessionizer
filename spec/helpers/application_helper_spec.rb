@@ -15,6 +15,63 @@ describe ApplicationHelper do
     end
   end
 
+  describe "#generate_meta_description" do
+    it "returns prose description with future tense, time range, and venue" do
+      event = create(:event,
+        name: "Minnebar 21",
+        date: Date.new(2027, 5, 1),
+        venue: "Best Buy HQ",
+        start_time: Time.zone.local(2027, 5, 1, 8, 0),
+        end_time: Time.zone.local(2027, 5, 1, 18, 30))
+
+      expect(helper.generate_meta_description(event)).to eq(
+        "Minnebar 21 is a participant-led unconference free and open to all. It'll be held on Saturday, May 1st, 2027 from 8am-6:30pm at Best Buy HQ."
+      )
+    end
+
+    it "returns multi-day format with past tense" do
+      event = create(:event,
+        name: "Minnebar 15",
+        date: Date.new(2020, 10, 6),
+        start_time: Time.zone.local(2020, 10, 6, 9, 0),
+        end_time: Time.zone.local(2020, 10, 17, 11, 55))
+
+      expect(helper.generate_meta_description(event)).to eq(
+        "Minnebar 15 is a participant-led unconference free and open to all. It was held Tuesday, October 6th - Saturday, October 17th, 2020 at Best Buy HQ."
+      )
+    end
+
+    it "uses past tense for past events" do
+      event = create(:event,
+        name: "Minnebar 18",
+        date: Date.new(2024, 4, 20),
+        start_time: Time.zone.local(2024, 4, 20, 8, 0),
+        end_time: Time.zone.local(2024, 4, 20, 19, 0))
+
+      expect(helper.generate_meta_description(event)).to eq(
+        "Minnebar 18 is a participant-led unconference free and open to all. It was held on Saturday, April 20th, 2024 from 8am-7pm at Best Buy HQ."
+      )
+    end
+
+    it "falls back to date-only format when times are nil" do
+      event = create(:event, name: "Minnebar 20", date: Date.new(2027, 4, 17), start_time: nil, end_time: nil)
+
+      expect(helper.generate_meta_description(event)).to eq(
+        "Minnebar 20 is a participant-led unconference free and open to all. It'll be held on Saturday, April 17th, 2027 at Best Buy HQ."
+      )
+    end
+
+    it "returns the default fallback when no event exists" do
+      expect(helper.generate_meta_description(nil)).to eq("Minnebar is a participant-led unconference free and open to all.")
+    end
+
+    it "defaults to using Event.current_event" do
+      event = create(:event, name: "Minnebar 22", date: Date.new(2027, 6, 1))
+
+      expect(helper.generate_meta_description).to include("Minnebar 22")
+    end
+  end
+
   describe "#markdown" do
     it 'converts markdown to html' do
       expect(helper.markdown("foo\n\n* bar\n* baz")).

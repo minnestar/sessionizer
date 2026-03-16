@@ -41,6 +41,12 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def display_time
+    return unless start_time && end_time
+
+    "#{format_time(start_time)}-#{format_time(end_time)}"
+  end
+
   def create_default_timeslots
     if timeslots.any?
       raise "#{name} (event.id=#{id}) already has timeslots; please delete them before running this task"
@@ -75,6 +81,17 @@ class Event < ActiveRecord::Base
 
         timeslot.save!
       end
+    end
+  end
+
+  private
+
+  def format_time(time)
+    t = time.in_time_zone
+    if t.min == 0
+      t.strftime('%l%P').strip
+    else
+      t.strftime('%l:%M%P').strip
     end
   end
 end
