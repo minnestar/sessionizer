@@ -70,7 +70,11 @@ module ApplicationHelper
 
   def add_sessions_button
     if Settings.allow_new_sessions?
-      link_to 'Add Session', new_session_path, class: 'button', alt: "Add Session"
+      options = { class: 'button', alt: "Add Session" }
+      if Event.current_event && current_participant&.sessions&.for_current_event&.any?
+        options[:data] = { confirm: Session::DUPLICATE_SESSION_WARNING }
+      end
+      link_to 'Add Session', new_session_path, options
     end
   end
 

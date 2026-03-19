@@ -15,6 +15,9 @@ class SessionsController < ApplicationController
   end
 
   def new
+    if Event.current_event && current_participant.sessions.for_current_event.any?
+      flash.now[:alert] = Session::DUPLICATE_SESSION_WARNING
+    end
     respond_with(@session)
   end
 

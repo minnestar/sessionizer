@@ -1,4 +1,5 @@
 class Session < ActiveRecord::Base
+  DUPLICATE_SESSION_WARNING = "It looks like you already have a session for this event. We're encouraging presenters to submit just one session this year -- give us your first, best idea! Are you sure you want to create another?"
   has_many :categorizations, :dependent => :destroy
   has_many :categories, :through => :categorizations
   belongs_to :participant  # TODO: rename to 'owner'

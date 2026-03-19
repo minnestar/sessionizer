@@ -31,6 +31,18 @@ feature "Manage Sessions" do
     expect(page).to have_content 'Thanks for adding your session.'
   end
 
+  scenario "As a user with an existing session, I see a warning when adding another" do
+    event = Event.current_event
+    user = create(:participant, email_confirmed_at: Time.current)
+    create(:session, event: event, participant: user)
+
+    sign_in_user(user)
+
+    visit new_session_path
+    expect(page).to have_content("already have a session for this event")
+    expect(page).to have_content("encouraging presenters to submit just one session")
+  end
+
   scenario "As a new user, I cannot add a session until my email has been confirmed" do
     visit root_path
 

@@ -99,6 +99,26 @@ describe SessionsController do
     end
   end
 
+  describe "new" do
+    let!(:event) { create(:event) }
+
+    it "succeeds without a flash alert when participant has no sessions" do
+      get :new
+      expect(response).to be_successful
+      expect(flash[:alert]).to be_nil
+    end
+
+    context "when participant already has a session for the current event" do
+      let!(:existing_session) { create(:session, event: event, participant: user) }
+
+      it "sets a flash alert warning" do
+        get :new
+        expect(response).to be_successful
+        expect(flash[:alert]).to match(/already have a session/)
+      end
+    end
+  end
+
   describe "create" do
     let!(:event) { create(:event) }
     let(:category) { Category.last }
