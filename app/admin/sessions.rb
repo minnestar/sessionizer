@@ -167,7 +167,7 @@ ActiveAdmin.register Session do
       f.input :level
       f.input :categories, collection: event.categories.merge(EventCategory.ordered)
       f.input :timeslot, collection: Timeslot.where(event_id: event.id)
-      f.input :room, collection: Room.where(event_id: event_id)
+      f.input :room, collection: Room.where(event_id: event.id)
       f.input :manually_scheduled
     end
     f.actions

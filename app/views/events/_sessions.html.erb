@@ -13,7 +13,8 @@
     </ul>
     <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
 
-    <% @categories.sample(6).each_slice(2) do |pair| %>
+    <% featured = @categories.first(2) + @categories.drop(2).sample(4) %>
+    <% featured.each_slice(2) do |pair| %>
       <div class="row">
         <% pair.each do |category| %>
           <%= render 'category_grid', category: category, grid: pair.size == 1 ? 6 : 3 %>
