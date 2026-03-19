@@ -1,7 +1,8 @@
 class BackfillEventCategories < ActiveRecord::Migration[7.2]
   def up
     # Link the original 5 categories to every existing event except the current one
-    event_ids = Event.where.not(id: Event.current_event.id).pluck(:id)
+    current_event = Event.current_event
+    event_ids = current_event ? Event.where.not(id: current_event.id).pluck(:id) : Event.pluck(:id)
 
     event_ids.each do |event_id|
       Category::LEGACY_DEFAULTS.each_with_index do |attrs, index|
