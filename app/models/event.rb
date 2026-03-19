@@ -3,6 +3,9 @@ class Event < ActiveRecord::Base
   has_many :timeslots, dependent: :destroy
   has_many :rooms, dependent: :destroy
 
+  has_many :event_categories, dependent: :destroy
+  has_many :categories, through: :event_categories
+
   has_many :presenter_timeslot_restrictions, :through => :timeslots
   has_many :code_of_conduct_agreements, dependent: :destroy
 

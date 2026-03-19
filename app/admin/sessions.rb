@@ -165,10 +165,9 @@ ActiveAdmin.register Session do
               collection: Participant.joins(:presentations).distinct.order(:name).map { |p| ["#{p.name} (#{p.email})", p.id] },
               input_html: { size: 10, multiple: true, style: 'height: auto;' }
       f.input :level
-      f.input :categories
-      event_id = f.object.event_id || Event.current_event.id
-      f.input :timeslot, collection: Timeslot.where(event_id: event_id)
-      f.input :room, collection: Room.where(event_id: event_id)
+      f.input :categories, collection: event.categories.merge(EventCategory.ordered)
+      f.input :timeslot, collection: Timeslot.where(event_id: event.id)
+      f.input :room, collection: Room.where(event_id: event.id)
       f.input :manually_scheduled
     end
     f.actions

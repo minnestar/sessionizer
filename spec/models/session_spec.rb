@@ -33,6 +33,36 @@ describe Session do
 
   end
 
+  describe "category validation" do
+    let(:event) { create(:event) }
+    let(:other_event) { create(:event) }
+
+    let(:event_category) { Category.first }
+    let(:non_event_category) { Category.second }
+
+    before do
+      create(:event_category, event: event, category: event_category, position: 1)
+      create(:event_category, event: other_event, category: non_event_category, position: 1)
+    end
+
+    it "allows categories that belong to the session's event" do
+      session = create(:session, event: event, category_ids: [event_category.id])
+      expect(session).to be_valid
+    end
+
+    it "rejects categories that do not belong to the session's event" do
+      session = build(:session, event: event)
+      session.category_ids = [non_event_category.id]
+      expect(session).not_to be_valid
+      expect(session.errors[:categories]).to be_present
+    end
+
+    it "allows sessions with no categories" do
+      session = create(:session, event: event, category_ids: [])
+      expect(session).to be_valid
+    end
+  end
+
   describe "destroying" do
     it "should destory categorizations and attendences" do
       session = create(:session, event: event)

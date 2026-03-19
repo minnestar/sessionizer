@@ -8,11 +8,32 @@ describe Event do
   it { should have_many :sessions }
   it { should have_many :timeslots }
   it { should have_many :rooms }
+  it { should have_many :event_categories }
+  it { should have_many :categories }
 
   context "creating a new event" do
     before { create(:event, date: 2.months.ago) }
     it "should clear the existing current_event" do
       expect { create(:event) }.to change { Event.current_event }
+    end
+  end
+
+  describe '#categories' do
+    let(:event) { create(:event) }
+
+    it 'returns categories linked through event_categories' do
+      cat = Category.first
+      create(:event_category, event: event, category: cat, position: 1)
+
+      expect(event.categories).to include(cat)
+    end
+
+    it 'does not return categories not linked to the event' do
+      other_event = create(:event)
+      cat = Category.first
+      create(:event_category, event: other_event, category: cat, position: 1)
+
+      expect(event.categories).not_to include(cat)
     end
   end
 

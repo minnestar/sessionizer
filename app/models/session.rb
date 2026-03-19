@@ -37,6 +37,7 @@ class Session < ActiveRecord::Base
   validates_presence_of :title
   validates_length_of :summary, :maximum => 100, :allow_blank => true
   #validates_uniqueness_of :timeslot_id, :scope => :room_id, :allow_blank => true, :message => 'and room combination already in use'
+  validate :categories_belong_to_event
 
 
   attr_accessor :name, :email, :code_of_conduct_agreement
@@ -211,6 +212,16 @@ class Session < ActiveRecord::Base
   # assign the creator as the first presenter
   def create_presenter
     presentations.create(participant: participant)
+  end
+
+  def categories_belong_to_event
+    return if event.nil? || categories.empty?
+
+    event_category_ids = event.category_ids
+    invalid_categories = categories.reject { |c| event_category_ids.include?(c.id) }
+    if invalid_categories.any?
+      errors.add(:categories, "must belong to the session's event")
+    end
   end
 
 end

@@ -42,6 +42,25 @@ ActiveAdmin.register Event do
     end
   end
 
+  member_action :generate_categories, method: :post do
+    begin
+      Category.create_defaults_for_event(resource)
+      redirect_to request.referer || admin_event_path(resource), notice: 'Default categories generated!'
+    rescue => e
+      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate categories: #{e.message}"
+    end
+  end
+
+  action_item :generate_categories, only: :show do
+    if resource.event_categories.empty?
+      button_to 'Generate categories',
+        generate_categories_admin_event_path(resource),
+        method: :post,
+        class: 'action-item-button cursor-pointer',
+        data: { confirm: "This will generate default categories for this event based on the currently active categories. Are you sure you want to do this?" }
+    end
+  end
+
   member_action :generate_timeslots, method: :post do
     begin
       if resource.create_default_timeslots
@@ -59,7 +78,7 @@ ActiveAdmin.register Event do
       button_to 'Generate timeslots',
         generate_timeslots_admin_event_path(resource),
         method: :post,
-        class: 'action-item-button',
+        class: 'action-item-button cursor-pointer',
         data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
     end
   end
@@ -150,6 +169,31 @@ ActiveAdmin.register Event do
             timeslot.sessions.size,
             admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
           )
+        end
+      end
+    end
+
+    event_categories = event.event_categories.ordered.includes(:category)
+    session_counts_by_category = Categorization
+      .joins(:session)
+      .where(sessions: { event_id: event.id, canceled_at: nil })
+      .group(:category_id)
+      .count
+
+    panel "Event Categories (#{event_categories.size})" do
+      table_for event_categories do
+        column :position
+        column :name do |ec|
+          link_to ec.category.name, admin_category_path(ec.category)
+        end
+        column :long_name do |ec|
+          ec.category.long_name
+        end
+        column :tagline do |ec|
+          ec.category.tagline
+        end
+        column "# of Sessions" do |ec|
+          session_counts_by_category[ec.category_id] || 0
         end
       end
     end

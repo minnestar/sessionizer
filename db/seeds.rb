@@ -24,4 +24,10 @@ Level.create_or_update(:id => 4, :name => 'All levels')
 
 Category.find_or_create_defaults
 
+# For development, create an event and link default categories
+if Rails.env.development?
+  event = Event.first || Event.create!(name: 'Minnebar Dev', date: 30.days.from_now, venue: 'Best Buy HQ')
+  Category.create_defaults_for_event(event) if event.event_categories.empty?
+end
+
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
