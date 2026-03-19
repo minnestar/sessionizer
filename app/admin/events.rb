@@ -113,6 +113,13 @@ ActiveAdmin.register Event do
   end
 
   show do
+    event_categories = event.event_categories.ordered.includes(:category)
+    session_counts_by_category = Categorization
+      .joins(:session)
+      .where(sessions: { event_id: event.id, canceled_at: nil })
+      .group(:category_id)
+      .count
+
     attributes_table do
       row :name
       row :date
@@ -126,6 +133,9 @@ ActiveAdmin.register Event do
       end
       row("Schedule URL") do |event|
         link_to event_schedule_url(event), event_schedule_url(event), target: "_blank"
+      end
+      row "# of Categories" do |event|
+        link_to event_categories.size, admin_event_categories_path(q: { event_id_eq: event.id })
       end
       row "# of Sessions" do |event|
         link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
@@ -157,7 +167,7 @@ ActiveAdmin.register Event do
       end
     end
 
-    panel "Event Timeslots (#{event.timeslots_count})" do
+    panel ("#{link_to 'Event Timeslots', admin_event_timeslots_path(event)} (#{event.timeslots_count})").html_safe do
       table_for event.timeslots do
         column :title do |timeslot|
           link_to timeslot.title, admin_event_timeslot_path(event, timeslot)
@@ -173,18 +183,11 @@ ActiveAdmin.register Event do
       end
     end
 
-    event_categories = event.event_categories.ordered.includes(:category)
-    session_counts_by_category = Categorization
-      .joins(:session)
-      .where(sessions: { event_id: event.id, canceled_at: nil })
-      .group(:category_id)
-      .count
-
-    panel "Event Categories (#{event_categories.size})" do
+    panel ("#{link_to 'Event Categories', admin_event_categories_path(q: { event_id_eq: event.id })} (#{event_categories.size})").html_safe do
       table_for event_categories do
         column :position
         column :name do |ec|
-          link_to ec.category.name, admin_category_path(ec.category)
+          link_to ec.category.name, edit_admin_event_category_path(ec)
         end
         column :long_name do |ec|
           ec.category.long_name
@@ -193,12 +196,13 @@ ActiveAdmin.register Event do
           ec.category.tagline
         end
         column "# of Sessions" do |ec|
-          session_counts_by_category[ec.category_id] || 0
+          count = session_counts_by_category[ec.category_id] || 0
+          link_to count, admin_sessions_path(q: { event_id_eq: event.id, categorizations_category_id_eq: ec.category_id })
         end
       end
     end
 
-    panel "Event Sessions (#{event.sessions_count})" do
+    panel ("#{link_to 'Event Sessions', admin_sessions_path(q: { event_id_eq: event.id })} (#{event.sessions_count})").html_safe do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
         'title' => 'sessions.title',

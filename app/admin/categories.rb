@@ -13,7 +13,6 @@ ActiveAdmin.register Category do
   permit_params :name, :long_name, :tagline, :description, :active, :default_position
 
   index do
-    column :id
     column :name
     column :long_name
     column :active
@@ -25,6 +24,7 @@ ActiveAdmin.register Category do
   show do
     attributes_table do
       row :id
+      row :default_position
       row :name
       row :long_name
       row(:display_long_name)
@@ -32,7 +32,6 @@ ActiveAdmin.register Category do
       row :description
       row :active
       row(:legacy, &:legacy?)
-      row :default_position
     end
 
     event_categories = category.event_categories.includes(:event).order('events.date DESC')
@@ -43,9 +42,12 @@ ActiveAdmin.register Category do
         column :event do |ec|
           link_to ec.event.name, admin_event_path(ec.event)
         end
-        column :position
+        column :position do |ec|
+          link_to ec.position, edit_admin_event_category_path(ec)
+        end
         column "# of Sessions" do |ec|
-          session_counts[ec.event_id] || 0
+          count = session_counts[ec.event_id] || 0
+          link_to count, admin_sessions_path(q: { event_id_eq: ec.event_id, categorizations_category_id_eq: ec.category_id })
         end
       end
     end

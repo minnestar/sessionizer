@@ -40,7 +40,7 @@ ActiveAdmin.register_page "Dashboard" do
       end
     end
 
-    panel "Current Event Sessions (#{Event.current_event.sessions.with_canceled.count})" do
+    panel ("#{link_to 'Current Event Sessions', admin_sessions_path(q: { event_id_eq: Event.current_event.id })} (#{Event.current_event.sessions.with_canceled.count})").html_safe do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
         'title' => 'sessions.title',

@@ -50,6 +50,8 @@ ActiveAdmin.register Session do
             .map { |t| ["#{t.event.name}: #{t.title}", t.id] }
   }
 
+  filter :categorizations_category_id, as: :select, label: "Category",
+         collection: proc { Category.order(:name).pluck(:name, :id) }
   filter :room, as: :select, collection: proc {
     Room.unscoped
         .includes(:event)
