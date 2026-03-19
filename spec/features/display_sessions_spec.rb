@@ -9,10 +9,6 @@ feature "View sessions" do
   context "when an event is setup" do
     let!(:event) { create(:event, :full_event) }
 
-    background do
-      Category.create_defaults_for_event(event)
-    end
-
     scenario "it shows the sessions" do
       visit root_path
       expect(page).to have_content 'Sessions'

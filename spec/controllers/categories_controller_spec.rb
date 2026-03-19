@@ -4,7 +4,6 @@ describe CategoriesController do
   describe "#show" do
     let(:category) { Category.first }
     let!(:event) { create(:event) }
-    let!(:event_category) { create(:event_category, event: event, category: category, position: 1) }
     let!(:session) { create(:session, event: event, category_ids: [category.id]) }
 
     it "should be successful" do
@@ -16,7 +15,6 @@ describe CategoriesController do
 
     it "should only show sessions from the current event" do
       old_event = create(:event, date: 2.months.ago)
-      create(:event_category, event: old_event, category: category, position: 1)
       old_session = create(:session, event: old_event, category_ids: [category.id])
 
       get :show, params: {id: category}

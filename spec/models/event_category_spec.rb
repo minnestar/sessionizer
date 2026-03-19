@@ -6,11 +6,10 @@ describe EventCategory do
 
   describe 'validations' do
     let(:event) { create(:event) }
-    let(:category) { Category.first }
 
     it 'prevents duplicate event-category pairs' do
-      create(:event_category, event: event, category: category)
-      duplicate = build(:event_category, event: event, category: category)
+      existing = event.event_categories.first
+      duplicate = build(:event_category, event: event, category: existing.category)
       expect(duplicate).not_to be_valid
     end
   end
@@ -19,12 +18,9 @@ describe EventCategory do
     let(:event) { create(:event) }
 
     it 'orders by position' do
-      cat_a = create(:category, name: 'Zzz Category')
-      cat_b = create(:category, name: 'Aaa Category')
-      ec_second = create(:event_category, event: event, category: cat_a, position: 2)
-      ec_first = create(:event_category, event: event, category: cat_b, position: 1)
-
-      expect(EventCategory.where(event: event).ordered).to eq [ec_first, ec_second]
+      ordered = event.event_categories.ordered
+      positions = ordered.map(&:position)
+      expect(positions).to eq positions.sort
     end
   end
 end

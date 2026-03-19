@@ -15,6 +15,12 @@ class Event < ActiveRecord::Base
 
   validates_presence_of :name, :date
 
+  after_create :create_default_categories
+
+  def create_default_categories
+    Category.create_defaults_for_event(self) if event_categories.empty?
+  end
+
   def self.current_event
     self.order(:date).last
   end

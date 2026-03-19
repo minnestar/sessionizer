@@ -21,19 +21,23 @@ describe Event do
   describe '#categories' do
     let(:event) { create(:event) }
 
-    it 'returns categories linked through event_categories' do
-      cat = Category.first
-      create(:event_category, event: event, category: cat, position: 1)
+    it 'automatically creates default categories after event creation' do
+      expect(event.categories.count).to eq Category.active.count
+    end
 
-      expect(event.categories).to include(cat)
+    it 'does not overwrite categories if already present' do
+      original_count = event.event_categories.count
+      event.create_default_categories
+      expect(event.event_categories.count).to eq original_count
+    end
+
+    it 'returns categories linked through event_categories' do
+      expect(event.categories).to include(Category.first)
     end
 
     it 'does not return categories not linked to the event' do
-      other_event = create(:event)
-      cat = Category.first
-      create(:event_category, event: other_event, category: cat, position: 1)
-
-      expect(event.categories).not_to include(cat)
+      inactive_cat = create(:category, name: 'Unlinkable Category', active: false)
+      expect(event.categories).not_to include(inactive_cat)
     end
   end
 

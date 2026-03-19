@@ -4,12 +4,6 @@ describe EventsController do
   context "with an event" do
     let!(:event) { create(:event, :full_event) }
 
-    before do
-      Category.active.each_with_index do |cat, i|
-        create(:event_category, event: event, category: cat, position: i + 1)
-      end
-    end
-
     it "should show the sessions" do
       get :show, params: { id: 'current' }
       expect(response).to be_successful

@@ -73,28 +73,18 @@ describe Category do
     let(:event) { create(:event) }
 
     it 'creates event_categories linking active categories to the event' do
-      expect {
-        Category.create_defaults_for_event(event)
-      }.to change { event.event_categories.count }.from(0)
-
       expect(event.categories.count).to eq Category.active.count
     end
 
     it 'assigns positions based on default_position' do
-      Category.find_by(name: 'Development').update!(default_position: 1)
-      Category.find_by(name: 'Design').update!(default_position: 2)
-
-      Category.create_defaults_for_event(event)
-
       dev_ec = event.event_categories.joins(:category).where(categories: { name: 'Development' }).first
       design_ec = event.event_categories.joins(:category).where(categories: { name: 'Design' }).first
 
-      expect(dev_ec.position).to eq 1
-      expect(design_ec.position).to eq 2
+      expect(dev_ec.position).to eq Category.find_by(name: 'Development').default_position
+      expect(design_ec.position).to eq Category.find_by(name: 'Design').default_position
     end
 
     it 'is idempotent - does not create duplicates' do
-      Category.create_defaults_for_event(event)
       expect {
         Category.create_defaults_for_event(event)
       }.not_to change { event.event_categories.count }
