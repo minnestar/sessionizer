@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :event_category do
-    event
-    category
+    association :event
+    association :category
     sequence(:position) { |n| n }
   end
 end

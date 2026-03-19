@@ -15,7 +15,8 @@ feature "View sessions" do
 
     scenario "it shows the sessions" do
       visit root_path
-      expect(page).to have_content 'Development Sessions'
+      expect(page).to have_content 'Sessions'
+      expect(page).to have_link 'See more...'
     end
   end
 end
