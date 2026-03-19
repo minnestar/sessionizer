@@ -1,7 +1,7 @@
 class BackfillEventCategories < ActiveRecord::Migration[7.2]
   def up
-    # For every event that has sessions, link the original 5 categories
-    event_ids = Session.where("event_id > 0").distinct.pluck(:event_id).compact
+    # Link the original 5 categories to every existing event
+    event_ids = Event.pluck(:id)
 
     event_ids.each do |event_id|
       Category::LEGACY_DEFAULTS.each_with_index do |attrs, index|

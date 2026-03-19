@@ -11,6 +11,7 @@ class Category < ActiveRecord::Base
   def self.ransackable_attributes(auth_object = nil)
     []
   end
+
   scope :default_order, -> { where(active: true).order(:default_position) }
 
   LEGACY_DEFAULTS = [
@@ -46,10 +47,9 @@ class Category < ActiveRecord::Base
 
   def self.find_or_create_defaults
     ALL_DEFAULTS.each do |attrs|
-      name = attrs[:name]
-      Category.find_or_create_by!(name: name) do |cat|
-        cat.assign_attributes(attrs.except(:name))
-      end
+      category = Category.find_or_initialize_by(name: attrs[:name])
+      category.assign_attributes(attrs.except(:name))
+      category.save!
     end
   end
 
