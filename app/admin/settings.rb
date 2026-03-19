@@ -1,5 +1,5 @@
 ActiveAdmin.register Settings do
-  menu priority: 2, label: "Event Settings"
+  menu parent: "Events", priority: 2, label: "Event Settings"
 
   config.filters = false
 

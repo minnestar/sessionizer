@@ -9,7 +9,7 @@
      <%= f.input :email, :label => 'Your email', :hint => "Please use a real email address. We need this to contact you about your presentation." %>
     <% end %>
 
-    <%= f.input :categories, :as => :check_boxes %>
+    <%= f.input :categories, :as => :check_boxes, :collection => (@session.event || Event.current_event).categories.merge(EventCategory.ordered).map { |c| [c.display_long_name, c.id] } %>
     <%= f.input :level, :as => :select, :label => 'Topic level' %>
     <%=
       f.input :code_of_conduct_agreement,

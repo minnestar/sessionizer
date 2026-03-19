@@ -1,8 +1,10 @@
 require "spec_helper"
 
 feature "Manage Sessions" do
+  let!(:event) { create(:event, :full_event) }
+
   background do
-    create(:event, :full_event)
+    Category.create_defaults_for_event(event)
   end
 
   scenario "As a new user, I want to register and add a session" do

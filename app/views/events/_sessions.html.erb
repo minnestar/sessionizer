@@ -13,19 +13,13 @@
     </ul>
     <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
 
-    <div class="row">
-      <%= render 'category_grid', category: @categories.first, grid: 3 %>
-      <%= render 'category_grid', category: @categories.second, grid: 3 %>
-    </div>
-
-    <div class="row">
-      <%= render 'category_grid', category: @categories.third, grid: 3 %>
-      <%= render 'category_grid', category: @categories.fourth, grid: 3 %>
-    </div>
-
-    <div class="row">
-      <%= render 'category_grid', category: @categories.fifth, grid: 6 %>
-    </div>
+    <% @categories.sample(6).each_slice(2) do |pair| %>
+      <div class="row">
+        <% pair.each do |category| %>
+          <%= render 'category_grid', category: category, grid: pair.size == 1 ? 6 : 3 %>
+        <% end %>
+      </div>
+    <% end %>
 
     <div class="clear"></div>
     <p><%= add_sessions_button %></p>

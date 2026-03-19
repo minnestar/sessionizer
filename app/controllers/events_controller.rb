@@ -11,7 +11,7 @@ class EventsController < ApplicationController
         @recent_sessions = @event ? @event.sessions.limit(4).recent : []
         @random_sessions = @event ? @event.sessions.limit(6).random_order : []
 
-        @categories = Category.all.order('id')
+        @categories = @event ? @event.categories.merge(EventCategory.ordered) : Category.none
       end
 
       format.json do

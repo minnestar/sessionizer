@@ -560,11 +560,14 @@ namespace :app do
     puts 'Reset DB.'
     Rake::Task['db:reset'].invoke
 
-    puts 'Create categories' 
+    puts 'Create categories'
     Category.find_or_create_defaults
 
     puts 'Creating event...'
-    event = Event.create(name: FFaker::HipsterIpsum.words(3).join(' '), date: 1.month.from_now) 
+    event = Event.create(name: FFaker::HipsterIpsum.words(3).join(' '), date: 1.month.from_now)
+
+    puts 'Linking categories to event...'
+    Category.create_defaults_for_event(event)
 
     puts 'Creating timeslots...'
     Rake::Task['app:create_timeslots'].invoke
