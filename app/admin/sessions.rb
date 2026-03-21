@@ -122,6 +122,9 @@ ActiveAdmin.register Session do
       row :description do |session|
         markdown session.description
       end
+      row :meta_description do |session|
+        helpers.meta_description_for(session.description)
+      end
       row :level
       row :categories
       row("Votes") do |session|

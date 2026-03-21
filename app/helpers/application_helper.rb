@@ -59,7 +59,13 @@ module ApplicationHelper
   end
 
   def meta_description
-    content_for?(:meta_description) ? content_for(:meta_description) : generate_meta_description
+    desc = content_for?(:meta_description) ? content_for(:meta_description) : generate_meta_description
+    meta_description_for(desc)
+  end
+
+  def meta_description_for(text)
+    desc = strip_tags(text.to_s).squish
+    truncate(desc, length: 160, separator: /(?<=[.!?])\s/, omission: '')
   end
 
   def sanitize_html(html)
