@@ -72,43 +72,6 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#meta_description" do
-    it "truncates long descriptions at the last sentence boundary within 160 chars" do
-      long_desc = "This is the first sentence. This is the second sentence that pushes us over the limit. " \
-                  "This third sentence definitely goes beyond one hundred and sixty characters and should be cut off."
-      helper.content_for(:meta_description, long_desc)
-
-      result = helper.meta_description
-      expect(result).to eq("This is the first sentence. This is the second sentence that pushes us over the limit.")
-      expect(result.length).to be <= 160
-    end
-
-    it "returns short descriptions unchanged" do
-      helper.content_for(:meta_description, "A short description.")
-
-      expect(helper.meta_description).to eq("A short description.")
-    end
-
-    it "strips HTML tags from descriptions" do
-      helper.content_for(:meta_description, "<p>Hello <strong>world</strong>.</p> More text here that keeps going and going beyond the limit of one hundred sixty characters to test truncation behavior.")
-
-      expect(helper.meta_description).not_to include("<")
-    end
-
-    it "falls back to word-boundary truncation when no sentence break exists" do
-      no_sentences = "A" * 200
-      helper.content_for(:meta_description, no_sentences)
-
-      expect(helper.meta_description.length).to be <= 163
-    end
-
-    it "falls back to generate_meta_description when no content_for is set" do
-      create(:event, name: "Minnebar 21")
-
-      expect(helper.meta_description).to include("Minnebar 21")
-    end
-  end
-
   describe "#markdown" do
     it 'converts markdown to html' do
       expect(helper.markdown("foo\n\n* bar\n* baz")).

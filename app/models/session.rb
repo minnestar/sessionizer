@@ -203,6 +203,11 @@ class Session < ActiveRecord::Base
     SessionsJsonBuilder.new.to_hash(self)
   end
 
+  def truncated_description(limit: 160)
+    text = ActionController::Base.helpers.strip_tags(description.to_s).squish
+    text.truncate(limit, separator: /(?<=[.!?])\s/, omission: '')
+  end
+
   def canceled?
     canceled_at.present? || event_id.negative?
   end

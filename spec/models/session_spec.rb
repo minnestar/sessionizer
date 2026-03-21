@@ -172,6 +172,37 @@ describe Session do
     assert_equal(session2.timeslot, slot1)
   end
 
+  describe "#truncated_description" do
+    let(:session) { create(:session, event: event) }
+
+    it "truncates at the last sentence boundary within 160 chars" do
+      session.description = "This is the first sentence. This is the second sentence that pushes us over the limit. " \
+                            "This third sentence definitely goes beyond one hundred and sixty characters and should be cut off."
+
+      result = session.truncated_description
+      expect(result).to eq("This is the first sentence. This is the second sentence that pushes us over the limit.")
+      expect(result.length).to be <= 160
+    end
+
+    it "returns short descriptions unchanged" do
+      session.description = "A short description."
+
+      expect(session.truncated_description).to eq("A short description.")
+    end
+
+    it "strips HTML tags" do
+      session.description = "<p>Hello <strong>world</strong>.</p> More text here that keeps going and going beyond the limit of one hundred sixty characters to test truncation behavior."
+
+      expect(session.truncated_description).not_to include("<")
+    end
+
+    it "falls back to hard cut when no sentence break exists" do
+      session.description = "A" * 200
+
+      expect(session.truncated_description.length).to be <= 163
+    end
+  end
+
   describe "#recommended_sessions" do
 
     it "should order based on recommendation strength" do

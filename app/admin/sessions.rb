@@ -123,7 +123,10 @@ ActiveAdmin.register Session do
         markdown session.description
       end
       row :meta_description do |session|
-        helpers.meta_description_for(session.description)
+        session.truncated_description
+      end
+      row("Session URL") do |session|
+        link_to session_url(session), session_url(session), target: "_blank"
       end
       row :level
       row :categories
