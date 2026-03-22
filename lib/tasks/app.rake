@@ -10,10 +10,8 @@ namespace :app do
 
   desc 'create default rooms for most recent event. Will nuke old rooms.'
   task :create_rooms => :environment do
-    event.rooms.destroy_all
-    event.create_default_rooms
+    event.create_default_rooms(force: true)
   end
-
 
   desc 'set up multi-day timeslots for a remote event'
   task create_remote_timeslots_and_rooms: :environment do

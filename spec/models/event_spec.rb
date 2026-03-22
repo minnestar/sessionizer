@@ -85,6 +85,17 @@ describe Event do
           event.create_default_rooms
         }.to raise_error(/#{event.name}.*already has rooms/)
       end
+
+      it "replaces existing rooms when force: true" do
+        allow(Settings).to receive(:default_rooms).and_return([
+          { "name" => "Theater", "capacity" => 250 },
+          { "name" => "Challenge", "capacity" => 24 }
+        ])
+
+        event.create_default_rooms(force: true)
+        expect(event.rooms.count).to eq(2)
+        expect(event.rooms.pluck(:name)).to contain_exactly("Theater", "Challenge")
+      end
     end
   end
 

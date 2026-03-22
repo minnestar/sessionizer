@@ -93,9 +93,13 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def create_default_rooms
+  def create_default_rooms(force: false)
     if rooms.any?
-      raise "#{name} (event.id=#{id}) already has rooms; please delete them before running this task"
+      if force
+        rooms.destroy_all
+      else
+        raise "#{name} (event.id=#{id}) already has rooms; please delete them before running this task"
+      end
     end
 
     Room.transaction do
