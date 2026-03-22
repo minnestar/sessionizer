@@ -177,7 +177,7 @@ class Settings < ActiveRecord::Base
   private
 
   def validate_default_rooms
-    return unless default_rooms_changed?
+    return unless has_attribute?(:default_rooms) && default_rooms_changed?
 
     if default_rooms_validation_error.present?
       errors.add(:default_rooms, default_rooms_validation_error)
