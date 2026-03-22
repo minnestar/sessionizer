@@ -34,9 +34,9 @@
       <%= markdown @session.description %>
       <% content_for :meta_description, @session.truncated_description %>
       <ul class="tags">
+        <li class="topic_level"><%= @session.level_name %></li>
         <%= render :partial => 'category', :collection => @session.categories %>
       </ul>
-      <div class="topic_level"><%= @session.level_name %></div>
     </div>
     <% end %>
 

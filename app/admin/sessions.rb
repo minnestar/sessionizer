@@ -120,7 +120,7 @@ ActiveAdmin.register Session do
       row :participant
       row :presenters
       row :description do |session|
-        markdown session.description
+        admin_markdown session.description
       end
       row :meta_description do |session|
         session.truncated_description
