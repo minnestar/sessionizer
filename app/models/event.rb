@@ -93,6 +93,23 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def create_default_rooms
+    if rooms.any?
+      raise "#{name} (event.id=#{id}) already has rooms; please delete them before running this task"
+    end
+
+    Room.transaction do
+      Settings.default_rooms.each do |conf|
+        next if conf["active"] == false
+
+        rooms.create!(
+          name: conf["name"],
+          capacity: conf["capacity"]
+        )
+      end
+    end
+  end
+
   private
 
   def format_time(time)

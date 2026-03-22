@@ -83,6 +83,29 @@ ActiveAdmin.register Event do
     end
   end
 
+  member_action :generate_rooms, method: :post do
+    begin
+      if resource.create_default_rooms
+        redirect_to request.referer || admin_event_path(resource), notice: 'Rooms successfully generated!'
+      else
+        redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate rooms.'
+      end
+    rescue => e
+      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate rooms: #{e.message}"
+    end
+  end
+
+  action_item :generate_rooms, only: :show do
+    if resource.rooms_count.zero?
+      active_count = Settings.default_rooms.count { |r| r["active"] != false }
+      button_to 'Generate rooms',
+        generate_rooms_admin_event_path(resource),
+        method: :post,
+        class: 'action-item-button cursor-pointer',
+        data: { confirm: "This will generate #{active_count} rooms based on the defaults in Event Settings. Are you sure you want to proceed?" }
+    end
+  end
+
   form do |f|
     f.inputs do
       f.input :name
@@ -162,6 +185,11 @@ ActiveAdmin.register Event do
           end
           row "Default Timeslots" do
             "#{settings.default_timeslots.size} slots"
+          end
+          row "Default Rooms" do
+            rooms = Settings.default_rooms
+            active_count = rooms.count { |r| r["active"] != false }
+            "#{rooms.size} rooms (#{active_count} active)"
           end
         end
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_19_035803) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_22_192507) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -168,6 +168,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_19_035803) do
     t.integer "current_event_id"
     t.boolean "allow_new_sessions", default: true, null: false
     t.jsonb "default_timeslots"
+    t.jsonb "default_rooms"
     t.index ["current_event_id"], name: "index_settings_on_current_event_id"
   end
 

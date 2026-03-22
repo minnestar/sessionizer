@@ -1,5 +1,6 @@
 class Settings < ActiveRecord::Base
   validate :validate_default_timeslots
+  validate :validate_default_rooms
 
   def self.instance
     self.find_or_create_by id: 1
@@ -44,6 +45,55 @@ class Settings < ActiveRecord::Base
     ]
   end
 
+  def self.default_rooms
+    rooms = instance.default_rooms.presence || static_default_rooms
+    rooms.map(&:stringify_keys)
+  end
+
+  def self.static_default_rooms
+    [
+      # Active rooms (alphabetical)
+      { name: "Bde Maka Ska",    capacity: 100 },
+      { name: "Challenge",       capacity:  24 },
+      { name: "Cottage",         capacity:   8, notes: "out of the way in the B wing" },
+      { name: "Discovery",       capacity:  23, notes: "no video recording" },
+      { name: "Florida",         capacity:  12, notes: "TV, no projector" },
+      { name: "Gandhi",          capacity:  23, notes: "Previously used for daycare; no video recording" },
+      { name: "Georgia",         capacity:  12, notes: "TV, no projector" },
+      { name: "Harriet",         capacity: 100 },
+      { name: "Kansas",          capacity:  10, notes: "TV, no projector" },
+      { name: "Learn",           capacity:  24 },
+      { name: "Louis Pasteur",   capacity:  18 },
+      { name: "Maine",           capacity:  10 },
+      { name: "Maryland",        capacity:  10 },
+      { name: "Minnetonka",      capacity: 100 },
+      { name: "Nebraska",        capacity:  10 },
+      { name: "Nevada",          capacity:  16, notes: "out of the way, but available" },
+      { name: "Nokomis",         capacity: 100 },
+      { name: "Oklahoma",        capacity:   8 },
+      { name: "Pennsylvania",    capacity:  10 },
+      { name: "Proverb-Edison",  capacity:  48 },
+      { name: "Stephen Leacock", capacity:  23, notes: "Previously used for daycare; no video recording" },
+      { name: "Tackle",          capacity:  23, notes: "no video recording" },
+      { name: "Texas",           capacity:  16 },
+      { name: "Theater",         capacity: 250 },
+      { name: "Zeke Landres",    capacity:  40 },
+
+      # Inactive rooms (alphabetical)
+      { name: "Alaska",          capacity:  96, active: false, notes: "Used for daycare in 2025" },
+      { name: "Brand",           capacity:  75, active: false, notes: "Suboptimal room, reserved for more dire need" },
+      { name: "Cabin",           capacity:   9, active: false, notes: "out of the way, not setup for presentations" },
+      { name: "California",      capacity:  16, active: false, notes: "behind security turnstiles" },
+      { name: "Illinois",        capacity:   7, active: false, notes: "small" },
+      { name: "Minnesota",       capacity:   7, active: false, notes: "small" },
+      { name: "New York",        capacity:  10, active: false, notes: "Used for staff in 2025" },
+      { name: "Oregon",          capacity:  12, active: false, notes: "behind security turnstiles" },
+      { name: "South Carolina",  capacity:   6, active: false, notes: "converted to meditation room in 2025" },
+      { name: "Washington",      capacity:   7, active: false, notes: "small, out of the way" },
+      { name: "Wisconsin",       capacity:   7, active: false, notes: "small" },
+    ]
+  end
+
   def default_timeslots=(value)
     # Store the raw value for error display
     @default_timeslots_raw_value = value
@@ -85,7 +135,82 @@ class Settings < ActiveRecord::Base
     @default_timeslots_validation_error
   end
 
+  def default_rooms=(value)
+    @default_rooms_raw_value = value
+
+    config = if value.is_a?(String)
+      begin
+        value.split(/[\r\n]+/).map do |line|
+          line = line.strip.gsub(/,\s*$/, '')
+          next if line.blank?
+          JSON.parse(line)
+        end.compact
+      rescue JSON::ParserError => e
+        @default_rooms_validation_error = "Invalid JSON format: #{e.message}"
+        self.class.static_default_rooms
+      end
+    else
+      value
+    end
+
+    validated_config = Array(config).map do |room|
+      entry = {
+        "name" => room["name"].to_s,
+        "capacity" => room["capacity"],
+        "active" => room.key?("active") ? room["active"] : nil,
+        "notes" => room["notes"].presence
+      }.compact
+      entry["active"] = false if room.key?("active") && room["active"] == false
+      entry
+    end
+    super(validated_config)
+  end
+
+  def default_rooms_raw_value
+    @default_rooms_raw_value
+  end
+
+  def default_rooms_validation_error
+    @default_rooms_validation_error
+  end
+
   private
+
+  def validate_default_rooms
+    return unless default_rooms_changed?
+
+    if default_rooms_validation_error.present?
+      errors.add(:default_rooms, default_rooms_validation_error)
+      return
+    end
+
+    unless default_rooms.is_a?(Array)
+      errors.add(:default_rooms, "must be an array of JSON objects")
+      return
+    end
+
+    default_rooms.each_with_index do |room, index|
+      unless room.is_a?(Hash)
+        errors.add(:default_rooms, "line #{index + 1} must be a valid JSON object")
+        next
+      end
+
+      unless room["name"].present?
+        errors.add(:default_rooms, "line #{index + 1} is missing required name")
+        next
+      end
+
+      unless room["capacity"].present?
+        errors.add(:default_rooms, "line #{index + 1} is missing required capacity")
+        next
+      end
+
+      capacity = room["capacity"].to_i
+      if capacity <= 0
+        errors.add(:default_rooms, "line #{index + 1} has invalid capacity (must be a positive integer)")
+      end
+    end
+  end
 
   def validate_default_timeslots
     return unless default_timeslots_changed?
