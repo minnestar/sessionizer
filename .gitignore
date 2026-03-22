@@ -31,3 +31,6 @@ coverage/
 !/app/assets/builds/.keep
 
 /node_modules
+
+# Agent plans
+/.agents/plans
