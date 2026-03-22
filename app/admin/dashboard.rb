@@ -35,6 +35,11 @@ ActiveAdmin.register_page "Dashboard" do
             row "Default Timeslots" do
               "#{settings.default_timeslots.size} slots"
             end
+            row "Default Rooms" do
+              rooms = Settings.default_rooms
+              active_count = rooms.count { |r| r["active"] != false }
+              "#{rooms.size} rooms (#{active_count} active)"
+            end
           end
         end
       end

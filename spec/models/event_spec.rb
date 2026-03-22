@@ -41,6 +41,64 @@ describe Event do
     end
   end
 
+  describe "#create_default_rooms" do
+    let(:event) { create(:event) }
+
+    context "when event has no rooms" do
+      it "creates rooms from the default configuration" do
+        active_count = Settings.default_rooms.count { |r| r["active"] != false }
+        expect {
+          event.create_default_rooms
+        }.to change { event.rooms.count }.from(0).to(active_count)
+      end
+
+      it "skips inactive rooms" do
+        allow(Settings).to receive(:default_rooms).and_return([
+          { "name" => "Theater", "capacity" => 250 },
+          { "name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "daycare" }
+        ])
+
+        event.create_default_rooms
+        expect(event.rooms.count).to eq(1)
+        expect(event.rooms.first.name).to eq("Theater")
+      end
+
+      it "sets correct name and capacity on each room" do
+        allow(Settings).to receive(:default_rooms).and_return([
+          { "name" => "Theater", "capacity" => 250 },
+          { "name" => "Challenge", "capacity" => 24 }
+        ])
+
+        event.create_default_rooms
+        theater = event.rooms.find_by(name: "Theater")
+        expect(theater.capacity).to eq(250)
+      end
+    end
+
+    context "when event already has rooms" do
+      before do
+        create(:room, event: event)
+      end
+
+      it "raises an error" do
+        expect {
+          event.create_default_rooms
+        }.to raise_error(/#{event.name}.*already has rooms/)
+      end
+
+      it "replaces existing rooms when force: true" do
+        allow(Settings).to receive(:default_rooms).and_return([
+          { "name" => "Theater", "capacity" => 250 },
+          { "name" => "Challenge", "capacity" => 24 }
+        ])
+
+        event.create_default_rooms(force: true)
+        expect(event.rooms.count).to eq(2)
+        expect(event.rooms.pluck(:name)).to contain_exactly("Theater", "Challenge")
+      end
+    end
+  end
+
   describe "#create_default_timeslots" do
     let(:event) { create(:event) }
 
