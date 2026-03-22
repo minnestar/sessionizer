@@ -157,7 +157,7 @@ class Settings < ActiveRecord::Base
       normalized = room.to_h.stringify_keys
       entry = {
         "name" => normalized["name"].to_s,
-        "capacity" => normalized["capacity"].to_i,
+        "capacity" => normalized.key?("capacity") ? normalized["capacity"].to_i : nil,
         "active" => normalized.key?("active") ? normalized["active"] : nil,
         "notes" => normalized["notes"].presence
       }.compact
@@ -206,15 +206,14 @@ class Settings < ActiveRecord::Base
         next
       end
 
-      capacity = room["capacity"].to_i
-      if capacity <= 0
+      if room["capacity"].to_i <= 0
         errors.add(:default_rooms, "line #{index + 1} has invalid capacity (must be a positive integer)")
       end
     end
   end
 
   def validate_default_timeslots
-    return unless default_timeslots_changed?
+    return unless has_attribute?(:default_timeslots) && default_timeslots_changed?
 
     # Check for any validation errors from the setter
     if default_timeslots_validation_error.present?

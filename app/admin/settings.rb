@@ -15,6 +15,32 @@ ActiveAdmin.register Settings do
     def index
       redirect_to admin_setting_path(Settings.first)
     end
+
+    helper_method :format_timeslots_json, :format_rooms_json
+
+    def format_timeslots_json
+      Settings.default_timeslots.map { |slot|
+        start_padding = " " * [5 - slot["start"].length, 0].max
+        parts = [%("start": "#{slot["start"]}",#{start_padding} "end": "#{slot["end"]}")]
+        parts << %("special": "#{slot["special"]}") if slot["special"].present?
+        "{#{parts.join(', ')}}"
+      }.join(",\n")
+    end
+
+    def format_rooms_json
+      rooms = Settings.default_rooms
+      max_name = rooms.map { |r| r["name"].length }.max
+      rooms.map { |room|
+        padding = " " * (max_name - room["name"].length)
+        capacity = "%3d" % room["capacity"].to_i
+        name = ERB::Util.html_escape(room["name"])
+        notes = ERB::Util.html_escape(room["notes"]) if room["notes"].present?
+        parts = [%("name": "#{name}",#{padding} "capacity": #{capacity})]
+        parts << %("active": false) if room.key?("active") && room["active"] == false
+        parts << %("notes": "#{notes}") if notes
+        "{#{parts.join(', ')}}"
+      }.join(",\n")
+    end
   end
 
   permit_params :allow_new_sessions, :show_schedule, :default_timeslots, :default_rooms
@@ -26,25 +52,11 @@ ActiveAdmin.register Settings do
       end
       row :allow_new_sessions
       row :show_schedule
-      row("Default Timeslots") do |settings|
-        pre Settings.default_timeslots.map { |slot|
-          start_padding = " " * [5 - slot["start"].length, 0].max
-          parts = [%("start": "#{slot["start"]}",#{start_padding} "end": "#{slot["end"]}")]
-          parts << %("special": "#{slot["special"]}") if slot["special"].present?
-          "{#{parts.join(', ')}}"
-        }.join(",\n")
+      row("Default Timeslots") do |_settings|
+        pre helpers.format_timeslots_json
       end
       row("Default Rooms") do |_settings|
-        rooms = Settings.default_rooms
-        max_name = rooms.map { |r| r["name"].length }.max
-        pre rooms.map { |room|
-          padding = " " * (max_name - room["name"].length)
-          capacity = "%3d" % room["capacity"].to_i
-          parts = [%("name": "#{room["name"]}",#{padding} "capacity": #{capacity})]
-          parts << %("active": false) if room.key?("active") && room["active"] == false
-          parts << %("notes": "#{room["notes"]}") if room["notes"].present?
-          "{#{parts.join(', ')}}"
-        }.join(",\n")
+        pre helpers.format_rooms_json
       end
     end
   end
@@ -63,36 +75,20 @@ ActiveAdmin.register Settings do
         as: :text,
         label: "Default Timeslots (JSON)",
         input_html: {
-          value: f.object.default_timeslots_raw_value || Settings.default_timeslots.map { |slot|
-            start_padding = " " * [5 - slot["start"].length, 0].max
-            parts = [%("start": "#{slot["start"]}",#{start_padding} "end": "#{slot["end"]}")]
-            parts << %("special": "#{slot["special"]}") if slot["special"].present?
-            "{#{parts.join(', ')}}"
-          }.join(",\n"),
+          value: f.object.default_timeslots_raw_value || helpers.format_timeslots_json,
           rows: 15,
           style: "font-family: monospace;"
         },
-        hint: "Format: {\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Registration / Breakfast\"}, {\"start\":\"8:30\", \"end\":\"8:50\", \"special\":\"Kickoff\"}, etc..."
+        hint: "Format: {\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Registration / Breakfast\"}<br>- One JSON object per line".html_safe
       f.input :default_rooms,
         as: :text,
         label: "Default Rooms (JSON)",
         input_html: {
-          value: f.object.default_rooms_raw_value || begin
-            rooms = Settings.default_rooms
-            max_name = rooms.map { |r| r["name"].length }.max
-            rooms.map { |room|
-              padding = " " * (max_name - room["name"].length)
-              capacity = "%3d" % room["capacity"].to_i
-              parts = [%("name": "#{room["name"]}",#{padding} "capacity": #{capacity})]
-              parts << %("active": false) if room.key?("active") && room["active"] == false
-              parts << %("notes": "#{room["notes"]}") if room["notes"].present?
-              "{#{parts.join(', ')}}"
-            }.join(",\n")
-          end,
+          value: f.object.default_rooms_raw_value || helpers.format_rooms_json,
           rows: 40,
           style: "font-family: monospace;"
         },
-        hint: "Format: {\"name\":\"Theater\", \"capacity\":250}, {\"name\":\"Alaska\", \"capacity\":96, \"active\":false, \"notes\":\"Used for daycare in 2025\"}, etc.<br>- Use \"active\": false if a room isn't being used this year <br>- Use \"notes\": \"...\" to add context about a room".html_safe
+        hint: "Format: {\"name\":\"Theater\", \"capacity\":250}, {\"name\":\"Alaska\", \"capacity\":96, \"active\":false, \"notes\":\"Used for daycare in 2025\"}, etc.<br>- One JSON object per line<br>- Use \"active\": false if a room isn't being used this year <br>- Use \"notes\": \"...\" to add context about a room".html_safe
     end
     f.actions
   end
