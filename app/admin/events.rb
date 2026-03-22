@@ -62,15 +62,17 @@ ActiveAdmin.register Event do
   end
 
   member_action :generate_timeslots, method: :post do
-    begin
-      if resource.create_default_timeslots
-        redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
-      else
-        redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate timeslots.'
-      end
-    rescue => e
-      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots #{e.message}"
-    end
+    resource.create_default_timeslots
+    redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
+  rescue => e
+    redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots: #{e.message}"
+  end
+
+  member_action :generate_rooms, method: :post do
+    resource.create_default_rooms
+    redirect_to request.referer || admin_event_path(resource), notice: 'Rooms successfully generated!'
+  rescue => e
+    redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate rooms: #{e.message}"
   end
 
   action_item :generate_timeslots, only: :show do
@@ -80,18 +82,6 @@ ActiveAdmin.register Event do
         method: :post,
         class: 'action-item-button cursor-pointer',
         data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
-    end
-  end
-
-  member_action :generate_rooms, method: :post do
-    begin
-      if resource.create_default_rooms
-        redirect_to request.referer || admin_event_path(resource), notice: 'Rooms successfully generated!'
-      else
-        redirect_to request.referer || admin_event_path(resource), alert: 'Failed to generate rooms.'
-      end
-    rescue => e
-      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate rooms: #{e.message}"
     end
   end
 

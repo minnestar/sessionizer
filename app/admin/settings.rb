@@ -28,7 +28,7 @@ ActiveAdmin.register Settings do
       row :show_schedule
       row("Default Timeslots") do |settings|
         pre Settings.default_timeslots.map { |slot|
-          start_padding = " " * (5 - slot["start"].length)
+          start_padding = " " * [5 - slot["start"].length, 0].max
           parts = [%("start": "#{slot["start"]}",#{start_padding} "end": "#{slot["end"]}")]
           parts << %("special": "#{slot["special"]}") if slot["special"].present?
           "{#{parts.join(', ')}}"
@@ -39,7 +39,7 @@ ActiveAdmin.register Settings do
         max_name = rooms.map { |r| r["name"].length }.max
         pre rooms.map { |room|
           padding = " " * (max_name - room["name"].length)
-          capacity = "%3d" % room["capacity"]
+          capacity = "%3d" % room["capacity"].to_i
           parts = [%("name": "#{room["name"]}",#{padding} "capacity": #{capacity})]
           parts << %("active": false) if room.key?("active") && room["active"] == false
           parts << %("notes": "#{room["notes"]}") if room["notes"].present?
@@ -64,7 +64,7 @@ ActiveAdmin.register Settings do
         label: "Default Timeslots (JSON)",
         input_html: {
           value: f.object.default_timeslots_raw_value || Settings.default_timeslots.map { |slot|
-            start_padding = " " * (5 - slot["start"].length)
+            start_padding = " " * [5 - slot["start"].length, 0].max
             parts = [%("start": "#{slot["start"]}",#{start_padding} "end": "#{slot["end"]}")]
             parts << %("special": "#{slot["special"]}") if slot["special"].present?
             "{#{parts.join(', ')}}"
@@ -82,7 +82,7 @@ ActiveAdmin.register Settings do
             max_name = rooms.map { |r| r["name"].length }.max
             rooms.map { |room|
               padding = " " * (max_name - room["name"].length)
-              capacity = "%3d" % room["capacity"]
+              capacity = "%3d" % room["capacity"].to_i
               parts = [%("name": "#{room["name"]}",#{padding} "capacity": #{capacity})]
               parts << %("active": false) if room.key?("active") && room["active"] == false
               parts << %("notes": "#{room["notes"]}") if room["notes"].present?

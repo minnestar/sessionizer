@@ -154,13 +154,14 @@ class Settings < ActiveRecord::Base
     end
 
     validated_config = Array(config).map do |room|
+      normalized = room.to_h.stringify_keys
       entry = {
-        "name" => room["name"].to_s,
-        "capacity" => room["capacity"],
-        "active" => room.key?("active") ? room["active"] : nil,
-        "notes" => room["notes"].presence
+        "name" => normalized["name"].to_s,
+        "capacity" => normalized["capacity"].to_i,
+        "active" => normalized.key?("active") ? normalized["active"] : nil,
+        "notes" => normalized["notes"].presence
       }.compact
-      entry["active"] = false if room.key?("active") && room["active"] == false
+      entry["active"] = false if normalized.key?("active") && normalized["active"] == false
       entry
     end
     super(validated_config)

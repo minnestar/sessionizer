@@ -79,7 +79,7 @@ describe Settings do
       it "rejects rooms with missing capacity" do
         settings.default_rooms = [{ "name" => "Theater" }]
         expect(settings).not_to be_valid
-        expect(settings.errors[:default_rooms]).to include("line 1 is missing required capacity")
+        expect(settings.errors[:default_rooms]).to include("line 1 has invalid capacity (must be a positive integer)")
       end
 
       it "rejects rooms with non-positive capacity" do
