@@ -21,6 +21,18 @@ ActiveAdmin.register Room do
     end
   end
 
+  action_item :generate_rooms, only: [:index] do
+    event = Event.find(params[:event_id])
+    if event.rooms_count.zero?
+      active_count = Settings.default_rooms.count { |r| r["active"] != false }
+      button_to 'Generate rooms',
+        generate_rooms_admin_event_path(event),
+        method: :post,
+        class: 'action-item-button cursor-pointer',
+        data: { confirm: "This will generate #{active_count} rooms based on the defaults in Event Settings. Are you sure you want to proceed?" }
+    end
+  end
+
   index do
     column :event
     column("Room name") do |room|
