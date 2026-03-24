@@ -31,8 +31,7 @@ ActiveAdmin.register Participant, as: "Presenter" do
          label: "Event",
          include_blank: false,
          collection: proc { Event.order(created_at: :desc).map { |e| ["#{e.name} (#{e.date.year})", e.id] } }
-  filter :name
-  filter :email
+
 
   collection_action :export, method: :get do
     sessions = params[:event_id].present? ? Session.where(event_id: params[:event_id]) : Session.all
