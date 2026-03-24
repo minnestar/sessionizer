@@ -31,7 +31,7 @@ gem 'fancybox2-rails'
 
 gem 'annealer'
 
-gem 'icalendar', '~> 2.4'
+gem 'icalendar', '~> 2.12'
 gem 'redcarpet', '~> 3.1'
 gem 'bcrypt-ruby', '~> 3.1'
 gem 'authlogic', '~> 6'
