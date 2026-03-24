@@ -33,7 +33,7 @@ class Participant < ActiveRecord::Base
   end
 
   def self.ransackable_associations(auth_object = nil)
-    []
+    %w[presentations]
   end
 
   def restrict_after(datetime, weight=1, event=Event.current_event)

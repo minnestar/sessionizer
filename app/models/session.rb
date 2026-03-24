@@ -49,7 +49,7 @@ class Session < ActiveRecord::Base
   end
 
   def self.ransackable_associations(auth_object = nil)
-    %w[categorizations]
+    %w[categorizations event]
   end
 
   def self.swap_timeslot_and_rooms(session_1, session_2)
