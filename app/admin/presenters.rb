@@ -2,7 +2,7 @@ ActiveAdmin.register Participant, as: "Presenter" do
   menu priority: 4
 
   config.batch_actions = false
-  config.sort_order = "name_asc"
+  config.sort_order = "first_submitted_at_desc"
 
   actions :index
 
@@ -10,7 +10,10 @@ ActiveAdmin.register Participant, as: "Presenter" do
     before_action :set_default_event_filter, only: :index
 
     def scoped_collection
-      Participant.joins(:presentations).includes(presentations: :session).distinct
+      Participant.joins(:presentations)
+        .includes(presentations: :session)
+        .select("participants.*, MIN(presentations.created_at) AS first_submitted_at")
+        .group("participants.id")
     end
 
     def selected_event_id
@@ -38,7 +41,11 @@ ActiveAdmin.register Participant, as: "Presenter" do
     presenter_ids = sessions.joins(:presentations)
       .pluck("presentations.participant_id")
       .uniq
-    presenters = Participant.where(id: presenter_ids).order(:name)
+    presenters = Participant.where(id: presenter_ids)
+      .joins(:presentations)
+      .merge(Presentation.where(session_id: sessions.select(:id)))
+      .group("participants.id")
+      .order(Arel.sql("MIN(presentations.created_at) DESC"))
 
     render body: presenters.map { |p| "\"#{p.name}\" <#{p.email}>" }.join(",\n"),
            content_type: Mime[:text]
@@ -60,6 +67,9 @@ ActiveAdmin.register Participant, as: "Presenter" do
       presenter.presentations.select { |p| p.session&.event_id == event_id }.map do |p|
         link_to(p.session.title, admin_session_path(p.session))
       end.join(", ").html_safe
+    end
+    column("Submitted At", sortable: :first_submitted_at) do |presenter|
+      presenter.first_submitted_at&.strftime("%-m/%-d/%y")
     end
   end
 end
