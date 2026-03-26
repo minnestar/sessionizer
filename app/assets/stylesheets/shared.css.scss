@@ -196,11 +196,15 @@ div.sidebar-box {
 }
 
 ul.sessionsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1em;
+  row-gap: 0.5em;
   margin: 0;
   padding: 0;
   padding-right: 2.2em;
   list-style-type: none;
-  @include columns(24em, 1em);
+
   li.attending {
     background: image-url("minnebar.png") no-repeat 0 .1em;
   }
@@ -233,6 +237,10 @@ ul.sessionsList {
         }
       }
     }
+  }
+
+  @media (max-width: 65em) {
+      grid-template-columns: 1fr;
   }
 }
 
