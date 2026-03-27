@@ -198,7 +198,7 @@ div.sidebar-box {
 ul.sessionsList {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 1em;
+  column-gap: 4em;
   row-gap: 0.5em;
   margin: 0;
   padding: 0;
@@ -212,7 +212,9 @@ ul.sessionsList {
     margin: 0.6em 0;
     padding-left: 2.2em;
     padding-right: 1em;
-    display: inline-block;  // prevent column break
+    display: grid;  // prevent column break
+    grid-template-columns: 8px auto;
+    grid-template-rows: auto 1fr;
     width: 100%;
 
     @media screen and (max-width: 65em) {
@@ -229,6 +231,7 @@ ul.sessionsList {
       }
     }
     div.presenter {
+      grid-area: 2 / 2;
       font-size: 0.95em;
       color: #AAA;
       a {
