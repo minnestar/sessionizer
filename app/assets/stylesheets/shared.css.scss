@@ -195,6 +195,10 @@ div.sidebar-box {
   }
 }
 
+.column {
+    container-type: inline-size;
+}
+
 ul.sessionsList {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -204,6 +208,11 @@ ul.sessionsList {
   padding: 0;
   padding-right: 2.2em;
   list-style-type: none;
+
+  @container (max-width: 400px) {
+      grid-template-columns: 1fr;
+      padding-right: 3em;
+  }
 
   li.attending {
     background: image-url("minnebar.png") no-repeat 0 .1em;
@@ -218,7 +227,7 @@ ul.sessionsList {
     width: 100%;
 
     @media screen and (max-width: 65em) {
-        padding-left: 0;
+        padding-left: 2em;
     }
     a {
       &:link, &:visited {
