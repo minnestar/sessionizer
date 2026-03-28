@@ -203,9 +203,13 @@ div.sidebar-box {
 
 ul.sessionsList {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   column-gap: 4em;
   row-gap: 0.5em;
+
+  &.single-column {
+    grid-template-columns: 1fr;
+  }
   margin: 0;
   padding: 0;
   padding-right: 2.2em;

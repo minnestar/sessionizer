@@ -2,13 +2,13 @@
   <%= cache [@event.sessions, current_participant], expires_in: 5.minutes do %>
 
     <h2>A Sampling of Sessions</h2>
-    <ul class="sessionsList">
+    <ul class="sessionsList single-column">
       <%= render @random_sessions %>
     </ul>
     <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
 
     <h2>Recently Added</h2>
-    <ul class="sessionsList">
+    <ul class="sessionsList single-column">
       <%= render @recent_sessions %>
     </ul>
     <p class="more_sessions"><%= link_to 'See all sessions', event_sessions_path(event_id: @event) %></p>
