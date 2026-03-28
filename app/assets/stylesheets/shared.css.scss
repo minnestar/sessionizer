@@ -245,6 +245,10 @@ ul.sessionsList {
       grid-area: 2 / 2;
       font-size: 0.95em;
       color: #AAA;
+      .edit-session, .edit-session a:link, .edit-session a:visited {
+        color: #666;
+        font-size: 1rem;
+      }
       a {
         &:link, &:visited {
           color: #949494;
