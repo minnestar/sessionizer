@@ -1,6 +1,8 @@
   <%# Note that fragment contains user-specific info, must be cached per user %>
   <%= cache [@event.sessions, current_participant], expires_in: 5.minutes do %>
 
+    <p class="add-session-mobile"><%= add_sessions_button %></p>
+
     <h2>A Sampling of Sessions</h2>
     <ul class="sessionsList single-column">
       <%= render @random_sessions %>
@@ -23,7 +25,7 @@
     <% end %>
 
     <div class="clear"></div>
-    <p><%= add_sessions_button %></p>
+    <p class="add-session-desktop"><%= add_sessions_button %></p>
 
 
   <% end %>
