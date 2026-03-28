@@ -196,12 +196,14 @@ div.sidebar-box {
 }
 
 .column {
-    container-type: inline-size;
+    @media screen and (min-width: 65em) {
+        container-type: inline-size;
+    }
 }
 
 ul.sessionsList {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 4em;
   row-gap: 0.5em;
   margin: 0;
