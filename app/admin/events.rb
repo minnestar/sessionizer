@@ -151,7 +151,10 @@ ActiveAdmin.register Event do
         link_to event_categories.size, admin_event_categories_path(q: { event_id_eq: event.id })
       end
       row "# of Sessions" do |event|
-        link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+        active_count = event.sessions.count
+        canceled_count = event.sessions.with_canceled.canceled.count
+        text_node link_to(active_count, admin_sessions_path(q: { event_id_eq: event.id }))
+        text_node " (+#{canceled_count} canceled)" if canceled_count > 0
       end
       row "# of Rooms" do |event|
         link_to event.rooms_count, admin_event_rooms_path(event)
@@ -239,7 +242,7 @@ ActiveAdmin.register Event do
         sort_direction = params[:order]&.end_with?('desc') ? 'desc' : 'asc'
         Arel.sql("#{sort_column} #{sort_direction}")
       else
-        Arel.sql('sessions.timeslot_id, rooms.capacity DESC, sessions.attendances_count DESC')
+        Arel.sql('sessions.timeslot_id, rooms.capacity DESC, sessions.canceled_at DESC, sessions.attendances_count DESC')
       end
 
       sessions = event.sessions
