@@ -195,12 +195,25 @@ div.sidebar-box {
   }
 }
 
+.column {
+    container-type: inline-size;
+}
+
 ul.sessionsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 4em;
+  row-gap: 0.5em;
   margin: 0;
   padding: 0;
   padding-right: 2.2em;
   list-style-type: none;
-  @include columns(24em, 1em);
+
+  @container (max-width: 400px) {
+      grid-template-columns: 1fr;
+      padding-right: 3em;
+  }
+
   li.attending {
     background: image-url("minnebar.png") no-repeat 0 .1em;
   }
@@ -208,8 +221,14 @@ ul.sessionsList {
     margin: 0.6em 0;
     padding-left: 2.2em;
     padding-right: 1em;
-    display: inline-block;  // prevent column break
+    display: grid;  // prevent column break
+    grid-template-columns: 8px auto;
+    grid-template-rows: auto 1fr;
     width: 100%;
+
+    @media screen and (max-width: 65em) {
+        padding-left: 2em;
+    }
     a {
       &:link, &:visited {
         font: 700 1.2em / 1.2em;
@@ -221,6 +240,7 @@ ul.sessionsList {
       }
     }
     div.presenter {
+      grid-area: 2 / 2;
       font-size: 0.95em;
       color: #AAA;
       a {
@@ -233,6 +253,10 @@ ul.sessionsList {
         }
       }
     }
+  }
+
+  @media screen and (max-width: 65em) {
+      grid-template-columns: 1fr;
   }
 }
 
