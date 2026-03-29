@@ -210,6 +210,14 @@ ul.sessionsList {
   &.single-column {
     grid-template-columns: 1fr;
   }
+
+  &.simple {
+    grid-template-columns: 1fr;
+    li {
+      display: list-item;
+      padding-left: 1em;
+    }
+  }
   margin: 0;
   padding: 0;
   padding-right: 2.2em;

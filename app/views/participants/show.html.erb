@@ -25,7 +25,7 @@
   <% if current_sessions_presenting.empty? %>
     <p>This person isn't presenting any sessions.</p>
   <% else %>
-    <ul class="sessionsList">
+    <ul class="sessionsList simple">
       <%= render :partial => 'session', :collection => current_sessions_presenting %>
     </ul>
   <% end %>
@@ -34,7 +34,7 @@
   <% if past_sessions_present.any? %>
     <h3>Past Presentations</h3>
 
-    <ul class="sessionsList">
+    <ul class="sessionsList simple">
       <%= render :partial => 'session', :collection => past_sessions_present %>
     </ul>
   <% end %>
@@ -46,8 +46,8 @@
   <% if @participant.sessions_attending.empty? %>
     <p>This person hasn't expressed interest in any sessions yet.</p>
   <% end %>
- 
-  <ul class="sessionsList">
+
+  <ul class="sessionsList simple">
     <%= render :partial => 'session', :collection => @participant.sessions_attending.for_current_event %>
   </ul>
 </div>

@@ -78,7 +78,7 @@
       <% else %>
         <h3 id="no-participants">No participants yet</h3>
       <% end %>
-      <ul class="sessionsList" id="participants">
+      <ul class="sessionsList simple" id="participants">
         <%= render :partial => 'participant', :collection => @session.participants.confirmed %>
       </ul>
 
