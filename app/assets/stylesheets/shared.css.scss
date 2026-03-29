@@ -150,6 +150,7 @@ input[type="submit"].button {
   background: transparent;
   text-transform: uppercase;
   text-decoration: none;
+  cursor: pointer;
 
   .title {
     padding: 10px;
@@ -294,6 +295,7 @@ ul.sessionsList {
   top: 0.1em;
 
   color: transparent;  // Text is for accessibility only
+  cursor: pointer;
 
   background-color: transparent;
   background-size: contain;
