@@ -43,28 +43,43 @@ ActiveAdmin.register Participant do
     end
 
     panel "Presentations (#{participant.presentations_count})" do
-      table_for participant.presentations.includes(session: :event).order(created_at: :desc) do
-        column(:title) do |p|
-          (link_to(p.session.title, admin_session_path(p.session)) +
-           (p.session.canceled? ? " (CANCELED)" : "")).html_safe
+      presented_sessions = Session.with_canceled
+        .joins(:presentations)
+        .includes(:event)
+        .where(presentations: { participant_id: participant.id })
+        .order("presentations.created_at DESC")
+      table_for presented_sessions do
+        column(:title) do |session|
+          (link_to(session.title, admin_session_path(session)) +
+           (session.canceled? ? " (CANCELED)" : "")).html_safe
         end
-        column(:event) do |p|
-          (link_to(p.session.event.name, admin_event_path(p.session.event)) + " (#{p.session.event.date.year})").html_safe if p.session.event
+        column(:event) do |session|
+          if session.event
+            (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe
+          end
         end
       end
     end
 
     panel "Interested Sessions (#{participant.attendances_count})" do
-      table_for participant.attendances.includes(session: :event).order('events.date desc, sessions.title') do
-        column(:title) do |attendance|
-          (link_to(attendance.session.title, admin_session_path(attendance.session)) +
-           (attendance.session.canceled? ? " (CANCELED)" : "")).html_safe
+      interested_sessions = Session.with_canceled
+        .joins(:attendances)
+        .includes(:event)
+        .where(attendances: { participant_id: participant.id })
+        .order("events.date DESC, sessions.title")
+      table_for interested_sessions do
+        column(:title) do |session|
+          (link_to(session.title, admin_session_path(session)) +
+           (session.canceled? ? " (CANCELED)" : "")).html_safe
         end
-        column(:event) do |attendance|
-          (link_to(attendance.session.event.name, admin_event_path(attendance.session.event)) +
-           " (#{attendance.session.event.date.year})").html_safe if attendance.session.event
+        column(:event) do |session|
+          if session.event
+            (link_to(session.event.name, admin_event_path(session.event)) + " (#{session.event.date.year})").html_safe
+          end
         end
-        column(:created_at) { |a| a.created_at.strftime("%-m/%-d/%y") }
+        column(:created_at) do |session|
+          session.attendances.find_by(participant_id: participant.id)&.created_at&.strftime("%-m/%-d/%y")
+        end
       end
     end
   end
