@@ -5,6 +5,19 @@ ActiveAdmin.register Participant do
 
   permit_params :name, :email, :bio, :email_confirmed_at
 
+  controller do
+    def destroy
+      resource = Participant.find(params[:id])
+      if resource.destroy
+        flash[:notice] = "Participant was successfully deleted."
+        redirect_to admin_participants_path
+      else
+        flash[:alert] = resource.errors.full_messages.to_sentence
+        redirect_to admin_participant_path(resource)
+      end
+    end
+  end
+
   includes :attendances, { presentations: { session: :event } }
 
   filter :name

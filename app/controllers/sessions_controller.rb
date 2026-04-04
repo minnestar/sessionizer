@@ -56,8 +56,12 @@ class SessionsController < ApplicationController
   end
 
   def create
+    unless current_participant.email_confirmed?
+      return render status: 403, plain: "Email confirmation required"
+    end
+
     unless Settings.allow_new_sessions?
-      return render status: 403, plain: 'Session submission is closed'
+      return render status: 403, plain: "Session submission is closed"
     end
 
     @session.attributes = session_params.except(:code_of_conduct_agreement)

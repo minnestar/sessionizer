@@ -1,5 +1,5 @@
 class Participant < ActiveRecord::Base
-  has_many :sessions
+  has_many :sessions, -> { unscope(where: :canceled_at) }, dependent: :restrict_with_error
   has_many :attendances, dependent: :destroy
   has_many :sessions_attending, :through => :attendances, :source => :session
   has_many :presentations

@@ -52,6 +52,28 @@ describe Participant do
     end
   end
 
+  describe "destroying" do
+    let!(:participant) { create(:participant) }
+    let!(:event) { create(:event) }
+
+    it "is prevented when the participant has sessions" do
+      create(:session, participant: participant, event: event)
+      expect { participant.destroy }.not_to change { Participant.count }
+      expect(participant.errors[:base]).to include(/Cannot delete record because dependent sessions exist/)
+    end
+
+    it "is prevented when the participant only has canceled sessions" do
+      session = create(:session, participant: participant, event: event)
+      session.update!(canceled_at: Time.current)
+      expect { participant.destroy }.not_to change { Participant.count }
+      expect(participant.errors[:base]).to include(/Cannot delete record because dependent sessions exist/)
+    end
+
+    it "is allowed when the participant has no sessions" do
+      expect { participant.destroy }.to change { Participant.count }.by(-1)
+    end
+  end
+
   describe '#attending session' do
     let!(:session1) { create(:session) }
     let!(:joe)  { create(:joe) }  

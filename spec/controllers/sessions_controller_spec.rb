@@ -123,30 +123,40 @@ describe SessionsController do
     let!(:event) { create(:event) }
     let(:category) { Category.last }
 
-    context "with valid values" do
-      it "creates a new session " do
+    context "when participant email is confirmed" do
+      let(:user) { create(:participant, email_confirmed_at: Time.current) }
 
-        expect {
-          post :create, params: { session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' } }
-        }.to change { Session.count }.by(1)
-        expect(response).to redirect_to assigns[:session]
-        expect(assigns[:session].title).to eq 'new title'
-        expect(assigns[:session].participant).to eq user
-        expect(assigns[:session].event).to eq event
-        expect(assigns[:session].category_ids).to include category.id
-        expect(flash[:notice]).to eq "Thanks for adding your session."
+      context "with valid values" do
+        it "creates a new session" do
+          expect {
+            post :create, params: { session: { title: "new title", description: "new description", category_ids: [category.id], level_id: "2" } }
+          }.to change { Session.count }.by(1)
+          expect(response).to redirect_to assigns[:session]
+          expect(assigns[:session].title).to eq "new title"
+          expect(assigns[:session].participant).to eq user
+          expect(assigns[:session].event).to eq event
+          expect(assigns[:session].category_ids).to include category.id
+          expect(flash[:notice]).to eq "Thanks for adding your session."
+        end
+      end
+
+      context "with invalid values" do
+        it "shows the errors" do
+          expect {
+            post :create, params: { session: { title: "" } }
+          }.not_to change { Session.count }
+          expect(response).to render_template("new")
+        end
       end
     end
 
-    context "with invalid values" do
-      it "shows the errors" do
-
+    context "when participant email is not confirmed" do
+      it "returns 403 and does not create a session" do
         expect {
-          post :create, params: { session: { title: ''} }
+          post :create, params: { session: { title: "new title", description: "new description", category_ids: [category.id], level_id: "2" } }
         }.not_to change { Session.count }
-        expect(response).to render_template('new')
+        expect(response).to have_http_status(403)
       end
     end
-
   end
 end

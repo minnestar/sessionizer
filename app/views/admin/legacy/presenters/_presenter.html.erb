@@ -6,6 +6,6 @@
     <%= presenter.email %>
   </td>
   <td>
-    <%= presenter.sessions.for_current_event.map { |session| link_to(session.title, session) }.join(", ").html_safe %>
+    <%= presenter.sessions.active.for_current_event.map { |session| link_to(session.title, session) }.join(", ").html_safe %>
  </td>
 </tr>
