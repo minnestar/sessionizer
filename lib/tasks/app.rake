@@ -465,7 +465,7 @@ namespace :app do
     puts "#{' ' * timeslots.count} vot exp  ID title                               presenters"
     puts "#{' ' * timeslots.count} --- ---  ---------------------------------------- ----------"
     Session.largest_attendance_first(event.sessions).each do |session|
-      puts "%s %3d %3s%s %-40.40s %s" % [
+      puts "%s %3d %3.0f%s %-40.40s %s" % [
         timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
         session.attendance_count,
         session.expected_attendance,
