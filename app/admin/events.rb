@@ -83,10 +83,10 @@ ActiveAdmin.register Event do
     if result[:already_assigned_count] > 0 && !reassign
       notice += " #{result[:already_assigned_count]} sessions already had rooms; use Reassign All to redo them."
     end
-    redirect_to(request.referer || admin_event_path(resource), notice: notice)
+    redirect_to request.referer || admin_event_path(resource), notice: notice
   rescue => e
-    redirect_to(request.referer || admin_event_path(resource),
-                alert: "Room assignment failed: #{e.message}. Try running `rails app:assign_rooms` in the terminal to see the full output.")
+    redirect_to request.referer || admin_event_path(resource),
+                alert: "Room assignment failed: #{e.message}. Try running `rails app:assign_rooms` in the terminal to see the full output."
   end
 
   action_item :generate_timeslots, only: :show do
@@ -111,7 +111,7 @@ ActiveAdmin.register Event do
   end
 
   action_item :assign_rooms, only: :show do
-    if resource.current? && resource.rooms_count > 0
+    if resource.current? && resource.rooms_count > 0 && resource.has_unassigned_sessions?
       button_to 'Assign rooms',
         assign_rooms_admin_event_path(resource),
         method: :post,
@@ -126,7 +126,7 @@ ActiveAdmin.register Event do
         assign_rooms_admin_event_path(resource, reassign: 1),
         method: :post,
         class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will OVERWRITE all existing room assignments based on current vote tallies. Are you sure?" }
+        data: { confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?" }
     end
   end
 
@@ -156,15 +156,6 @@ ActiveAdmin.register Event do
     end
     column("# of Timeslots") do |event|
       link_to event.timeslots_count, admin_event_timeslots_path(event)
-    end
-    column("Actions") do |event|
-      if event.current? && event.rooms_count > 0
-        button_to "Assign rooms",
-          assign_rooms_admin_event_path(event),
-          method: :post,
-          class: "cursor-pointer",
-          data: { confirm: "Assign rooms to scheduled sessions that don't yet have one? This will take a little while. Sit tight." }
-      end
     end
   end
 

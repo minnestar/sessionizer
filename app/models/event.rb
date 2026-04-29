@@ -117,17 +117,28 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def has_unassigned_sessions?
+    sessions
+      .joins(:timeslot)
+      .where(timeslots: { schedulable: true }, room_id: nil, manually_scheduled: false)
+      .exists?
+  end
+
   def assign_rooms!(reassign: false)
     log = []
     already_assigned_count = 0
 
+    # Postgres rejects setting isolation in nested transactions; in tests RSpec
+    # already wraps each example in one, so request :serializable only at the top level.
     transaction_opts = Session.connection.open_transactions.zero? ? { isolation: :serializable } : {}
     Session.transaction(**transaction_opts) do
-      rooms_by_capacity = rooms.where(schedulable: true).sort_by { |r| -r.capacity }
+      rooms_by_capacity = rooms.where(schedulable: true).order(capacity: :desc).to_a
+      schedulable_timeslots = timeslots.where(schedulable: true).order(:starts_at).includes(:sessions)
 
-      timeslots.where(schedulable: true).order(:starts_at).each do |slot|
+      schedulable_timeslots.each do |slot|
         log << slot.to_s
-        sessions = Session.largest_attendance_first(slot.sessions)
+        sessions = slot.sessions.reject(&:manually_scheduled).to_a
+        sessions = Session.largest_attendance_first(sessions)
 
         unless reassign
           assigned, unassigned = sessions.partition(&:room_id?)
@@ -138,16 +149,15 @@ class Event < ActiveRecord::Base
         sessions.zip(rooms_by_capacity) do |session, room|
           if room.nil?
             raise NotEnoughRoomsError,
-              "NOT ENOUGH ROOMS: #{slot} has #{slot.sessions.count} sessions, " \
+              "NOT ENOUGH ROOMS: #{slot} has #{slot.sessions.size} sessions, " \
               "but there are only #{rooms_by_capacity.size} schedulable rooms"
           end
           log << "    #{session.id} #{session.title}" \
                  " (#{'%1.1f' % session.expected_attendance} est:" \
-                 " #{session.attendances.count} raw vote(s)," \
+                 " #{session.attendance_count} raw vote(s)," \
                  " #{'%1.1f' % session.estimated_interest} time-scaled)" \
                  " in #{room.name} (#{room.capacity})"
-          session.room = room
-          session.save!
+          session.update_columns(room_id: room.id, updated_at: Time.current)
         end
       end
     end

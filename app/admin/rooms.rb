@@ -35,7 +35,7 @@ ActiveAdmin.register Room do
 
   action_item :assign_rooms, only: [:index] do
     event = Event.find(params[:event_id])
-    if event.current? && event.rooms_count > 0
+    if event.current? && event.rooms_count > 0 && event.has_unassigned_sessions?
       button_to 'Assign rooms',
         assign_rooms_admin_event_path(event),
         method: :post,
@@ -51,7 +51,7 @@ ActiveAdmin.register Room do
         assign_rooms_admin_event_path(event, reassign: 1),
         method: :post,
         class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will OVERWRITE all existing room assignments based on current vote tallies. Are you sure?" }
+        data: { confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?" }
     end
   end
 

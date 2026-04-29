@@ -189,6 +189,32 @@ describe Event do
     end
   end
 
+  describe "#has_unassigned_sessions?" do
+    let(:event) { create(:event) }
+    let(:slot) { create(:timeslot_1, event: event, schedulable: true) }
+
+    it "is true when a schedulable-timeslot session has no room" do
+      create(:session, :without_room, event: event, timeslot: slot)
+      expect(event.has_unassigned_sessions?).to be true
+    end
+
+    it "is false when all schedulable-timeslot sessions have rooms" do
+      create(:session, event: event, timeslot: slot)
+      expect(event.has_unassigned_sessions?).to be false
+    end
+
+    it "ignores manually_scheduled sessions" do
+      create(:session, :without_room, event: event, timeslot: slot, manually_scheduled: true)
+      expect(event.has_unassigned_sessions?).to be false
+    end
+
+    it "ignores sessions in non-schedulable timeslots" do
+      special_slot = create(:timeslot, event: event, schedulable: false)
+      create(:session, :without_room, event: event, timeslot: special_slot)
+      expect(event.has_unassigned_sessions?).to be false
+    end
+  end
+
   describe "#assign_rooms!" do
     let(:event) { create(:event) }
     let!(:big_room) { create(:room, event: event, name: "Theater", capacity: 250) }
@@ -271,6 +297,15 @@ describe Event do
 
       expect(session.reload.room).to eq(big_room)
       expect(special_room.sessions.reload).to be_empty
+    end
+
+    it "leaves manually_scheduled sessions alone, even when reassigning" do
+      manual = create(:session, event: event, timeslot: slot, manually_scheduled: true)
+      manual.update_column(:room_id, small_room.id)
+
+      event.assign_rooms!(reassign: true)
+
+      expect(manual.reload.room).to eq(small_room)
     end
 
     it "raises NotEnoughRoomsError when not enough schedulable rooms exist" do
