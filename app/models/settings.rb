@@ -159,9 +159,11 @@ class Settings < ActiveRecord::Base
         "name" => normalized["name"].to_s,
         "capacity" => normalized.key?("capacity") ? normalized["capacity"].to_i : nil,
         "active" => normalized.key?("active") ? normalized["active"] : nil,
+        "schedulable" => normalized.key?("schedulable") ? normalized["schedulable"] : nil,
         "notes" => normalized["notes"].presence
       }.compact
       entry["active"] = false if normalized.key?("active") && normalized["active"] == false
+      entry["schedulable"] = false if normalized.key?("schedulable") && normalized["schedulable"] == false
       entry
     end
     super(validated_config)

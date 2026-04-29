@@ -1,4 +1,6 @@
 class Event < ActiveRecord::Base
+  class NotEnoughRoomsError < StandardError; end
+
   has_many :sessions, dependent: :destroy
   has_many :timeslots, dependent: :destroy
   has_many :rooms, dependent: :destroy
@@ -108,10 +110,59 @@ class Event < ActiveRecord::Base
 
         rooms.create!(
           name: conf["name"],
-          capacity: conf["capacity"]
+          capacity: conf["capacity"],
+          schedulable: conf.fetch("schedulable", true)
         )
       end
     end
+  end
+
+  def has_unassigned_sessions?
+    sessions
+      .joins(:timeslot)
+      .where(timeslots: { schedulable: true }, room_id: nil, manually_scheduled: false)
+      .exists?
+  end
+
+  def assign_rooms!(reassign: false)
+    log = []
+    already_assigned_count = 0
+
+    # Postgres rejects setting isolation in nested transactions; in tests RSpec
+    # already wraps each example in one, so request :serializable only at the top level.
+    transaction_opts = Session.connection.open_transactions.zero? ? { isolation: :serializable } : {}
+    Session.transaction(**transaction_opts) do
+      rooms_by_capacity = rooms.where(schedulable: true).order(capacity: :desc).to_a
+      schedulable_timeslots = timeslots.where(schedulable: true).order(:starts_at).includes(:sessions)
+
+      schedulable_timeslots.each do |slot|
+        log << slot.to_s
+        sessions = slot.sessions.reject(&:manually_scheduled).to_a
+        sessions = Session.largest_attendance_first(sessions)
+
+        unless reassign
+          assigned, unassigned = sessions.partition(&:room_id?)
+          sessions = unassigned
+          already_assigned_count += assigned.size
+        end
+
+        sessions.zip(rooms_by_capacity) do |session, room|
+          if room.nil?
+            raise NotEnoughRoomsError,
+              "NOT ENOUGH ROOMS: #{slot} has #{slot.sessions.size} sessions, " \
+              "but there are only #{rooms_by_capacity.size} schedulable rooms"
+          end
+          log << "    #{session.id} #{session.title}" \
+                 " (#{'%1.1f' % session.expected_attendance} est:" \
+                 " #{session.attendance_count} raw vote(s)," \
+                 " #{'%1.1f' % session.estimated_interest} time-scaled)" \
+                 " in #{room.name} (#{room.capacity})"
+          session.update_columns(room_id: room.id, updated_at: Time.current)
+        end
+      end
+    end
+
+    { log: log, already_assigned_count: already_assigned_count }
   end
 
   private

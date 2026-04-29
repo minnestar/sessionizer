@@ -73,6 +73,26 @@ describe Event do
         theater = event.rooms.find_by(name: "Theater")
         expect(theater.capacity).to eq(250)
       end
+
+      it "respects the schedulable flag from config" do
+        allow(Settings).to receive(:default_rooms).and_return([
+          { "name" => "Theater", "capacity" => 250 },
+          { "name" => "Uptowner", "capacity" => 85, "schedulable" => false }
+        ])
+
+        event.create_default_rooms
+        expect(event.rooms.find_by(name: "Theater").schedulable).to be true
+        expect(event.rooms.find_by(name: "Uptowner").schedulable).to be false
+      end
+
+      it "defaults schedulable to true when not specified" do
+        allow(Settings).to receive(:default_rooms).and_return([
+          { "name" => "Theater", "capacity" => 250 }
+        ])
+
+        event.create_default_rooms
+        expect(event.rooms.find_by(name: "Theater").schedulable).to be true
+      end
     end
 
     context "when event already has rooms" do
@@ -166,6 +186,144 @@ describe Event do
         expect(Rails.logger).to receive(:warn).with(/WARNING: Session 2 is a different length/)
         event.create_default_timeslots
       end
+    end
+  end
+
+  describe "#has_unassigned_sessions?" do
+    let(:event) { create(:event) }
+    let(:slot) { create(:timeslot_1, event: event, schedulable: true) }
+
+    it "is true when a schedulable-timeslot session has no room" do
+      create(:session, :without_room, event: event, timeslot: slot)
+      expect(event.has_unassigned_sessions?).to be true
+    end
+
+    it "is false when all schedulable-timeslot sessions have rooms" do
+      create(:session, event: event, timeslot: slot)
+      expect(event.has_unassigned_sessions?).to be false
+    end
+
+    it "ignores manually_scheduled sessions" do
+      create(:session, :without_room, event: event, timeslot: slot, manually_scheduled: true)
+      expect(event.has_unassigned_sessions?).to be false
+    end
+
+    it "ignores sessions in non-schedulable timeslots" do
+      special_slot = create(:timeslot, event: event, schedulable: false)
+      create(:session, :without_room, event: event, timeslot: special_slot)
+      expect(event.has_unassigned_sessions?).to be false
+    end
+  end
+
+  describe "#assign_rooms!" do
+    let(:event) { create(:event) }
+    let!(:big_room) { create(:room, event: event, name: "Theater", capacity: 250) }
+    let!(:medium_room) { create(:room, event: event, name: "Harriet", capacity: 100) }
+    let!(:small_room) { create(:room, event: event, name: "Challenge", capacity: 24) }
+    let!(:slot) { create(:timeslot_1, event: event, schedulable: true) }
+
+    def session_in_slot(attrs = {})
+      create(:session, :without_room, attrs.merge(event: event, timeslot: slot))
+    end
+
+    it "assigns rooms to sessions in the schedulable timeslot" do
+      session = session_in_slot
+      expect {
+        event.assign_rooms!
+      }.to change { session.reload.room }.from(nil)
+    end
+
+    it "assigns higher-capacity rooms to sessions with more expected attendance" do
+      popular = session_in_slot(manual_attendance_estimate: 200)
+      unpopular = session_in_slot(manual_attendance_estimate: 5)
+
+      event.assign_rooms!
+
+      expect(popular.reload.room).to eq(big_room)
+      expect(unpopular.reload.room).to eq(medium_room)
+    end
+
+    it "skips sessions that already have a room by default" do
+      preassigned = session_in_slot
+      preassigned.update!(room: small_room)
+
+      event.assign_rooms!
+
+      expect(preassigned.reload.room).to eq(small_room)
+    end
+
+    it "reports already-assigned sessions in the result" do
+      session_in_slot.update!(room: small_room)
+      session_in_slot.update!(room: medium_room)
+
+      result = event.assign_rooms!
+
+      expect(result[:already_assigned_count]).to eq(2)
+    end
+
+    it "reassigns existing rooms when reassign: true" do
+      session = session_in_slot(manual_attendance_estimate: 200)
+      session.update!(room: small_room)
+
+      event.assign_rooms!(reassign: true)
+
+      expect(session.reload.room).to eq(big_room)
+    end
+
+    it "ignores non-schedulable timeslots" do
+      special_slot = create(:timeslot, event: event, schedulable: false)
+      special_session = create(:session, :without_room, event: event, timeslot: special_slot)
+
+      event.assign_rooms!
+
+      expect(special_session.reload.room).to be_nil
+    end
+
+    it "raises NotEnoughRoomsError and rolls back when sessions exceed rooms" do
+      4.times { session_in_slot }  # 4 sessions, only 3 rooms
+
+      expect {
+        event.assign_rooms!
+      }.to raise_error(Event::NotEnoughRoomsError, /NOT ENOUGH ROOMS/)
+
+      expect(event.sessions.where.not(room_id: nil)).to be_empty
+    end
+
+    it "ignores non-schedulable rooms when distributing" do
+      special_room = create(:room, event: event, name: "Atrium", capacity: 500, schedulable: false)
+      session = session_in_slot(manual_attendance_estimate: 999)
+
+      event.assign_rooms!
+
+      expect(session.reload.room).to eq(big_room)
+      expect(special_room.sessions.reload).to be_empty
+    end
+
+    it "leaves manually_scheduled sessions alone, even when reassigning" do
+      manual = create(:session, event: event, timeslot: slot, manually_scheduled: true)
+      manual.update_column(:room_id, small_room.id)
+
+      event.assign_rooms!(reassign: true)
+
+      expect(manual.reload.room).to eq(small_room)
+    end
+
+    it "raises NotEnoughRoomsError when not enough schedulable rooms exist" do
+      create(:room, event: event, name: "Atrium", capacity: 500, schedulable: false)
+      4.times { session_in_slot }  # 4 sessions, 3 schedulable rooms (Atrium doesn't count)
+
+      expect {
+        event.assign_rooms!
+      }.to raise_error(Event::NotEnoughRoomsError, /3 schedulable rooms/)
+    end
+
+    it "returns a log of slot and session assignments" do
+      session = session_in_slot
+
+      result = event.assign_rooms!
+
+      expect(result[:log]).to include(slot.to_s)
+      expect(result[:log].any? { |line| line.include?(session.title) && line.include?(big_room.name) }).to be true
     end
   end
 end
