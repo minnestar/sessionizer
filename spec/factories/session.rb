@@ -11,5 +11,11 @@ FactoryBot.define do
     after(:build) do |session|
       session.room = session.event.rooms.first || create(:room, event: session.event)
     end
+
+    trait :without_room do
+      after(:build) do |session|
+        session.room = nil
+      end
+    end
   end
 end

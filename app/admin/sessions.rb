@@ -59,6 +59,7 @@ ActiveAdmin.register Session do
         .order('events.id DESC, rooms.capacity DESC')
         .map { |r| ["#{r.event.name}: #{r.name}", r.id] }
   }
+  filter :manually_scheduled
 
   member_action :cancel, method: :post do
     resource.update!(canceled_at: Time.current)

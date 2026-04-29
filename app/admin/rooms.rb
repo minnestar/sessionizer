@@ -33,6 +33,28 @@ ActiveAdmin.register Room do
     end
   end
 
+  action_item :assign_rooms, only: [:index] do
+    event = Event.find(params[:event_id])
+    if event.current? && event.rooms_count > 0
+      button_to 'Assign rooms',
+        assign_rooms_admin_event_path(event),
+        method: :post,
+        class: 'action-item-button cursor-pointer',
+        data: { confirm: "Assign rooms to scheduled sessions that don't yet have one? This will take a little while. Sit tight." }
+    end
+  end
+
+  action_item :reassign_rooms, only: [:index] do
+    event = Event.find(params[:event_id])
+    if event.current? && event.rooms_count > 0
+      button_to 'Reassign all rooms',
+        assign_rooms_admin_event_path(event, reassign: 1),
+        method: :post,
+        class: 'action-item-button cursor-pointer',
+        data: { confirm: "This will OVERWRITE all existing room assignments based on current vote tallies. Are you sure?" }
+    end
+  end
+
   index do
     column :event
     column("Room name") do |room|

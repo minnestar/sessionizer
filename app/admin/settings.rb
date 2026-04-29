@@ -37,6 +37,7 @@ ActiveAdmin.register Settings do
         notes = ERB::Util.html_escape(room["notes"]) if room["notes"].present?
         parts = [%("name": "#{name}",#{padding} "capacity": #{capacity})]
         parts << %("active": false) if room.key?("active") && room["active"] == false
+        parts << %("schedulable": false) if room.key?("schedulable") && room["schedulable"] == false
         parts << %("notes": "#{notes}") if notes
         "{#{parts.join(', ')}}"
       }.join(",\n")
@@ -88,7 +89,7 @@ ActiveAdmin.register Settings do
           rows: 40,
           style: "font-family: monospace;"
         },
-        hint: "Format: {\"name\":\"Theater\", \"capacity\":250}, {\"name\":\"Alaska\", \"capacity\":96, \"active\":false, \"notes\":\"Used for daycare in 2025\"}, etc.<br>- One JSON object per line<br>- Use \"active\": false if a room isn't being used this year <br>- Use \"notes\": \"...\" to add context about a room".html_safe
+        hint: "Format: {\"name\":\"Theater\", \"capacity\":250}, {\"name\":\"Alaska\", \"capacity\":96, \"active\":false, \"notes\":\"Used for daycare in 2025\"}, etc.<br>- One JSON object per line<br>- Use \"active\": false if a room isn't being used this year<br>- Use \"schedulable\": false to create the room but exclude it from automatic room assignment (e.g. networking spaces booked manually)<br>- Use \"notes\": \"...\" to add context about a room".html_safe
     end
     f.actions
   end

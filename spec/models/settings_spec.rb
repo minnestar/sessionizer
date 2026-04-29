@@ -61,6 +61,21 @@ describe Settings do
         expect(settings.default_rooms.first["active"]).to eq(false)
         expect(settings.default_rooms.first["notes"]).to eq("daycare")
       end
+
+      it "preserves the schedulable field" do
+        settings.default_rooms = [
+          { "name" => "Uptowner", "capacity" => 85, "schedulable" => false, "notes" => "networking" }
+        ]
+        expect(settings).to be_valid
+        expect(settings.default_rooms.first["schedulable"]).to eq(false)
+      end
+
+      it "omits schedulable when not specified" do
+        settings.default_rooms = [
+          { "name" => "Theater", "capacity" => 250 }
+        ]
+        expect(settings.default_rooms.first).not_to have_key("schedulable")
+      end
     end
 
     context "with invalid input" do

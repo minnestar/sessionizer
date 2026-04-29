@@ -324,39 +324,15 @@ namespace :app do
 
   desc 'assign scheduled sessions to rooms'
   task :assign_rooms => :environment do
-    Session.transaction(isolation: :serializable) do
-      already_assigned_count = 0
-      reassign_existing_rooms = (ENV['reassign_rooms'].to_i != 0)
+    reassign = (ENV['reassign_rooms'].to_i != 0)
+    result = event.assign_rooms!(reassign: reassign)
 
-      rooms_by_capacity = event.rooms.sort_by { |r| -r.capacity }
-      event.timeslots.where(schedulable: true).order('starts_at').each do |slot|
-        puts slot
-        sessions = Session.largest_attendance_first(slot.sessions)
+    puts result[:log]
 
-        unless reassign_existing_rooms
-          assigned, unassigned = sessions.partition(&:room_id?)
-          sessions = unassigned
-          already_assigned_count += assigned.size
-        end
-
-        sessions.zip(rooms_by_capacity) do |session, room|
-          if room.nil?
-            raise "NOT ENOUGH ROOMS: #{session.timeslot} has #{session.timeslot.sessions.count} sessions," +
-                  " but there are only #{event.rooms.count} rooms"
-          end
-          puts "    #{session.id} #{session.title}" +
-               " (#{'%1.1f' % session.expected_attendance} est: #{session.attendances.count} raw vote(s), #{'%1.1f' % session.estimated_interest} time-scaled)" +
-               " in #{room.name} (#{room.capacity})"
-          session.room = room
-          session.save!
-        end
-      end
-
-      if already_assigned_count > 0
-        puts
-        puts "WARNING: #{already_assigned_count} sessions already had rooms assigned. " \
-          "Use reassign_rooms=1 to redo these existing room assignements based on updated vote tallies."
-      end
+    if result[:already_assigned_count] > 0
+      puts
+      puts "WARNING: #{result[:already_assigned_count]} sessions already had rooms assigned. " \
+        "Use reassign_rooms=1 to redo these existing room assignements based on updated vote tallies."
     end
   end
 
