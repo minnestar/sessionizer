@@ -102,7 +102,7 @@ namespace :app do
     if args[:config_file].blank?
       STDERR.puts 'Usage:
 
-          rake app:configure_sessions[path/to/constraints.csv]
+          rails "app:configure_sessions[path/to/constraints.csv]"
 
         The CSV file must open with a header line with the following columns:
 
@@ -118,7 +118,8 @@ namespace :app do
           <12:00pm           Session must end at or before the given time
           >1:00pm, <3:00pm   Session must fall entirely within give time range
           @2:00pm            Session must be in the timeslot that includes the given time
-          # 1 2 3            Session must be in one of these specific timeslot ids
+          #= 1 2 3           Session must be in one of these specific timeslot ids
+          #! 1 2 3           Session must NOT be in one of these specific timeslot ids
           manual             Do not let sessionizer schedule this session
           delete             Soft-delete session by assigning to a nonexistent event
 
@@ -192,11 +193,14 @@ namespace :app do
         constraints.split(',').map(&:strip).each do |constraint|
           puts "    #{constraint}"
 
-          if /^#(?<ids>(\s*\d+\s*)+)$/ =~ constraint
-            presenter.restrict_to_only(
-              Timeslot.find(
-                ids.split))
-            next
+          if /^#(?<include_exclude>.)(?<ids>(\s*\d+\s*)+)$/ =~ constraint
+            specific_slots = Timeslot.find(ids.split)
+            case include_exclude
+              when '=' then presenter.restrict_all_except(specific_slots)
+              when '!' then presenter.restrict_only(specific_slots)
+              else raise "Unknown include/exclude symbol `#{include_exclude}` in `#{constraint}`"
+            end
+            next  # done with this rule!
           end
 
           unless %r{
@@ -437,7 +441,7 @@ namespace :app do
     puts "#{' ' * timeslots.count} vot exp  ID title                               presenters"
     puts "#{' ' * timeslots.count} --- ---  ---------------------------------------- ----------"
     Session.largest_attendance_first(event.sessions).each do |session|
-      puts "%s %3d %3s%s %-40.40s %s" % [
+      puts "%s %3d %3.0f%s %-40.40s %s" % [
         timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
         session.attendance_count,
         session.expected_attendance,
