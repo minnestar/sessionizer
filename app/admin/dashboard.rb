@@ -19,7 +19,12 @@ ActiveAdmin.register_page "Dashboard" do
               text_node " (+#{canceled_count} canceled)" if canceled_count > 0
             end
             row "# of Rooms" do |event|
-              link_to event.rooms_count, admin_event_rooms_path(event)
+              text_node link_to(event.rooms_count, admin_event_rooms_path(event))
+              if event.rooms_count > 0 && event.timeslots_count > 0
+                text_node " ("
+                text_node link_to("availability matrix", admin_room_availability_path(event_id: event.id))
+                text_node ")"
+              end
             end
             row "# of Timeslots" do |event|
               link_to event.timeslots_count, admin_event_timeslots_path(event)

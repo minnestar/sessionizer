@@ -77,6 +77,12 @@ ActiveAdmin.register Event do
 
   member_action :assign_rooms, method: :post do
     reassign = params[:reassign].present?
+
+    if reassign && resource.starts_within?(24.hours)
+      redirect_to(request.referer || admin_event_path(resource),
+                  alert: "Reassign all rooms is disabled within 24 hours of the event start.") and return
+    end
+
     result = resource.assign_rooms!(reassign: reassign)
 
     notice = reassign ? "Rooms reassigned." : "Rooms assigned."
@@ -121,12 +127,20 @@ ActiveAdmin.register Event do
   end
 
   action_item :reassign_rooms, only: :show do
-    if resource.current? && resource.rooms_count > 0
+    if resource.current? && resource.rooms_count > 0 && !resource.starts_within?(24.hours)
       button_to 'Reassign all rooms',
         assign_rooms_admin_event_path(resource, reassign: 1),
         method: :post,
         class: 'action-item-button cursor-pointer',
         data: { confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?" }
+    end
+  end
+
+  action_item :availability_matrix, only: :show do
+    if resource.rooms_count > 0 && resource.timeslots_count > 0
+      link_to "Room availability matrix",
+        admin_room_availability_path(event_id: resource.id),
+        class: "action-item-button"
     end
   end
 
@@ -191,7 +205,12 @@ ActiveAdmin.register Event do
         text_node " (+#{canceled_count} canceled)" if canceled_count > 0
       end
       row "# of Rooms" do |event|
-        link_to event.rooms_count, admin_event_rooms_path(event)
+        text_node link_to(event.rooms_count, admin_event_rooms_path(event))
+        if event.rooms_count > 0 && event.timeslots_count > 0
+          text_node " ("
+          text_node link_to("availability matrix", admin_room_availability_path(event_id: event.id))
+          text_node ")"
+        end
       end
       row "# of Timeslots" do |event|
         link_to event.timeslots_count, admin_event_timeslots_path(event)

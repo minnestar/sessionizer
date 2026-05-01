@@ -176,7 +176,18 @@ ActiveAdmin.register Session do
       f.input :level
       f.input :categories, collection: event.categories.merge(EventCategory.ordered)
       f.input :timeslot, collection: Timeslot.where(event_id: event.id)
-      f.input :room, collection: Room.where(event_id: event.id)
+
+      rooms = Room.where(event_id: event.id).order(capacity: :desc)
+      if f.object.timeslot_id.present?
+        booked_room_ids = Session
+          .where(timeslot_id: f.object.timeslot_id, canceled_at: nil)
+          .where.not(id: f.object.id)
+          .where.not(room_id: nil)
+          .pluck(:room_id)
+        rooms = rooms.where.not(id: booked_room_ids)
+      end
+      f.input :room,
+              collection: rooms.map { |r| ["#{r.name} (#{r.capacity})", r.id] }
       f.input :manually_scheduled
     end
     f.actions

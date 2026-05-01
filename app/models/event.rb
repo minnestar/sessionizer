@@ -34,6 +34,19 @@ class Event < ActiveRecord::Base
     @current
   end
 
+  def starts_within?(duration)
+    return false if date.nil?
+
+    starts_at = if start_time
+      t = start_time.in_time_zone
+      date.in_time_zone.change(hour: t.hour, min: t.min)
+    else
+      date.in_time_zone.beginning_of_day
+    end
+
+    starts_at <= duration.from_now
+  end
+
   def multiday?
     if @multiday.nil?
       separate_day_count = timeslots.map(&:starts_at).map(&:midnight).uniq.count

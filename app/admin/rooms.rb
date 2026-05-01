@@ -46,12 +46,21 @@ ActiveAdmin.register Room do
 
   action_item :reassign_rooms, only: [:index] do
     event = Event.find(params[:event_id])
-    if event.current? && event.rooms_count > 0
+    if event.current? && event.rooms_count > 0 && !event.starts_within?(24.hours)
       button_to 'Reassign all rooms',
         assign_rooms_admin_event_path(event, reassign: 1),
         method: :post,
         class: 'action-item-button cursor-pointer',
         data: { confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?" }
+    end
+  end
+
+  action_item :availability_matrix, only: [:index, :show] do
+    event = Event.find(params[:event_id])
+    if event.rooms_count > 0 && event.timeslots_count > 0
+      link_to "Availability matrix",
+        admin_room_availability_path(event_id: event.id),
+        class: "action-item-button"
     end
   end
 

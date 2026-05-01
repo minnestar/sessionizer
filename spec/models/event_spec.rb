@@ -189,6 +189,40 @@ describe Event do
     end
   end
 
+  describe "#starts_within?" do
+    it "is true when the event starts in less than the given duration" do
+      event = build(:event, date: Date.current, start_time: Time.current + 1.hour)
+      expect(event.starts_within?(24.hours)).to be true
+    end
+
+    it "is true when the event has already started" do
+      event = build(:event, date: Date.current, start_time: Time.current - 1.hour)
+      expect(event.starts_within?(24.hours)).to be true
+    end
+
+    it "is false when the event starts after the given duration" do
+      event = build(:event, date: 5.days.from_now.to_date, start_time: 5.days.from_now)
+      expect(event.starts_within?(24.hours)).to be false
+    end
+
+    it "is false right at the boundary" do
+      event = build(:event, date: 2.days.from_now.to_date, start_time: 2.days.from_now)
+      expect(event.starts_within?(24.hours)).to be false
+    end
+
+    it "is false when the date is nil" do
+      event = build(:event, date: nil, start_time: nil, end_time: nil)
+      expect(event.starts_within?(24.hours)).to be false
+    end
+
+    it "falls back to start of day when start_time is nil" do
+      tomorrow = Date.current + 1.day
+      event = build(:event, date: tomorrow, start_time: nil)
+      expect(event.starts_within?(24.hours)).to be true
+      expect(event.starts_within?(1.hour)).to be false
+    end
+  end
+
   describe "#has_unassigned_sessions?" do
     let(:event) { create(:event) }
     let(:slot) { create(:timeslot_1, event: event, schedulable: true) }
