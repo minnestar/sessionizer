@@ -172,8 +172,10 @@ GEM
       activesupport (>= 5.2)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
-    icalendar (2.10.3)
+    icalendar (2.12.2)
+      base64
       ice_cube (~> 0.16)
+      logger
       ostruct
     ice_cube (0.17.0)
     importmap-rails (2.2.3)
@@ -263,7 +265,7 @@ GEM
     nokogiri (1.19.1-x86_64-linux-musl)
       racc (~> 1.4)
     orm_adapter (0.5.0)
-    ostruct (0.6.1)
+    ostruct (0.6.3)
     pg (1.5.9)
     pp (0.6.3)
       prettyprint
@@ -457,7 +459,7 @@ DEPENDENCIES
   ffaker
   formtastic
   haml (~> 6)
-  icalendar (~> 2.4)
+  icalendar (~> 2.12)
   importmap-rails
   jbuilder (~> 2)
   jquery-rails
