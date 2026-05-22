@@ -78,11 +78,8 @@ class SessionsController < ApplicationController
   end
 
   def create_code_of_conduct_agreement_if_not_exists!
-    if session_params[:code_of_conduct_agreement] == '1' && @session.participant.signed_code_of_conduct_for_current_event? == false
-      CodeOfConductAgreement.create!({
-        participant_id: @session.participant.id,
-        event_id: Event.current_event.id,
-      })
+    if session_params[:code_of_conduct_agreement] == '1' && !@session.participant.signed_code_of_conduct_for_current_event?
+      current_participant.update!(coc_agreed_at: Time.current)
     end
   end
 
@@ -139,5 +136,4 @@ private
       .order('created_at desc')
       .distinct
   end
-
 end

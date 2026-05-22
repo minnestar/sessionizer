@@ -20,10 +20,7 @@ describe PresentationsController do
 
     context "when the user is found by id" do
       it "should be successful when the user has signed the code of conduct" do
-        CodeOfConductAgreement.create!({
-          participant_id: participant.id,
-          event_id: Event.current_event.id,
-        })
+        participant.update!(coc_agreed_at: Time.current)
 
         expect {
           post :create, params: { session_id: session, id: participant.id }
@@ -41,10 +38,7 @@ describe PresentationsController do
 
     context "when the user is found by name" do
       it "should be successful when the user has signed the code of conduct" do
-        CodeOfConductAgreement.create!({
-          participant_id: participant.id,
-          event_id: Event.current_event.id,
-        })
+        participant.update!(coc_agreed_at: Time.current)
 
         expect {
           post :create, params: { session_id: session, name: participant.name }

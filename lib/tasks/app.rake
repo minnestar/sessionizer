@@ -517,6 +517,7 @@ namespace :app do
       participant.email = FFaker::Internet.safe_email
       participant.password = 'password'
       participant.bio = FFaker::Lorem.paragraph if [true, false].sample
+      participant.coc_agreed_at = Time.current
       participant.save!
       progress.increment
     end

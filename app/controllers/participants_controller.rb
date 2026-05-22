@@ -4,6 +4,7 @@ class ParticipantsController < ApplicationController
   respond_to :html
   load_resource except: :confirm_email
   before_action :verify_owner, :only => [:edit, :update]
+  before_action :coc_agreement_param_as_timestamp, only: [:create, :update]
 
   def index
     respond_to do |format|
@@ -40,7 +41,6 @@ class ParticipantsController < ApplicationController
     end
 
     if @participant.update(new_params)
-      create_code_of_conduct_agreement_if_not_exists!
       flash[:notice] = "Profile updated successfully."
       redirect_to participant_path(@participant)
     else
@@ -52,22 +52,12 @@ class ParticipantsController < ApplicationController
   def create
     @participant.attributes = participant_params.except(:code_of_conduct_agreement)
     if @participant.save
-      create_code_of_conduct_agreement_if_not_exists!
       @participant.deliver_email_confirmation_instructions!
       flash[:notice] = "Thanks for registering an account. Please check your email to confirm your account."
       redirect_to root_path
     else
       flash[:error] = "There was a problem creating your account."
       render :new
-    end
-  end
-
-  def create_code_of_conduct_agreement_if_not_exists!
-    if participant_params[:code_of_conduct_agreement] == '1' && @participant.signed_code_of_conduct_for_current_event? == false
-      CodeOfConductAgreement.create!({
-        participant_id: @participant.id,
-        event_id: Event.current_event.id,
-      })
     end
   end
 
@@ -95,11 +85,17 @@ class ParticipantsController < ApplicationController
       :name, :email, :password,
       :bio,
       :code_of_conduct_agreement,
-      :contact_details
+      :contact_details, :coc_agreed_at
     )
   end
 
   def verify_owner
     redirect_to participant_path(@participant) if @participant != current_participant
+  end
+
+  def coc_agreement_param_as_timestamp
+    if params[:participant][:code_of_conduct_agreement] == '1'
+      params[:participant][:coc_agreed_at] = Time.current
+    end
   end
 end

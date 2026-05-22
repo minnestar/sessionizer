@@ -5,7 +5,6 @@ class Participant < ActiveRecord::Base
   has_many :presentations
   has_many :sessions_presenting, :through => :presentations, :source => :session
   has_many :presenter_timeslot_restrictions, dependent: :destroy
-  has_many :code_of_conduct_agreements, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true
@@ -82,12 +81,7 @@ class Participant < ActiveRecord::Base
   end
 
   def signed_code_of_conduct_for_current_event?
-    return false unless Event.current_event
-
-    CodeOfConductAgreement.where({
-      participant_id: id,
-      event_id: Event.current_event.id,
-    }).exists?
+    coc_agreed_at.present?
   end
 
   def attending_session?(session)

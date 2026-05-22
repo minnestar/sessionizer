@@ -138,6 +138,29 @@ describe SessionsController do
           expect(assigns[:session].category_ids).to include category.id
           expect(flash[:notice]).to eq "Thanks for adding your session."
         end
+        it "should sign code of conduct if param is present" do
+          expect {
+            post :create, params: { session:  { title: "new title",
+                                                description: "new description",
+                                                category_ids: [category.id],
+                                                level_id: "2",
+                                                code_of_conduct_agreement:  "1",
+                                              }
+                                  }
+          }.to change { Session.count }.by(1)
+          expect(user.reload.coc_agreed_at).not_to be_nil
+        end
+        it "should not sign code of conduct if param is not present" do
+          expect {
+            post :create, params: { session:  { title: "new title",
+                                                description: "new description",
+                                                category_ids: [category.id],
+                                                level_id: "2",
+                                              }
+                                  }
+          }.to change { Session.count }.by(1)
+          expect(user.reload.coc_agreed_at).to be_nil
+        end
       end
 
       context "with invalid values" do
