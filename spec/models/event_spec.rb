@@ -216,10 +216,12 @@ describe Event do
     end
 
     it "falls back to start of day when start_time is nil" do
-      tomorrow = Date.current + 1.day
-      event = build(:event, date: tomorrow, start_time: nil)
-      expect(event.starts_within?(24.hours)).to be true
-      expect(event.starts_within?(1.hour)).to be false
+      travel_to Time.current.change(hour: 17, min: 0, sec: 0) do
+        tomorrow = Date.current + 1.day
+        event = build(:event, date: tomorrow, start_time: nil)
+        expect(event.starts_within?(24.hours)).to be true
+        expect(event.starts_within?(1.hour)).to be false
+      end
     end
   end
 

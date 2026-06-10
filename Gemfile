@@ -57,6 +57,7 @@ group :development, :test do
   gem 'pry'
   gem "simplecov", "~> 0.22.0"
   gem "letter_opener", "~> 1.10"
+  gem "standard"
 end
 
 group :test do
