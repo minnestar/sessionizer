@@ -59,7 +59,7 @@ class Event < ActiveRecord::Base
   def first_timeslots_of_day
     @first_timeslots_of_day ||= timeslots
       .group_by { |slot| slot.starts_at.midnight }
-      .map { |date, slots| slots.sort_by(&:starts_at).first }
+      .map { |date, slots| slots.min_by(&:starts_at) }
       .sort_by(&:starts_at)
   end
 

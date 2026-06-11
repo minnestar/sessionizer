@@ -72,11 +72,10 @@ class ParticipantsController < ApplicationController
     @participant = Participant.find_using_perishable_token(params[:token])
     if @participant.update!(email_confirmed_at: Time.current)
       flash[:notice] = "Email confirmed. Thank you!"
-      redirect_to root_path
     else
       flash[:error] = "Something went wrong. Please try again."
-      redirect_to root_path
     end
+    redirect_to root_path
   end
 
   private

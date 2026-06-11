@@ -16,7 +16,7 @@ module Scheduling
 
     def add(session_id)
       @sessions << session_id
-      @superset.add(session_id) if @superset
+      @superset&.add(session_id)
     end
 
     # The score if sessions are evenly distributed among all available timeslots.

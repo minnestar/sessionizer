@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   def current_participant
-    @current_participant ||= current_participant_session && current_participant_session.participant
+    @current_participant ||= current_participant_session&.participant
   end
   alias_method :current_user, :current_participant
 

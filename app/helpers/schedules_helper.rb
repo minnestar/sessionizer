@@ -24,7 +24,7 @@ module SchedulesHelper
     end
     split = (sessions.size + 1) / 2
     yield sessions[0...split]
-    yield sessions[split..-1]
+    yield sessions[split..]
   end
 
   # Attempt to divide these sessions into two roughly equal groups of roughly equal height.

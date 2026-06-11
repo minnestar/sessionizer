@@ -179,7 +179,7 @@ module Scheduling
           puts slot
           sessions = Session.find(@sessions_by_slot[slot].reject { |s| EmptyRoom === s })
           sessions.sort_by { |s| -s.attendance_count }.each do |session|
-            puts "    #{session.id} #{session.title}" +
+            puts "    #{session.id} #{session.title}" \
               " (#{session.attendances.count} vote(s) / #{"%1.1f" % session.estimated_interest} interest)"
             unless session.manually_scheduled
               session.timeslot = slot

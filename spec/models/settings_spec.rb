@@ -119,7 +119,7 @@ describe Settings do
       end
 
       it "accepts JSON string with multiple timeslots" do
-        valid_input = "{\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Breakfast\"},\r\n" +
+        valid_input = "{\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Breakfast\"},\r\n" \
           "{\"start\":\"8:30\", \"end\":\"9:00\"}"
         settings.default_timeslots = valid_input
         expect(settings).to be_valid

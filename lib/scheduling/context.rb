@@ -66,7 +66,7 @@ module Scheduling
     def report_count(role)
       assoc_count = people.map { |p| p.send(role).size }.sum
       person_count = people.count { |p| p.send(role).size > 0 }
-      puts "#{assoc_count} #{role.to_s.humanize.downcase} relationships" +
+      puts "#{assoc_count} #{role.to_s.humanize.downcase} relationships" \
         " (#{person_count} people, avg #{"%1.1f" % (assoc_count / person_count.to_f)} each)"
     end
   end
