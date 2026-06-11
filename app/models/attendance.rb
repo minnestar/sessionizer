@@ -6,5 +6,5 @@ class Attendance < ActiveRecord::Base
 
   validates_presence_of :session_id
   validates_presence_of :participant_id
-  validates_uniqueness_of :participant_id, :scope => :session_id
+  validates_uniqueness_of :participant_id, scope: :session_id
 end

@@ -29,8 +29,8 @@ ActiveAdmin.register_page "Room Availability" do
     defaults = Settings.default_rooms
     notes_by_name = defaults.index_by { |r| r["name"] }
     unique_caps = defaults.group_by { |r| r["capacity"] }
-                          .select { |_cap, rs| rs.size == 1 }
-                          .transform_values(&:first)
+      .select { |_cap, rs| rs.size == 1 }
+      .transform_values(&:first)
 
     notes_for = ->(room) do
       match = notes_by_name[room.name] || unique_caps[room.capacity]
@@ -82,4 +82,3 @@ ActiveAdmin.register_page "Room Availability" do
     end
   end
 end
-

@@ -3,12 +3,12 @@ class ParticipantsController < ApplicationController
 
   respond_to :html
   load_resource except: :confirm_email
-  before_action :verify_owner, :only => [:edit, :update]
+  before_action :verify_owner, only: [:edit, :update]
 
   def index
     respond_to do |format|
       format.json do
-        render :json => @participants.map { |p| {:value => p.name, :tokens => p.name.split(" "), :id => p.id} }
+        render json: @participants.map { |p| {value: p.name, tokens: p.name.split(" "), id: p.id} }
       end
     end
   end
@@ -35,7 +35,7 @@ class ParticipantsController < ApplicationController
     new_params = participant_params.except(:code_of_conduct_agreement)
 
     # reset email_confirmed_at if the email address was changed
-    if (new_params[:email] != @participant.email)
+    if new_params[:email] != @participant.email
       @participant.email_confirmed_at = nil
     end
 
@@ -95,7 +95,7 @@ class ParticipantsController < ApplicationController
   end
 
   def record_code_of_conduct_agreement!
-    if participant_params[:code_of_conduct_agreement] == '1' && !@participant.signed_code_of_conduct?
+    if participant_params[:code_of_conduct_agreement] == "1" && !@participant.signed_code_of_conduct?
       @participant.update!(coc_agreed_at: Time.current)
     end
   end

@@ -2,7 +2,7 @@ ActiveAdmin.register EventCategory do
   menu parent: "Events", priority: 4
 
   config.batch_actions = false
-  config.sort_order = 'position_asc'
+  config.sort_order = "position_asc"
 
   permit_params :event_id, :category_id, :position
 
@@ -16,7 +16,7 @@ ActiveAdmin.register EventCategory do
 
     def update
       update! do |format|
-        format.html { redirect_to admin_event_categories_path(q: { event_id_eq: resource.event_id }) }
+        format.html { redirect_to admin_event_categories_path(q: {event_id_eq: resource.event_id}) }
       end
     end
   end
@@ -24,7 +24,7 @@ ActiveAdmin.register EventCategory do
   index do
     session_counts = Categorization
       .joins(:session)
-      .where(sessions: { event_id: collection.map(&:event_id).uniq, canceled_at: nil })
+      .where(sessions: {event_id: collection.map(&:event_id).uniq, canceled_at: nil})
       .group("sessions.event_id", :category_id)
       .count
 
@@ -35,7 +35,7 @@ ActiveAdmin.register EventCategory do
     column :position
     column "# of Sessions" do |ec|
       count = session_counts[[ec.event_id, ec.category_id]] || 0
-      link_to count, admin_sessions_path(q: { event_id_eq: ec.event_id, categorizations_category_id_eq: ec.category_id })
+      link_to count, admin_sessions_path(q: {event_id_eq: ec.event_id, categorizations_category_id_eq: ec.category_id})
     end
     actions
   end

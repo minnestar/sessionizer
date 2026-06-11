@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   def show
-    @event = if params[:id] == 'current'
+    @event = if params[:id] == "current"
       Event.current_event
     else
       Event.find(params[:id])
@@ -15,7 +15,7 @@ class EventsController < ApplicationController
       end
 
       format.json do
-        render json: @event.to_json(include: { sessions: { methods: [:starts_at, :room_name, :presenter_names] } })
+        render json: @event.to_json(include: {sessions: {methods: [:starts_at, :room_name, :presenter_names]}})
       end
     end
   end

@@ -23,7 +23,7 @@ ActiveAdmin.register Settings do
         start_padding = " " * [5 - slot["start"].length, 0].max
         parts = [%("start": "#{slot["start"]}",#{start_padding} "end": "#{slot["end"]}")]
         parts << %("special": "#{slot["special"]}") if slot["special"].present?
-        "{#{parts.join(', ')}}"
+        "{#{parts.join(", ")}}"
       }.join(",\n")
     end
 
@@ -39,7 +39,7 @@ ActiveAdmin.register Settings do
         parts << %("active": false) if room.key?("active") && room["active"] == false
         parts << %("schedulable": false) if room.key?("schedulable") && room["schedulable"] == false
         parts << %("notes": "#{notes}") if notes
-        "{#{parts.join(', ')}}"
+        "{#{parts.join(", ")}}"
       }.join(",\n")
     end
   end
@@ -68,7 +68,7 @@ ActiveAdmin.register Settings do
         as: :select,
         collection: [[Event.current_event.name, Event.current_event.id]],
         selected: Event.current_event.id,
-        input_html: { disabled: true },
+        input_html: {disabled: true},
         label: "Current Event"
       f.input :allow_new_sessions
       f.input :show_schedule

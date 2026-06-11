@@ -1,18 +1,16 @@
-# -*- coding: utf-8 -*-
-
 class Timeslot < ActiveRecord::Base
   belongs_to :event, counter_cache: true
   has_many :sessions, dependent: :nullify
   has_many :presenter_timeslot_restrictions, dependent: :destroy
 
-  validates :starts_at, :presence => true
-  validates :ends_at, :presence => true
-  validates :event_id, :presence => true
+  validates :starts_at, presence: true
+  validates :ends_at, presence: true
+  validates :event_id, presence: true
 
-  default_scope { order 'starts_at asc' }
+  default_scope { order "starts_at asc" }
 
   def self.at(datetime)
-    self.find_by('starts_at <= ? and ends_at >= ?', datetime, datetime)
+    find_by("starts_at <= ? and ends_at >= ?", datetime, datetime)
   end
 
   def to_s(with_day: false)
@@ -31,11 +29,11 @@ class Timeslot < ActiveRecord::Base
     end
 
     def to_s(with_day: false)
-      "#{start_day + ' • ' if with_day}#{start_time} – #{end_time}"
+      "#{start_day + " • " if with_day}#{start_time} – #{end_time}"
     end
 
     def start_day
-      start.in_time_zone.strftime('%a, %b %e')
+      start.in_time_zone.strftime("%a, %b %e")
     end
 
     def start_time

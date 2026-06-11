@@ -1,5 +1,4 @@
-require 'set'
-require 'pp'
+require "pp"
 
 module Scheduling
   # Represents a particular schedule (i.e. assignment of sessions to timeslots) for the purpose of annealing.
@@ -16,7 +15,8 @@ module Scheduling
       fill_schedule!(
         event.sessions
           .includes(:timeslot)
-          .to_a)
+          .to_a
+      )
     end
 
     def initialize_copy(source)  # deep copy; called by dup
@@ -29,7 +29,7 @@ module Scheduling
       @slots_by_session[session_id]&.id
     end
 
-  private
+    private
 
     attr_reader :ctx
 
@@ -39,7 +39,7 @@ module Scheduling
       end
     end
 
-  public
+    public
 
     # ------------ Scoring ------------
 
@@ -47,8 +47,8 @@ module Scheduling
     # real-life physical process of annealing, in which a cooling material minimizes the energy of its chemical bonds.
     #
     def energy
-       (1 - attendance_score) +
-       (1 - presenter_score) * ctx.people.size  # Multiplier b/c presenter double-bookings trump attendance prefs
+      (1 - attendance_score) +
+        (1 - presenter_score) * ctx.people.size  # Multiplier b/c presenter double-bookings trump attendance prefs
     end
 
     # Average attendee satisfaction with the schedule, measured as the estimated fraction of the total value
@@ -70,16 +70,16 @@ module Scheduling
     # Gives bounds on the possible range of attendance_score. Returns [best, random, worst] scores.
     def attendance_score_metrics
       count = ctx.people.size.to_f
-      %i(
+      %i[
         worst_possible_score
         random_schedule_score
         best_possible_score
-      ).map do |metric|
+      ].map do |metric|
         ctx.people.sum { |p| p.attending.send(metric) } / count
       end
     end
 
-  private
+    private
 
     def score(role)
       count = ctx.people.size
@@ -94,7 +94,7 @@ module Scheduling
       end
     end
 
-  public
+    public
 
     # ------------ State space traversal ------------
 
@@ -117,7 +117,7 @@ module Scheduling
           slot_sessions << placeholder
           @schedulable_sessions << placeholder
         end
-        slot_sessions.each { |session| schedule(session, slot)  }
+        slot_sessions.each { |session| schedule(session, slot) }
       end
       unless unassigned.empty?
         raise "Not enough room / slot combinations! There are #{sessions.size} sessions, but only #{ctx.timeslots.size} times slots * #{ctx.room_count} rooms = #{ctx.timeslots.size * ctx.room_count} combinations."
@@ -144,14 +144,14 @@ module Scheduling
 
       # Rotate their assignments
       slot_cycle.each_with_index do |old_slot, i|
-        new_slot = slot_cycle[(i+1) % slot_cycle.size]
+        new_slot = slot_cycle[(i + 1) % slot_cycle.size]
         schedule random_schedulable_session(old_slot), new_slot
       end
 
       self
     end
 
-  private
+    private
 
     def schedulable_sessions_in_slot(slot)
       @schedulable_sessions & @sessions_by_slot[slot]
@@ -169,7 +169,7 @@ module Scheduling
       @sessions_by_slot[new_slot] << session if new_slot
     end
 
-  public
+    public
 
     # ------------ Managing results ------------
 
@@ -180,7 +180,7 @@ module Scheduling
           sessions = Session.find(@sessions_by_slot[slot].reject { |s| EmptyRoom === s })
           sessions.sort_by { |s| -s.attendance_count }.each do |session|
             puts "    #{session.id} #{session.title}" +
-                 " (#{session.attendances.count} vote(s) / #{'%1.1f' % session.estimated_interest} interest)"
+              " (#{session.attendances.count} vote(s) / #{"%1.1f" % session.estimated_interest} interest)"
             unless session.manually_scheduled
               session.timeslot = slot
               session.room = nil  # Rooms have to be reassigned after rearranging timeslots
@@ -207,7 +207,7 @@ module Scheduling
     end
 
     def inspect
-      worst_score, random_score, best_score = self.attendance_score_metrics
+      _, random_score, best_score = attendance_score_metrics
       attendance_score_scaled = (attendance_score - random_score) / (best_score - random_score)
 
       s = "Schedule\n"
@@ -215,39 +215,37 @@ module Scheduling
       s << "| absolute satisfaction = #{format_percent attendance_score} of impossibly perfect schedule\n"
       s << "| presenter score = #{format_percent presenter_score} (if < 100 then presenters have conflicts)\n"
       ctx.timeslots.each do |slot|
-        s << "  #{slot}: #{@sessions_by_slot[slot].join(' ')}\n"
+        s << "  #{slot}: #{@sessions_by_slot[slot].join(" ")}\n"
       end
       s
     end
 
     def inspect_bounds
-      worst_score, random_score, best_score = self.attendance_score_metrics
-      s =  "If we could give everyone a different schedule optimized just for them,\n"
+      worst_score, random_score, best_score = attendance_score_metrics
+      s = "If we could give everyone a different schedule optimized just for them,\n"
       s << "the schedule quality could be...\n"
       s << "\n"
-      s << "    at worst #{'%03.3f' % ((worst_score) * 100)}%\n"
-      s << "     at best #{'%03.3f' % ((best_score ) * 100)}%\n"
+      s << "    at worst #{"%03.3f" % (worst_score * 100)}%\n"
+      s << "     at best #{"%03.3f" % (best_score * 100)}%\n"
       s << "\n"
       s << "Note that these are outer limits on what is possible.\n"
       s << "Neither the best nor the worst score is likely to be achievable.\n"
       s << "\n"
       s << "If we pick a schedule at random, its score will be about\n"
       s << "\n"
-      s << "             #{'%03.3f' % ((random_score) * 100)}%\n"
+      s << "             #{"%03.3f" % (random_score * 100)}%\n"
       s << "\n"
       s << "...and that's what we're trying to improve on.\n"
     end
 
-  private
+    private
 
     def format_percent(x)
-      "#{'%1.3f' % (x * 100)}%"
+      "#{"%1.3f" % (x * 100)}%"
     end
 
     def empty_array_hash
-      Hash.new { |h,k| h[k] = [] }
+      Hash.new { |h, k| h[k] = [] }
     end
-
   end
 end
-

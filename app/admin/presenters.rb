@@ -26,15 +26,14 @@ ActiveAdmin.register Participant, as: "Presenter" do
     def set_default_event_filter
       return if params[:commit].present? || params[:q].present?
 
-      params[:q] = { presentations_session_event_id_eq: Event.current_event.id.to_s }
+      params[:q] = {presentations_session_event_id_eq: Event.current_event.id.to_s}
     end
   end
 
   filter :presentations_session_event_id, as: :select,
-         label: "Event",
-         include_blank: false,
-         collection: proc { Event.order(created_at: :desc).map { |e| ["#{e.name} (#{e.date.year})", e.id] } }
-
+    label: "Event",
+    include_blank: false,
+    collection: proc { Event.order(created_at: :desc).map { |e| ["#{e.name} (#{e.date.year})", e.id] } }
 
   collection_action :export, method: :get do
     sessions = params[:event_id].present? ? Session.where(event_id: params[:event_id]) : Session.all
@@ -48,7 +47,7 @@ ActiveAdmin.register Participant, as: "Presenter" do
       .order(Arel.sql("MIN(presentations.created_at) DESC"))
 
     render body: presenters.map { |p| "\"#{p.name}\" <#{p.email}>" }.join(",\n"),
-           content_type: Mime[:text]
+      content_type: Mime[:text]
   end
 
   action_item :export, only: :index do

@@ -1,5 +1,4 @@
 module Scheduling
-
   # A set of sessions which can be scored against a particular schedule.
   #
   # This can represent either the set of sessions an attendee is interested in seeing,
@@ -31,7 +30,7 @@ module Scheduling
         big_slots = size % slot_count
         small_slots = slot_count - big_slots
         [
-          small_slots * slot_value(even_split_floor)    + 
+          small_slots * slot_value(even_split_floor) +
             big_slots * slot_value(even_split_floor + 1),
           1.0
         ].min
@@ -71,7 +70,7 @@ module Scheduling
 
     def score(schedule)
       return 1 if empty?
-      
+
       slot_session_count = Hash.new(0)
       penalty = 0
 
@@ -97,7 +96,7 @@ module Scheduling
       @sessions.empty?
     end
 
-  private
+    private
 
     # Assume each attendee has some ranking of all the sessions in which they expressed interest.
     # (Not an unreasonable assumption.) Further assume that the attendee values their sessions of interest
@@ -118,6 +117,5 @@ module Scheduling
     def slot_value(k)
       2 * k / (size.to_f * (k + 1))
     end
-
   end
 end

@@ -21,7 +21,7 @@ describe Session do
   describe "creation" do
     let(:participant) { create(:participant) }
     subject {
-      participant.sessions.build(title: 'Some Title', description: 'some desc').tap do |s|
+      participant.sessions.build(title: "Some Title", description: "some desc").tap do |s|
         s.event = event
         s.save!
       end
@@ -30,13 +30,12 @@ describe Session do
     it "should create a presenter after create" do
       expect(subject.presentations.size).to eq 1
     end
-
   end
 
   describe "category validation" do
     let(:event) { create(:event) }
     let(:valid_category) { event.categories.first }
-    let(:unlinked_category) { create(:category, name: 'Unlinked Category') }
+    let(:unlinked_category) { create(:category, name: "Unlinked Category") }
 
     it "allows categories that belong to the session's event" do
       session = create(:session, event: event, category_ids: [valid_category.id])
@@ -62,7 +61,7 @@ describe Session do
       categorization = session.categorizations.build
       categorization.category = Category.first
       categorization.save!
-      session.attendances.create(:participant => joe)
+      session.attendances.create(participant: joe)
 
       expect {
         expect {
@@ -75,13 +74,13 @@ describe Session do
   end
 
   it "should allow a blank summary" do
-    subject.summary = ''
+    subject.summary = ""
     subject.valid?
     assert_empty subject.errors[:summary]
   end
 
   it "should add the owner as a presenter" do
-    session = joe.sessions.build(:title => 'hi', :description => 'bye')
+    session = joe.sessions.build(title: "hi", description: "bye")
     session.event = event
     session.save!
     assert_equal([joe], session.presenters)
@@ -90,7 +89,7 @@ describe Session do
   it "should require a unique timeslot and room" do
     room = create(:room)
     slot = create(:timeslot_1)
-    Session.new(:title => 'hi', :description => 'bye').tap do |s|
+    Session.new(title: "hi", description: "bye").tap do |s|
       s.timeslot = slot
       s.room = room
       s.participant = joe
@@ -107,12 +106,12 @@ describe Session do
     assert session.errors[:timeslot_id]
   end
 
-  it 'should allow rooms to be swapped' do
+  it "should allow rooms to be swapped" do
     room1 = create(:room)
     room2 = create(:room)
     slot1 = create(:timeslot_1)
 
-    Session.new(:title => 'Session 1', :description => 'First session').tap do |s|
+    Session.new(title: "Session 1", description: "First session").tap do |s|
       s.timeslot = slot1
       s.room = room1
       s.participant = joe
@@ -120,8 +119,8 @@ describe Session do
       s.save!
     end
     session1 = Session.last
-    
-    Session.new(:title => 'Session 2', :description => 'Second session').tap do |s|
+
+    Session.new(title: "Session 2", description: "Second session").tap do |s|
       s.timeslot = slot1
       s.room = room2
       s.participant = luke
@@ -137,13 +136,13 @@ describe Session do
     assert_equal(session2.room, room1)
   end
 
-  it 'should allow rooms and time slots to be swapped' do
+  it "should allow rooms and time slots to be swapped" do
     room1 = create(:room)
     room2 = create(:room)
     slot1 = create(:timeslot_1)
     slot2 = create(:timeslot_2)
 
-    Session.new(:title => 'Session 1', :description => 'First session').tap do |s|
+    Session.new(title: "Session 1", description: "First session").tap do |s|
       s.timeslot = slot1
       s.room = room1
       s.participant = joe
@@ -151,8 +150,8 @@ describe Session do
       s.save!
     end
     session1 = Session.last
-    
-    Session.new(:title => 'Session 2', :description => 'Second session').tap do |s|
+
+    Session.new(title: "Session 2", description: "Second session").tap do |s|
       s.timeslot = slot2
       s.room = room2
       s.participant = luke
@@ -204,37 +203,35 @@ describe Session do
   end
 
   describe "#recommended_sessions" do
-
     it "should order based on recommendation strength" do
-
-      comparison_session = event.sessions.create(:title => 'session 1', :description => 'blah').tap do |s|
+      comparison_session = event.sessions.create(title: "session 1", description: "blah").tap do |s|
         s.participant = luke
         s.save!
       end
 
-      half_similar = event.sessions.create(:title => 'session 3', :description => 'blah').tap do |s|
+      half_similar = event.sessions.create(title: "session 3", description: "blah").tap do |s|
         s.participant = luke
         s.save!
       end
 
       # create this one last: natural ordering is by IDs(?), this will throw it off
-      equal_session = event.sessions.create(:title => 'session 2', :description => 'blah').tap do |s|
+      equal_session = event.sessions.create(title: "session 2", description: "blah").tap do |s|
         s.participant = luke
         s.save!
       end
 
-      #-make sure we don't have any stale data around
-      Rails.cache.delete 'session_similarity'
+      # -make sure we don't have any stale data around
+      Rails.cache.delete "session_similarity"
 
-      comparison_session.attendances.create(:participant => luke)
-      comparison_session.attendances.create(:participant => joe)
+      comparison_session.attendances.create(participant: luke)
+      comparison_session.attendances.create(participant: joe)
 
-      equal_session.attendances.create(:participant => luke)
-      equal_session.attendances.create(:participant => joe)
+      equal_session.attendances.create(participant: luke)
+      equal_session.attendances.create(participant: joe)
 
-      half_similar.attendances.create(:participant => joe)
+      half_similar.attendances.create(participant: joe)
 
-      similarity = Session.session_similarity()
+      similarity = Session.session_similarity
 
       assert_equal([[1, equal_session.id], [0.5, half_similar.id]], similarity[comparison_session.id])
 

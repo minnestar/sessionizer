@@ -34,5 +34,4 @@ class Admin::Legacy::EventsController < Admin::Legacy::AdminController
   def event_params
     params.require(controller_name.singularize).permit(:name, :date)
   end
-
 end

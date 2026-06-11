@@ -1,19 +1,17 @@
-# -*- coding: utf-8 -*-
-require 'csv'
+require "csv"
 
 namespace :app do
-
-  desc 'create default timeslots for the most recent event'
+  desc "create default timeslots for the most recent event"
   task create_timeslots: :environment do
     event.create_default_timeslots
   end
 
-  desc 'create default rooms for most recent event. Will nuke old rooms.'
-  task :create_rooms => :environment do
+  desc "create default rooms for most recent event. Will nuke old rooms."
+  task create_rooms: :environment do
     event.create_default_rooms(force: true)
   end
 
-  desc 'set up multi-day timeslots for a remote event'
+  desc "set up multi-day timeslots for a remote event"
   task create_remote_timeslots_and_rooms: :environment do
     session_length = 25.minutes
     event = Event.current_event
@@ -21,20 +19,20 @@ namespace :app do
     event.rooms.destroy_all
 
     dates = [
-      '2020-10-6',
-      '2020-10-8',
-      '2020-10-10',
-      '2020-10-13',
-      '2020-10-15',
-      '2020-10-17',
+      "2020-10-6",
+      "2020-10-8",
+      "2020-10-10",
+      "2020-10-13",
+      "2020-10-15",
+      "2020-10-17"
     ]
     times = [
-      '9:00',
-      '9:30',
-      '10:00',
-      '10:30',
-      '11:00',
-      '11:30',
+      "9:00",
+      "9:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30"
     ]
     Timeslot.transaction do
       dates.each.with_index do |date, day_num|
@@ -54,8 +52,8 @@ namespace :app do
     end
 
     rooms = [
-        { name: 'Sessions Track', capacity: 2 },
-        { name: 'Hallway Track', capacity: 1 },  # Preferentially schedules sessions in the Sessions Track
+      {name: "Sessions Track", capacity: 2},
+      {name: "Hallway Track", capacity: 1}  # Preferentially schedules sessions in the Sessions Track
     ]
     Room.transaction do
       rooms.each do |room|
@@ -64,43 +62,42 @@ namespace :app do
     end
   end
 
-
-  desc 'add a Presentation for each Session with the session owner, if it does not have one'
-  task :presentationize => :environment do
+  desc "add a Presentation for each Session with the session owner, if it does not have one"
+  task presentationize: :environment do
     Session.all.each do |session|
       if session.presentations.empty?
-        session.presentations.create!(:participant => session.participant)
+        session.presentations.create!(participant: session.participant)
       end
     end
   end
 
-  desc 'add a presenter to a session'
-  task :presenter => :environment do
-    session = Session.find(ENV['SESSION'])
+  desc "add a presenter to a session"
+  task presenter: :environment do
+    session = Session.find(ENV["SESSION"])
 
-    if ENV['EMAIL']
-      participant = Participant.find(email:ENV['EMAIL']).first
-    elsif ENV['PARTICIPANT']
+    if ENV["EMAIL"]
+      participant = Participant.find(email: ENV["EMAIL"]).first
+    elsif ENV["PARTICIPANT"]
       participant = Participant.find(ENV["PARTICIPANT"])
     end
 
     # NOTE! Heroku does NOT like env vars with spaces in them, even when quoted. Escape spaces with \
-    if participant.nil? && ENV['NAME']
-      participant = Participant.new(:name => ENV['NAME'], :email => ENV['EMAIL'])
+    if participant.nil? && ENV["NAME"]
+      participant = Participant.new(name: ENV["NAME"], email: ENV["EMAIL"])
 
       participant.save(false) # ignore missing email addy
 
-      puts "Created new participant #{participant.id}#{participant.email.blank? ? ' (without an email address!)' : ''}"
+      puts "Created new participant #{participant.id}#{" (without an email address!)" if participant.email.blank?}"
     end
 
-    session.presentations.create!(:participant => participant)
+    session.presentations.create!(participant: participant)
     puts "#{participant.name} (#{participant.id}) is now associated with #{session.title}"
   end
 
-  desc 'read schedule constraints and session deletions from a CSV file'
+  desc "read schedule constraints and session deletions from a CSV file"
   task :configure_sessions, [:config_file] => :environment do |_, args|
     if args[:config_file].blank?
-      STDERR.puts 'Usage:
+      warn 'Usage:
 
           rake app:configure_sessions[path/to/constraints.csv]
 
@@ -136,7 +133,7 @@ namespace :app do
 
     CSV.foreach(args[:config_file], headers: true) do |row|
       def resolve_url(url, model_class)
-        presenter = unless url.blank?
+        unless url.blank?
           unless url.strip =~ %r{https://sessions.minnestar.org/#{model_class.model_name.route_key}/(\d+)}
             raise "Unable to parse #{model_class} URL: #{url}"
           end
@@ -145,12 +142,12 @@ namespace :app do
       end
 
       presenter = resolve_url(row["Presenter URL"], Participant)
-      session   = resolve_url(row["Session URL"], Session)
+      session = resolve_url(row["Session URL"], Session)
 
-      puts "Presenter:     #{presenter&.name || '–'}"
-      puts "Session:       #{session&.title || '–'}"
-      puts "Intended name: #{row['Name']}"
-      puts "Notes:         #{row['Notes']}"
+      puts "Presenter:     #{presenter&.name || "–"}"
+      puts "Session:       #{session&.title || "–"}"
+      puts "Intended name: #{row["Name"]}"
+      puts "Notes:         #{row["Notes"]}"
 
       if presenter && session
         unless session.presenters.include?(presenter)
@@ -162,18 +159,18 @@ namespace :app do
         raise "Session does not belong to the current event: #{session}"
       end
 
-      constraints = (row["Constraints"] || '').strip.downcase
+      constraints = (row["Constraints"] || "").strip.downcase
       if constraints.blank?
         puts
         print "    WARNING: no constraints specified"
-      elsif constraints == 'manual'
+      elsif constraints == "manual"
         unless session
           raise "Manual scheduling requires that you specify a specific Session URL"
         end
         puts "    Manually scheduled; sessionizer will not assign time or room"
         session.manually_scheduled = true
         session.save!
-      elsif constraints == 'delete'
+      elsif constraints == "delete"
         if row["Name"] != session.title
           raise "Name mismatch"
         end
@@ -185,17 +182,19 @@ namespace :app do
           presenter = session.presenters.select { |p| p.sessions_presenting.where(event: event).count == 1 }.first
           if !presenter
             raise "Cannot choose a single presenter to attach the session-based time constraint to " +
-                  "because all the presenters for this session are presenting other sessions too."
+              "because all the presenters for this session are presenting other sessions too."
           end
           puts "    Attaching time constraints to #{presenter.name}, who is not presenting any other sessions"
         end
-        constraints.split(',').map(&:strip).each do |constraint|
+        constraints.split(",").map(&:strip).each do |constraint|
           puts "    #{constraint}"
 
           if /^#(?<ids>(\s*\d+\s*)+)$/ =~ constraint
             presenter.restrict_to_only(
               Timeslot.find(
-                ids.split))
+                ids.split
+              )
+            )
             next
           end
 
@@ -220,9 +219,9 @@ namespace :app do
           time = Time.zone.local(event.date.year, event.date.month, event.date.day, hour, minute)
 
           case rule
-          when '<' then presenter.restrict_after(time, 1, event)
-          when '>' then presenter.restrict_before(time, 1, event)
-          when '@' then presenter.restrict_not_at(time, 1, event)
+          when "<" then presenter.restrict_after(time, 1, event)
+          when ">" then presenter.restrict_before(time, 1, event)
+          when "@" then presenter.restrict_not_at(time, 1, event)
           end
         end
         puts "    #{presenter.name} now restricted to the following timeslots:"
@@ -239,32 +238,32 @@ namespace :app do
     end
   end
 
-  desc 'show restrictions for current event'
-  task :show_restrictions => :environment do
+  desc "show restrictions for current event"
+  task show_restrictions: :environment do
     restrictions_grouped = PresenterTimeslotRestriction
-      .where('timeslot_id in (select id from timeslots where event_id = ?)', event.id)
+      .where("timeslot_id in (select id from timeslots where event_id = ?)", event.id)
       .group_by(&:participant)
     restrictions_grouped.each do |presenter, restrictions|
       puts "#{presenter.name}"
-      sessions = presenter.sessions_presenting.where('event_id = ?', event.id)
+      sessions = presenter.sessions_presenting.where("event_id = ?", event.id)
       puts "  who is presenting:"
       sessions.map(&:title).each do |title|
         puts "        #{title}"
       end
       restrictions.each do |r|
-        puts "  #{r.weight >= 1 ? 'cannot' : 'prefers not to'}" +
-             " present at #{r.timeslot}" +
-             " (weight=#{r.weight})"
+        puts "  #{(r.weight >= 1) ? "cannot" : "prefers not to"}" +
+          " present at #{r.timeslot}" +
+          " (weight=#{r.weight})"
       end
     end
   end
 
-  desc 'clear the current schedule (DANGER: Irreversible!!!). You must do the before generating a new schedule'
+  desc "clear the current schedule (DANGER: Irreversible!!!). You must do the before generating a new schedule"
   task clear_schedule: :environment do
     STDOUT.puts "Are you sure? This destroys the existing schedule and you will not be\n" \
       "able to retrieve it. You should back up the database before doing this.\n\nIf you are really sure, type \"SCHEDULE ARMAGEDDON\" now (anything else to cancel)..."
     input = STDIN.gets.strip
-    if input == 'SCHEDULE ARMAGEDDON'
+    if input == "SCHEDULE ARMAGEDDON"
       event.sessions.update_all(timeslot_id: nil)
       STDOUT.puts "\nThe current schedule has been erased."
     else
@@ -279,9 +278,9 @@ namespace :app do
   #
   #   session.update_attributes(manually_scheduled: true)
   #
-  desc 'Create a schedule for the current event. DANGER: Wipes existing schedule!'
-  task :generate_schedule => :environment do
-    quality = (ENV['quality'] || 1).to_f
+  desc "Create a schedule for the current event. DANGER: Wipes existing schedule!"
+  task generate_schedule: :environment do
+    quality = (ENV["quality"] || 1).to_f
 
     puts "Scheduling #{event.name}..."
 
@@ -291,7 +290,7 @@ namespace :app do
 
     puts
     puts "Assigning sessions to time slots..."
-    max_iter         = (quality ** 0.5 * 12000).ceil
+    max_iter = (quality**0.5 * 12000).ceil
     repetition_count = 1  # because generate_schedule now supports manual re-running
     puts
     puts "Quality = #{quality}:    (adjust using 'quality' env var)"
@@ -309,7 +308,8 @@ namespace :app do
         end
       ),
       max_iter: max_iter,
-      log_to: STDOUT)
+      log_to: STDOUT
+    )
     best = annealer.anneal schedule
     puts "BEST SOLUTION:"
     p best
@@ -319,12 +319,12 @@ namespace :app do
     best.dump_presenter_conflicts
 
     puts
-    puts 'Best schedule saved to DB.'
+    puts "Best schedule saved to DB."
   end
 
-  desc 'assign scheduled sessions to rooms'
-  task :assign_rooms => :environment do
-    reassign = (ENV['reassign_rooms'].to_i != 0)
+  desc "assign scheduled sessions to rooms"
+  task assign_rooms: :environment do
+    reassign = (ENV["reassign_rooms"].to_i != 0)
     result = event.assign_rooms!(reassign: reassign)
 
     puts result[:log]
@@ -336,13 +336,13 @@ namespace :app do
     end
   end
 
-  desc 'export schedule for import to another node (for running annealer locally & exporting to heroku)'
-  task :export_schedule => :environment do
+  desc "export schedule for import to another node (for running annealer locally & exporting to heroku)"
+  task export_schedule: :environment do
     Event.transaction do
       export = {
         sessions: Hash[
           event.sessions.map do |session|
-            [session.id, { slot: session.timeslot_id, room: session.room_id }]
+            [session.id, {slot: session.timeslot_id, room: session.room_id}]
           end.sort_by(&:first)  # by session ID, to facilitate diffs
         ]
       }
@@ -350,22 +350,22 @@ namespace :app do
     end
   end
 
-  desc 'import schedule generated by app:export_schedule'
-  task :import_schedule => :environment do
+  desc "import schedule generated by app:export_schedule"
+  task import_schedule: :environment do
     export = JSON.parse(STDIN.read)
     Event.transaction do
-      export['sessions'].each do |sid, opts|
+      export["sessions"].each do |sid, opts|
         session = Session.find(sid)
-        session.timeslot = (Timeslot.find(opts['slot']) if opts['slot'])
-        session.room = (Room.find(opts['room']) if opts['room'])
+        session.timeslot = (Timeslot.find(opts["slot"]) if opts["slot"])
+        session.room = (Room.find(opts["room"]) if opts["room"])
         puts "#{session.timeslot} #{session.title} [#{session.room&.name}]"
         session.save!
       end
     end
   end
 
-  desc 'print a summary of data that will affect the quality of the generated schedule'
-  task :analyze_scheduler_input_quality => :environment do
+  desc "print a summary of data that will affect the quality of the generated schedule"
+  task analyze_scheduler_input_quality: :environment do
     def frequencies(elems)
       elems.each_with_object(Hash.new(0)) do |elem, counts|
         counts[elem] += 1
@@ -377,9 +377,9 @@ namespace :app do
       max = freqs.map(&:last).max
       freqs.sort_by(&:first).each do |value, count|
         print "       %3d   %3d " % [value, count]
-        print '━' * (60.0 * count / max).round
+        print "━" * (60.0 * count / max).round
         if block_given?
-          print ' '
+          print " "
           yield value, count
         end
         puts
@@ -400,7 +400,7 @@ namespace :app do
     puts "The biggie:"
     puts "#{multivoting_count} participants (#{"%1.1f" % multivoting_rate}% of those voting) expressed interest in multiple sessions"
     puts
-    
+
     puts "Distribution of number of sessions of interest"
     puts "(How many people expressed interest in n sessions?)"
     puts
@@ -418,13 +418,14 @@ namespace :app do
     puts
     puts "      days | sessions"
     frequency_dump(
-      event.sessions.map { |s| ((Time.now - s.created_at) / 1.day).floor })
+      event.sessions.map { |s| ((Time.now - s.created_at) / 1.day).floor }
+    )
     puts
-    
-    participants = event.participants.includes(:sessions_attending)
+
+    event.participants.includes(:sessions_attending)
   end
 
-  task :analyze_session_popularity => :environment do
+  task analyze_session_popularity: :environment do
     puts "Most popular sessions"
     puts
     puts "vot = Raw vote total"
@@ -434,14 +435,14 @@ namespace :app do
     puts "Dots in leftmost columns show timeslot assignments"
     puts
     timeslots = event.timeslots.where(schedulable: true).order(:starts_at)
-    puts "#{' ' * timeslots.count} vot exp  ID title                               presenters"
-    puts "#{' ' * timeslots.count} --- ---  ---------------------------------------- ----------"
+    puts "#{" " * timeslots.count} vot exp  ID title                               presenters"
+    puts "#{" " * timeslots.count} --- ---  ---------------------------------------- ----------"
     Session.largest_attendance_first(event.sessions).each do |session|
       puts "%s %3d %3s%s %-40.40s %s" % [
-        timeslots.map { |slot| slot.id == session.timeslot_id ? '•' : ' ' }.join,
+        timeslots.map { |slot| (slot.id == session.timeslot_id) ? "•" : " " }.join,
         session.attendance_count,
         session.expected_attendance,
-        session.manual_attendance_estimate? ? "❗" : " ", 
+        session.manual_attendance_estimate? ? "❗" : " ",
         "#{session.id} #{session.title.remove_fancy_chars}",
         session.presenters.map(&:email).join(", ")
       ]
@@ -470,59 +471,59 @@ namespace :app do
     pairs.each do |s1_id, s2_id, count|
       s1, s2 = [s1_id, s2_id].map { |id| Session.find(id) }
       status = if !s1.timeslot_id || !s2.timeslot_id
-        '(unscheduled)'
+        "(unscheduled)"
       elsif s1.timeslot_id == s2.timeslot_id
-        'CONFLICT AS SCHEDULED'
+        "CONFLICT AS SCHEDULED"
       else
-        ''
+        ""
       end
       puts "  %3d  %-36.36s  +  %-36.36s  %s" % [count, s1.title.remove_fancy_chars, s2.title.remove_fancy_chars, status]
     end
   end
 
-  desc 'Reset and hydrate the database with dummy data.'
-  task :make_believe => :environment do
-    require 'ffaker'
-    require 'ruby-progressbar'
+  desc "Reset and hydrate the database with dummy data."
+  task make_believe: :environment do
+    require "ffaker"
+    require "ruby-progressbar"
 
-    puts 'Reset DB.'
-    Rake::Task['db:reset'].invoke
+    puts "Reset DB."
+    Rake::Task["db:reset"].invoke
 
-    puts 'Create categories'
+    puts "Create categories"
     Category.find_or_create_defaults
 
-    puts 'Creating event...'
+    puts "Creating event..."
     event_date = 1.month.from_now.to_date
     event = Event.create!(
-      name: FFaker::HipsterIpsum.words(3).join(' '),
+      name: FFaker::HipsterIpsum.words(3).join(" "),
       date: event_date,
       start_time: event_date.in_time_zone.change(hour: 8),
       end_time: event_date.in_time_zone.change(hour: 19)
     )
 
-    puts 'Linking categories to event...'
+    puts "Linking categories to event..."
     Category.create_defaults_for_event(event)
 
-    puts 'Creating timeslots...'
+    puts "Creating timeslots..."
     event.create_default_timeslots
 
-    puts 'Creating rooms...'
+    puts "Creating rooms..."
     event.create_default_rooms(force: true)
 
-    puts 'Creating 100 participants...'
-    progress = ProgressBar.create(title: 'Participants', total: 100)
+    puts "Creating 100 participants..."
+    progress = ProgressBar.create(title: "Participants", total: 100)
     100.times do
       participant = Participant.new
       participant.name = FFaker::Name.name
       participant.email = FFaker::Internet.safe_email
-      participant.password = 'password'
+      participant.password = "password"
       participant.bio = FFaker::Lorem.paragraph if [true, false].sample
       participant.coc_agreed_at = Time.current
       participant.save!
       progress.increment
     end
 
-    puts 'Creating sessions...'
+    puts "Creating sessions..."
     sessions_total = [Room.count * Timeslot.count, 50].min
     participant_ids = Participant.pluck(:id)
     category_ids = event.categories.pluck(:id)
@@ -549,85 +550,80 @@ namespace :app do
         participant_progress.increment
       end
     end
-
   end
 
-private
+  private
 
   def event
-    @event ||= if event_id = ENV['event']
+    @event ||= if event_id = ENV["event"]
       Event.find(event_id)
     else
       Event.current_event
     end
   end
-
 end
-
 
 # OPTION 2
 # reg/bfast -  8:00 -  8:45
-# session 0 -  8:45 -  9:30 
+# session 0 -  8:45 -  9:30
 # -------------------------
 # session 1 -  9:40 - 10:30
 # session 2 - 10:40 - 11:30
 # session 3 - 11:40 - 12:30
 # -------------------------
-# Lunch       12:40 -  1:30 
+# Lunch       12:40 -  1:30
 # -------------------------
 # session 4    1:40 -  2:30
 # session 5    2:40 -  3:30
-# session 6    3:40 -  4:30 
+# session 6    3:40 -  4:30
 # -------------------------
-# HH           4:30 --> 
- 
+# HH           4:30 -->
 
 #
 # 16 rooms
 # 6 * 16 = 96
-# 73 sessions  
+# 73 sessions
 #
-#8:00 - 9:00 - Registration & Light Breakfast
-#9:00 - 9:50 - Session 0 - Opening Remarks and Featured Session with David Hussman | Devjam
-#10:00 - 10:50 - Session 1
-#11:00 - 11:50 - Session 2
-#12:00 - 12:50 - Session 3
-#1:00 - 1:50 - Lunch
-#2:00 - 2:50 - Session 4
-#3:00 - 3:50 - Session 5
-#4:00 - 4:50 - Session 6
-#5:00 - 7:00 - Happy Hour
+# 8:00 - 9:00 - Registration & Light Breakfast
+# 9:00 - 9:50 - Session 0 - Opening Remarks and Featured Session with David Hussman | Devjam
+# 10:00 - 10:50 - Session 1
+# 11:00 - 11:50 - Session 2
+# 12:00 - 12:50 - Session 3
+# 1:00 - 1:50 - Lunch
+# 2:00 - 2:50 - Session 4
+# 3:00 - 3:50 - Session 5
+# 4:00 - 4:50 - Session 6
+# 5:00 - 7:00 - Happy Hour
 
 #
 # OPTION 2
 # reg/bfast -  8:00 -  8:45
-# session 0 -  8:45 -  9:30 
+# session 0 -  8:45 -  9:30
 # -------------------------
 # session 1 -  9:40 - 10:30
 # session 2 - 10:40 - 11:30
 # session 3 - 11:40 - 12:30
 # -------------------------
-# Lunch       12:40 -  1:30 
+# Lunch       12:40 -  1:30
 # -------------------------
 # session 4    1:40 -  2:30
 # session 5    2:40 -  3:30
-# session 6    3:40 -  4:30 
+# session 6    3:40 -  4:30
 # -------------------------
-# HH           4:30 --> 
- 
+# HH           4:30 -->
 
 # OPTION 3
 # reg/bfast -  8:00 -  9:00
-# session 0 -  9:00 -  9:50 
+# session 0 -  9:00 -  9:50
 # -------------------------
 # session 1 - 10:00 - 10:45
 # session 2 - 10:55 - 11:40
 # session 3 - 11:50 - 12:35
 # -------------------------
-# Lunch       12:30 -  1:30 
+# Lunch       12:30 -  1:30
 # -------------------------
 # session 4    1:30 -  2:15
 # session 5    2:25 -  3:10
 # session 6    3:20 -  4:05
 # -------------------------
-# HH           4:05 --> 
+# HH           4:05 -->

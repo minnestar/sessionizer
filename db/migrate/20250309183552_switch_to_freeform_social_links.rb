@@ -15,7 +15,7 @@ class SwitchToFreeformSocialLinks < ActiveRecord::Migration[7.1]
       if social_items.any?
         bio = result["bio"]
 
-        bio.gsub!(/\s+\Z/, '')
+        bio.gsub!(/\s+\Z/, "")
         bio << "\n\n**Links:**\n\n"
 
         bio << social_items.map do |item|
@@ -43,8 +43,8 @@ class SwitchToFreeformSocialLinks < ActiveRecord::Migration[7.1]
     raise "Migration not reversible, because it would require parsing markdown to recover links"
   end
 
-private
-  
+  private
+
   def extract_username(username_or_url)
     if username_or_url =~ %r{https?://(?:.*)/(\w+)}
       $1  # heck with it, last segment of URL path is probably a username…right?

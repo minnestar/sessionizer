@@ -1,13 +1,13 @@
 class CreateAttendances < ActiveRecord::Migration[4.2]
   def self.up
     create_table :attendances do |t|
-      t.belongs_to :session, :null => false
-      t.belongs_to :participant, :null => false
+      t.belongs_to :session, null: false
+      t.belongs_to :participant, null: false
 
       t.timestamps
     end
 
-    add_index :attendances, [:session_id, :participant_id], :unique => true
+    add_index :attendances, [:session_id, :participant_id], unique: true
   end
 
   def self.down

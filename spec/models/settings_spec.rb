@@ -29,8 +29,8 @@ describe Settings do
     context "with valid input" do
       it "accepts array of room hashes" do
         valid_rooms = [
-          { "name" => "Theater", "capacity" => 250 },
-          { "name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "Used for daycare" }
+          {"name" => "Theater", "capacity" => 250},
+          {"name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "Used for daycare"}
         ]
         settings.default_rooms = valid_rooms
         expect(settings).to be_valid
@@ -55,7 +55,7 @@ describe Settings do
 
       it "preserves optional fields" do
         settings.default_rooms = [
-          { "name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "daycare" }
+          {"name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "daycare"}
         ]
         expect(settings).to be_valid
         expect(settings.default_rooms.first["active"]).to eq(false)
@@ -64,7 +64,7 @@ describe Settings do
 
       it "preserves the schedulable field" do
         settings.default_rooms = [
-          { "name" => "Uptowner", "capacity" => 85, "schedulable" => false, "notes" => "networking" }
+          {"name" => "Uptowner", "capacity" => 85, "schedulable" => false, "notes" => "networking"}
         ]
         expect(settings).to be_valid
         expect(settings.default_rooms.first["schedulable"]).to eq(false)
@@ -72,7 +72,7 @@ describe Settings do
 
       it "omits schedulable when not specified" do
         settings.default_rooms = [
-          { "name" => "Theater", "capacity" => 250 }
+          {"name" => "Theater", "capacity" => 250}
         ]
         expect(settings.default_rooms.first).not_to have_key("schedulable")
       end
@@ -86,19 +86,19 @@ describe Settings do
       end
 
       it "rejects rooms with missing name" do
-        settings.default_rooms = [{ "capacity" => 250 }]
+        settings.default_rooms = [{"capacity" => 250}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_rooms]).to include("line 1 is missing required name")
       end
 
       it "rejects rooms with missing capacity" do
-        settings.default_rooms = [{ "name" => "Theater" }]
+        settings.default_rooms = [{"name" => "Theater"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_rooms]).to include("line 1 is missing required capacity")
       end
 
       it "rejects rooms with non-positive capacity" do
-        settings.default_rooms = [{ "name" => "Theater", "capacity" => 0 }]
+        settings.default_rooms = [{"name" => "Theater", "capacity" => 0}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_rooms]).to include("line 1 has invalid capacity (must be a positive integer)")
       end
@@ -111,8 +111,8 @@ describe Settings do
     context "with valid input" do
       it "accepts array of timeslot hashes" do
         valid_timeslots = [
-          { "start" => "8:00", "end" => "8:30", "special" => "Breakfast" },
-          { "start" => "8:30", "end" => "9:00" }
+          {"start" => "8:00", "end" => "8:30", "special" => "Breakfast"},
+          {"start" => "8:30", "end" => "9:00"}
         ]
         settings.default_timeslots = valid_timeslots
         expect(settings).to be_valid
@@ -120,7 +120,7 @@ describe Settings do
 
       it "accepts JSON string with multiple timeslots" do
         valid_input = "{\"start\":\"8:00\", \"end\":\"8:30\", \"special\":\"Breakfast\"},\r\n" +
-                     "{\"start\":\"8:30\", \"end\":\"9:00\"}"
+          "{\"start\":\"8:30\", \"end\":\"9:00\"}"
         settings.default_timeslots = valid_input
         expect(settings).to be_valid
       end
@@ -145,19 +145,19 @@ describe Settings do
       end
 
       it "rejects timeslots with missing required fields" do
-        settings.default_timeslots = [{ "start" => "8:00" }]
+        settings.default_timeslots = [{"start" => "8:00"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_timeslots]).to include("line 1 is missing required start or end time")
       end
 
       it "rejects invalid time formats" do
-        settings.default_timeslots = [{ "start" => "invalid", "end" => "8:30" }]
+        settings.default_timeslots = [{"start" => "invalid", "end" => "8:30"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_timeslots]).to include("line 1 has invalid time format")
       end
 
       it "rejects invalid time order" do
-        settings.default_timeslots = [{ "start" => "9:00", "end" => "8:30" }]
+        settings.default_timeslots = [{"start" => "9:00", "end" => "8:30"}]
         expect(settings).not_to be_valid
         expect(settings.errors[:default_timeslots]).to include("line 1 has end time before or equal to start time")
       end

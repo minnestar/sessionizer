@@ -2,7 +2,7 @@ class AddCounterCachesToParticipants < ActiveRecord::Migration[7.1]
   def change
     add_column :participants, :presentations_count, :integer, default: 0
     add_column :participants, :attendances_count, :integer, default: 0
-    
+
     # using raw SQL to update counter caches here to make this more performant
     reversible do |dir|
       dir.up do

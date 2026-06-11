@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   has_many :event_categories, dependent: :destroy
   has_many :categories, through: :event_categories
 
-  has_many :presenter_timeslot_restrictions, :through => :timeslots
+  has_many :presenter_timeslot_restrictions, through: :timeslots
   has_many :code_of_conduct_agreements, dependent: :destroy
 
   # Careful! Large joins here; use with caution:
@@ -24,7 +24,7 @@ class Event < ActiveRecord::Base
   end
 
   def self.current_event
-    self.order(:date).last
+    order(:date).last
   end
 
   def current?
@@ -57,12 +57,10 @@ class Event < ActiveRecord::Base
 
   # The list of timeslots that are at the first of each day of the event
   def first_timeslots_of_day
-    @first_timeslots_of_day ||= begin
-      timeslots
-        .group_by { |slot| slot.starts_at.midnight }
-        .map { |date, slots| slots.sort_by(&:starts_at).first }
-        .sort_by(&:starts_at)
-    end
+    @first_timeslots_of_day ||= timeslots
+      .group_by { |slot| slot.starts_at.midnight }
+      .map { |date, slots| slots.sort_by(&:starts_at).first }
+      .sort_by(&:starts_at)
   end
 
   def display_time
@@ -133,7 +131,7 @@ class Event < ActiveRecord::Base
   def has_unassigned_sessions?
     sessions
       .joins(:timeslot)
-      .where(timeslots: { schedulable: true }, room_id: nil, manually_scheduled: false)
+      .where(timeslots: {schedulable: true}, room_id: nil, manually_scheduled: false)
       .exists?
   end
 
@@ -143,7 +141,7 @@ class Event < ActiveRecord::Base
 
     # Postgres rejects setting isolation in nested transactions; in tests RSpec
     # already wraps each example in one, so request :serializable only at the top level.
-    transaction_opts = Session.connection.open_transactions.zero? ? { isolation: :serializable } : {}
+    transaction_opts = Session.connection.open_transactions.zero? ? {isolation: :serializable} : {}
     Session.transaction(**transaction_opts) do
       rooms_by_capacity = rooms.where(schedulable: true).order(capacity: :desc).to_a
       schedulable_timeslots = timeslots.where(schedulable: true).order(:starts_at).includes(:sessions)
@@ -166,16 +164,16 @@ class Event < ActiveRecord::Base
               "but there are only #{rooms_by_capacity.size} schedulable rooms"
           end
           log << "    #{session.id} #{session.title}" \
-                 " (#{'%1.1f' % session.expected_attendance} est:" \
+                 " (#{"%1.1f" % session.expected_attendance} est:" \
                  " #{session.attendance_count} raw vote(s)," \
-                 " #{'%1.1f' % session.estimated_interest} time-scaled)" \
+                 " #{"%1.1f" % session.estimated_interest} time-scaled)" \
                  " in #{room.name} (#{room.capacity})"
           session.update_columns(room_id: room.id, updated_at: Time.current)
         end
       end
     end
 
-    { log: log, already_assigned_count: already_assigned_count }
+    {log: log, already_assigned_count: already_assigned_count}
   end
 
   private
@@ -183,9 +181,9 @@ class Event < ActiveRecord::Base
   def format_time(time)
     t = time.in_time_zone
     if t.min == 0
-      t.strftime('%l%P').strip
+      t.strftime("%l%P").strip
     else
-      t.strftime('%l:%M%P').strip
+      t.strftime("%l:%M%P").strip
     end
   end
 end
