@@ -34,7 +34,7 @@ ActiveAdmin.register Category do
       row(:legacy, &:legacy?)
     end
 
-    event_categories = category.event_categories.includes(:event).order('events.date DESC')
+    event_categories = category.event_categories.includes(:event).order("events.date DESC")
     session_counts = category.sessions.group(:event_id).count
 
     panel "Events Using This Category (#{event_categories.size})" do
@@ -47,7 +47,7 @@ ActiveAdmin.register Category do
         end
         column "# of Sessions" do |ec|
           count = session_counts[ec.event_id] || 0
-          link_to count, admin_sessions_path(q: { event_id_eq: ec.event_id, categorizations_category_id_eq: ec.category_id })
+          link_to count, admin_sessions_path(q: {event_id_eq: ec.event_id, categorizations_category_id_eq: ec.category_id})
         end
       end
     end

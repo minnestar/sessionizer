@@ -1,8 +1,8 @@
 class CreateHomepageSummaryMarkdown < ActiveRecord::Migration[5.2]
   def up
     mc = MarkdownContent.new({
-      name: 'Homepage Summary',
-      slug: 'homepage-summary',
+      name: "Homepage Summary",
+      slug: "homepage-summary",
       markdown: <<~EOF
         ### How long are sessions?
 
@@ -29,7 +29,7 @@ class CreateHomepageSummaryMarkdown < ActiveRecord::Migration[5.2]
   end
 
   def down
-    mc = MarkdownContent.find_by_slug('homepage-summary')
+    mc = MarkdownContent.find_by_slug("homepage-summary")
     mc.destroy!
   end
 end

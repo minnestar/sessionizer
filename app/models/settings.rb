@@ -29,19 +29,19 @@ class Settings < ActiveRecord::Base
 
   def self.static_default_timeslots
     [
-      { start: "8:00", end: "8:30", special: "Registration / Breakfast" },
-      { start: "8:30", end: "8:50", special: "Kickoff" },
-      { start: "8:50", end: "9:20", special: "Session 0" },
-      { start: "9:30", end: "16:30", special: "All day" },
-      { start: "9:35", end: "10:15" },
-      { start: "10:30", end: "11:10" },
-      { start: "11:25", end: "12:05" },
-      { start: "12:05", end: "13:05", special: "Lunch" },
-      { start: "13:05", end: "13:45" },
-      { start: "14:00", end: "14:40" },
-      { start: "14:55", end: "15:35" },
-      { start: "15:50", end: "16:30" },
-      { start: "16:30", end: "18:30", special: "Social Hour" }
+      {start: "8:00", end: "8:30", special: "Registration / Breakfast"},
+      {start: "8:30", end: "8:50", special: "Kickoff"},
+      {start: "8:50", end: "9:20", special: "Session 0"},
+      {start: "9:30", end: "16:30", special: "All day"},
+      {start: "9:35", end: "10:15"},
+      {start: "10:30", end: "11:10"},
+      {start: "11:25", end: "12:05"},
+      {start: "12:05", end: "13:05", special: "Lunch"},
+      {start: "13:05", end: "13:45"},
+      {start: "14:00", end: "14:40"},
+      {start: "14:55", end: "15:35"},
+      {start: "15:50", end: "16:30"},
+      {start: "16:30", end: "18:30", special: "Social Hour"}
     ]
   end
 
@@ -53,44 +53,44 @@ class Settings < ActiveRecord::Base
   def self.static_default_rooms
     [
       # Active rooms (alphabetical)
-      { name: "Bde Maka Ska",    capacity: 100 },
-      { name: "Challenge",       capacity:  24 },
-      { name: "Cottage",         capacity:   8, notes: "out of the way in the B wing" },
-      { name: "Discovery",       capacity:  23, notes: "no video recording" },
-      { name: "Florida",         capacity:  12, notes: "TV, no projector" },
-      { name: "Gandhi",          capacity:  23, notes: "Previously used for daycare; no video recording" },
-      { name: "Georgia",         capacity:  12, notes: "TV, no projector" },
-      { name: "Harriet",         capacity: 100 },
-      { name: "Kansas",          capacity:  10, notes: "TV, no projector" },
-      { name: "Learn",           capacity:  24 },
-      { name: "Louis Pasteur",   capacity:  18 },
-      { name: "Maine",           capacity:  10 },
-      { name: "Maryland",        capacity:  10 },
-      { name: "Minnetonka",      capacity: 100 },
-      { name: "Nebraska",        capacity:  10 },
-      { name: "Nevada",          capacity:  16, notes: "out of the way, but available" },
-      { name: "Nokomis",         capacity: 100 },
-      { name: "Oklahoma",        capacity:   8 },
-      { name: "Pennsylvania",    capacity:  10 },
-      { name: "Proverb-Edison",  capacity:  48 },
-      { name: "Stephen Leacock", capacity:  23, notes: "Previously used for daycare; no video recording" },
-      { name: "Tackle",          capacity:  23, notes: "no video recording" },
-      { name: "Texas",           capacity:  16 },
-      { name: "Theater",         capacity: 250 },
-      { name: "Zeke Landres",    capacity:  40 },
+      {name: "Bde Maka Ska", capacity: 100},
+      {name: "Challenge", capacity: 24},
+      {name: "Cottage", capacity: 8, notes: "out of the way in the B wing"},
+      {name: "Discovery", capacity: 23, notes: "no video recording"},
+      {name: "Florida", capacity: 12, notes: "TV, no projector"},
+      {name: "Gandhi", capacity: 23, notes: "Previously used for daycare; no video recording"},
+      {name: "Georgia", capacity: 12, notes: "TV, no projector"},
+      {name: "Harriet", capacity: 100},
+      {name: "Kansas", capacity: 10, notes: "TV, no projector"},
+      {name: "Learn", capacity: 24},
+      {name: "Louis Pasteur", capacity: 18},
+      {name: "Maine", capacity: 10},
+      {name: "Maryland", capacity: 10},
+      {name: "Minnetonka", capacity: 100},
+      {name: "Nebraska", capacity: 10},
+      {name: "Nevada", capacity: 16, notes: "out of the way, but available"},
+      {name: "Nokomis", capacity: 100},
+      {name: "Oklahoma", capacity: 8},
+      {name: "Pennsylvania", capacity: 10},
+      {name: "Proverb-Edison", capacity: 48},
+      {name: "Stephen Leacock", capacity: 23, notes: "Previously used for daycare; no video recording"},
+      {name: "Tackle", capacity: 23, notes: "no video recording"},
+      {name: "Texas", capacity: 16},
+      {name: "Theater", capacity: 250},
+      {name: "Zeke Landres", capacity: 40},
 
       # Inactive rooms (alphabetical)
-      { name: "Alaska",          capacity:  96, active: false, notes: "Used for daycare in 2025" },
-      { name: "Brand",           capacity:  75, active: false, notes: "Suboptimal room, reserved for more dire need" },
-      { name: "Cabin",           capacity:   9, active: false, notes: "out of the way, not setup for presentations" },
-      { name: "California",      capacity:  16, active: false, notes: "behind security turnstiles" },
-      { name: "Illinois",        capacity:   7, active: false, notes: "small" },
-      { name: "Minnesota",       capacity:   7, active: false, notes: "small" },
-      { name: "New York",        capacity:  10, active: false, notes: "Used for staff in 2025" },
-      { name: "Oregon",          capacity:  12, active: false, notes: "behind security turnstiles" },
-      { name: "South Carolina",  capacity:   6, active: false, notes: "converted to meditation room in 2025" },
-      { name: "Washington",      capacity:   7, active: false, notes: "small, out of the way" },
-      { name: "Wisconsin",       capacity:   7, active: false, notes: "small" },
+      {name: "Alaska", capacity: 96, active: false, notes: "Used for daycare in 2025"},
+      {name: "Brand", capacity: 75, active: false, notes: "Suboptimal room, reserved for more dire need"},
+      {name: "Cabin", capacity: 9, active: false, notes: "out of the way, not setup for presentations"},
+      {name: "California", capacity: 16, active: false, notes: "behind security turnstiles"},
+      {name: "Illinois", capacity: 7, active: false, notes: "small"},
+      {name: "Minnesota", capacity: 7, active: false, notes: "small"},
+      {name: "New York", capacity: 10, active: false, notes: "Used for staff in 2025"},
+      {name: "Oregon", capacity: 12, active: false, notes: "behind security turnstiles"},
+      {name: "South Carolina", capacity: 6, active: false, notes: "converted to meditation room in 2025"},
+      {name: "Washington", capacity: 7, active: false, notes: "small, out of the way"},
+      {name: "Wisconsin", capacity: 7, active: false, notes: "small"}
     ]
   end
 
@@ -104,7 +104,7 @@ class Settings < ActiveRecord::Base
         # Split the string by newlines and parse each line as JSON
         value.split(/[\r\n]+/).map do |line|
           # Remove trailing comma if present
-          line = line.strip.gsub(/,\s*$/, '')
+          line = line.strip.gsub(/,\s*$/, "")
           next if line.blank?
           JSON.parse(line)
         end.compact
@@ -127,13 +127,9 @@ class Settings < ActiveRecord::Base
     super(validated_config)
   end
 
-  def default_timeslots_raw_value
-    @default_timeslots_raw_value
-  end
+  attr_reader :default_timeslots_raw_value
 
-  def default_timeslots_validation_error
-    @default_timeslots_validation_error
-  end
+  attr_reader :default_timeslots_validation_error
 
   def default_rooms=(value)
     @default_rooms_raw_value = value
@@ -141,7 +137,7 @@ class Settings < ActiveRecord::Base
     config = if value.is_a?(String)
       begin
         value.split(/[\r\n]+/).map do |line|
-          line = line.strip.gsub(/,\s*$/, '')
+          line = line.strip.gsub(/,\s*$/, "")
           next if line.blank?
           JSON.parse(line)
         end.compact
@@ -169,13 +165,9 @@ class Settings < ActiveRecord::Base
     super(validated_config)
   end
 
-  def default_rooms_raw_value
-    @default_rooms_raw_value
-  end
+  attr_reader :default_rooms_raw_value
 
-  def default_rooms_validation_error
-    @default_rooms_validation_error
-  end
+  attr_reader :default_rooms_validation_error
 
   private
 

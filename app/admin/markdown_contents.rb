@@ -40,7 +40,7 @@ ActiveAdmin.register MarkdownContent do
     f.inputs do
       f.input :name
       f.input :slug
-      f.input :markdown, as: :text, input_html: { rows: 20 }
+      f.input :markdown, as: :text, input_html: {rows: 20}
     end
     f.actions
   end

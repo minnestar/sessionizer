@@ -21,7 +21,7 @@ ActiveAdmin.register Event do
           sessions: [
             :timeslot,
             :room,
-            { presentations: :participant }
+            {presentations: :participant}
           ]
         )
       else
@@ -38,39 +38,37 @@ ActiveAdmin.register Event do
 
   action_item :edit_event, only: :show do
     if resource.date.nil? || resource.date >= Date.current
-      link_to "Edit Event", edit_admin_event_path(resource), class: 'action-item-button'
+      link_to "Edit Event", edit_admin_event_path(resource), class: "action-item-button"
     end
   end
 
   member_action :generate_categories, method: :post do
-    begin
-      Category.create_defaults_for_event(resource)
-      redirect_to request.referer || admin_event_path(resource), notice: 'Default categories generated!'
-    rescue => e
-      redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate categories: #{e.message}"
-    end
+    Category.create_defaults_for_event(resource)
+    redirect_to request.referer || admin_event_path(resource), notice: "Default categories generated!"
+  rescue => e
+    redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate categories: #{e.message}"
   end
 
   action_item :generate_categories, only: :show do
     if resource.event_categories.empty?
-      button_to 'Generate categories',
+      button_to "Generate categories",
         generate_categories_admin_event_path(resource),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will generate default categories for this event based on the currently active categories. Are you sure you want to do this?" }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "This will generate default categories for this event based on the currently active categories. Are you sure you want to do this?"}
     end
   end
 
   member_action :generate_timeslots, method: :post do
     resource.create_default_timeslots
-    redirect_to request.referer || admin_event_path(resource), notice: 'Timeslots successfully generated!'
+    redirect_to request.referer || admin_event_path(resource), notice: "Timeslots successfully generated!"
   rescue => e
     redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate timeslots: #{e.message}"
   end
 
   member_action :generate_rooms, method: :post do
     resource.create_default_rooms
-    redirect_to request.referer || admin_event_path(resource), notice: 'Rooms successfully generated!'
+    redirect_to request.referer || admin_event_path(resource), notice: "Rooms successfully generated!"
   rescue => e
     redirect_to request.referer || admin_event_path(resource), alert: "Failed to generate rooms: #{e.message}"
   end
@@ -80,7 +78,7 @@ ActiveAdmin.register Event do
 
     if reassign && resource.starts_within?(24.hours)
       redirect_to(request.referer || admin_event_path(resource),
-                  alert: "Reassign all rooms is disabled within 24 hours of the event start.") and return
+        alert: "Reassign all rooms is disabled within 24 hours of the event start.") and return
     end
 
     result = resource.assign_rooms!(reassign: reassign)
@@ -92,47 +90,47 @@ ActiveAdmin.register Event do
     redirect_to request.referer || admin_event_path(resource), notice: notice
   rescue => e
     redirect_to request.referer || admin_event_path(resource),
-                alert: "Room assignment failed: #{e.message}. Try running `rails app:assign_rooms` in the terminal to see the full output."
+      alert: "Room assignment failed: #{e.message}. Try running `rails app:assign_rooms` in the terminal to see the full output."
   end
 
   action_item :generate_timeslots, only: :show do
     if resource.timeslots_count.zero?
-      button_to 'Generate timeslots',
+      button_to "Generate timeslots",
         generate_timeslots_admin_event_path(resource),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?" }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "This will generate #{Settings.default_timeslots.size} timeslots based on the defaults in Event Settings. Are you sure you want to proceed?"}
     end
   end
 
   action_item :generate_rooms, only: :show do
     if resource.rooms_count.zero?
       active_count = Settings.default_rooms.count { |r| r["active"] != false }
-      button_to 'Generate rooms',
+      button_to "Generate rooms",
         generate_rooms_admin_event_path(resource),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will generate #{active_count} rooms based on the defaults in Event Settings. Are you sure you want to proceed?" }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "This will generate #{active_count} rooms based on the defaults in Event Settings. Are you sure you want to proceed?"}
     end
   end
 
   action_item :assign_rooms, only: :show do
     if resource.current? && resource.rooms_count > 0 && resource.has_unassigned_sessions?
-      button_to 'Assign rooms',
+      button_to "Assign rooms",
         assign_rooms_admin_event_path(resource),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "Assign rooms to scheduled sessions that don't yet have one? This will take a little while. Sit tight." }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "Assign rooms to scheduled sessions that don't yet have one? This will take a little while. Sit tight."}
     end
   end
 
   action_item :reassign_rooms, only: :show do
     if resource.current? && resource.rooms_count > 0 && !resource.starts_within?(24.hours)
-      button_to 'Reassign all rooms',
+      button_to "Reassign all rooms",
         assign_rooms_admin_event_path(resource, reassign: 1),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?" }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?"}
     end
   end
 
@@ -163,7 +161,7 @@ ActiveAdmin.register Event do
     column(:time, &:display_time)
     column :venue
     column("# of Sessions") do |event|
-      link_to event.sessions_count, admin_sessions_path(q: { event_id_eq: event.id })
+      link_to event.sessions_count, admin_sessions_path(q: {event_id_eq: event.id})
     end
     column("# of Rooms") do |event|
       link_to event.rooms_count, admin_event_rooms_path(event)
@@ -177,7 +175,7 @@ ActiveAdmin.register Event do
     event_categories = event.event_categories.ordered.includes(:category)
     session_counts_by_category = Categorization
       .joins(:session)
-      .where(sessions: { event_id: event.id, canceled_at: nil })
+      .where(sessions: {event_id: event.id, canceled_at: nil})
       .group(:category_id)
       .count
 
@@ -196,12 +194,12 @@ ActiveAdmin.register Event do
         link_to event_schedule_url(event), event_schedule_url(event), target: "_blank"
       end
       row "# of Categories" do |event|
-        link_to event_categories.size, admin_event_categories_path(q: { event_id_eq: event.id })
+        link_to event_categories.size, admin_event_categories_path(q: {event_id_eq: event.id})
       end
       row "# of Sessions" do |event|
         active_count = event.sessions.count
         canceled_count = event.sessions.with_canceled.canceled.count
-        text_node link_to(active_count, admin_sessions_path(q: { event_id_eq: event.id }))
+        text_node link_to(active_count, admin_sessions_path(q: {event_id_eq: event.id}))
         text_node " (+#{canceled_count} canceled)" if canceled_count > 0
       end
       row "# of Rooms" do |event|
@@ -221,7 +219,7 @@ ActiveAdmin.register Event do
 
     if event.current?
       settings = Settings.first
-      panel ("Event Settings (#{link_to 'edit', edit_admin_setting_path(1)})").html_safe do
+      panel "Event Settings (#{link_to "edit", edit_admin_setting_path(1)})".html_safe do
         attributes_table_for settings do
           row "Allow New Sessions" do
             settings.allow_new_sessions
@@ -241,7 +239,7 @@ ActiveAdmin.register Event do
       end
     end
 
-    panel ("#{link_to 'Event Timeslots', admin_event_timeslots_path(event)} (#{event.timeslots_count})").html_safe do
+    panel "#{link_to "Event Timeslots", admin_event_timeslots_path(event)} (#{event.timeslots_count})".html_safe do
       table_for event.timeslots do
         column :title do |timeslot|
           link_to timeslot.title, admin_event_timeslot_path(event, timeslot)
@@ -251,13 +249,13 @@ ActiveAdmin.register Event do
         column("Sessions", sortable: :sessions_count) do |timeslot|
           link_to(
             timeslot.sessions.size,
-            admin_sessions_path(order: "attendances_count_desc", q: { event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id })
+            admin_sessions_path(order: "attendances_count_desc", q: {event_id_eq: timeslot.event_id, timeslot_id_eq: timeslot.id})
           )
         end
       end
     end
 
-    panel ("#{link_to 'Event Categories', admin_event_categories_path(q: { event_id_eq: event.id })} (#{event_categories.size})").html_safe do
+    panel "#{link_to "Event Categories", admin_event_categories_path(q: {event_id_eq: event.id})} (#{event_categories.size})".html_safe do
       table_for event_categories do
         column :position
         column :name do |ec|
@@ -271,38 +269,38 @@ ActiveAdmin.register Event do
         end
         column "# of Sessions" do |ec|
           count = session_counts_by_category[ec.category_id] || 0
-          link_to count, admin_sessions_path(q: { event_id_eq: event.id, categorizations_category_id_eq: ec.category_id })
+          link_to count, admin_sessions_path(q: {event_id_eq: event.id, categorizations_category_id_eq: ec.category_id})
         end
       end
     end
 
-    panel ("#{link_to 'Event Sessions', admin_sessions_path(q: { event_id_eq: event.id })} (#{event.sessions_count})").html_safe do
+    panel "#{link_to "Event Sessions", admin_sessions_path(q: {event_id_eq: event.id})} (#{event.sessions_count})".html_safe do
       # Define allowed sort columns and their database equivalents
       sortable_columns = {
-        'title' => 'sessions.title',
-        'attendances_count' => 'sessions.attendances_count',
-        'timeslot_id' => 'sessions.timeslot_id',
-        'room' => 'rooms.name',
-        'created_at' => 'sessions.created_at'
+        "title" => "sessions.title",
+        "attendances_count" => "sessions.attendances_count",
+        "timeslot_id" => "sessions.timeslot_id",
+        "room" => "rooms.name",
+        "created_at" => "sessions.created_at"
       }
 
       # Get sort column and direction from params, with validation
-      raw_sort = params[:order]&.gsub(/_desc|_asc/, '')  # Remove direction suffix
+      raw_sort = params[:order]&.gsub(/_desc|_asc/, "")  # Remove direction suffix
 
       # If sort param exists, use it; otherwise use default sort (timeslot, room capacity,then votes)
       order_clause = if params[:order].present?
-        sort_column = sortable_columns[raw_sort] || 'sessions.timeslot_id'
-        sort_direction = params[:order]&.end_with?('desc') ? 'desc' : 'asc'
+        sort_column = sortable_columns[raw_sort] || "sessions.timeslot_id"
+        sort_direction = params[:order]&.end_with?("desc") ? "desc" : "asc"
         Arel.sql("#{sort_column} #{sort_direction}")
       else
-        Arel.sql('sessions.timeslot_id, rooms.capacity DESC, sessions.canceled_at DESC, sessions.attendances_count DESC')
+        Arel.sql("sessions.timeslot_id, rooms.capacity DESC, sessions.canceled_at DESC, sessions.attendances_count DESC")
       end
 
       sessions = event.sessions
-                     .with_canceled
-                     .includes(:presenters, :attendances, :timeslot, :room)
-                     .joins('LEFT JOIN rooms ON rooms.id = sessions.room_id')
-                     .order(order_clause)
+        .with_canceled
+        .includes(:presenters, :attendances, :timeslot, :room)
+        .joins("LEFT JOIN rooms ON rooms.id = sessions.room_id")
+        .order(order_clause)
 
       table_for sessions, sortable: true do
         column :title, sortable: :title do |session|
@@ -335,5 +333,4 @@ ActiveAdmin.register Event do
       end
     end
   end
-  
 end

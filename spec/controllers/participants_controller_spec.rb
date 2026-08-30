@@ -1,16 +1,16 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ParticipantsController do
   let(:participant) { create(:participant) }
 
   describe "#index" do
-    let!(:participant) { create(:participant, name: 'one two three', email: 'test@example.org') }
+    let!(:participant) { create(:participant, name: "one two three", email: "test@example.org") }
 
     it "should be successful" do
       get :index, format: :json
       expect(response).to be_successful
       json = JSON.parse(response.body)
-      expect(json).to eq [ { "value"=>'one two three', "tokens"=>["one", "two", "three"], "id"=>participant.id } ]
+      expect(json).to eq [{"value" => "one two three", "tokens" => ["one", "two", "three"], "id" => participant.id}]
     end
   end
 
@@ -24,45 +24,37 @@ describe ParticipantsController do
 
   describe "#create" do
     it "should be successful" do
-      post :create, params: { participant: { name: 'Alan Turing', 
-                                   email: 'tapewriter@example.org', 
-                                   password: 'infinite-memory'
-                             }
-      }
+      post :create, params: {participant: {name: "Alan Turing",
+                                           email: "tapewriter@example.org",
+                                           password: "infinite-memory"}}
       expect(response).to redirect_to root_path
       expect(flash[:notice]).to eq "Thanks for registering an account. Please check your email to confirm your account."
     end
 
     it "should not be successful if a bot provides contact_details field" do
-      expect{
-        post :create, params: { participant: { name: 'spam bot', 
-                                               email: 'spambot@example.org', 
-                                               password: 'spam-bot',
-                                               contact_details: 'this is a honeypot field that i fell for because im a spam bot'
-                              }
-        }
+      expect {
+        post :create, params: {participant: {name: "spam bot",
+                                             email: "spambot@example.org",
+                                             password: "spam-bot",
+                                             contact_details: "this is a honeypot field that i fell for because im a spam bot"}}
       }.not_to change(Participant, :count)
       expect(response).to render_template(:new)
       expect(flash[:error]).to eq "There was a problem creating your account."
     end
 
     it "does not set coc_agreed_at on the participant when the user has not signed the code of conduct" do
-      post :create, params: { participant:  { name: 'Alan Turing',
-                                              email: 'tapewriter@example.org',
-                                              password: 'infinite-memory',
-                                              code_of_conduct_agreement: '0'
-                                            }
-                            }
-      expect(Participant.find_by(email: 'tapewriter@example.org').coc_agreed_at).to be_nil
+      post :create, params: {participant: {name: "Alan Turing",
+                                           email: "tapewriter@example.org",
+                                           password: "infinite-memory",
+                                           code_of_conduct_agreement: "0"}}
+      expect(Participant.find_by(email: "tapewriter@example.org").coc_agreed_at).to be_nil
     end
     it "sets coc_agreed_at on the participant when the user has signed the code of conduct" do
-      post :create, params: { participant:  { name: 'Alan Turing',
-                                              email: 'tapewriter@example.org',
-                                              password: 'infinite-memory',
-                                              code_of_conduct_agreement: '1'
-                                            }
-                            }
-      expect(Participant.find_by(email: 'tapewriter@example.org').coc_agreed_at).not_to be_nil
+      post :create, params: {participant: {name: "Alan Turing",
+                                           email: "tapewriter@example.org",
+                                           password: "infinite-memory",
+                                           code_of_conduct_agreement: "1"}}
+      expect(Participant.find_by(email: "tapewriter@example.org").coc_agreed_at).not_to be_nil
     end
   end
 
@@ -75,7 +67,7 @@ describe ParticipantsController do
 
     context "when logged in" do
       context "when logged in user has not confirmed email" do
-        let(:unconfirmed_email_participant) { create(:participant, email_confirmed_at: nil )}
+        let(:unconfirmed_email_participant) { create(:participant, email_confirmed_at: nil) }
 
         before do
           activate_authlogic
@@ -90,8 +82,8 @@ describe ParticipantsController do
     end
 
     context "when logged in user has confirmed email" do
-      let(:unconfirmed_email_participant) { create(:participant, email_confirmed_at: Time.now )}
-        
+      let(:unconfirmed_email_participant) { create(:participant, email_confirmed_at: Time.now) }
+
       before do
         activate_authlogic
         ParticipantSession.create(unconfirmed_email_participant)
@@ -102,7 +94,6 @@ describe ParticipantsController do
         expect(flash[:alert]).not_to be_present
       end
     end
-
 
     context "when not logged in" do
       it "should not show confirm email flash message" do
@@ -118,7 +109,7 @@ describe ParticipantsController do
       activate_authlogic
       ParticipantSession.create(luke)
     end
-      
+
     describe "#edit" do
       it "should be not be allowed" do
         get :edit, params: {id: participant}
@@ -128,9 +119,9 @@ describe ParticipantsController do
 
     describe "#update" do
       it "will not be allowed" do
-        put :update, params: {id: participant, participant: { name: 'Alan Kay' }}
+        put :update, params: {id: participant, participant: {name: "Alan Kay"}}
         expect(response).to be_redirect
-        expect(participant.reload.name).to_not eq 'Alan Kay'
+        expect(participant.reload.name).to_not eq "Alan Kay"
       end
     end
   end
@@ -152,47 +143,47 @@ describe ParticipantsController do
 
     describe "#update" do
       it "should be successful" do
-        put :update, params: {id: joe, participant: { name: 'schmoe, joe' }}
+        put :update, params: {id: joe, participant: {name: "schmoe, joe"}}
         expect(response).to redirect_to participant_path(joe)
-        expect(joe.reload.name).to eq 'schmoe, joe'
+        expect(joe.reload.name).to eq "schmoe, joe"
       end
 
       it "does not set coc_agreed_at on the participant when the user has not signed the code of conduct" do
-        put :update, params:  { id: joe,  participant:  { name: 'Alan Turing', code_of_conduct_agreement: '0' } }
+        put :update, params: {id: joe, participant: {name: "Alan Turing", code_of_conduct_agreement: "0"}}
         expect(joe.reload.coc_agreed_at).to be_nil
       end
 
       it "sets coc_agreed_at on the participant when the user has signed the code of conduct" do
-        put :update, params:  { id: joe,  participant:  { code_of_conduct_agreement: '1' } }
+        put :update, params: {id: joe, participant: {code_of_conduct_agreement: "1"}}
         expect(joe.reload.coc_agreed_at).not_to be_nil
       end
 
       it "does not overwrite coc_agreed_at when the participant has already signed" do
         original_time = 1.year.ago
         joe.update!(coc_agreed_at: original_time)
-        put :update, params: { id: joe, participant: { code_of_conduct_agreement: '1' } }
+        put :update, params: {id: joe, participant: {code_of_conduct_agreement: "1"}}
         expect(joe.reload.coc_agreed_at).to be_within(1.second).of(original_time)
       end
 
       it "ignores a coc_agreed_at value submitted directly in params" do
         forged_time = 10.years.ago
-        put :update, params: { id: joe, participant: { coc_agreed_at: forged_time } }
+        put :update, params: {id: joe, participant: {coc_agreed_at: forged_time}}
         expect(joe.reload.coc_agreed_at).to be_nil
       end
 
       describe "more attributes are not required" do
         it "should be successful" do
           put :update, params: {
-            id: joe, participant: { bio: 'schmoe' }
+            id: joe, participant: {bio: "schmoe"}
           }
           expect(response).to be_redirect
-          expect(joe.reload.bio).to eq 'schmoe'
+          expect(joe.reload.bio).to eq "schmoe"
         end
       end
 
       describe "when email address is changed" do
         it "should unconfirm the user's email" do
-          put :update, params: {id: joe, participant: { email: 'new@example.org',}}
+          put :update, params: {id: joe, participant: {email: "new@example.org"}}
           expect(response).to be_redirect
           expect(joe.reload.email_confirmed_at).to be_nil
         end

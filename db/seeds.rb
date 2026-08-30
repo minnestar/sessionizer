@@ -8,7 +8,7 @@ class ActiveRecord::Base
   # Returns the record.
   def self.create_or_update(options = {})
     id = options.delete(:id)
-    record = self.where(:id => id).first || new
+    record = where(id: id).first || new
     record.id = id
     record.attributes = options
     record.save!
@@ -17,10 +17,10 @@ class ActiveRecord::Base
   end
 end
 
-Level.create_or_update(:id => 1, :name => 'Beginner')
-Level.create_or_update(:id => 2, :name => 'Intermediate')
-Level.create_or_update(:id => 3, :name => 'Advanced')
-Level.create_or_update(:id => 4, :name => 'All levels')
+Level.create_or_update(id: 1, name: "Beginner")
+Level.create_or_update(id: 2, name: "Intermediate")
+Level.create_or_update(id: 3, name: "Advanced")
+Level.create_or_update(id: 4, name: "All levels")
 
 Category.find_or_create_defaults
 
@@ -74,4 +74,4 @@ if Rails.env.development?
   homepage_summary.save!
 end
 
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+AdminUser.create!(email: "admin@example.com", password: "password", password_confirmation: "password") if Rails.env.development?

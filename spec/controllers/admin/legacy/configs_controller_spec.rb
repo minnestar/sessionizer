@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Admin::Legacy::ConfigsController do
   describe "#show" do
@@ -11,10 +11,10 @@ describe Admin::Legacy::ConfigsController do
   describe "#create" do
     it "should be successful" do
       expect {
-        post :create, params: {show_schedule: 'true'}
+        post :create, params: {show_schedule: "true"}
       }.to change { Settings.show_schedule? }.from(false).to(true)
       expect(response).to be_redirect
-      expect(flash[:notice]).to eq 'Configuration saved'
+      expect(flash[:notice]).to eq "Configuration saved"
     end
   end
 end

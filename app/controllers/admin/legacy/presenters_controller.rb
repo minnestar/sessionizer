@@ -1,6 +1,6 @@
 class Admin::Legacy::PresentersController < Admin::Legacy::AdminController
   before_action :load_presenters, only: [:index, :export]
-  load_resource class: 'Participant'
+  load_resource class: "Participant"
   respond_to :html
 
   def index
@@ -36,9 +36,7 @@ class Admin::Legacy::PresentersController < Admin::Legacy::AdminController
     params.require(:participant).permit(:name, :email, :bio)
   end
 
-
   def load_presenters
     @presenters ||= Participant.find(Event.current_event.sessions.map(&:presenter_ids).flatten.uniq)
   end
-
 end

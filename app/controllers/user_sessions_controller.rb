@@ -21,14 +21,14 @@ class UserSessionsController < ApplicationController
       session.delete(:after_login)
     else
       flash.now[:error] = "Sorry, couldn't find that participant. Try again, or sign up to register a new account."
-      render :action => :new
+      render action: :new
     end
   end
 
   def destroy
     current_participant_session&.destroy
 
-    flash[:notice] = 'You have been logged out.'
+    flash[:notice] = "You have been logged out."
     redirect_to root_path
   end
 
@@ -37,5 +37,4 @@ class UserSessionsController < ApplicationController
   def participant_session_params
     params.require(:participant_session).permit(:email, :password, :remember_me)
   end
-
 end

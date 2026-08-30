@@ -18,19 +18,19 @@ ActiveAdmin.register Participant do
     end
   end
 
-  includes :attendances, { presentations: { session: :event } }
+  includes :attendances, {presentations: {session: :event}}
 
   filter :name
   filter :email
   filter :bio
   filter :email_confirmed_at_not_null, as: :boolean,
-         label: 'Email confirmed',
-         filters: [:eq],
-         input_html: { name: 'q[email_confirmed_at_not_null]' }
+    label: "Email confirmed",
+    filters: [:eq],
+    input_html: {name: "q[email_confirmed_at_not_null]"}
   filter :coc_agreed_at_not_null, as: :boolean,
-         label: 'CoC accepted',
-         filters: [:eq],
-         input_html: { name: 'q[coc_agreed_at_not_null]' }
+    label: "CoC accepted",
+    filters: [:eq],
+    input_html: {name: "q[coc_agreed_at_not_null]"}
 
   index do
     column :name do |participant|
@@ -68,7 +68,7 @@ ActiveAdmin.register Participant do
       presented_sessions = Session.with_canceled
         .joins(:presentations)
         .includes(:event)
-        .where(presentations: { participant_id: participant.id })
+        .where(presentations: {participant_id: participant.id})
         .order("presentations.created_at DESC")
       table_for presented_sessions do
         column(:title) do |session|
@@ -87,7 +87,7 @@ ActiveAdmin.register Participant do
       interested_sessions = Session.with_canceled
         .joins(:attendances)
         .includes(:event)
-        .where(attendances: { participant_id: participant.id })
+        .where(attendances: {participant_id: participant.id})
         .order("events.date DESC, sessions.title")
       table_for interested_sessions do
         column(:title) do |session|

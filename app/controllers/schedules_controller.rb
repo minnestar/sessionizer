@@ -1,5 +1,4 @@
 class SchedulesController < ApplicationController
-
   before_action :authenticate_participant, if: -> { params[:preview] }
 
   def index
@@ -7,14 +6,13 @@ class SchedulesController < ApplicationController
       redirect_to home_page_path
       return
     end
-    render layout: 'schedule'
+    render layout: "schedule"
   end
 
   def ical
     event = Event.current_event
 
     sessions = event.sessions.includes([:room, :timeslot])
-
 
     cal = Icalendar::Calendar.new
 
@@ -24,18 +22,18 @@ class SchedulesController < ApplicationController
 
       t.daylight do |d|
         d.tzoffsetfrom = "-0600"
-        d.tzoffsetto   = "-0500"
-        d.tzname       = "CDT"
-        d.dtstart      = "19700308T020000"
-        d.rrule        = "FREQ=YEARLY;BYMONTH=3;BYDAY=2SU"
+        d.tzoffsetto = "-0500"
+        d.tzname = "CDT"
+        d.dtstart = "19700308T020000"
+        d.rrule = "FREQ=YEARLY;BYMONTH=3;BYDAY=2SU"
       end
 
       t.standard do |s|
         s.tzoffsetfrom = "-0500"
-        s.tzoffsetto   = "-0600"
-        s.tzname       = "CST"
-        s.dtstart      = "19701101T020000"
-        s.rrule        = "FREQ=YEARLY;BYMONTH=11;BYDAY=1SU"
+        s.tzoffsetto = "-0600"
+        s.tzname = "CST"
+        s.dtstart = "19701101T020000"
+        s.rrule = "FREQ=YEARLY;BYMONTH=11;BYDAY=1SU"
       end
     end
 
@@ -43,17 +41,17 @@ class SchedulesController < ApplicationController
       next if session.timeslot.nil?
 
       cal.event do |e|
-        e.summary     = session.title
-        e.organizer   = Icalendar::Values::CalAddress.new('', cn: session.presenter_names.join("\\, "))
+        e.summary = session.title
+        e.organizer = Icalendar::Values::CalAddress.new("", cn: session.presenter_names.join("\\, "))
         e.description = session.summary
-        e.dtstart     = session.timeslot.starts_at.to_datetime
-        e.dtend       = session.timeslot.ends_at.to_datetime
+        e.dtstart = session.timeslot.starts_at.to_datetime
+        e.dtend = session.timeslot.ends_at.to_datetime
 
-        e.location    = session.room.name
+        e.location = session.room.name
       end
     end
 
-    render plain: cal.to_ical, :content_type => 'text/calendar'
+    render plain: cal.to_ical, content_type: "text/calendar"
   end
 
   def event_timeslots
@@ -64,7 +62,8 @@ class SchedulesController < ApplicationController
 
       # Preload vote counts in order to sort sessions by popularity
       Session.preload_attendance_counts(
-        timeslots.map(&:sessions).flatten)
+        timeslots.map(&:sessions).flatten
+      )
 
       timeslots
     end
@@ -95,7 +94,6 @@ class SchedulesController < ApplicationController
 
   # Should we honor this request to show the schedule?
   def schedule_visible?
-     schedule_public? || params[:preview]
+    schedule_public? || params[:preview]
   end
-
 end

@@ -1,6 +1,6 @@
 ActiveAdmin.register Room do
   config.filters = false
-  config.sort_order = 'capacity_desc'
+  config.sort_order = "capacity_desc"
 
   belongs_to :event
 
@@ -14,7 +14,7 @@ ActiveAdmin.register Room do
     def scoped_collection
       collection = super
       if action_name == "show"
-        collection.includes(sessions: [:timeslot, { presentations: :participant }])
+        collection.includes(sessions: [:timeslot, {presentations: :participant}])
       else
         collection
       end
@@ -25,33 +25,33 @@ ActiveAdmin.register Room do
     event = Event.find(params[:event_id])
     if event.rooms_count.zero?
       active_count = Settings.default_rooms.count { |r| r["active"] != false }
-      button_to 'Generate rooms',
+      button_to "Generate rooms",
         generate_rooms_admin_event_path(event),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will generate #{active_count} rooms based on the defaults in Event Settings. Are you sure you want to proceed?" }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "This will generate #{active_count} rooms based on the defaults in Event Settings. Are you sure you want to proceed?"}
     end
   end
 
   action_item :assign_rooms, only: [:index] do
     event = Event.find(params[:event_id])
     if event.current? && event.rooms_count > 0 && event.has_unassigned_sessions?
-      button_to 'Assign rooms',
+      button_to "Assign rooms",
         assign_rooms_admin_event_path(event),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "Assign rooms to scheduled sessions that don't yet have one? This will take a little while. Sit tight." }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "Assign rooms to scheduled sessions that don't yet have one? This will take a little while. Sit tight."}
     end
   end
 
   action_item :reassign_rooms, only: [:index] do
     event = Event.find(params[:event_id])
     if event.current? && event.rooms_count > 0 && !event.starts_within?(24.hours)
-      button_to 'Reassign all rooms',
+      button_to "Reassign all rooms",
         assign_rooms_admin_event_path(event, reassign: 1),
         method: :post,
-        class: 'action-item-button cursor-pointer',
-        data: { confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?" }
+        class: "action-item-button cursor-pointer",
+        data: {confirm: "This will OVERWRITE existing room assignments based on current vote tallies (manually-scheduled sessions are left alone). Are you sure?"}
     end
   end
 
@@ -73,10 +73,10 @@ ActiveAdmin.register Room do
     column :schedulable
     column("Sessions") do |room|
       link_to(
-        "#{room.sessions.size}",
-        admin_sessions_path(order: "timeslot_id_asc", q: { event_id_eq: room.event_id, room_id_eq: room.id })
+        room.sessions.size.to_s,
+        admin_sessions_path(order: "timeslot_id_asc", q: {event_id_eq: room.event_id, room_id_eq: room.id})
       )
-      end
+    end
     actions
   end
 
@@ -91,17 +91,17 @@ ActiveAdmin.register Room do
 
     panel "Sessions (#{room.sessions.with_canceled.size})" do
       if room.sessions.with_canceled.any?
-        table_for room.sessions.with_canceled.order('sessions.timeslot_id') do
+        table_for room.sessions.with_canceled.order("sessions.timeslot_id") do
           column("Timeslot") do |session|
             link_to session.timeslot.to_s, admin_event_timeslot_path(session.event, session.timeslot)
-        end
-        column :title do |session|
-          (link_to(session.title, admin_session_path(session)) +
-          (session.canceled? ? " (CANCELED)" : "")).html_safe
           end
-        column :presenters
-        column("Votes", &:attendances_count)
-        column("Canceled", &:canceled?)
+          column :title do |session|
+            (link_to(session.title, admin_session_path(session)) +
+            (session.canceled? ? " (CANCELED)" : "")).html_safe
+          end
+          column :presenters
+          column("Votes", &:attendances_count)
+          column("Canceled", &:canceled?)
         end
       else
         div do

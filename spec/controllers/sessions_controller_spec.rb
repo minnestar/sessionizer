@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe SessionsController do
   before do
@@ -8,7 +8,7 @@ describe SessionsController do
 
   let(:user) { create(:participant) }
   let(:event) { create(:event) }
-  let(:old_event) { create(:event, name: 'First MinneBar', date: '2006-5-6') }
+  let(:old_event) { create(:event, name: "First MinneBar", date: "2006-5-6") }
 
   context "with an existing session" do
     let!(:session) { create(:session, event: event) }
@@ -16,29 +16,28 @@ describe SessionsController do
 
     describe "update" do
       it "is not updatable by someone who doesn't own it" do
-        patch :update, params: { id: session, session: { description: 'Lulz' } }
+        patch :update, params: {id: session, session: {description: "Lulz"}}
         expect(response).to redirect_to session
       end
 
       context "when the owner is signed in" do
-
         let(:user) { session.participant }
 
         let(:category) { Category.last }
 
         it "should be updatable" do
-          patch :update, params: { id: session, session: { title: 'new title', description: 'new description', category_ids: [category.id], level_id: '2' } }
+          patch :update, params: {id: session, session: {title: "new title", description: "new description", category_ids: [category.id], level_id: "2"}}
           expect(response).to redirect_to session
-          expect(assigns[:session].title).to eq 'new title'
+          expect(assigns[:session].title).to eq "new title"
         end
 
         it "should sign code of conduct if param is present" do
-          patch :update, params: { id: session, session: { title: 'new title', code_of_conduct_agreement: '1' } }
+          patch :update, params: {id: session, session: {title: "new title", code_of_conduct_agreement: "1"}}
           expect(user.reload.coc_agreed_at).not_to be_nil
         end
 
         it "should not sign code of conduct if param is not present" do
-          patch :update, params: { id: session, session: { title: 'new title' } }
+          patch :update, params: {id: session, session: {title: "new title"}}
           expect(user.reload.coc_agreed_at).to be_nil
         end
       end
@@ -74,7 +73,7 @@ describe SessionsController do
       end
 
       it "should handle a past event" do
-        get :index, params: { event_id: old_event.id }
+        get :index, params: {event_id: old_event.id}
         expect(response).to be_successful
         expect(assigns[:sessions]).to eq [old_session]
       end
@@ -83,7 +82,7 @@ describe SessionsController do
         it "is successful and have all the things" do
           get :index, format: :json
           expect(response).to be_successful
-          expect(response.content_type).to eq('application/json; charset=utf-8')
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response.body).to eq SessionsJsonBuilder.new.to_json([session])
         end
       end
@@ -97,11 +96,11 @@ describe SessionsController do
         end
 
         it "should allow exporting previous events" do
-          get :index, params: { event_id: event2.id }
+          get :index, params: {event_id: event2.id}
           expect(response).to be_successful
           expect(assigns[:sessions]).to eq [session2]
 
-          get :index, params: { event_id: event.id }
+          get :index, params: {event_id: event.id}
           expect(response).to be_successful
           expect(assigns[:sessions]).to eq [session]
         end
@@ -139,7 +138,7 @@ describe SessionsController do
       context "with valid values" do
         it "creates a new session" do
           expect {
-            post :create, params: { session: { title: "new title", description: "new description", category_ids: [category.id], level_id: "2" } }
+            post :create, params: {session: {title: "new title", description: "new description", category_ids: [category.id], level_id: "2"}}
           }.to change { Session.count }.by(1)
           expect(response).to redirect_to assigns[:session]
           expect(assigns[:session].title).to eq "new title"
@@ -150,24 +149,20 @@ describe SessionsController do
         end
         it "should sign code of conduct if param is present" do
           expect {
-            post :create, params: { session:  { title: "new title",
-                                                description: "new description",
-                                                category_ids: [category.id],
-                                                level_id: "2",
-                                                code_of_conduct_agreement:  "1",
-                                              }
-                                  }
+            post :create, params: {session: {title: "new title",
+                                             description: "new description",
+                                             category_ids: [category.id],
+                                             level_id: "2",
+                                             code_of_conduct_agreement: "1"}}
           }.to change { Session.count }.by(1)
           expect(user.reload.coc_agreed_at).not_to be_nil
         end
         it "should not sign code of conduct if param is not present" do
           expect {
-            post :create, params: { session:  { title: "new title",
-                                                description: "new description",
-                                                category_ids: [category.id],
-                                                level_id: "2",
-                                              }
-                                  }
+            post :create, params: {session: {title: "new title",
+                                             description: "new description",
+                                             category_ids: [category.id],
+                                             level_id: "2"}}
           }.to change { Session.count }.by(1)
           expect(user.reload.coc_agreed_at).to be_nil
         end
@@ -176,7 +171,7 @@ describe SessionsController do
       context "with invalid values" do
         it "shows the errors" do
           expect {
-            post :create, params: { session: { title: "" } }
+            post :create, params: {session: {title: ""}}
           }.not_to change { Session.count }
           expect(response).to render_template("new")
         end
@@ -186,7 +181,7 @@ describe SessionsController do
     context "when participant email is not confirmed" do
       it "returns 403 and does not create a session" do
         expect {
-          post :create, params: { session: { title: "new title", description: "new description", category_ids: [category.id], level_id: "2" } }
+          post :create, params: {session: {title: "new title", description: "new description", category_ids: [category.id], level_id: "2"}}
         }.not_to change { Session.count }
         expect(response).to have_http_status(403)
       end

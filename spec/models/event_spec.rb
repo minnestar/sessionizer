@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Event do
-  subject { Event.new(name: 'Foobar', date: Date.today) }
+  subject { Event.new(name: "Foobar", date: Date.today) }
 
   it { should validate_presence_of :name }
   it { should validate_presence_of :date }
@@ -18,25 +18,25 @@ describe Event do
     end
   end
 
-  describe '#categories' do
+  describe "#categories" do
     let(:event) { create(:event) }
 
-    it 'automatically creates default categories after event creation' do
+    it "automatically creates default categories after event creation" do
       expect(event.categories.count).to eq Category.active.count
     end
 
-    it 'does not overwrite categories if already present' do
+    it "does not overwrite categories if already present" do
       original_count = event.event_categories.count
       event.create_default_categories
       expect(event.event_categories.count).to eq original_count
     end
 
-    it 'returns categories linked through event_categories' do
+    it "returns categories linked through event_categories" do
       expect(event.categories).to include(Category.first)
     end
 
-    it 'does not return categories not linked to the event' do
-      inactive_cat = create(:category, name: 'Unlinkable Category', active: false)
+    it "does not return categories not linked to the event" do
+      inactive_cat = create(:category, name: "Unlinkable Category", active: false)
       expect(event.categories).not_to include(inactive_cat)
     end
   end
@@ -54,8 +54,8 @@ describe Event do
 
       it "skips inactive rooms" do
         allow(Settings).to receive(:default_rooms).and_return([
-          { "name" => "Theater", "capacity" => 250 },
-          { "name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "daycare" }
+          {"name" => "Theater", "capacity" => 250},
+          {"name" => "Alaska", "capacity" => 96, "active" => false, "notes" => "daycare"}
         ])
 
         event.create_default_rooms
@@ -65,8 +65,8 @@ describe Event do
 
       it "sets correct name and capacity on each room" do
         allow(Settings).to receive(:default_rooms).and_return([
-          { "name" => "Theater", "capacity" => 250 },
-          { "name" => "Challenge", "capacity" => 24 }
+          {"name" => "Theater", "capacity" => 250},
+          {"name" => "Challenge", "capacity" => 24}
         ])
 
         event.create_default_rooms
@@ -76,8 +76,8 @@ describe Event do
 
       it "respects the schedulable flag from config" do
         allow(Settings).to receive(:default_rooms).and_return([
-          { "name" => "Theater", "capacity" => 250 },
-          { "name" => "Uptowner", "capacity" => 85, "schedulable" => false }
+          {"name" => "Theater", "capacity" => 250},
+          {"name" => "Uptowner", "capacity" => 85, "schedulable" => false}
         ])
 
         event.create_default_rooms
@@ -87,7 +87,7 @@ describe Event do
 
       it "defaults schedulable to true when not specified" do
         allow(Settings).to receive(:default_rooms).and_return([
-          { "name" => "Theater", "capacity" => 250 }
+          {"name" => "Theater", "capacity" => 250}
         ])
 
         event.create_default_rooms
@@ -108,8 +108,8 @@ describe Event do
 
       it "replaces existing rooms when force: true" do
         allow(Settings).to receive(:default_rooms).and_return([
-          { "name" => "Theater", "capacity" => 250 },
-          { "name" => "Challenge", "capacity" => 24 }
+          {"name" => "Theater", "capacity" => 250},
+          {"name" => "Challenge", "capacity" => 24}
         ])
 
         event.create_default_rooms(force: true)
@@ -177,8 +177,8 @@ describe Event do
     context "when timeslot lengths are inconsistent" do
       before do
         allow(Settings).to receive(:default_timeslots).and_return([
-          { "start" => "9:00", "end" => "9:45" },
-          { "start" => "10:00", "end" => "10:30" } # Different length
+          {"start" => "9:00", "end" => "9:45"},
+          {"start" => "10:00", "end" => "10:30"} # Different length
         ])
       end
 
@@ -216,10 +216,12 @@ describe Event do
     end
 
     it "falls back to start of day when start_time is nil" do
-      tomorrow = Date.current + 1.day
-      event = build(:event, date: tomorrow, start_time: nil)
-      expect(event.starts_within?(24.hours)).to be true
-      expect(event.starts_within?(1.hour)).to be false
+      travel_to Time.current.change(hour: 17, min: 0, sec: 0) do
+        tomorrow = Date.current + 1.day
+        event = build(:event, date: tomorrow, start_time: nil)
+        expect(event.starts_within?(24.hours)).to be true
+        expect(event.starts_within?(1.hour)).to be false
+      end
     end
   end
 
